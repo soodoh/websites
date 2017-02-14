@@ -1,0 +1,101 @@
+body {
+  font-family:"Arial",sans-serif;
+  color:white;
+  font-size: 15px;
+}
+nav {
+}
+.navbar-inverse {
+  background-color: rgba(0,0,0,.7);
+  background-image:none;
+}
+h1 {
+  font-size: 45px;
+  font-style: normal;
+}
+h2 {
+  font-size: 30px;
+  font-style: normal;
+}
+h3 {
+  font-size: 20px;
+  font-style: normal;
+}
+p{
+  text-align: left;
+  text-indent: 20px;
+}
+#wood-fence {
+  padding: 200px 0px 50px 0px;
+  color: black;
+  text-align:center;
+  background-image: url("../_images/woodfence.jpg");
+  background-position: top;
+  background-repeat: repeat;
+  background-size: cover;
+}
+#portrait img {
+  width: 100%;
+  border: 5px;
+  border-style: solid;
+  border-color: white;
+  border-radius: 10px;
+  max-width: 285px;
+}
+#about {
+  padding: 30px 0px 30px 0px;
+  color: white;
+  background-color: rgb(68, 68, 68);
+}
+#projects {
+  background-color: white;
+  color: black;
+  padding: 30px 0px 30px 0px;
+}
+#projects img {
+  border: 3px;
+  border-color: rgb(68, 68, 68);
+  border-style: solid;
+}
+.project-temp {
+  border: 3px;
+  border-style: solid;
+  border-color: rgb(68, 68, 68);
+  background-color: rgb(168, 168, 168);
+}
+.project-container {
+  padding: 15px;
+}
+.demo-button {
+  background-color: rgb(168, 168, 168);
+  border:1px;
+  border-color:rgb(68, 68, 68);
+  border-style:solid;
+  color: black;
+}
+.demo-button:hover {
+  color: rgb(68, 68, 68);
+}
+#contact {
+  background-image: url("../_images/brickwall.jpg");
+  background-position:top;
+  background-repeat:repeat;
+  background-size:cover;
+  color:black;
+  padding: 30px 0px 100px 0px;
+}
+.text-box {
+  color: white;
+  background-color: rgba(0,0,0,.7);
+  margin-top: 50px;
+  padding-bottom: 15px;
+}
+.description {
+  margin-top: 15px;
+}
+i {
+  color:white;
+}
+i:hover {
+  color: rgb(168, 168, 168);
+}
