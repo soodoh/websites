@@ -4,16 +4,81 @@ $white: #FFFEDF;
 $darkgray: #2A2C31;
 $gray: #3E4147;
 
+@mixin stroke($thickness, $color) {
+  text-shadow: (-$thickness) 0px $color,0px $thickness $color,$thickness 0px $color,0px (-$thickness) $color;
+}
+// @mixin gradient() {
+//   background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+//   background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+//   background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
+//   -webkit-gradient();
+//   -ms-linear-gradient();
+//   -o-linear-gradient();
+// }
+
 body {
   font-family: 'Roboto', sans-serif;
-}
-.navbar {
-  background-color: $darkgray;
+  background-color: $gray;
   color: $white;
+}
+.navbar, footer {
+  background-color: $darkgray;
   font-family: 'Roboto', sans-serif;
+  border-radius: 0px;
+  a {
+    color: $white !important;
+    &:hover {
+      opacity: .7;
+    }
+  }
 }
 .navbar-brand {
+  @include stroke(2px, $white);
   font-family: 'Ultra', serif;
+  #firstname {
+    color: $blue;
+  }
+  #lastname {
+    color: $brown;
+  }
+}
+.carousel-item {
+  &:before {
+    content: '';
+  	position: absolute;
+  	top: 0;
+  	right: 0;
+  	bottom: 0;
+  	left: 0;
+  	background-image: linear-gradient(to bottom,rgba(0,0,0,0),$darkgray);
+    // TODO add mixin for prefixes
+  }
+  max-height: 800px;
+  object-fit: cover;
+}
+#about {
+  // TODO change list style & line height
+  img {
+    border: 3px solid $white;
+    // TODO get max-width on portrait to work
+    // TODO make about section more responsive
+  }
+}
+#projects {
+  // TODO figure out URL webpack CSS bug
+  // background-image: url("_images/woodfence.jpg");
+  background-size: cover;
+  h1 {
+    color: black;
+  }
+  .btn {
+    background-color: $gray;
+    // TODO fix button colors
+    // TODO get pictures for every project
+    .active {
+      background-color: $blue;
+    }
+  }
 }
 h1 {
   font-family: 'Ultra', serif;
@@ -22,5 +87,6 @@ h2 {
   font-family: 'Ultra', serif;
 }
 h3 {
-  font-family: 'Ultra', serif;
+  font-family: 'Roboto', sans-serif;
+  font-size: 2.5rem;
 }
