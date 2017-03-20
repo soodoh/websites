@@ -1,22 +1,42 @@
-var webpack = require("webpack");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: "./src/main.js",
+  entry: [
+    "./src/main.js"
+  ],
   output: {
-    path: "build",
+    path: __dirname+"/build/",
+    publicPath: "/",
     filename: "bundle.js"
   },
+  plugins: [new HtmlWebpackPlugin({
+    template: "./src/index.html" // Copies src html as "template" to build
+  }), new webpack.HotModuleReplacementPlugin()],
   devServer: {
     inline: true,
-    contentBase: "./",
+    contentBase: __dirname+"/build/",
+    hot: true,
     port: 8080
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.scss$/,
-        loader: "style-loader!css-loader!sass-loader",
+        use: [
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader"
+        ]
+      },
+      {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000
+        }
       }
     ]
   }
-}
+};

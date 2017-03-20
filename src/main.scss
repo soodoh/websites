@@ -7,19 +7,13 @@ $gray: #3E4147;
 @mixin stroke($thickness, $color) {
   text-shadow: (-$thickness) 0px $color,0px $thickness $color,$thickness 0px $color,0px (-$thickness) $color;
 }
-// @mixin gradient() {
-//   background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
-//   background: -moz-linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
-//   background: -webkit-linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,1));
-//   -webkit-gradient();
-//   -ms-linear-gradient();
-//   -o-linear-gradient();
-// }
 
 body {
   font-family: 'Roboto', sans-serif;
   background-color: $gray;
   color: $white;
+  position: relative;
+  overflow: scroll;
 }
 .navbar, footer {
   background-color: $darkgray;
@@ -28,7 +22,7 @@ body {
   a {
     color: $white !important;
     &:hover {
-      opacity: .7;
+      color: $blue !important;
     }
   }
 }
@@ -42,6 +36,9 @@ body {
     color: $brown;
   }
 }
+.carousel {
+  padding-top: 50px;
+}
 .carousel-item {
   &:before {
     content: '';
@@ -51,33 +48,107 @@ body {
   	bottom: 0;
   	left: 0;
   	background-image: linear-gradient(to bottom,rgba(0,0,0,0),$darkgray);
-    // TODO add mixin for prefixes
   }
   max-height: 800px;
   object-fit: cover;
 }
 #about {
-  // TODO change list style & line height
+  ul {
+    line-height: 1.3rem;
+    font-size: .8rem;
+  }
+  #portrait {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
   img {
     border: 3px solid $white;
-    // TODO get max-width on portrait to work
-    // TODO make about section more responsive
   }
 }
+#portrait-label {
+  @extend .project-text;
+  padding: 0px;
+  margin: 0px;
+  font-size: 1.7rem !important;
+  padding-left: 10px;
+}
+.project-text {
+  color: $white;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: center;
+  position: absolute;
+  bottom: 0px;
+  font-size: 1.3rem;
+  background-color: rgba(0,0,0,.7);
+  height: 33%;
+  width: 100%;
+}
 #projects {
-  // TODO figure out URL webpack CSS bug
-  // background-image: url("_images/woodfence.jpg");
+  background-image: url("../build/_images/woodfence.jpg");
   background-size: cover;
+  background-attachment: fixed;
+  & * {
+    z-index: 1;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 0;
+    background: rgba(255,255,255,.5);
+  }
   h1 {
     color: black;
   }
-  .btn {
-    background-color: $gray;
-    // TODO fix button colors
-    // TODO get pictures for every project
-    .active {
-      background-color: $blue;
+  a:hover {
+    opacity: .7;
+  }
+}
+#contact {
+  i {
+    font-size: 8rem;
+  }
+  a {
+    color: $white !important;
+    &:hover {
+      opacity: .7;
     }
+  }
+}
+#map {
+	position:relative;
+  iframe {
+  	width:100%;
+  	height:500px;
+  }
+  .overlay {
+  	width: 100%;
+  	min-height: 500px;
+  	position: absolute;
+  	top: 0px;
+    left: 0px;
+  }
+}
+.modal {
+  color: $darkgray;
+}
+.btn {
+  color: $white;
+  background-color: $gray;
+  &:hover {
+    background-color: $darkgray;
+  }
+}
+.active, .btn-primary {
+  background-color: $blue;
+  &:hover {
+    background-color: darken($blue, 20%);
   }
 }
 h1 {
