@@ -1,3 +1,2 @@
-# Web Portfolio
-
-Serverless Portfolio for Full Stack Software Engineer. Powered by React, Contentful, and AWS S3 & Cloudfront.
+# sarabeth-portfolio
+Serverless Portfolio for an Opera Singer, powered by Gatsby + React, Contentful and Netlify + AWS Lambda.
