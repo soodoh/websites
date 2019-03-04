@@ -1,3 +1,10 @@
+const headerText = {
+  fontFamily: '\'Fjalla One\', serif',
+};
+const bodyText = {
+  fontFamily: '\'Geo\', serif',
+};
+
 const rawTheme = {
   palette: {
     background: {
@@ -18,12 +25,18 @@ const rawTheme = {
   },
   typography: {
     useNextVariants: true,
-    fontFamily: '\'Geo\', sans-serif',
+    ...bodyText,
     h1: {
-      fontFamily: '\'Fjalla One\', serif',
+      ...headerText,
+    },
+    h2: {
+      ...headerText,
+    },
+    h3: {
+      ...headerText,
     },
     body1: {
-      fontFamily: '\'Fjalla One\', serif',
+      ...bodyText,
       fontSize: '1.2rem',
       paddingBottom: '1.5rem',
     },

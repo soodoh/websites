@@ -1,5 +1,10 @@
-const path = require('path');
+const dotenv = require('dotenv');
 const theme = require('./src/components/Layout/theme');
+
+// Load environment variables from project
+dotenv.config();
+const spaceId = process.env.CONTENTFUL_SPACE_ID;
+const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN;
 
 module.exports = {
   plugins: [
@@ -13,11 +18,8 @@ module.exports = {
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
     {
-      resolve: 'gatsby-source-filesystem',
-      options: {
-        name: 'images',
-        path: path.join(__dirname, 'src', 'images'),
-      },
+      resolve: 'gatsby-source-contentful',
+      options: { spaceId, accessToken },
     },
     {
       resolve: 'gatsby-plugin-web-font-loader',

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { StaticQuery, graphql } from 'gatsby';
+import { StaticQuery, graphql } from 'gatsby';
 import { withStyles } from '@material-ui/core/styles';
 import Metadata from '../components/common/Metadata';
+import Banner from '../components/Banner';
 
 const HomeCore = (props) => {
-  const { classes } = props;
+  const { classes, data } = props;
 
   return (
     <React.Fragment>
@@ -15,7 +16,11 @@ const HomeCore = (props) => {
       />
 
       <div className={classes.container}>
-        Hello World
+        <Banner
+          title={data.title}
+          jobTitle={data.jobTitle}
+          tagLine={data.tagLine}
+        />
       </div>
     </React.Fragment>
   );
@@ -25,6 +30,13 @@ HomeCore.propTypes = {
   classes: PropTypes.shape({
     home: PropTypes.string,
     buttonGroup: PropTypes.string,
+  }).isRequired,
+  data: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    jobTitle: PropTypes.string.isRequired,
+    tagLine: PropTypes.string.isRequired,
+    description: PropTypes.object.isRequired,
+    portrait: PropTypes.object.isRequired,
   }).isRequired,
 };
 
@@ -37,4 +49,31 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(HomeCore);
+const Home = withStyles(styles)(HomeCore);
+
+export default () => (
+  <StaticQuery
+    query={graphql`
+      query Projects {
+        contentfulAbout {
+          title
+          jobTitle
+          tagLine
+          description {
+            childMarkdownRemark {
+              html
+            }
+          }
+          portrait {
+            fluid(maxWidth: 1920) {
+              ...GatsbyContentfulFluid_withWebp
+            }
+          }
+        }
+      }
+    `}
+    render={data => (
+      <Home data={data.contentfulAbout} />
+    )}
+  />
+);
