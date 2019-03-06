@@ -35,6 +35,15 @@ const rawTheme = {
     h3: {
       ...headerText,
     },
+    h4: {
+      ...headerText,
+    },
+    h5: {
+      ...headerText,
+    },
+    h6: {
+      ...headerText,
+    },
     body1: {
       ...bodyText,
       fontSize: '1.2rem',

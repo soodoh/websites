@@ -2,6 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import ArrowForward from '@material-ui/icons/ArrowForward';
+import Header from './Layout/Header';
+import ContactButtons from './common/ContactButtons';
+import VerticalBar from './common/VerticalBar';
 
 const Banner = (props) => {
   const {
@@ -10,17 +15,40 @@ const Banner = (props) => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h2" gutterBottom>
-        {title}
-      </Typography>
+      <Header />
 
-      <Typography variant="h5">
-        {jobTitle}
-      </Typography>
+      <div className={classes.titleGroup}>
+        <Typography variant="h2" gutterBottom>
+          {title}
+        </Typography>
 
-      <Typography variant="subtitle1">
-        {tagLine}
-      </Typography>
+        <Typography variant="subtitle1" className={classes.jobTitle}>
+          {jobTitle}
+        </Typography>
+
+        <Typography variant="subtitle1" className={classes.tagLine}>
+          {tagLine}
+        </Typography>
+
+        <Button
+          variant="contained"
+          color="secondary"
+        >
+          Contact Me
+          <ArrowForward />
+        </Button>
+      </div>
+
+      <div className={classes.buttonGroup}>
+        <ContactButtons />
+      </div>
+
+      <div className={classes.viewMore}>
+        <Typography variant="subtitle1">
+          View More
+        </Typography>
+        <VerticalBar />
+      </div>
     </div>
   );
 };
@@ -34,7 +62,38 @@ Banner.propTypes = {
 
 const styles = theme => ({
   container: {
-    padding: theme.spacing.unit * 2,
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  titleGroup: {
+    marginTop: '25vh',
+    marginLeft: theme.spacing.unit * 6,
+    flex: 1,
+    [theme.breakpoints.down('xs')]: {
+      marginTop: '15vh',
+      marginLeft: theme.spacing.unit * 3,
+    },
+  },
+  jobTitle: {
+    fontSize: '1.5rem',
+  },
+  tagLine: {
+    fontStyle: 'italic',
+  },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginRight: theme.spacing.unit * 6,
+    [theme.breakpoints.down('xs')]: {
+      marginRight: theme.spacing.unit * 3,
+    },
+  },
+  viewMore: {
+    marginBottom: theme.spacing.unit * 2,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 });
 

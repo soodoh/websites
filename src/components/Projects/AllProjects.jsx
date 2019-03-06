@@ -44,7 +44,7 @@ export default () => (
       }
     `}
     render={data => (
-      <AllProjects data={data} />
+      <AllProjects data={data.allContentfulProjects.edges.map(item => item.node)} />
     )}
   />
 );
