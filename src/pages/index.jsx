@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
+import { withStyles } from '@material-ui/core/styles';
 import Metadata from '../components/common/Metadata';
 import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
 import Footer from '../components/Layout/Footer';
 
-const Home = (props) => {
-  const { data } = props;
+const HomeCore = (props) => {
+  const { classes, data } = props;
 
   return (
     <>
@@ -16,6 +18,10 @@ const Home = (props) => {
         title="PD Portfolio"
         description="Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info."
       />
+
+      <Helmet>
+        <body className={classes.background} />
+      </Helmet>
 
       <Banner
         title={data.title}
@@ -37,7 +43,8 @@ const Home = (props) => {
   );
 };
 
-Home.propTypes = {
+HomeCore.propTypes = {
+  classes: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
@@ -48,6 +55,14 @@ Home.propTypes = {
     portrait: PropTypes.object.isRequired,
   }).isRequired,
 };
+
+const styles = theme => ({
+  background: {
+    backgroundColor: theme.palette.primary.main,
+  },
+});
+
+const Home = withStyles(styles)(HomeCore);
 
 export default () => (
   <StaticQuery

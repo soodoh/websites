@@ -21,7 +21,7 @@ const About = (props) => {
       </div>
 
       <div className={classes.grid}>
-        <Typography variant="h5">
+        <Typography variant="h5" color="inherit">
           About
         </Typography>
         <div
@@ -30,7 +30,7 @@ const About = (props) => {
           dangerouslySetInnerHTML={{ __html: aboutContent }}
         />
 
-        <Typography variant="h5">
+        <Typography variant="h5" color="inherit">
           Skills
         </Typography>
         <div
@@ -61,6 +61,7 @@ const styles = theme => ({
     },
   },
   grid: {
+    color: theme.palette.secondary.light,
     marginTop: theme.spacing.unit * 6,
     display: 'grid',
     gridTemplateColumns: `${theme.spacing.unit * 10}px auto`,
@@ -81,34 +82,46 @@ const styles = theme => ({
     right: theme.spacing.unit * 6,
     width: '30vw',
     minWidth: 200,
-    maxWidth: 500,
+    maxWidth: 400,
     zIndex: -1,
+    opacity: '0.5',
     [theme.breakpoints.down('sm')]: {
       position: 'relative',
-
+      top: theme.spacing.unit * 20,
+      right: 0,
+      width: '100%',
+      padding: `0 ${theme.spacing.unit * 6}px`,
+      margin: '0 auto',
     },
   },
   markdownContent: {
+    ...theme.typography.body1,
+    color: theme.palette.primary.contrastText,
     '& h1, h2, h3': {
       ...theme.typography.h5,
       marginBottom: 0,
+      color: theme.palette.primary.contrastText,
     },
-    ...theme.typography.body1,
     '& ul': {
       marginTop: 0,
       padding: 0,
       display: 'grid',
       gridTemplateColumns: '50% 50%',
+      marginLeft: theme.spacing.unit * -4,
+      listStyleType: 'none',
+
       [theme.breakpoints.down('xs')]: {
         gridTemplateColumns: 'auto',
+        marginLeft: 0,
       },
+    },
+    '& ul li:before': {
+      content: '"\\2014"',
+      paddingRight: theme.spacing.unit,
     },
     '& p, li': {
       margin: 0,
       padding: 0,
-    },
-    '& li': {
-      marginLeft: theme.spacing.unit * -2,
     },
   },
 });

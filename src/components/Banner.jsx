@@ -18,15 +18,15 @@ const Banner = (props) => {
       <Header />
 
       <div className={classes.titleGroup}>
-        <Typography variant="h2" gutterBottom>
+        <Typography variant="h2" color="inherit" gutterBottom>
           {title}
         </Typography>
 
-        <Typography variant="subtitle1" className={classes.jobTitle}>
+        <Typography variant="subtitle1" color="inherit" className={classes.jobTitle}>
           {jobTitle}
         </Typography>
 
-        <Typography variant="subtitle1" className={classes.tagLine}>
+        <Typography variant="subtitle1" color="inherit" className={classes.tagLine}>
           {tagLine}
         </Typography>
 
@@ -44,7 +44,7 @@ const Banner = (props) => {
       </div>
 
       <div className={classes.viewMore}>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" color="inherit">
           View More
         </Typography>
         <VerticalBar />
@@ -65,10 +65,11 @@ const styles = theme => ({
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
+    color: theme.palette.primary.contrastText,
   },
   titleGroup: {
     marginTop: '25vh',
-    marginLeft: theme.spacing.unit * 6,
+    marginLeft: '10vw',
     flex: 1,
     [theme.breakpoints.down('xs')]: {
       marginTop: '15vh',

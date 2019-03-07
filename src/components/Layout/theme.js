@@ -11,7 +11,7 @@ const rawTheme = {
       default: 'white',
     },
     primary: {
-      light: '#0E0827',
+      light: '#1F294F',
       main: '#0E0827',
       dark: '#0E0827',
       contrastText: '#D7DFC2',

@@ -11,8 +11,8 @@ const Header = (props) => {
 
   return (
     <Toolbar className={classes.container}>
-      <IconButton>
-        <Menu />
+      <IconButton color="secondary">
+        <Menu className={classes.icon} />
       </IconButton>
     </Toolbar>
   );
@@ -22,11 +22,14 @@ Header.propTypes = {
   classes: PropTypes.shape({}).isRequired,
 };
 
-const styles = {
+const styles = theme => ({
   container: {
     display: 'flex',
     flexDirection: 'row-reverse',
   },
-};
+  icon: {
+    color: theme.palette.primary.contrastText,
+  },
+});
 
 export default withStyles(styles)(Header);

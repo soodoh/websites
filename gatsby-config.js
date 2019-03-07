@@ -18,6 +18,14 @@ module.exports = {
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
     {
+      resolve: 'gatsby-plugin-react-svg',
+      options: {
+        rule: {
+          include: /assets/,
+        },
+      },
+    },
+    {
       resolve: 'gatsby-source-contentful',
       options: { spaceId, accessToken },
     },
@@ -44,7 +52,7 @@ module.exports = {
         // Enables "Add to Homescreen" prompt and disables browser UI (including back button)
         // see https://developers.google.com/web/fundamentals/web-app-manifest/#display
         display: 'standalone',
-        icon: 'src/images/favicon.png', // This path is relative to the root of the site.
+        icon: 'assets/favicon.png', // This path is relative to the root of the site.
       },
     },
   ],
