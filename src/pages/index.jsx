@@ -13,7 +13,7 @@ const HomeCore = (props) => {
   const { classes, data } = props;
 
   return (
-    <>
+    <div className={classes.container}>
       <Metadata
         title="PD Portfolio"
         description="Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info."
@@ -39,7 +39,7 @@ const HomeCore = (props) => {
       />
 
       <Footer />
-    </>
+    </div>
   );
 };
 
@@ -49,7 +49,6 @@ HomeCore.propTypes = {
     title: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
     tagLine: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
     skills: PropTypes.object.isRequired,
     portrait: PropTypes.object.isRequired,
@@ -57,8 +56,13 @@ HomeCore.propTypes = {
 };
 
 const styles = theme => ({
+  container: {
+    position: 'relative',
+    width: '100vw',
+    overflowX: 'hidden',
+  },
   background: {
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.default,
   },
 });
 

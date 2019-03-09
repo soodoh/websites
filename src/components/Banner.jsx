@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import ArrowForward from '@material-ui/icons/ArrowForward';
+import ArrowForward from '../../assets/ArrowForward.svg';
 import Header from './Layout/Header';
 import ContactButtons from './common/ContactButtons';
 import VerticalBar from './common/VerticalBar';
@@ -17,8 +17,14 @@ const Banner = (props) => {
     <div className={classes.container}>
       <Header />
 
+      <Typography variant="h1" className={classes.titleBackground}>
+        Paul
+        <br />
+        DiLoreto
+      </Typography>
+
       <div className={classes.titleGroup}>
-        <Typography variant="h2" color="inherit" gutterBottom>
+        <Typography variant="h2" color="inherit">
           {title}
         </Typography>
 
@@ -33,6 +39,7 @@ const Banner = (props) => {
         <Button
           variant="contained"
           color="secondary"
+          className={classes.contactButton}
         >
           Contact Me
           <ArrowForward />
@@ -67,13 +74,35 @@ const styles = theme => ({
     flexDirection: 'column',
     color: theme.palette.primary.contrastText,
   },
-  titleGroup: {
-    marginTop: '25vh',
-    marginLeft: '10vw',
-    flex: 1,
+  titleBackground: {
+    color: theme.palette.primary.light,
+    position: 'absolute',
+    top: '25vh',
+    paddingLeft: '8vw',
+
     [theme.breakpoints.down('xs')]: {
-      marginTop: '15vh',
-      marginLeft: theme.spacing.unit * 3,
+      top: '15vh',
+      paddingLeft: theme.spacing.unit * 2,
+    },
+  },
+  titleGroup: {
+    paddingTop: '25vh',
+    paddingLeft: '10vw',
+    flex: 1,
+
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: '15vh',
+      paddingLeft: theme.spacing.unit * 4,
+    },
+  },
+  contactButton: {
+    marginTop: theme.spacing.unit * 4,
+    '& svg': {
+      marginLeft: theme.spacing.unit * 2,
+    },
+    '& line, path': {
+      stroke: theme.palette.primary.main,
+      fill: theme.palette.primary.main,
     },
   },
   jobTitle: {
@@ -85,13 +114,18 @@ const styles = theme => ({
   buttonGroup: {
     display: 'flex',
     justifyContent: 'flex-end',
-    marginRight: theme.spacing.unit * 6,
+    paddingRight: theme.spacing.unit * 6,
+
     [theme.breakpoints.down('xs')]: {
-      marginRight: theme.spacing.unit * 3,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      paddingRight: 0,
+      paddingLeft: theme.spacing.unit * 3,
     },
   },
   viewMore: {
-    marginBottom: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

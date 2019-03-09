@@ -15,12 +15,11 @@ const FooterCore = (props) => {
 
       <div className={classes.contactMe}>
         <Typography variant="h6" color="secondary">
-          Feel free to contact me at
+          FEEL FREE TO CONTACT ME AT
         </Typography>
 
-        <ArrowForward className={classes.arrow} />
-
-        <Typography variant="h5" className={classes.contact}>
+        <Typography variant="h6" className={classes.contact}>
+          <ArrowForward className={classes.arrow} />
           {contact}
         </Typography>
       </div>
@@ -39,18 +38,30 @@ FooterCore.propTypes = {
 const styles = theme => ({
   container: {
     display: 'flex',
+    flexWrap: 'wrap',
     color: theme.palette.primary.contrastText,
-    padding: `${theme.spacing.unit * 6}px 10vw`,
+    paddingBottom: theme.spacing.unit * 6,
+    paddingLeft: '10vw',
+    paddingRight: '10vw',
+
     [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing.unit * 6}px ${theme.spacing.unit * 2}px`,
+      flexDirection: 'column-reverse',
+      alignItems: 'center',
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
     },
   },
   contactMe: {
-    marginLeft: theme.spacing.unit * 6,
     flex: 1,
     display: 'flex',
+    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
+
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'flex-start',
+      marginBottom: theme.spacing.unit * 6,
+    },
   },
   arrow: {
     margin: `0 ${theme.spacing.unit * 2}px`,
@@ -60,6 +71,8 @@ const styles = theme => ({
     },
   },
   contact: {
+    display: 'flex',
+    alignItems: 'center',
     color: theme.palette.primary.contrastText,
   },
 });

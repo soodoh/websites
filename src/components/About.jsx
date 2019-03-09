@@ -12,12 +12,12 @@ const About = (props) => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h1" align="center">
+      <Typography variant="h1" align="center" className={classes.title}>
         About Me
       </Typography>
 
       <div className={classes.portrait}>
-        <Img fluid={portrait.fluid} />
+        <Img fluid={portrait.fluid} className={classes.portraitFilter} />
       </div>
 
       <div className={classes.grid}>
@@ -55,25 +55,50 @@ About.propTypes = {
 const styles = theme => ({
   container: {
     position: 'relative',
-    padding: `${theme.spacing.unit * 6}px 10vw`,
+    paddingTop: theme.spacing.unit * 6,
+    paddingLeft: '10vw',
+    paddingRight: '10vw',
+
     [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing.unit * 6}px ${theme.spacing.unit * 2}px`,
+      paddingLeft: '10vw',
+      paddingRight: '10vw',
+    },
+  },
+  title: {
+    position: 'absolute',
+    margin: '0 auto',
+    color: theme.palette.primary.light,
+    whiteSpace: 'nowrap',
+    paddingLeft: '10vw',
+
+    [theme.breakpoints.down('sm')]: {
+      top: theme.spacing.unit * 15,
+      left: 0,
     },
   },
   grid: {
     color: theme.palette.secondary.light,
-    marginTop: theme.spacing.unit * 6,
+    marginTop: theme.spacing.unit * 13,
     display: 'grid',
     gridTemplateColumns: `${theme.spacing.unit * 10}px auto`,
     gridTemplateRows: 'auto auto',
+
     [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing.unit * 6,
       gridTemplateColumns: 'auto',
     },
   },
   about: {
     paddingRight: theme.spacing.unit * 20,
+
     [theme.breakpoints.down('sm')]: {
       paddingRight: 0,
+    },
+  },
+  portraitFilter: {
+    backgroundColor: theme.palette.background.default,
+    '& img, picture': {
+      opacity: '0.5',
     },
   },
   portrait: {
@@ -84,7 +109,7 @@ const styles = theme => ({
     minWidth: 200,
     maxWidth: 400,
     zIndex: -1,
-    opacity: '0.5',
+
     [theme.breakpoints.down('sm')]: {
       position: 'relative',
       top: theme.spacing.unit * 20,

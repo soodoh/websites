@@ -8,7 +8,7 @@ const bodyText = {
 const rawTheme = {
   palette: {
     background: {
-      default: 'white',
+      default: '#0E0827',
     },
     primary: {
       light: '#1F294F',
@@ -28,6 +28,9 @@ const rawTheme = {
     ...bodyText,
     h1: {
       ...headerText,
+      textTransform: 'uppercase',
+      fontSize: '10rem',
+      zIndex: -1,
     },
     h2: {
       ...headerText,
