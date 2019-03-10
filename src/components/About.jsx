@@ -72,7 +72,7 @@ const styles = theme => ({
     paddingLeft: '10vw',
 
     [theme.breakpoints.down('sm')]: {
-      top: theme.spacing.unit * 15,
+      // top: theme.spacing.unit * 15,
       left: 0,
     },
   },
@@ -86,6 +86,9 @@ const styles = theme => ({
     [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing.unit * 6,
       gridTemplateColumns: 'auto',
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 0,
     },
   },
   about: {
@@ -112,7 +115,7 @@ const styles = theme => ({
 
     [theme.breakpoints.down('sm')]: {
       position: 'relative',
-      top: theme.spacing.unit * 20,
+      top: theme.spacing.unit * 12,
       right: 0,
       width: '100%',
       padding: `0 ${theme.spacing.unit * 6}px`,
@@ -122,6 +125,7 @@ const styles = theme => ({
   markdownContent: {
     ...theme.typography.body1,
     color: theme.palette.primary.contrastText,
+
     '& h1, h2, h3': {
       ...theme.typography.h5,
       marginBottom: 0,
@@ -132,21 +136,23 @@ const styles = theme => ({
       padding: 0,
       display: 'grid',
       gridTemplateColumns: '50% 50%',
-      marginLeft: theme.spacing.unit * -4,
+      marginLeft: theme.spacing.unit,
       listStyleType: 'none',
 
       [theme.breakpoints.down('xs')]: {
         gridTemplateColumns: 'auto',
-        marginLeft: 0,
       },
     },
     '& ul li:before': {
-      content: '"\\2014"',
+      content: '"+"',
       paddingRight: theme.spacing.unit,
     },
     '& p, li': {
       margin: 0,
       padding: 0,
+    },
+    '& li': {
+      marginRight: theme.spacing.unit,
     },
   },
 });

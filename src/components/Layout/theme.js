@@ -9,6 +9,8 @@ const rawTheme = {
   palette: {
     background: {
       default: '#0E0827',
+      light: '#9DC7E2',
+      dark: '#969BCC',
     },
     primary: {
       light: '#1F294F',
