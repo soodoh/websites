@@ -95,6 +95,10 @@ const styles = theme => ({
   },
   oddContainer: {
     gridTemplateColumns: '60% 40%',
+
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: 'auto',
+    },
   },
   viewButton: {
     marginTop: theme.spacing.unit * 2,

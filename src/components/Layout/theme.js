@@ -33,9 +33,17 @@ const rawTheme = {
       textTransform: 'uppercase',
       fontSize: '10rem',
       zIndex: -1,
+
+      '@media (max-width: 600px)': {
+        fontSize: '7rem',
+      },
     },
     h2: {
       ...headerText,
+
+      '@media (max-width: 600px)': {
+        fontSize: '3rem',
+      },
     },
     h3: {
       ...headerText,

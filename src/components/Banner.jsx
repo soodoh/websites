@@ -10,7 +10,7 @@ import VerticalBar from './common/VerticalBar';
 
 const Banner = (props) => {
   const {
-    classes, title, jobTitle, tagLine,
+    classes, title, jobTitle, tagLine, contact,
   } = props;
 
   return (
@@ -40,6 +40,12 @@ const Banner = (props) => {
           variant="contained"
           color="secondary"
           className={classes.contactButton}
+          component={({ children, ...others }) => (
+            <a {...others}>
+              {children}
+            </a>
+          )}
+          href={`mailto:${contact}`}
         >
           Contact Me
           <ArrowForward />
@@ -65,6 +71,7 @@ Banner.propTypes = {
   title: PropTypes.string.isRequired,
   jobTitle: PropTypes.string.isRequired,
   tagLine: PropTypes.string.isRequired,
+  contact: PropTypes.string.isRequired,
 };
 
 const styles = theme => ({
@@ -81,7 +88,7 @@ const styles = theme => ({
     paddingLeft: '8vw',
 
     [theme.breakpoints.down('xs')]: {
-      top: '15vh',
+      top: '18vh',
       paddingLeft: theme.spacing.unit * 2,
     },
   },

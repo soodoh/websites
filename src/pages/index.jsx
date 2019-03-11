@@ -27,6 +27,7 @@ const HomeCore = (props) => {
         title={data.title}
         jobTitle={data.jobTitle}
         tagLine={data.tagLine}
+        contact={data.contact}
       />
 
       <Projects />
@@ -76,6 +77,7 @@ export default () => (
           title
           jobTitle
           tagLine
+          contact
           description {
             childMarkdownRemark {
               html
