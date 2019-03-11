@@ -86,11 +86,10 @@ const styles = theme => ({
     padding: `${theme.spacing.unit * 2}px 0`,
     display: 'grid',
     gridTemplateColumns: '40% 60%',
-    gridColumnGap: theme.spacing.unit * 6,
+    width: '100%',
 
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: 'auto',
-      gridColumnGap: 0,
     },
   },
   oddContainer: {
@@ -121,6 +120,7 @@ const styles = theme => ({
   oddDescription: {
     alignItems: 'flex-start',
     gridColumn: 2,
+    gridRow: 1,
   },
   thumbnail: {
     display: 'flex',
@@ -128,6 +128,7 @@ const styles = theme => ({
   },
   oddThumbnail: {
     gridColumn: 1,
+    gridRow: 1,
   },
   markdownContent: {
     ...theme.typography.body1,

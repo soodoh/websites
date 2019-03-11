@@ -47,6 +47,9 @@ const rawTheme = {
     },
     h3: {
       ...headerText,
+      '@media (max-width: 600px)': {
+        fontSize: '2rem',
+      },
     },
     h4: {
       ...headerText,

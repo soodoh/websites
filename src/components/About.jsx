@@ -115,7 +115,7 @@ const styles = theme => ({
 
     [theme.breakpoints.down('sm')]: {
       position: 'relative',
-      top: theme.spacing.unit * 12,
+      top: theme.spacing.unit * 9,
       right: 0,
       width: '100%',
       padding: `0 ${theme.spacing.unit * 6}px`,
