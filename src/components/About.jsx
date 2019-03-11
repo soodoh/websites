@@ -77,7 +77,7 @@ const styles = theme => ({
     },
   },
   grid: {
-    color: theme.palette.secondary.light,
+    color: theme.palette.secondary.main,
     marginTop: theme.spacing.unit * 13,
     display: 'grid',
     gridTemplateColumns: `${theme.spacing.unit * 10}px auto`,

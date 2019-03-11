@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 
@@ -11,14 +12,19 @@ const ProjectContainer = (props) => {
   const { classes, data, isEven } = props;
 
   return (
-    <div className={classes.container}>
+    <div
+      className={classNames({
+        [classes.container]: true,
+        [classes.oddContainer]: !isEven,
+      })}
+    >
       <div
         className={classNames({
           [classes.description]: true,
           [classes.oddDescription]: !isEven,
         })}
       >
-        <Typography variant="h4" color="primary">
+        <Typography variant="h5" color="primary" gutterBottom>
           {data.jobTitle}
         </Typography>
 
@@ -31,7 +37,16 @@ const ProjectContainer = (props) => {
           dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
         />
 
-        <Button variant="contained" className={classes.viewButton}>
+        <Button
+          variant="contained"
+          className={classes.viewButton}
+          component={({ children, ...others }) => (
+            <a {...others}>
+              {children}
+            </a>
+          )}
+          href={data.url}
+        >
           {!isEven && (
             <ArrowBack />
           )}
@@ -48,7 +63,7 @@ const ProjectContainer = (props) => {
           [classes.oddThumbnail]: !isEven,
         })}
       >
-        Thumbnail
+        <ProjectThumbnail data={data} />
       </div>
     </div>
   );
@@ -68,18 +83,22 @@ ProjectContainer.propTypes = {
 
 const styles = theme => ({
   container: {
+    padding: `${theme.spacing.unit * 2}px 0`,
     display: 'grid',
-    gridTemplateColumns: '50% 50%',
+    gridTemplateColumns: '40% 60%',
+    gridColumnGap: theme.spacing.unit * 6,
 
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: 'auto',
       gridColumnGap: 0,
     },
   },
+  oddContainer: {
+    gridTemplateColumns: '60% 40%',
+  },
   viewButton: {
     marginTop: theme.spacing.unit * 2,
     backgroundColor: theme.palette.primary.contrastText,
-
 
     '& svg': {
       margin: `0 ${theme.spacing.unit * 2}px`,
@@ -93,14 +112,11 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
+    zIndex: 2,
   },
   oddDescription: {
-    gridColumn: 2,
     alignItems: 'flex-start',
-
-    [theme.breakpoints.down('xs')]: {
-      gridColumn: 1,
-    },
+    gridColumn: 2,
   },
   thumbnail: {
     display: 'flex',
@@ -108,10 +124,6 @@ const styles = theme => ({
   },
   oddThumbnail: {
     gridColumn: 1,
-
-    [theme.breakpoints.down('xs')]: {
-      gridColumn: 2,
-    },
   },
   markdownContent: {
     ...theme.typography.body1,

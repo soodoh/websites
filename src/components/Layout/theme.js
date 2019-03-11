@@ -19,7 +19,7 @@ const rawTheme = {
       contrastText: '#D7DFC2',
     },
     secondary: {
-      light: '#9DC7E2',
+      light: '#C0D8E8',
       main: '#9DC7E2',
       dark: '#9DC7E2',
       contrastText: '#0E0827',
@@ -45,6 +45,7 @@ const rawTheme = {
     },
     h5: {
       ...headerText,
+      zIndex: 'inherit',
     },
     h6: {
       ...headerText,
