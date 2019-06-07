@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const dotenv = require('dotenv');
 const theme = require('./src/components/Layout/theme');
 
