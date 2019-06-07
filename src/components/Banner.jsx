@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ArrowForward from '../../assets/ArrowForward.svg';
-import Header from './Layout/Header';
 import ContactButtons from './common/ContactButtons';
 import VerticalBar from './common/VerticalBar';
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   titleGroup: {
-    paddingTop: '25vh',
+    paddingTop: '32vh',
     paddingLeft: '10vw',
     flex: 1,
 
@@ -81,8 +80,6 @@ const Banner = (props) => {
 
   return (
     <div className={classes.container}>
-      <Header />
-
       <Typography variant="h1" className={classes.titleBackground}>
         Paul
         <br />

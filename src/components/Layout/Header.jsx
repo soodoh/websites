@@ -8,6 +8,9 @@ const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'row-reverse',
+    position: 'absolute',
+    top: 0,
+    width: '100vw',
   },
   icon: {
     color: theme.palette.primary.contrastText,

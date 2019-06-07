@@ -5,7 +5,8 @@ import Metadata from '../components/common/Metadata';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    padding: theme.spacing(2),
+    marginTop: theme.spacing(4),
+    padding: '25vh',
   },
 }));
 
@@ -20,10 +21,10 @@ const NotFound = () => {
       />
 
       <div className={classes.container}>
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" color="secondary" align="center" gutterBottom>
         404: Page Not Found
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="h6" color="secondary" align="center">
         Please check your URL, or select something from the nav bar
         </Typography>
       </div>

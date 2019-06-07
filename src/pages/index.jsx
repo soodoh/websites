@@ -7,7 +7,6 @@ import Metadata from '../components/common/Metadata';
 import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
-import Footer from '../components/Layout/Footer';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -50,8 +49,6 @@ const Home = (props) => {
         contact={data.contact}
         portrait={data.portrait}
       />
-
-      <Footer />
     </div>
   );
 };
