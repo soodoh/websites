@@ -2,13 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Project from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
 
-const AllProjectsCore = (props) => {
-  const { classes, data } = props;
+const useStyles = makeStyles(theme => ({
+  container: {
+    position: 'relative',
+    backgroundColor: theme.palette.background.light,
+    padding: '0 10vw',
+
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(0, 2),
+    },
+  },
+  projectTitle: {
+    position: 'absolute',
+    top: 0,
+    left: '8vw',
+    color: theme.palette.secondary.light,
+    zIndex: 1,
+
+    [theme.breakpoints.down('xs')]: {
+      left: theme.spacing(2),
+    },
+  },
+  projectsContainer: {
+    paddingTop: theme.spacing(11),
+  },
+}));
+
+const AllProjects = (props) => {
+  const classes = useStyles();
+  const { data } = props;
 
   return (
     <div className={classes.container}>
@@ -37,40 +64,11 @@ const AllProjectsCore = (props) => {
   );
 };
 
-AllProjectsCore.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
+AllProjects.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
 };
-
-const styles = theme => ({
-  container: {
-    position: 'relative',
-    backgroundColor: theme.palette.background.light,
-    padding: '0 10vw',
-
-    [theme.breakpoints.down('xs')]: {
-      padding: `0 ${theme.spacing.unit * 2}px`,
-    },
-  },
-  projectTitle: {
-    position: 'absolute',
-    top: 0,
-    left: '8vw',
-    color: theme.palette.secondary.light,
-    zIndex: 1,
-
-    [theme.breakpoints.down('xs')]: {
-      left: theme.spacing.unit * 2,
-    },
-  },
-  projectsContainer: {
-    paddingTop: theme.spacing.unit * 11,
-  },
-});
-
-const AllProjects = withStyles(styles)(AllProjectsCore);
 
 export default () => (
   <StaticQuery

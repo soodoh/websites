@@ -24,9 +24,9 @@ module.exports = {
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
     'gatsby-plugin-sitemap',
-    // {
-    //   resolve: 'gatsby-plugin-material-ui',
-    // },
+    {
+      resolve: 'gatsby-plugin-material-ui',
+    },
     {
       resolve: 'gatsby-plugin-google-analytics',
       options: {
@@ -62,10 +62,6 @@ module.exports = {
           families: ['Fjalla One', 'Geo'],
         },
       },
-    },
-    {
-      resolve: '@wapps/gatsby-plugin-material-ui',
-      options: { theme },
     },
     {
       resolve: 'gatsby-plugin-manifest',

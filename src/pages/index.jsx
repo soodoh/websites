@@ -2,15 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
 import Footer from '../components/Layout/Footer';
 
-const HomeCore = (props) => {
-  const { classes, data } = props;
+const useStyles = makeStyles(theme => ({
+  container: {
+    position: 'relative',
+    width: '100vw',
+    overflowX: 'hidden',
+  },
+  background: {
+    backgroundColor: theme.palette.background.default,
+  },
+}));
+
+const Home = (props) => {
+  const classes = useStyles();
+  const { data } = props;
 
   return (
     <div className={classes.container}>
@@ -44,8 +56,7 @@ const HomeCore = (props) => {
   );
 };
 
-HomeCore.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
+Home.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
@@ -55,19 +66,6 @@ HomeCore.propTypes = {
     portrait: PropTypes.object.isRequired,
   }).isRequired,
 };
-
-const styles = theme => ({
-  container: {
-    position: 'relative',
-    width: '100vw',
-    overflowX: 'hidden',
-  },
-  background: {
-    backgroundColor: theme.palette.background.default,
-  },
-});
-
-const Home = withStyles(styles)(HomeCore);
 
 export default () => (
   <StaticQuery

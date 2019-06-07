@@ -1,15 +1,95 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: theme.spacing(2, 0),
+    display: 'grid',
+    gridTemplateColumns: '40% 60%',
+    width: '100%',
+
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: 'auto',
+    },
+  },
+  oddContainer: {
+    gridTemplateColumns: '60% 40%',
+
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: 'auto',
+    },
+  },
+  viewButton: {
+    marginTop: theme.spacing(2),
+    backgroundColor: theme.palette.primary.contrastText,
+
+    '& svg': {
+      margin: theme.spacing(0, 2),
+    },
+    '& line, path': {
+      stroke: theme.palette.primary.main,
+      fill: theme.palette.primary.main,
+    },
+  },
+  description: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    zIndex: 2,
+  },
+  oddDescription: {
+    alignItems: 'flex-start',
+    gridColumn: 2,
+    gridRow: 1,
+  },
+  thumbnail: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  oddThumbnail: {
+    gridColumn: 1,
+    gridRow: 1,
+  },
+  markdownContent: {
+    ...theme.typography.body1,
+    color: theme.palette.primary.main,
+    margin: 0,
+    paddingBottom: 0,
+
+    '& h1, h2, h3': {
+      ...theme.typography.h5,
+      marginBottom: 0,
+      color: theme.palette.primary.contrastText,
+    },
+    '& ul': {
+      margin: 0,
+      padding: 0,
+      listStyleType: 'none',
+    },
+    '& li': {
+      padding: 0,
+      margin: theme.spacing(2, 0),
+      lineHeight: '1rem',
+      textAlign: 'right',
+    },
+  },
+  oddMarkdown: {
+    '& li': {
+      textAlign: 'left',
+    },
+  },
+}));
+
 const ProjectContainer = (props) => {
-  const { classes, data, isEven } = props;
+  const classes = useStyles();
+  const { data, isEven } = props;
 
   return (
     <div
@@ -70,7 +150,6 @@ const ProjectContainer = (props) => {
 };
 
 ProjectContainer.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({
     coverImage: PropTypes.object.isRequired,
     description: PropTypes.object.isRequired,
@@ -81,83 +160,4 @@ ProjectContainer.propTypes = {
   isEven: PropTypes.bool.isRequired,
 };
 
-const styles = theme => ({
-  container: {
-    padding: `${theme.spacing.unit * 2}px 0`,
-    display: 'grid',
-    gridTemplateColumns: '40% 60%',
-    width: '100%',
-
-    [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: 'auto',
-    },
-  },
-  oddContainer: {
-    gridTemplateColumns: '60% 40%',
-
-    [theme.breakpoints.down('xs')]: {
-      gridTemplateColumns: 'auto',
-    },
-  },
-  viewButton: {
-    marginTop: theme.spacing.unit * 2,
-    backgroundColor: theme.palette.primary.contrastText,
-
-    '& svg': {
-      margin: `0 ${theme.spacing.unit * 2}px`,
-    },
-    '& line, path': {
-      stroke: theme.palette.primary.main,
-      fill: theme.palette.primary.main,
-    },
-  },
-  description: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    zIndex: 2,
-  },
-  oddDescription: {
-    alignItems: 'flex-start',
-    gridColumn: 2,
-    gridRow: 1,
-  },
-  thumbnail: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  oddThumbnail: {
-    gridColumn: 1,
-    gridRow: 1,
-  },
-  markdownContent: {
-    ...theme.typography.body1,
-    color: theme.palette.primary.main,
-    margin: 0,
-    paddingBottom: 0,
-
-    '& h1, h2, h3': {
-      ...theme.typography.h5,
-      marginBottom: 0,
-      color: theme.palette.primary.contrastText,
-    },
-    '& ul': {
-      margin: 0,
-      padding: 0,
-      listStyleType: 'none',
-    },
-    '& li': {
-      padding: 0,
-      margin: `${theme.spacing.unit * 2}px 0`,
-      lineHeight: '1rem',
-      textAlign: 'right',
-    },
-  },
-  oddMarkdown: {
-    '& li': {
-      textAlign: 'left',
-    },
-  },
-});
-
-export default withStyles(styles)(ProjectContainer);
+export default ProjectContainer;
