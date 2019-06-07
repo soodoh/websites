@@ -120,11 +120,7 @@ const ProjectContainer = (props) => {
         <Button
           variant="contained"
           className={classes.viewButton}
-          component={({ children, ...others }) => (
-            <a {...others}>
-              {children}
-            </a>
-          )}
+          component="a"
           href={data.url}
         >
           {!isEven && (

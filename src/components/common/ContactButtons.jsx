@@ -32,9 +32,7 @@ const ContactButtons = (props) => {
           size="small"
           color="secondary"
           className={classes.button}
-          component={({ children, ...others }) => (
-            <a {...others}>{children}</a>
-          )}
+          component="a"
           href={contactInfo.url}
         >
           {contactInfo.label}

@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Project from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
+import GradientBackground from './GradientBackground';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   },
   projectTitle: {
     position: 'absolute',
-    top: 0,
+    top: theme.spacing(4),
     left: '8vw',
     color: theme.palette.secondary.light,
     zIndex: 1,
@@ -29,7 +30,15 @@ const useStyles = makeStyles(theme => ({
     },
   },
   projectsContainer: {
-    paddingTop: theme.spacing(11),
+    paddingTop: theme.spacing(15),
+  },
+  topGradient: {
+    height: theme.spacing(16),
+    background: `linear-gradient(to bottom, ${theme.palette.background.default}, ${theme.palette.background.light})`,
+  },
+  bottomGradient: {
+    height: theme.spacing(24),
+    background: `linear-gradient(to bottom, ${theme.palette.background.dark}, ${theme.palette.background.default})`,
   },
 }));
 
@@ -38,29 +47,37 @@ const AllProjects = (props) => {
   const { data } = props;
 
   return (
-    <div className={classes.container}>
-      <Typography
-        variant="h1"
-        className={classes.projectTitle}
-      >
+    <React.Fragment>
+      <div className={classes.topGradient} />
+
+      <div className={classes.container}>
+        <GradientBackground />
+
+        <Typography
+          variant="h1"
+          className={classes.projectTitle}
+        >
         Work
-      </Typography>
+        </Typography>
 
-      <div className={classes.projectsContainer}>
-        {data.map((project, index) => (
-          <React.Fragment key={uid(project)}>
-            <Project
-              data={project}
-              isEven={index % 2 === 0}
-            />
+        <div className={classes.projectsContainer}>
+          {data.map((project, index) => (
+            <React.Fragment key={uid(project)}>
+              <Project
+                data={project}
+                isEven={index % 2 === 0}
+              />
 
-            {index < data.length - 1 && (
+              {index < data.length - 1 && (
               <VerticalBar />
-            )}
-          </React.Fragment>
-        ))}
+              )}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
-    </div>
+
+      <div className={classes.bottomGradient} />
+    </React.Fragment>
   );
 };
 

@@ -106,11 +106,7 @@ const Banner = (props) => {
           variant="contained"
           color="secondary"
           className={classes.contactButton}
-          component={({ children, ...others }) => (
-            <a {...others}>
-              {children}
-            </a>
-          )}
+          component="a"
           href={`mailto:${contact}`}
         >
           Contact Me
