@@ -7,7 +7,12 @@ dotenv.config();
 const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN;
 
+const siteUrl = 'https://pauldiloreto.com';
+
 module.exports = {
+  siteMetadata: {
+    siteUrl,
+  },
   plugins: [
     'gatsby-plugin-eslint',
     'gatsby-plugin-layout',
@@ -18,6 +23,26 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
+    'gatsby-plugin-sitemap',
+    // {
+    //   resolve: 'gatsby-plugin-material-ui',
+    // },
+    {
+      resolve: 'gatsby-plugin-google-analytics',
+      options: {
+        trackingId: 'UA-141361857-3',
+        head: true,
+        anonymize: true,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: siteUrl,
+        sitemap: `${siteUrl}/sitemap.xml`,
+        policy: [{ userAgent: '*', allow: '/' }],
+      },
+    },
     {
       resolve: 'gatsby-plugin-react-svg',
       options: {
