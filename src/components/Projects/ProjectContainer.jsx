@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme => ({
     gridRow: 1,
     [theme.breakpoints.down('xs')]: {
       gridRow: 2,
+      gridColumn: 1,
     },
   },
   thumbnail: {

@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import { navigate } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/icons/Menu';
 import RefContext from '../common/RefContext';
+import NavDrawer from './NavDrawer';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -16,9 +15,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     zIndex: 5,
   },
-  icon: {
-    color: theme.palette.primary.contrastText,
-  },
   navLink: {
     fontSize: '1rem',
     padding: theme.spacing(0, 6),
@@ -27,13 +23,9 @@ const useStyles = makeStyles(theme => ({
     border: 'none',
     fontFamily: 'inherit',
     cursor: 'pointer',
+    textTransform: 'lowercase',
 
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
-    },
-  },
-  mobileMenu: {
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
   },
@@ -50,34 +42,26 @@ const handleScroll = (ref) => {
 const Header = () => {
   const classes = useStyles();
   const { aboutRef, workRef, contactRef } = useContext(RefContext);
+  const links = [
+    { label: 'Work', onClick: () => handleScroll(workRef) },
+    { label: 'About', onClick: () => handleScroll(aboutRef) },
+    { label: 'Contact', onClick: () => handleScroll(contactRef) },
+  ];
 
   return (
     <Toolbar className={classes.container}>
-      <button
-        type="button"
-        onClick={() => handleScroll(workRef)}
-        className={classes.navLink}
-      >
-        Work
-      </button>
-      <button
-        type="button"
-        onClick={() => handleScroll(aboutRef)}
-        className={classes.navLink}
-      >
-        About
-      </button>
-      <button
-        type="button"
-        onClick={() => handleScroll(contactRef)}
-        className={classes.navLink}
-      >
-        Contact
-      </button>
+      {links.map(({ label, onClick }) => (
+        <button
+          key={`nav-${label}`}
+          type="button"
+          onClick={onClick}
+          className={classes.navLink}
+        >
+          {label}
+        </button>
+      ))}
 
-      <IconButton color="secondary" className={classes.mobileMenu}>
-        <Menu className={classes.icon} />
-      </IconButton>
+      <NavDrawer links={links} />
     </Toolbar>
   );
 };

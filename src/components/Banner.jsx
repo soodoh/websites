@@ -55,6 +55,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
     paddingRight: theme.spacing(6),
+    zIndex: 6,
 
     [theme.breakpoints.down('xs')]: {
       position: 'absolute',

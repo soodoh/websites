@@ -59,8 +59,8 @@ const Footer = (props) => {
       <ContactButtons />
 
       <div className={classes.contactMe}>
-        <Typography variant="h6" color="secondary">
-          FEEL FREE TO CONTACT ME AT
+        <Typography variant="h6" color="secondary" style={{ textTransform: 'uppercase' }}>
+          Feel free to contact me at
         </Typography>
 
         <Typography variant="h6" className={classes.contact}>
