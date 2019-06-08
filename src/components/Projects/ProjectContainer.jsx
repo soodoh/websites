@@ -48,10 +48,16 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
     gridColumn: 2,
     gridRow: 1,
+    [theme.breakpoints.down('xs')]: {
+      gridRow: 2,
+    },
   },
   thumbnail: {
     display: 'flex',
     justifyContent: 'center',
+    [theme.breakpoints.down('xs')]: {
+      gridRow: 1,
+    },
   },
   oddThumbnail: {
     gridColumn: 1,
