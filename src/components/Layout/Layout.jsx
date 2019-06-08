@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
 import Header from './Header';
 import Footer from './Footer';
+import RefContext from '../common/RefContext';
 
 const useStyles = makeStyles({
   container: {
@@ -20,6 +21,9 @@ const useStyles = makeStyles({
 });
 
 const Layout = ({ children }) => {
+  const workRef = React.createRef();
+  const aboutRef = React.createRef();
+  const contactRef = React.createRef();
   const classes = useStyles();
 
   return (
@@ -29,13 +33,19 @@ const Layout = ({ children }) => {
         <html lang="en" />
       </Helmet>
 
-      <div className={classes.container}>
-        <Header />
-        <main className={classes.content}>
-          {children}
-        </main>
-        <Footer />
-      </div>
+      <RefContext.Provider
+        value={{
+          workRef, aboutRef, contactRef,
+        }}
+      >
+        <div className={classes.container}>
+          <Header />
+          <main className={classes.content}>
+            {children}
+          </main>
+          <Footer />
+        </div>
+      </RefContext.Provider>
     </ThemeProvider>
   );
 };

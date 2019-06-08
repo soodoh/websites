@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import RefContext from './common/RefContext';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -114,10 +115,11 @@ const About = (props) => {
   const {
     aboutContent, skillsContent, portrait,
   } = props;
+  const { aboutRef } = useContext(RefContext);
 
   return (
     <div className={classes.container}>
-      <Typography variant="h1" align="center" className={classes.title}>
+      <Typography variant="h1" align="center" className={classes.title} ref={aboutRef}>
         About Me
       </Typography>
 

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import ContactButtons from '../common/ContactButtons';
 import ArrowForward from '../../../assets/ArrowForward.svg';
+import RefContext from '../common/RefContext';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -51,9 +52,10 @@ const useStyles = makeStyles(theme => ({
 const Footer = (props) => {
   const classes = useStyles();
   const { contact } = props;
+  const { contactRef } = useContext(RefContext);
 
   return (
-    <footer className={classes.container}>
+    <footer className={classes.container} ref={contactRef}>
       <ContactButtons />
 
       <div className={classes.contactMe}>

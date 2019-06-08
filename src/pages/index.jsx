@@ -11,7 +11,7 @@ import About from '../components/About';
 const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
-    width: '100vw',
+    width: '100%',
     overflowX: 'hidden',
   },
   background: {

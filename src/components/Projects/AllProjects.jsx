@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Project from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
+import RefContext from '../common/RefContext';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -45,6 +46,7 @@ const useStyles = makeStyles(theme => ({
 const AllProjects = (props) => {
   const classes = useStyles();
   const { data } = props;
+  const { workRef } = useContext(RefContext);
 
   return (
     <React.Fragment>
@@ -56,6 +58,7 @@ const AllProjects = (props) => {
         <Typography
           variant="h1"
           className={classes.projectTitle}
+          ref={workRef}
         >
         Work
         </Typography>
