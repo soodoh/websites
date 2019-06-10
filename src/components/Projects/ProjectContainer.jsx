@@ -30,12 +30,20 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(2),
     backgroundColor: theme.palette.primary.contrastText,
 
+    [theme.breakpoints.down('xs')]: {
+      margin: `${theme.spacing(2)}px auto`,
+    },
     '& svg': {
       margin: theme.spacing(0, 2),
     },
     '& line, path': {
       stroke: theme.palette.primary.main,
       fill: theme.palette.primary.main,
+    },
+  },
+  arrow: {
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
     },
   },
   description: {
@@ -131,11 +139,11 @@ const ProjectContainer = (props) => {
           href={data.url}
         >
           {!isEven && (
-            <ArrowBack />
+            <ArrowBack className={classes.arrow} />
           )}
           View Site
           {isEven && (
-            <ArrowForward />
+            <ArrowForward className={classes.arrow} />
           )}
         </Button>
       </div>
