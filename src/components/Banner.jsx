@@ -55,7 +55,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     justifyContent: 'flex-end',
     paddingRight: theme.spacing(6),
-    zIndex: 6,
 
     [theme.breakpoints.down('xs')]: {
       position: 'absolute',
@@ -63,6 +62,7 @@ const useStyles = makeStyles(theme => ({
       left: 0,
       paddingRight: 0,
       paddingLeft: theme.spacing(3),
+      zIndex: theme.zIndex.appBar + 1,
     },
   },
   viewMore: {

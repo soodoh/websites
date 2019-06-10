@@ -1,19 +1,20 @@
 import React, { useContext } from 'react';
 import { navigate } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
+import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import Slide from '@material-ui/core/Slide';
+import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import RefContext from '../common/RefContext';
 import NavDrawer from './NavDrawer';
 
 const useStyles = makeStyles(theme => ({
-  container: {
+  appBar: {
+    boxShadow: 'none',
+  },
+  toolbar: {
     display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'flex-end',
-    position: 'absolute',
-    top: 0,
-    width: '100%',
-    zIndex: 5,
   },
   navLink: {
     fontSize: '1rem',
@@ -47,22 +48,27 @@ const Header = () => {
     { label: 'About', onClick: () => handleScroll(aboutRef) },
     { label: 'Contact', onClick: () => handleScroll(contactRef) },
   ];
+  const trigger = useScrollTrigger();
 
   return (
-    <Toolbar className={classes.container}>
-      {links.map(({ label, onClick }) => (
-        <button
-          key={`nav-${label}`}
-          type="button"
-          onClick={onClick}
-          className={classes.navLink}
-        >
-          {label}
-        </button>
-      ))}
+    <Slide direction="down" appear={false} in={!trigger}>
+      <AppBar position="fixed" color="primary" className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
+          {links.map(({ label, onClick }) => (
+            <button
+              key={`nav-${label}`}
+              type="button"
+              onClick={onClick}
+              className={classes.navLink}
+            >
+              {label}
+            </button>
+          ))}
 
-      <NavDrawer links={links} />
-    </Toolbar>
+          <NavDrawer links={links} />
+        </Toolbar>
+      </AppBar>
+    </Slide>
   );
 };
 
