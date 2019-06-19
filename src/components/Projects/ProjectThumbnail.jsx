@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import Fade from 'react-reveal/Fade';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -39,18 +40,20 @@ const ProjectThumbnail = (props) => {
 
   return (
     <div className={classes.container}>
-      <div className={classes.titleContainer}>
-        <Typography
-          variant="h3"
-          color="primary"
-          align="center"
-          className={classes.title}
-        >
-          {data.title}
-        </Typography>
-      </div>
+      <Fade left opposite>
+        <div className={classes.titleContainer}>
+          <Typography
+            variant="h3"
+            color="primary"
+            align="center"
+            className={classes.title}
+          >
+            {data.title}
+          </Typography>
+        </div>
 
-      <Img className={classes.thumbnail} fluid={data.coverImage.fluid} />
+        <Img className={classes.thumbnail} fluid={data.coverImage.fluid} />
+      </Fade>
     </div>
   );
 };

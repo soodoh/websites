@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Fade from 'react-reveal/Fade';
 import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
@@ -119,33 +120,35 @@ const ProjectContainer = (props) => {
           [classes.oddDescription]: !isEven,
         })}
       >
-        <Typography variant="h5" color="primary" gutterBottom>
-          {data.jobTitle}
-        </Typography>
+        <Fade right cascade opposite delay={500}>
+          <Typography variant="h5" color="primary" gutterBottom>
+            {data.jobTitle}
+          </Typography>
 
-        <div
-          className={classNames({
-            [classes.markdownContent]: true,
-            [classes.oddMarkdown]: !isEven,
-          })}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
-        />
+          <div
+            className={classNames({
+              [classes.markdownContent]: true,
+              [classes.oddMarkdown]: !isEven,
+            })}
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
+          />
 
-        <Button
-          variant="contained"
-          className={classes.viewButton}
-          component="a"
-          href={data.url}
-        >
-          {!isEven && (
+          <Button
+            variant="contained"
+            className={classes.viewButton}
+            component="a"
+            href={data.url}
+          >
+            {!isEven && (
             <ArrowBack className={classes.arrow} />
-          )}
-          View Site
-          {isEven && (
+            )}
+              View Site
+            {isEven && (
             <ArrowForward className={classes.arrow} />
-          )}
-        </Button>
+            )}
+          </Button>
+        </Fade>
       </div>
 
       <div

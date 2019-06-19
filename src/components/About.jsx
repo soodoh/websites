@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { Parallax } from 'react-scroll-parallax';
+import Fade from 'react-reveal/Fade';
 import RefContext from './common/RefContext';
 
 const useStyles = makeStyles(theme => ({
@@ -118,6 +118,7 @@ const About = (props) => {
     aboutContent, skillsContent, portrait,
   } = props;
   const { aboutRef } = useContext(RefContext);
+  const delayInterval = 500;
 
   return (
     <div className={classes.container}>
@@ -128,27 +129,42 @@ const About = (props) => {
       </Parallax>
 
       <Parallax className={classes.portrait} y={[20, -20]}>
-        <Img fluid={portrait.fluid} className={classes.portraitFilter} />
+        <Fade bottom opposite>
+          <Img fluid={portrait.fluid} className={classes.portraitFilter} />
+        </Fade>
       </Parallax>
 
       <div className={classes.grid}>
-        <Typography variant="h5" color="inherit">
-          About
-        </Typography>
-        <div
-          className={classNames(classes.markdownContent, classes.about)}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: aboutContent }}
-        />
+        <Fade left opposite>
+          <Typography variant="h5" color="inherit">
+            About
+          </Typography>
+        </Fade>
 
-        <Typography variant="h5" color="inherit">
+        <div className={classes.about}>
+          <Fade right opposite delay={delayInterval}>
+            <div
+              className={classes.markdownContent}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: aboutContent }}
+            />
+          </Fade>
+        </div>
+
+        <Fade left opposite delay={delayInterval * 2}>
+          <Typography variant="h5" color="inherit">
           Skills
-        </Typography>
-        <div
-          className={classes.markdownContent}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: skillsContent }}
-        />
+          </Typography>
+        </Fade>
+
+        <div className={classes.markdownContent}>
+          <Fade left opposite delay={delayInterval * 3}>
+            <div
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: skillsContent }}
+            />
+          </Fade>
+        </div>
       </div>
     </div>
   );

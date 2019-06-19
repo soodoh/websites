@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import Fade from 'react-reveal/Fade';
 import ContactButtons from '../common/ContactButtons';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 import RefContext from '../common/RefContext';
@@ -59,14 +60,16 @@ const Footer = (props) => {
       <ContactButtons />
 
       <div className={classes.contactMe}>
-        <Typography variant="h6" color="secondary" style={{ textTransform: 'uppercase' }}>
-          Feel free to contact me at
-        </Typography>
+        <Fade right opposite delay={500}>
+          <Typography variant="h6" color="secondary" style={{ textTransform: 'uppercase' }}>
+            Feel free to contact me at
+          </Typography>
 
-        <Typography variant="h6" className={classes.contact}>
-          <ArrowForward className={classes.arrow} />
-          {contact}
-        </Typography>
+          <Typography variant="h6" className={classes.contact}>
+            <ArrowForward className={classes.arrow} />
+            {contact}
+          </Typography>
+        </Fade>
       </div>
     </footer>
   );

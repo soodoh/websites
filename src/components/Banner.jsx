@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Parallax } from 'react-scroll-parallax';
+import Fade from 'react-reveal/Fade';
 import ArrowForward from '../../assets/ArrowForward.svg';
 import ContactButtons from './common/ContactButtons';
 import VerticalBar from './common/VerticalBar';
@@ -80,40 +81,45 @@ const Banner = (props) => {
   const {
     title, jobTitle, tagLine, contact,
   } = props;
+  const delayInterval = 500;
 
   return (
     <div className={classes.container}>
       <Parallax className={classes.titleBackground} y={[-60, 60]}>
-        <Typography variant="h1">
-          Paul
-          <br />
-          DiLoreto
-        </Typography>
+        <Fade bottom opposite delay={delayInterval}>
+          <Typography variant="h1">
+            Paul
+            <br />
+            DiLoreto
+          </Typography>
+        </Fade>
       </Parallax>
 
       <Parallax className={classes.titleGroup} y={[5, -5]} x={[-10, 10]}>
-        <Typography variant="h2" color="inherit">
-          {title}
-        </Typography>
+        <Fade top opposite>
+          <Typography variant="h2" color="inherit">
+            {title}
+          </Typography>
 
-        <Typography variant="subtitle1" color="inherit" className={classes.jobTitle}>
-          {jobTitle}
-        </Typography>
+          <Typography variant="subtitle1" color="inherit" className={classes.jobTitle}>
+            {jobTitle}
+          </Typography>
 
-        <Typography variant="subtitle1" color="inherit" className={classes.tagLine}>
-          {tagLine}
-        </Typography>
+          <Typography variant="subtitle1" color="inherit" className={classes.tagLine}>
+            {tagLine}
+          </Typography>
 
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.contactButton}
-          component="a"
-          href={`mailto:${contact}`}
-        >
-          Contact Me
-          <ArrowForward />
-        </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            className={classes.contactButton}
+            component="a"
+            href={`mailto:${contact}`}
+          >
+            Contact Me
+            <ArrowForward />
+          </Button>
+        </Fade>
       </Parallax>
 
       <div className={classes.buttonGroup}>
@@ -121,10 +127,12 @@ const Banner = (props) => {
       </div>
 
       <div className={classes.viewMore}>
-        <Typography variant="subtitle1" color="inherit">
-          View More
-        </Typography>
-        <VerticalBar />
+        <Fade bottom opposite delay={delayInterval * 3}>
+          <Typography variant="subtitle1" color="inherit">
+            View More
+          </Typography>
+          <VerticalBar />
+        </Fade>
       </div>
     </div>
   );
