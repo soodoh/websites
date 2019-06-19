@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import { Parallax } from 'react-scroll-parallax';
 import RefContext from './common/RefContext';
 
 const useStyles = makeStyles(theme => ({
@@ -24,6 +25,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.light,
     whiteSpace: 'nowrap',
     paddingLeft: '10vw',
+    zIndex: -1,
 
     [theme.breakpoints.down('sm')]: {
       left: 0,
@@ -119,13 +121,15 @@ const About = (props) => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h1" align="center" className={classes.title} ref={aboutRef}>
-        About Me
-      </Typography>
+      <Parallax className={classes.title} y={[-40, 60]} x={[5, -5]}>
+        <Typography variant="h1" align="center" ref={aboutRef}>
+          About Me
+        </Typography>
+      </Parallax>
 
-      <div className={classes.portrait}>
+      <Parallax className={classes.portrait} y={[20, -20]}>
         <Img fluid={portrait.fluid} className={classes.portraitFilter} />
-      </div>
+      </Parallax>
 
       <div className={classes.grid}>
         <Typography variant="h5" color="inherit">

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { Parallax } from 'react-scroll-parallax';
 import ArrowForward from '../../assets/ArrowForward.svg';
 import ContactButtons from './common/ContactButtons';
 import VerticalBar from './common/VerticalBar';
@@ -19,6 +20,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: '25vh',
     paddingLeft: '8vw',
+    zIndex: -1,
 
     [theme.breakpoints.down('xs')]: {
       top: '18vh',
@@ -81,13 +83,15 @@ const Banner = (props) => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="h1" className={classes.titleBackground}>
-        Paul
-        <br />
-        DiLoreto
-      </Typography>
+      <Parallax className={classes.titleBackground} y={[-60, 60]}>
+        <Typography variant="h1">
+          Paul
+          <br />
+          DiLoreto
+        </Typography>
+      </Parallax>
 
-      <div className={classes.titleGroup}>
+      <Parallax className={classes.titleGroup} y={[5, -5]} x={[-10, 10]}>
         <Typography variant="h2" color="inherit">
           {title}
         </Typography>
@@ -110,7 +114,7 @@ const Banner = (props) => {
           Contact Me
           <ArrowForward />
         </Button>
-      </div>
+      </Parallax>
 
       <div className={classes.buttonGroup}>
         <ContactButtons />

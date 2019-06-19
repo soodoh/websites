@@ -4,6 +4,7 @@ import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import { Parallax } from 'react-scroll-parallax';
 import Project from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
@@ -55,13 +56,14 @@ const AllProjects = (props) => {
       <div className={classes.container}>
         <GradientBackground />
 
-        <Typography
-          variant="h1"
-          className={classes.projectTitle}
-          ref={workRef}
-        >
-        Work
-        </Typography>
+        <Parallax className={classes.projectTitle} y={[-30, 150]} x={[-10, 10]}>
+          <Typography
+            variant="h1"
+            ref={workRef}
+          >
+            Work
+          </Typography>
+        </Parallax>
 
         <div className={classes.projectsContainer}>
           {data.map((project, index) => (

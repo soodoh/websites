@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { ParallaxProvider } from 'react-scroll-parallax';
 import theme from './theme';
 import Header from './Header';
 import Footer from './Footer';
@@ -40,9 +41,13 @@ const Layout = ({ children }) => {
       >
         <div className={classes.container}>
           <Header />
+
           <main className={classes.content}>
-            {children}
+            <ParallaxProvider>
+              {children}
+            </ParallaxProvider>
           </main>
+
           <Footer />
         </div>
       </RefContext.Provider>

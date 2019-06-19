@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   titleContainer: {
     position: 'absolute',
     top: theme.spacing(-3),
-    zIndex: 2,
+    zIndex: 3,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
@@ -22,9 +22,10 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.primary.contrastText,
     padding: theme.spacing(2),
   },
-  thumbnailContainer: {
+  thumbnail: {
     padding: theme.spacing(2),
     opacity: '0.5',
+    zIndex: 2,
 
     [theme.breakpoints.down('xs')]: {
       padding: 0,
@@ -49,9 +50,7 @@ const ProjectThumbnail = (props) => {
         </Typography>
       </div>
 
-      <div className={classes.thumbnailContainer}>
-        <Img fluid={data.coverImage.fluid} />
-      </div>
+      <Img className={classes.thumbnail} fluid={data.coverImage.fluid} />
     </div>
   );
 };
