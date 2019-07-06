@@ -151,14 +151,14 @@ const About = (props) => {
           </Fade>
         </div>
 
-        <Fade left opposite delay={delayInterval * 2}>
+        <Fade left opposite delay={delayInterval * 1.5}>
           <Typography variant="h5" color="inherit">
           Skills
           </Typography>
         </Fade>
 
         <div className={classes.markdownContent}>
-          <Fade left opposite delay={delayInterval * 3}>
+          <Fade left opposite delay={delayInterval * 2}>
             <div
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: skillsContent }}
