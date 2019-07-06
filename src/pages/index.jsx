@@ -56,6 +56,7 @@ const Home = (props) => {
 Home.propTypes = {
   data: PropTypes.shape({
     title: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
     jobTitle: PropTypes.string.isRequired,
     tagLine: PropTypes.string.isRequired,
     description: PropTypes.object.isRequired,
