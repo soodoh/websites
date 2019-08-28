@@ -9,7 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   menuButton: {
     [theme.breakpoints.up('sm')]: {
       display: 'none',
@@ -42,7 +42,7 @@ const NavDrawer = (props) => {
   const { links } = props;
 
   return (
-    <React.Fragment>
+    <>
       <IconButton
         color="secondary"
         className={classes.menuButton}
@@ -85,7 +85,7 @@ const NavDrawer = (props) => {
           ))}
         </List>
       </Drawer>
-    </React.Fragment>
+    </>
   );
 };
 

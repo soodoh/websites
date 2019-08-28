@@ -8,7 +8,7 @@ import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 import RefContext from '../common/RefContext';
 import NavDrawer from './NavDrawer';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     boxShadow: 'none',
   },

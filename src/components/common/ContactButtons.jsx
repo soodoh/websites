@@ -5,7 +5,7 @@ import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Fab from '@material-ui/core/Fab';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -26,7 +26,7 @@ const ContactButtons = (props) => {
 
   return (
     <div className={classes.container}>
-      {data.map(contactInfo => (
+      {data.map((contactInfo) => (
         <Fab
           key={uid(contactInfo)}
           size="small"
@@ -65,8 +65,8 @@ export default () => (
         }
       }
     `}
-    render={data => (
-      <ContactButtons data={data.allContentfulContactInfo.edges.map(item => item.node)} />
+    render={(data) => (
+      <ContactButtons data={data.allContentfulContactInfo.edges.map((item) => item.node)} />
     )}
   />
 );

@@ -9,7 +9,7 @@ import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(2, 0),
     display: 'grid',

@@ -9,7 +9,7 @@ import ArrowForward from '../../assets/ArrowForward.svg';
 import ContactButtons from './common/ContactButtons';
 import VerticalBar from './common/VerticalBar';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     minHeight: '100vh',
     display: 'flex',

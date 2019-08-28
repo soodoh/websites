@@ -8,7 +8,7 @@ import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     width: '100%',
@@ -92,7 +92,7 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <Home data={data.contentfulAbout} />
     )}
   />

@@ -7,7 +7,7 @@ import { Parallax } from 'react-scroll-parallax';
 import Fade from 'react-reveal/Fade';
 import RefContext from './common/RefContext';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     paddingTop: theme.spacing(6),

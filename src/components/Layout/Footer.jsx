@@ -8,7 +8,7 @@ import ContactButtons from '../common/ContactButtons';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 import RefContext from '../common/RefContext';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -88,7 +88,7 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <Footer contact={data.contentfulAbout.contact} />
     )}
   />

@@ -10,7 +10,7 @@ import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
 import RefContext from '../common/RefContext';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     backgroundColor: theme.palette.background.light,
@@ -50,7 +50,7 @@ const AllProjects = (props) => {
   const { workRef } = useContext(RefContext);
 
   return (
-    <React.Fragment>
+    <>
       <div className={classes.topGradient} />
 
       <div className={classes.container}>
@@ -82,7 +82,7 @@ const AllProjects = (props) => {
       </div>
 
       <div className={classes.bottomGradient} />
-    </React.Fragment>
+    </>
   );
 };
 
@@ -117,8 +117,8 @@ export default () => (
         }
       }
     `}
-    render={data => (
-      <AllProjects data={data.allContentfulProjects.edges.map(item => item.node)} />
+    render={(data) => (
+      <AllProjects data={data.allContentfulProjects.edges.map((item) => item.node)} />
     )}
   />
 );
