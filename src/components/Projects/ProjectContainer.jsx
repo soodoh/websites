@@ -143,7 +143,7 @@ const ProjectContainer = (props) => {
             {!isEven && (
             <ArrowBack className={classes.arrow} />
             )}
-              View Site
+            View Site
             {isEven && (
             <ArrowForward className={classes.arrow} />
             )}

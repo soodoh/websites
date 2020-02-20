@@ -153,7 +153,7 @@ const About = (props) => {
 
         <Fade left opposite delay={delayInterval * 1.5}>
           <Typography variant="h5" color="inherit">
-          Skills
+            Skills
           </Typography>
         </Fade>
 
