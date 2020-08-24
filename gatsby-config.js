@@ -23,9 +23,7 @@ module.exports = {
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
     'gatsby-plugin-sitemap',
-    {
-      resolve: 'gatsby-plugin-material-ui',
-    },
+    'gatsby-plugin-material-ui',
     {
       resolve: 'gatsby-plugin-google-analytics',
       options: {
