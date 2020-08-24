@@ -121,7 +121,7 @@ const About = props => {
   return (
     <div className={classes.container}>
       <Parallax className={classes.title} y={[-40, 60]} x={[5, -5]}>
-        <Typography variant='h1' align='center' ref={aboutRef}>
+        <Typography variant="h1" align="center" ref={aboutRef}>
           About Me
         </Typography>
       </Parallax>
@@ -134,7 +134,7 @@ const About = props => {
 
       <div className={classes.grid}>
         <Fade left opposite>
-          <Typography variant='h5' color='inherit'>
+          <Typography variant="h5" color="inherit">
             About
           </Typography>
         </Fade>
@@ -150,7 +150,7 @@ const About = props => {
         </div>
 
         <Fade left opposite delay={delayInterval * 1.5}>
-          <Typography variant='h5' color='inherit'>
+          <Typography variant="h5" color="inherit">
             Skills
           </Typography>
         </Fade>

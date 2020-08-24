@@ -121,7 +121,7 @@ const ProjectContainer = props => {
         })}
       >
         <Fade right cascade opposite delay={500}>
-          <Typography variant='h5' color='primary' gutterBottom>
+          <Typography variant="h5" color="primary" gutterBottom>
             {data.jobTitle}
           </Typography>
 
@@ -134,7 +134,7 @@ const ProjectContainer = props => {
             dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
           />
 
-          <Button variant='contained' className={classes.viewButton} component='a' href={data.url}>
+          <Button variant="contained" className={classes.viewButton} component="a" href={data.url}>
             {!isEven && <ArrowBack className={classes.arrow} />}
             View Site
             {isEven && <ArrowForward className={classes.arrow} />}

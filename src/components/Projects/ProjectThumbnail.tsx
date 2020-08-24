@@ -42,7 +42,7 @@ const ProjectThumbnail = props => {
     <div className={classes.container}>
       <Fade left opposite>
         <div className={classes.titleContainer}>
-          <Typography variant='h3' color='primary' align='center' className={classes.title}>
+          <Typography variant="h3" color="primary" align="center" className={classes.title}>
             {data.title}
           </Typography>
         </div>

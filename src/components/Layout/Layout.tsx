@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
     <ThemeProvider theme={createMuiTheme(theme)}>
       <CssBaseline />
       <Helmet>
-        <html lang='en' />
+        <html lang="en" />
       </Helmet>
 
       <RefContext.Provider

@@ -43,19 +43,19 @@ const NavDrawer = props => {
 
   return (
     <>
-      <IconButton color='secondary' className={classes.menuButton} onClick={() => setActive(true)}>
+      <IconButton color="secondary" className={classes.menuButton} onClick={() => setActive(true)}>
         <Menu />
       </IconButton>
 
       <Drawer
-        anchor='right'
+        anchor="right"
         open={isActive}
         classes={{ paper: classes.drawer }}
         onClose={() => setActive(false)}
         ModalProps={{ disableRestoreFocus: true }}
       >
         <div className={classes.drawerTop}>
-          <IconButton color='primary' onClick={() => setActive(false)}>
+          <IconButton color="primary" onClick={() => setActive(false)}>
             <ArrowRight />
           </IconButton>
         </div>

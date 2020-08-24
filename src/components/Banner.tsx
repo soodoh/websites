@@ -85,7 +85,7 @@ const Banner = props => {
     <div className={classes.container}>
       <Parallax className={classes.titleBackground} y={[-60, 60]}>
         <Fade bottom opposite delay={delayInterval}>
-          <Typography variant='h1'>
+          <Typography variant="h1">
             Paul
             <br />
             DiLoreto
@@ -95,19 +95,19 @@ const Banner = props => {
 
       <Parallax className={classes.titleGroup} y={[5, -5]} x={[-10, 10]}>
         <Fade top opposite>
-          <Typography variant='h2' color='inherit'>
+          <Typography variant="h2" color="inherit">
             {title}
           </Typography>
 
-          <Typography variant='subtitle1' color='inherit' className={classes.jobTitle}>
+          <Typography variant="subtitle1" color="inherit" className={classes.jobTitle}>
             {jobTitle}
           </Typography>
 
-          <Typography variant='subtitle1' color='inherit' className={classes.tagLine}>
+          <Typography variant="subtitle1" color="inherit" className={classes.tagLine}>
             {tagLine}
           </Typography>
 
-          <Button variant='contained' color='secondary' className={classes.contactButton} component='a' href={`mailto:${contact}`}>
+          <Button variant="contained" color="secondary" className={classes.contactButton} component="a" href={`mailto:${contact}`}>
             Contact Me
             <ArrowForward />
           </Button>
@@ -120,7 +120,7 @@ const Banner = props => {
 
       <div className={classes.viewMore}>
         <Fade bottom opposite delay={delayInterval * 3}>
-          <Typography variant='subtitle1' color='inherit'>
+          <Typography variant="subtitle1" color="inherit">
             View More
           </Typography>
           <VerticalBar />

@@ -26,8 +26,8 @@ const Home = props => {
   return (
     <div className={classes.container}>
       <Metadata
-        title='PD Portfolio'
-        description='Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info.'
+        title="PD Portfolio"
+        description="Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info."
       />
 
       <Helmet>

@@ -15,13 +15,13 @@ const NotFound = () => {
 
   return (
     <>
-      <Metadata title='PD: Page Not Found' robots='noindex, nofollow' />
+      <Metadata title="PD: Page Not Found" robots="noindex, nofollow" />
 
       <div className={classes.container}>
-        <Typography variant='h3' color='secondary' align='center' gutterBottom>
+        <Typography variant="h3" color="secondary" align="center" gutterBottom>
           404: Page Not Found
         </Typography>
-        <Typography variant='h6' color='secondary' align='center'>
+        <Typography variant="h6" color="secondary" align="center">
           Please check your URL, or select something from the nav bar
         </Typography>
       </div>

@@ -27,7 +27,7 @@ const ContactButtons = props => {
   return (
     <div className={classes.container}>
       {data.map(contactInfo => (
-        <Fab key={uid(contactInfo)} size='small' color='secondary' className={classes.button} component='a' href={contactInfo.url}>
+        <Fab key={uid(contactInfo)} size="small" color="secondary" className={classes.button} component="a" href={contactInfo.url}>
           {contactInfo.label}
         </Fab>
       ))}

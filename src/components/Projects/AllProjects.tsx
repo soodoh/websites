@@ -57,7 +57,7 @@ const AllProjects = props => {
         <GradientBackground />
 
         <Parallax className={classes.projectTitle} y={[-30, 150]} x={[-10, 10]}>
-          <Typography variant='h1' ref={workRef}>
+          <Typography variant="h1" ref={workRef}>
             Work
           </Typography>
         </Parallax>

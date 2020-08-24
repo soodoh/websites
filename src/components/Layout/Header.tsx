@@ -51,11 +51,11 @@ const Header = () => {
   const trigger = useScrollTrigger();
 
   return (
-    <Slide direction='down' appear={false} in={!trigger}>
-      <AppBar position='fixed' color='primary' className={classes.appBar}>
+    <Slide direction="down" appear={false} in={!trigger}>
+      <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           {links.map(({ label, onClick }) => (
-            <button key={`nav-${label}`} type='button' onClick={onClick} className={classes.navLink}>
+            <button key={`nav-${label}`} type="button" onClick={onClick} className={classes.navLink}>
               {label}
             </button>
           ))}

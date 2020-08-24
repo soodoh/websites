@@ -61,11 +61,11 @@ const Footer = props => {
 
       <div className={classes.contactMe}>
         <Fade right opposite delay={500}>
-          <Typography variant='h6' color='secondary' style={{ textTransform: 'uppercase' }}>
+          <Typography variant="h6" color="secondary" style={{ textTransform: 'uppercase' }}>
             Feel free to contact me at
           </Typography>
 
-          <Typography variant='h6' className={classes.contact}>
+          <Typography variant="h6" className={classes.contact}>
             <ArrowForward className={classes.arrow} />
             {contact}
           </Typography>
