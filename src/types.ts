@@ -1,4 +1,12 @@
-import { Markdown, Image } from './contentful';
+export interface Markdown {
+  childMarkdownRemark: {
+    html: string;
+  };
+}
+
+export interface Image {
+  fluid: any;
+}
 
 export interface Project {
   coverImage: Image;

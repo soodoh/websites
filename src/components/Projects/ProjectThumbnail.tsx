@@ -3,7 +3,7 @@ import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Fade';
-import Project from '../../interfaces/projects';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {

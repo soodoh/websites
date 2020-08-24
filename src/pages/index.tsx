@@ -6,7 +6,7 @@ import Metadata from '../components/common/Metadata';
 import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
-import { Markdown, Image } from '../interfaces/contentful';
+import { Markdown, Image } from '../types';
 
 const useStyles = makeStyles(theme => ({
   container: {

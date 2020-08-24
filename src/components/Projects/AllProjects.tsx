@@ -8,7 +8,7 @@ import ProjectContainer from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
 import RefContext from '../common/RefContext';
-import { Project } from '../../interfaces/projects';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
