@@ -15,6 +15,7 @@ module.exports = {
     siteUrl,
   },
   plugins: [
+    'gatsby-plugin-typescript',
     'gatsby-plugin-layout',
     'gatsby-plugin-remove-trailing-slashes',
     'gatsby-transformer-remark',
