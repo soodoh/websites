@@ -5,7 +5,7 @@ import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Fab from '@material-ui/core/Fab';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -20,21 +20,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ContactButtons = (props) => {
+const ContactButtons = props => {
   const classes = useStyles();
   const { data } = props;
 
   return (
     <div className={classes.container}>
-      {data.map((contactInfo) => (
-        <Fab
-          key={uid(contactInfo)}
-          size="small"
-          color="secondary"
-          className={classes.button}
-          component="a"
-          href={contactInfo.url}
-        >
+      {data.map(contactInfo => (
+        <Fab key={uid(contactInfo)} size='small' color='secondary' className={classes.button} component='a' href={contactInfo.url}>
           {contactInfo.label}
         </Fab>
       ))}
@@ -51,7 +44,7 @@ ContactButtons.propTypes = {
   ).isRequired,
 };
 
-export default () => (
+const ContactButtonsWithData = () => (
   <StaticQuery
     query={graphql`
       query ContactButtons {
@@ -65,8 +58,7 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <ContactButtons data={data.allContentfulContactInfo.edges.map((item) => item.node)} />
-    )}
+    render={data => <ContactButtons data={data.allContentfulContactInfo.edges.map(item => item.node)} />}
   />
 );
+export default ContactButtonsWithData;

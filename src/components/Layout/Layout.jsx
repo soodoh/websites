@@ -31,21 +31,21 @@ const Layout = ({ children }) => {
     <ThemeProvider theme={createMuiTheme(theme)}>
       <CssBaseline />
       <Helmet>
-        <html lang="en" />
+        <html lang='en' />
       </Helmet>
 
       <RefContext.Provider
         value={{
-          workRef, aboutRef, contactRef,
+          workRef,
+          aboutRef,
+          contactRef,
         }}
       >
         <div className={classes.container}>
           <Header />
 
           <main className={classes.content}>
-            <ParallaxProvider>
-              {children}
-            </ParallaxProvider>
+            <ParallaxProvider>{children}</ParallaxProvider>
           </main>
 
           <Footer />

@@ -9,7 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   menuButton: {
     [theme.breakpoints.up('sm')]: {
       display: 'none',
@@ -36,44 +36,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavDrawer = (props) => {
+const NavDrawer = props => {
   const classes = useStyles();
   const [isActive, setActive] = useState(false);
   const { links } = props;
 
   return (
     <>
-      <IconButton
-        color="secondary"
-        className={classes.menuButton}
-        onClick={() => setActive(true)}
-      >
+      <IconButton color='secondary' className={classes.menuButton} onClick={() => setActive(true)}>
         <Menu />
       </IconButton>
 
       <Drawer
-        anchor="right"
+        anchor='right'
         open={isActive}
         classes={{ paper: classes.drawer }}
         onClose={() => setActive(false)}
         ModalProps={{ disableRestoreFocus: true }}
       >
         <div className={classes.drawerTop}>
-          <IconButton
-            color="primary"
-            onClick={() => setActive(false)}
-          >
+          <IconButton color='primary' onClick={() => setActive(false)}>
             <ArrowRight />
           </IconButton>
         </div>
 
         <List className={classes.list}>
           {links.map(({ label, onClick }) => (
-            <ListItem
-              button
-              className={classes.listItem}
-              key={`mobile-${label}`}
-            >
+            <ListItem button className={classes.listItem} key={`mobile-${label}`}>
               <ListItemText
                 primary={label}
                 onClick={() => {
@@ -90,10 +79,12 @@ const NavDrawer = (props) => {
 };
 
 NavDrawer.propTypes = {
-  links: PropTypes.arrayOf(PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
-  })).isRequired,
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired,
+    }),
+  ).isRequired,
 };
 
 export default NavDrawer;

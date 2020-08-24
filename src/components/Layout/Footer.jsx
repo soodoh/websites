@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
@@ -8,7 +8,7 @@ import ContactButtons from '../common/ContactButtons';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 import RefContext from '../common/RefContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Footer = (props) => {
+const Footer = props => {
   const classes = useStyles();
   const { contact } = props;
   const { contactRef } = useContext(RefContext);
@@ -61,11 +61,11 @@ const Footer = (props) => {
 
       <div className={classes.contactMe}>
         <Fade right opposite delay={500}>
-          <Typography variant="h6" color="secondary" style={{ textTransform: 'uppercase' }}>
+          <Typography variant='h6' color='secondary' style={{ textTransform: 'uppercase' }}>
             Feel free to contact me at
           </Typography>
 
-          <Typography variant="h6" className={classes.contact}>
+          <Typography variant='h6' className={classes.contact}>
             <ArrowForward className={classes.arrow} />
             {contact}
           </Typography>
@@ -79,7 +79,7 @@ Footer.propTypes = {
   contact: PropTypes.string.isRequired,
 };
 
-export default () => (
+const FooterWithData = () => (
   <StaticQuery
     query={graphql`
       query Footer {
@@ -88,8 +88,8 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <Footer contact={data.contentfulAbout.contact} />
-    )}
+    render={data => <Footer contact={data.contentfulAbout.contact} />}
   />
 );
+
+export default FooterWithData;

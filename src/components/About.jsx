@@ -7,7 +7,7 @@ import { Parallax } from 'react-scroll-parallax';
 import Fade from 'react-reveal/Fade';
 import RefContext from './common/RefContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     paddingTop: theme.spacing(6),
@@ -112,18 +112,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const About = (props) => {
+const About = props => {
   const classes = useStyles();
-  const {
-    aboutContent, skillsContent, portrait,
-  } = props;
+  const { aboutContent, skillsContent, portrait } = props;
   const { aboutRef } = useContext(RefContext);
   const delayInterval = 500;
 
   return (
     <div className={classes.container}>
       <Parallax className={classes.title} y={[-40, 60]} x={[5, -5]}>
-        <Typography variant="h1" align="center" ref={aboutRef}>
+        <Typography variant='h1' align='center' ref={aboutRef}>
           About Me
         </Typography>
       </Parallax>
@@ -136,7 +134,7 @@ const About = (props) => {
 
       <div className={classes.grid}>
         <Fade left opposite>
-          <Typography variant="h5" color="inherit">
+          <Typography variant='h5' color='inherit'>
             About
           </Typography>
         </Fade>
@@ -152,7 +150,7 @@ const About = (props) => {
         </div>
 
         <Fade left opposite delay={delayInterval * 1.5}>
-          <Typography variant="h5" color="inherit">
+          <Typography variant='h5' color='inherit'>
             Skills
           </Typography>
         </Fade>

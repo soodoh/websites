@@ -9,7 +9,7 @@ import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: theme.spacing(2, 0),
     display: 'grid',
@@ -103,7 +103,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectContainer = (props) => {
+const ProjectContainer = props => {
   const classes = useStyles();
   const { data, isEven } = props;
 
@@ -121,7 +121,7 @@ const ProjectContainer = (props) => {
         })}
       >
         <Fade right cascade opposite delay={500}>
-          <Typography variant="h5" color="primary" gutterBottom>
+          <Typography variant='h5' color='primary' gutterBottom>
             {data.jobTitle}
           </Typography>
 
@@ -134,19 +134,10 @@ const ProjectContainer = (props) => {
             dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
           />
 
-          <Button
-            variant="contained"
-            className={classes.viewButton}
-            component="a"
-            href={data.url}
-          >
-            {!isEven && (
-            <ArrowBack className={classes.arrow} />
-            )}
+          <Button variant='contained' className={classes.viewButton} component='a' href={data.url}>
+            {!isEven && <ArrowBack className={classes.arrow} />}
             View Site
-            {isEven && (
-            <ArrowForward className={classes.arrow} />
-            )}
+            {isEven && <ArrowForward className={classes.arrow} />}
           </Button>
         </Fade>
       </div>

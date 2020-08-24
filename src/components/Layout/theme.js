@@ -1,8 +1,8 @@
 const headerText = {
-  fontFamily: '\'Fjalla One\', serif',
+  fontFamily: "'Fjalla One', serif",
 };
 const bodyText = {
-  fontFamily: '\'Geo\', serif',
+  fontFamily: "'Geo', serif",
 };
 
 const rawTheme = {
@@ -69,4 +69,4 @@ const rawTheme = {
   },
 };
 
-module.exports = rawTheme;
+export default rawTheme;

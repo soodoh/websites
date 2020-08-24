@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Fade from 'react-reveal/Fade';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     width: '100%',
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProjectThumbnail = (props) => {
+const ProjectThumbnail = props => {
   const classes = useStyles();
   const { data } = props;
 
@@ -42,12 +42,7 @@ const ProjectThumbnail = (props) => {
     <div className={classes.container}>
       <Fade left opposite>
         <div className={classes.titleContainer}>
-          <Typography
-            variant="h3"
-            color="primary"
-            align="center"
-            className={classes.title}
-          >
+          <Typography variant='h3' color='primary' align='center' className={classes.title}>
             {data.title}
           </Typography>
         </div>

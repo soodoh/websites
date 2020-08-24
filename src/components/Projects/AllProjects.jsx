@@ -10,7 +10,7 @@ import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
 import RefContext from '../common/RefContext';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     backgroundColor: theme.palette.background.light,
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AllProjects = (props) => {
+const AllProjects = props => {
   const classes = useStyles();
   const { data } = props;
   const { workRef } = useContext(RefContext);
@@ -57,10 +57,7 @@ const AllProjects = (props) => {
         <GradientBackground />
 
         <Parallax className={classes.projectTitle} y={[-30, 150]} x={[-10, 10]}>
-          <Typography
-            variant="h1"
-            ref={workRef}
-          >
+          <Typography variant='h1' ref={workRef}>
             Work
           </Typography>
         </Parallax>
@@ -68,14 +65,9 @@ const AllProjects = (props) => {
         <div className={classes.projectsContainer}>
           {data.map((project, index) => (
             <React.Fragment key={uid(project)}>
-              <Project
-                data={project}
-                isEven={index % 2 === 0}
-              />
+              <Project data={project} isEven={index % 2 === 0} />
 
-              {index < data.length - 1 && (
-              <VerticalBar />
-              )}
+              {index < data.length - 1 && <VerticalBar />}
             </React.Fragment>
           ))}
         </div>
@@ -87,12 +79,10 @@ const AllProjects = (props) => {
 };
 
 AllProjects.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.object,
-  ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-export default () => (
+const AllProjectsWithData = () => (
   <StaticQuery
     query={graphql`
       query Projects {
@@ -117,8 +107,8 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <AllProjects data={data.allContentfulProjects.edges.map((item) => item.node)} />
-    )}
+    render={data => <AllProjects data={data.allContentfulProjects.edges.map(item => item.node)} />}
   />
 );
+
+export default AllProjectsWithData;

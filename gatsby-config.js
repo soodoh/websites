@@ -1,5 +1,7 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dotenv = require('dotenv');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const process = require('process');
 
 // Load environment variables from project
 dotenv.config();
@@ -13,7 +15,6 @@ module.exports = {
     siteUrl,
   },
   plugins: [
-    'gatsby-plugin-eslint',
     'gatsby-plugin-layout',
     'gatsby-plugin-remove-trailing-slashes',
     'gatsby-transformer-remark',
@@ -21,7 +22,6 @@ module.exports = {
     'gatsby-plugin-sharp',
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-remove-serviceworker',
-    // 'gatsby-plugin-offline',
     'gatsby-plugin-sitemap',
     'gatsby-plugin-material-ui',
     {

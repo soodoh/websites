@@ -8,7 +8,7 @@ import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     width: '100%',
@@ -19,27 +19,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = (props) => {
+const Home = props => {
   const classes = useStyles();
   const { data } = props;
 
   return (
     <div className={classes.container}>
       <Metadata
-        title="PD Portfolio"
-        description="Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info."
+        title='PD Portfolio'
+        description='Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info.'
       />
 
       <Helmet>
         <body className={classes.background} />
       </Helmet>
 
-      <Banner
-        title={data.title}
-        jobTitle={data.jobTitle}
-        tagLine={data.tagLine}
-        contact={data.contact}
-      />
+      <Banner title={data.title} jobTitle={data.jobTitle} tagLine={data.tagLine} contact={data.contact} />
 
       <Projects />
 
@@ -65,7 +60,7 @@ Home.propTypes = {
   }).isRequired,
 };
 
-export default () => (
+const HomeWithData = () => (
   <StaticQuery
     query={graphql`
       query HomePage {
@@ -92,8 +87,8 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <Home data={data.contentfulAbout} />
-    )}
+    render={data => <Home data={data.contentfulAbout} />}
   />
 );
+
+export default HomeWithData;
