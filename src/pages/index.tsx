@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import Helmet from 'react-helmet';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
@@ -7,6 +6,7 @@ import Metadata from '../components/common/Metadata';
 import Banner from '../components/Banner';
 import Projects from '../components/Projects/AllProjects';
 import About from '../components/About';
+import { Markdown, Image } from '../interfaces/contentful';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -19,7 +19,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Home = props => {
+interface HomeProps {
+  data: {
+    title: string;
+    jobTitle: string;
+    tagLine: string;
+    contact: string;
+    description: Markdown;
+    skills: Markdown;
+    portrait: Image;
+  };
+}
+
+const Home = (props: HomeProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
 
@@ -41,26 +53,13 @@ const Home = props => {
       <About
         aboutContent={data.description.childMarkdownRemark.html}
         skillsContent={data.skills.childMarkdownRemark.html}
-        contact={data.contact}
         portrait={data.portrait}
       />
     </div>
   );
 };
 
-Home.propTypes = {
-  data: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    jobTitle: PropTypes.string.isRequired,
-    tagLine: PropTypes.string.isRequired,
-    description: PropTypes.object.isRequired,
-    skills: PropTypes.object.isRequired,
-    portrait: PropTypes.object.isRequired,
-  }).isRequired,
-};
-
-const HomeWithData = () => (
+const HomeWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query HomePage {

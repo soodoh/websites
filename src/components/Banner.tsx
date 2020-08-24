@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -76,7 +75,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Banner = props => {
+interface BannerProps {
+  title: string;
+  jobTitle: string;
+  contact: string;
+  tagLine: string;
+}
+
+const Banner = (props: BannerProps): ReactElement => {
   const classes = useStyles();
   const { title, jobTitle, tagLine, contact } = props;
   const delayInterval = 500;
@@ -128,13 +134,6 @@ const Banner = props => {
       </div>
     </div>
   );
-};
-
-Banner.propTypes = {
-  title: PropTypes.string.isRequired,
-  jobTitle: PropTypes.string.isRequired,
-  tagLine: PropTypes.string.isRequired,
-  contact: PropTypes.string.isRequired,
 };
 
 export default Banner;

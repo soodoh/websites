@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
@@ -20,7 +19,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ContactButtons = props => {
+interface ContactButtonProps {
+  data: {
+    label: string;
+    url: string;
+  }[];
+}
+
+const ContactButtons = (props: ContactButtonProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
 
@@ -35,16 +41,7 @@ const ContactButtons = props => {
   );
 };
 
-ContactButtons.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
-};
-
-const ContactButtonsWithData = () => (
+const ContactButtonsWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query ContactButtons {

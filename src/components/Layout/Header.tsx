@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactElement, useContext } from 'react';
 import { navigate } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -40,7 +40,7 @@ const handleScroll = ref => {
   }
 };
 
-const Header = () => {
+const Header = (): ReactElement => {
   const classes = useStyles();
   const { aboutRef, workRef, contactRef } = useContext(RefContext);
   const links = [

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/icons/Menu';
@@ -36,10 +35,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const NavDrawer = props => {
+interface NavDrawerProps {
+  links: {
+    label: string;
+    onClick: () => void;
+  }[];
+}
+
+const NavDrawer = (props: NavDrawerProps): ReactElement => {
   const classes = useStyles();
   const [isActive, setActive] = useState(false);
-  const { links } = props;
 
   return (
     <>
@@ -61,7 +66,7 @@ const NavDrawer = props => {
         </div>
 
         <List className={classes.list}>
-          {links.map(({ label, onClick }) => (
+          {props.links.map(({ label, onClick }) => (
             <ListItem button className={classes.listItem} key={`mobile-${label}`}>
               <ListItemText
                 primary={label}
@@ -76,15 +81,6 @@ const NavDrawer = props => {
       </Drawer>
     </>
   );
-};
-
-NavDrawer.propTypes = {
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      onClick: PropTypes.func.isRequired,
-    }),
-  ).isRequired,
 };
 
 export default NavDrawer;

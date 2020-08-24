@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
@@ -103,7 +102,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ProjectContainer = props => {
+interface ProjectContainerProps {
+  data: Project;
+  isEven: boolean;
+}
+
+const ProjectContainer = (props: ProjectContainerProps): ReactElement => {
   const classes = useStyles();
   const { data, isEven } = props;
 
@@ -152,17 +156,6 @@ const ProjectContainer = props => {
       </div>
     </div>
   );
-};
-
-ProjectContainer.propTypes = {
-  data: PropTypes.shape({
-    coverImage: PropTypes.object.isRequired,
-    description: PropTypes.object.isRequired,
-    jobTitle: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    url: PropTypes.string,
-  }).isRequired,
-  isEven: PropTypes.bool.isRequired,
 };
 
 export default ProjectContainer;

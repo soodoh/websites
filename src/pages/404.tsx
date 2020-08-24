@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const NotFound = () => {
+const NotFound = (): ReactElement => {
   const classes = useStyles();
 
   return (

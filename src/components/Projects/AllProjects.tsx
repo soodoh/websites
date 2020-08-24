@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useContext } from 'react';
 import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import { Parallax } from 'react-scroll-parallax';
-import Project from './ProjectContainer';
+import ProjectContainer from './ProjectContainer';
 import VerticalBar from '../common/VerticalBar';
 import GradientBackground from './GradientBackground';
 import RefContext from '../common/RefContext';
+import { Project } from '../../interfaces/projects';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -44,7 +44,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const AllProjects = props => {
+interface AllProjectsProps {
+  data: Project[];
+}
+
+const AllProjects = (props: AllProjectsProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
   const { workRef } = useContext(RefContext);
@@ -65,7 +69,7 @@ const AllProjects = props => {
         <div className={classes.projectsContainer}>
           {data.map((project, index) => (
             <React.Fragment key={uid(project)}>
-              <Project data={project} isEven={index % 2 === 0} />
+              <ProjectContainer data={project} isEven={index % 2 === 0} />
 
               {index < data.length - 1 && <VerticalBar />}
             </React.Fragment>
@@ -78,11 +82,7 @@ const AllProjects = props => {
   );
 };
 
-AllProjects.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
-
-const AllProjectsWithData = () => (
+const AllProjectsWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query Projects {

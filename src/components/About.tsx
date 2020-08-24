@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useContext } from 'react';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
@@ -112,7 +111,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const About = props => {
+interface AboutProps {
+  portrait: Image;
+  aboutContent: string;
+  skillsContent: string;
+}
+
+const About = (props: AboutProps): ReactElement => {
   const classes = useStyles();
   const { aboutContent, skillsContent, portrait } = props;
   const { aboutRef } = useContext(RefContext);
@@ -166,14 +171,6 @@ const About = props => {
       </div>
     </div>
   );
-};
-
-About.propTypes = {
-  portrait: PropTypes.shape({
-    fluid: PropTypes.object.isRequired,
-  }).isRequired,
-  aboutContent: PropTypes.string.isRequired,
-  skillsContent: PropTypes.string.isRequired,
 };
 
 export default About;

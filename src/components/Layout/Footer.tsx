@@ -1,5 +1,4 @@
 import React, { ReactElement, useContext } from 'react';
-import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
@@ -50,7 +49,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Footer = props => {
+interface FooterProps {
+  contact: string;
+}
+
+const Footer = (props: FooterProps) => {
   const classes = useStyles();
   const { contact } = props;
   const { contactRef } = useContext(RefContext);
@@ -75,11 +78,7 @@ const Footer = props => {
   );
 };
 
-Footer.propTypes = {
-  contact: PropTypes.string.isRequired,
-};
-
-const FooterWithData = () => (
+const FooterWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query Footer {
