@@ -1,5 +1,4 @@
 import React, { ReactElement, useContext } from 'react';
-import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
@@ -68,7 +67,7 @@ const AllProjects = (props: AllProjectsProps): ReactElement => {
 
         <div className={classes.projectsContainer}>
           {data.map((project, index) => (
-            <React.Fragment key={uid(project)}>
+            <React.Fragment key={project.id}>
               <ProjectContainer data={project} isEven={index % 2 === 0} />
 
               {index < data.length - 1 && <VerticalBar />}
@@ -89,6 +88,7 @@ const AllProjectsWithData = (): ReactElement => (
         allContentfulProjects {
           edges {
             node {
+              id
               title
               jobTitle
               url
@@ -107,7 +107,7 @@ const AllProjectsWithData = (): ReactElement => (
         }
       }
     `}
-    render={data => <AllProjects data={data.allContentfulProjects.edges.map(item => item.node)} />}
+    render={data => <AllProjects data={data.allContentfulProjects.edges.map((item: { node: Project }) => item.node)} />}
   />
 );
 

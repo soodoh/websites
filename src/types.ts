@@ -9,6 +9,7 @@ export interface Image {
 }
 
 export interface Project {
+  id: string;
   coverImage: Image;
   description: Markdown;
   jobTitle: string;

@@ -37,10 +37,7 @@ const Home = (props: HomeProps): ReactElement => {
 
   return (
     <div className={classes.container}>
-      <Metadata
-        title="PD Portfolio"
-        description="Paul DiLoreto is a Full Stack Software Engineer currently working at 20th Century Fox. View portfolio for more info."
-      />
+      <Metadata title="PD Portfolio" description={data.tagLine} />
 
       <Helmet>
         <body className={classes.background} />

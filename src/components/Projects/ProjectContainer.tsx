@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -7,6 +6,7 @@ import Fade from 'react-reveal/Fade';
 import ProjectThumbnail from './ProjectThumbnail';
 import ArrowBack from '../../../assets/ArrowBack.svg';
 import ArrowForward from '../../../assets/ArrowForward.svg';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -92,12 +92,7 @@ const useStyles = makeStyles(theme => ({
       padding: 0,
       margin: theme.spacing(2, 0),
       lineHeight: '1rem',
-      textAlign: 'right',
-    },
-  },
-  oddMarkdown: {
-    '& li': {
-      textAlign: 'left',
+      textAlign: isEven => (isEven ? 'right' : 'left'),
     },
   },
 }));
@@ -108,32 +103,19 @@ interface ProjectContainerProps {
 }
 
 const ProjectContainer = (props: ProjectContainerProps): ReactElement => {
-  const classes = useStyles();
   const { data, isEven } = props;
+  const classes = useStyles(isEven);
 
   return (
-    <div
-      className={classNames({
-        [classes.container]: true,
-        [classes.oddContainer]: !isEven,
-      })}
-    >
-      <div
-        className={classNames({
-          [classes.description]: true,
-          [classes.oddDescription]: !isEven,
-        })}
-      >
+    <div className={`${classes.container} ${!isEven ? classes.oddContainer : ''}`}>
+      <div className={`${classes.description} ${!isEven ? classes.oddDescription : ''}`}>
         <Fade right cascade opposite delay={500}>
           <Typography variant="h5" color="primary" gutterBottom>
             {data.jobTitle}
           </Typography>
 
           <div
-            className={classNames({
-              [classes.markdownContent]: true,
-              [classes.oddMarkdown]: !isEven,
-            })}
+            className={classes.markdownContent}
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
           />
@@ -146,12 +128,7 @@ const ProjectContainer = (props: ProjectContainerProps): ReactElement => {
         </Fade>
       </div>
 
-      <div
-        className={classNames({
-          [classes.thumbnail]: true,
-          [classes.oddThumbnail]: !isEven,
-        })}
-      >
+      <div className={`${classes.thumbnail} ${!isEven ? classes.oddThumbnail : ''}`}>
         <ProjectThumbnail data={data} />
       </div>
     </div>

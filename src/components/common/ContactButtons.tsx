@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react';
-import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Fab from '@material-ui/core/Fab';
@@ -21,6 +20,7 @@ const useStyles = makeStyles(theme => ({
 
 interface ContactButtonProps {
   data: {
+    id: string;
     label: string;
     url: string;
   }[];
@@ -33,7 +33,7 @@ const ContactButtons = (props: ContactButtonProps): ReactElement => {
   return (
     <div className={classes.container}>
       {data.map(contactInfo => (
-        <Fab key={uid(contactInfo)} size="small" color="secondary" className={classes.button} component="a" href={contactInfo.url}>
+        <Fab key={contactInfo.id} size="small" color="secondary" className={classes.button} component="a" href={contactInfo.url}>
           {contactInfo.label}
         </Fab>
       ))}
@@ -48,6 +48,7 @@ const ContactButtonsWithData = (): ReactElement => (
         allContentfulContactInfo {
           edges {
             node {
+              id
               label
               url
             }
