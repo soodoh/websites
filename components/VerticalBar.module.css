@@ -1,0 +1,5 @@
+.bar {
+  width: 1px;
+  height: 4rem;
+  background-color: var(--light-yellow);
+}

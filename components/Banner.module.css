@@ -1,0 +1,113 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--dark-blue);
+  color: var(--light-yellow);
+  position: relative;
+  overflow: hidden;
+}
+
+
+.titleBackground {
+  font-size: 5rem;
+  line-height: 11rem;
+  color: var(--background-text);
+  position: absolute;
+  top: 10vh;
+  left: 8vw;
+  z-index: 0;
+
+  @media (--sm-viewport) {
+    & {
+      top: 0;
+      left: 1rem;
+    }
+  }
+}
+
+.titleGroup {
+  position: absolute;
+  top: 28vh;
+  left: 10vw;
+  z-index: 5;
+
+  @media (--xs-viewport) {
+    & {
+      padding-top: 15vh;
+      padding-left: 16px;
+    }
+  }
+
+  & h2,
+  & p {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.title {
+  font-size: 3.7rem;
+}
+
+.jobTitle {
+  font-size: 1.5rem;
+}
+
+.tagLine {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+.contactButton {
+  background-color: var(--light-blue);
+  color: var(--dark-blue);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: .5rem 1rem;
+  margin-top: 3rem;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: var(--purple);
+    transition: background-color 0.3s ease;
+  }
+
+  & line,
+  & path {
+    stroke: var(--dark-blue);
+    fill: var(--dark-blue);
+  }
+
+  & svg {
+    margin-left: 16px;
+  }
+}
+
+.socialMediaButtons {
+  position: absolute;
+  bottom: 8rem;
+  right: 4rem;
+
+  @media (--sm-viewport) {
+    & {
+      top: 0;
+      left: 3rem;
+      right: unset;
+      z-index: 1100;
+    }
+  }
+}
+
+.viewMore {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  gap: 5px;
+}

@@ -1,0 +1,36 @@
+.container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.titleContainer {
+  position: absolute;
+  top: -2rem;
+  z-index: 3;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  background-color: var(--light-yellow);
+  color: var(--dark-blue);
+  padding: 1rem;
+  margin: 0;
+  font-size: 3rem;
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+  opacity: 0.5;
+  z-index: 2;
+
+  @media (--xs-viewport) {
+    & {
+      padding: 0;
+    }
+  }
+}

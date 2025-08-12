@@ -1,0 +1,19 @@
+.container {
+  margin-top: 5rem;
+  padding: 0 10vw;
+
+  @media (--sm-viewport) {
+    & {
+      padding: 0 2rem;
+    }
+  }
+
+
+  & h1 {
+    font-size: 2rem;
+  }
+
+  & h2 {
+    font-size: 1rem;
+  }
+}
