@@ -10,12 +10,12 @@ const Footer = () => {
       <ContactButtons />
 
       <div className={styles.contactMe} id="contact">
-        <h6 className={styles.contactTitle}>Feel free to contact me at</h6>
+        <span className={styles.contactTitle}>Feel free to contact me at</span>
 
-        <h6 className={styles.contact}>
+        <div className={styles.contact}>
           <ArrowForward className={styles.arrow} />
           <a href={`mailto:${about.email}`}>{about.email}</a>
-        </h6>
+        </div>
       </div>
     </footer>
   );
