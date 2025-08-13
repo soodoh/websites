@@ -3,13 +3,15 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  z-index: 2;
   min-width: 400px;
   max-width: 600px;
   width: 50%;
 
   @media (--md-viewport) {
-    width: 100%;
+    & {
+      width: 100%;
+      margin-top: 2rem;
+    }
   }
 }
 
@@ -30,11 +32,4 @@
   width: 100%;
   height: auto;
   opacity: 0.5;
-  z-index: 2;
-
-  @media (--xs-viewport) {
-    & {
-      padding: 0;
-    }
-  }
 }

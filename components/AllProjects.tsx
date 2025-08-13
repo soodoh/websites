@@ -24,7 +24,7 @@ const AllProjects = () => {
           <React.Fragment key={`project-${index}`}>
             <ProjectContainer project={project} isEven={index % 2 === 0} />
 
-            {index < projects.length - 1 && <VerticalBar />}
+            {index < projects.length - 1 && <VerticalBar dark />}
           </React.Fragment>
         ))}
       </div>

@@ -3,3 +3,7 @@
   height: 4rem;
   background-color: var(--light-yellow);
 }
+
+.dark {
+  background-color: var(--dark-blue);
+}
