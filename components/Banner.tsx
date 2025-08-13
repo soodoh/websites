@@ -1,4 +1,6 @@
 import { about } from "@/content/about";
+import titleStyles from "@/styles/backgroundTitle.module.css";
+import cx from "classnames";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 import { Parallax } from "react-scroll-parallax";
@@ -10,7 +12,10 @@ import VerticalBar from "./VerticalBar";
 const Banner = () => {
   return (
     <div className={styles.container}>
-      <Parallax className={styles.titleBackground} translateY={[-60, 60]}>
+      <Parallax
+        className={cx(titleStyles.title, styles.titleBackground)}
+        translateY={[-60, 60]}
+      >
         <motion.h1
           initial={{ opacity: 0, y: 500 }}
           animate={{ opacity: 1, y: 0 }}

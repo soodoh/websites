@@ -55,7 +55,7 @@
   align-items: flex-end;
   z-index: 2;
 
-  & h4 {
+  & h3 {
     font-size: 1.5rem;
     margin: 0;
   }

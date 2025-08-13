@@ -19,7 +19,7 @@ const ProjectContainer = ({
   return (
     <div className={cx(styles.container, { oddContainer: !isEven })}>
       <div className={cx(styles.description, { oddDescription: !isEven })}>
-        <h4>{project.title}</h4>
+        <h3>{project.title}</h3>
 
         <ul className={cx(styles.bullets, { oddBullets: !isEven })}>
           {project.bullets.map((bullet, index) => (

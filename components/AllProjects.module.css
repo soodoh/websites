@@ -1,11 +1,9 @@
 .projectTitle {
+  z-index: 2;
+  color: var(--lighter-blue);
   position: absolute;
   top: 0;
   left: 8vw;
-  color: var(--lighter-blue);
-  z-index: 1;
-  font-size: 5rem;
-  line-height: 11rem;
 
   @media (--xs-viewport) {
     & {

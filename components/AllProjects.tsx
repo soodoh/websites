@@ -1,5 +1,7 @@
 import VerticalBar from "@/components/VerticalBar";
 import { projects } from "@/content/projects";
+import titleStyles from "@/styles/backgroundTitle.module.css";
+import cx from "classnames";
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
 import styles from "./AllProjects.module.css";
@@ -10,7 +12,7 @@ const AllProjects = () => {
   return (
     <GradientContainer>
       <Parallax
-        className={styles.projectTitle}
+        className={cx(titleStyles.title, styles.projectTitle)}
         translateY={[-30, 150]}
         translateX={[-10, 10]}
       >

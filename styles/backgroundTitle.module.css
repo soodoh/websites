@@ -1,0 +1,14 @@
+.title {
+  text-transform: uppercase;
+  color: var(--background-text);
+  font-size: 5rem;
+  line-height: 11rem;
+  white-space: nowrap;
+  z-index: 0;
+
+  @media (--sm-viewport) {
+    & {
+      font-size: 4rem;
+    }
+  }
+}

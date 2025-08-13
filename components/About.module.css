@@ -15,13 +15,6 @@
 
 .title {
   position: absolute;
-  margin: 0 auto;
-  color: var(--background-text);
-  font-size: 5rem;
-  line-height: 11rem;
-  white-space: nowrap;
-  padding-left: 10vw;
-  z-index: 0;
 
   @media (--xs-viewport) {
     & {
@@ -38,7 +31,7 @@
   grid-template-rows: auto auto;
   z-index: 2;
 
-  & h5 {
+  & h2 {
     font-size: 1.5rem;
     color: var(--light-blue);
     margin: 0;
@@ -95,7 +88,7 @@
 }
 
 .skills {
-  & h6 {
+  & h3 {
     font-size: 1.5rem;
     margin: 0 0 1rem 0;
   }

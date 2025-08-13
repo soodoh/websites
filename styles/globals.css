@@ -50,31 +50,3 @@ h6 {
   font-family: var(--header-font);
   font-weight: 500;
 }
-
-h1 {
-  text-transform: uppercase;
-
-  @media (max-width: 600px) {
-    & {
-      font-size: 7rem;
-    }
-  }
-}
-
-h2 {
-  font-size: 4rem;
-
-  @media (max-width: 600px) {
-    & {
-      font-size: 3rem;
-    }
-  }
-}
-
-h3 {
-  @media (max-width: 600px) {
-    & {
-      font-size: 2rem;
-    }
-  }
-}

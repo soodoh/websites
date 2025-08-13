@@ -1,4 +1,6 @@
 import { about } from "@/content/about";
+import titleStyles from "@/styles/backgroundTitle.module.css";
+import cx from "classnames";
 import Image from "next/image";
 import { Fragment } from "react";
 import { Parallax } from "react-scroll-parallax";
@@ -8,7 +10,7 @@ const About = () => {
   return (
     <div className={styles.container}>
       <Parallax
-        className={styles.title}
+        className={cx(titleStyles.title, styles.title)}
         translateY={[-40, 60]}
         translateX={[5, -5]}
       >
@@ -20,7 +22,7 @@ const About = () => {
       </Parallax>
 
       <div className={styles.grid}>
-        <h5>About</h5>
+        <h2>About</h2>
 
         <div className={styles.about}>
           {about.bio.map((paragraph, index) => (
@@ -28,12 +30,12 @@ const About = () => {
           ))}
         </div>
 
-        <h5>Skills</h5>
+        <h2>Skills</h2>
 
         <div className={styles.skills}>
           {about.skills.map(({ title, bullets }) => (
             <Fragment key={`skill-category-${title}`}>
-              <h6>{title}</h6>
+              <h3>{title}</h3>
               <ul>
                 {bullets.map((bullet, index) => (
                   <li key={`skill-${title}-${index}`}>{bullet}</li>

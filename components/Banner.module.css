@@ -10,13 +10,9 @@
 
 
 .titleBackground {
-  font-size: 5rem;
-  line-height: 11rem;
-  color: var(--background-text);
   position: absolute;
   top: 10vh;
   left: 8vw;
-  z-index: 0;
 
   @media (--sm-viewport) {
     & {
@@ -28,14 +24,14 @@
 
 .titleGroup {
   position: absolute;
-  top: 28vh;
-  left: 10vw;
+  top: 30vh;
+  left: 11vw;
   z-index: 5;
 
-  @media (--xs-viewport) {
+  @media (--sm-viewport) {
     & {
-      padding-top: 15vh;
-      padding-left: 16px;
+      top: 25vh;
+      left: 3rem;
     }
   }
 

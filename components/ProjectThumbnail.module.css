@@ -5,20 +5,15 @@
   justify-content: center;
 }
 
-.titleContainer {
+.title {
   position: absolute;
   top: -2rem;
   z-index: 3;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.title {
   background-color: var(--light-yellow);
   color: var(--dark-blue);
   padding: 1rem;
   margin: 0;
+  font-family: var(--header-font);
   font-size: 3rem;
 }
 

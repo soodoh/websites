@@ -6,9 +6,7 @@ import type { Project } from "@/content/projects";
 const ProjectThumbnail = ({ project }: { project: Project }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.titleContainer}>
-        <h3 className={styles.title}>{project.title}</h3>
-      </div>
+      <div className={styles.title}>{project.title}</div>
 
       <Image
         className={styles.thumbnail}
