@@ -1,14 +1,23 @@
 .container {
   position: relative;
-  width: 100%;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+  z-index: 2;
+  min-width: 400px;
+  max-width: 600px;
+  width: 50%;
+
+  @media (--md-viewport) {
+    width: 100%;
+  }
 }
 
 .title {
   position: absolute;
   top: -2rem;
   z-index: 3;
+  white-space: nowrap;
   background-color: var(--light-yellow);
   color: var(--dark-blue);
   padding: 1rem;

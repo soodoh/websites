@@ -18,6 +18,8 @@ const ProjectContainer = ({
 }) => {
   return (
     <div className={cx(styles.container, { oddContainer: !isEven })}>
+      <ProjectThumbnail project={project} />
+
       <div className={cx(styles.description, { oddDescription: !isEven })}>
         <h3>{project.title}</h3>
 
@@ -32,10 +34,6 @@ const ProjectContainer = ({
           View Site
           {isEven && <ArrowForward className={styles.arrow} />}
         </Link>
-      </div>
-
-      <div className={cx(styles.thumbnail, { oddThumbnail: !isEven })}>
-        <ProjectThumbnail project={project} />
       </div>
     </div>
   );
