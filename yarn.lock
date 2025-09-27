@@ -1645,12 +1645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.1.13":
-  version: 19.1.13
-  resolution: "@types/react@npm:19.1.13"
+"@types/react@npm:^19.1.14":
+  version: 19.1.14
+  resolution: "@types/react@npm:19.1.14"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10/a4e12df335ded76e931cc2ba2a4c8a61872ed840081eca83612fbdadc4afbf0cbd0ae31fdedc7fae7f0e02c90dac98dda517dfa73bec653dd4b1de2755431a62
+  checksum: 10/080368cf7c8963f6a80c9bb8530d6f2e7f1b53ac48cc83aa98b67fbd91c8126435e11a2e95e0cc7275677f0bb0fb92789b7240e3d21c3eab75f5874d153addda
   languageName: node
   linkType: hard
 
@@ -4501,11 +4501,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^12.23.19":
-  version: 12.23.19
-  resolution: "framer-motion@npm:12.23.19"
+"framer-motion@npm:^12.23.22":
+  version: 12.23.22
+  resolution: "framer-motion@npm:12.23.22"
   dependencies:
-    motion-dom: "npm:^12.23.19"
+    motion-dom: "npm:^12.23.21"
     motion-utils: "npm:^12.23.6"
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -4519,7 +4519,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/563ed1cc3f1edc32426827f14c5d03b3be16d1a1cedb72219ab3319bd64d382c58a82d31b84bc2a017ea3c8582fdfdfd451d859ea52aea111bbbb5768081cafd
+  checksum: 10/ea16b23a7587634e42a5fd0ac0fafaaee34ec720947f9cd4c7f80d7e8a68c3371df43309c1216302387b7d3682d132c27d376b2b63628df56270539046c3acda
   languageName: node
   linkType: hard
 
@@ -6136,12 +6136,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:^12.23.19":
-  version: 12.23.19
-  resolution: "motion-dom@npm:12.23.19"
+"motion-dom@npm:^12.23.21":
+  version: 12.23.21
+  resolution: "motion-dom@npm:12.23.21"
   dependencies:
     motion-utils: "npm:^12.23.6"
-  checksum: 10/4854a30b2b6b3d521fee519d16c535e55999aefa2f8174999b05ddaa23619c6e9f85fff33eaefe1c25a39103ce0f434b73f55136ea67929ad7e7791eac52dee4
+  checksum: 10/567b9926f28cc1e3cd2df27384fe39a86b51f557362f7b9c00f478d2abb64a0866a6cfadc6d4d546c767ad749029251ef076fa492de88637099b3d7ed82bc307
   languageName: node
   linkType: hard
 
@@ -6152,11 +6152,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion@npm:^12.23.19":
-  version: 12.23.19
-  resolution: "motion@npm:12.23.19"
+"motion@npm:^12.23.22":
+  version: 12.23.22
+  resolution: "motion@npm:12.23.22"
   dependencies:
-    framer-motion: "npm:^12.23.19"
+    framer-motion: "npm:^12.23.22"
     tslib: "npm:^2.4.0"
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -6169,7 +6169,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/cb843db0f0d4aaa3008ebd3b0fa68274167a6a98d9f4ea2ba6b47b0c3b3d689f5cdf4068ac88989aed7d68beb5e1d97b5cc611c53942d0102b7ecf64ad8d7dea
+  checksum: 10/bdf27cb61aad3992801bf4107f7d10b73184c6bb60d1e1345a750ff7bb892dda2c6fe7507e80082a999fa8f8c295abe24e446bce70c049bf7166c2cc68616ccc
   languageName: node
   linkType: hard
 
@@ -6821,7 +6821,7 @@ __metadata:
     "@playwright/test": "npm:^1.55.1"
     "@tsconfig/next": "npm:^2.0.3"
     "@types/node": "npm:24.5.2"
-    "@types/react": "npm:^19.1.13"
+    "@types/react": "npm:^19.1.14"
     classnames: "npm:^2.5.1"
     cssnano: "npm:^7.1.1"
     eslint: "npm:^9.36.0"
@@ -6831,7 +6831,7 @@ __metadata:
     eslint-plugin-no-relative-import-paths: "npm:^1.6.1"
     eslint-plugin-prettier: "npm:^5.5.4"
     husky: "npm:^9.1.7"
-    motion: "npm:^12.23.19"
+    motion: "npm:^12.23.22"
     next: "npm:^15.5.4"
     postcss: "npm:^8.5.6"
     postcss-flexbugs-fixes: "npm:^5.0.2"
