@@ -1636,21 +1636,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.5.2":
-  version: 24.5.2
-  resolution: "@types/node@npm:24.5.2"
+"@types/node@npm:24.6.0":
+  version: 24.6.0
+  resolution: "@types/node@npm:24.6.0"
   dependencies:
-    undici-types: "npm:~7.12.0"
-  checksum: 10/a497aea88a12131b03382d933690b71c131ee890232596b8d5b73f0a20c90874001800b2bfc267bd37df8285bef911729b4773426be7d2dc13ef4c760904e47d
+    undici-types: "npm:~7.13.0"
+  checksum: 10/7a030019c8aca6acb49a1a8dd5069a95eb313bf06a12ec9a50bb66069a6b506cf04ca89594f8e935bfded38e23e45f61a8918134abf64594213a70a87abdaa1b
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.1.14":
-  version: 19.1.14
-  resolution: "@types/react@npm:19.1.14"
+"@types/react@npm:^19.1.15":
+  version: 19.1.15
+  resolution: "@types/react@npm:19.1.15"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10/080368cf7c8963f6a80c9bb8530d6f2e7f1b53ac48cc83aa98b67fbd91c8126435e11a2e95e0cc7275677f0bb0fb92789b7240e3d21c3eab75f5874d153addda
+  checksum: 10/9acff968d35e02152a817a11f8572cbcc985d9ea93616898b34e75ab193af20f9ab46274217abd12cd1ff4e4150081143b13ba20e0bb503efd64fe6601cb8bd8
   languageName: node
   linkType: hard
 
@@ -6820,8 +6820,8 @@ __metadata:
     "@netlify/plugin-nextjs": "npm:^5.13.3"
     "@playwright/test": "npm:^1.55.1"
     "@tsconfig/next": "npm:^2.0.3"
-    "@types/node": "npm:24.5.2"
-    "@types/react": "npm:^19.1.14"
+    "@types/node": "npm:24.6.0"
+    "@types/react": "npm:^19.1.15"
     classnames: "npm:^2.5.1"
     cssnano: "npm:^7.1.1"
     eslint: "npm:^9.36.0"
@@ -6841,7 +6841,7 @@ __metadata:
     prettier-eslint: "npm:^16.4.2"
     react: "npm:^19.1.1"
     react-dom: "npm:^19.1.1"
-    react-scroll-parallax: "npm:^3.4.5"
+    react-scroll-parallax: "npm:^3.5.0"
     typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
@@ -7865,15 +7865,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-scroll-parallax@npm:^3.4.5":
-  version: 3.4.5
-  resolution: "react-scroll-parallax@npm:3.4.5"
+"react-scroll-parallax@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "react-scroll-parallax@npm:3.5.0"
   dependencies:
     parallax-controller: "npm:^1.7.1"
   peerDependencies:
-    react: ^16.8.0-0 || >=17.0.1 || ^18.0.0
-    react-dom: ^16.8.0-0 || >=17.0.1 || ^18.0.0
-  checksum: 10/8c1c429fc71c164aa8b4f9772b19a1d51470b663df0caed66d6d1891de84ce5e3c42f077e07f7959b28d45b53a563ecafdccc6db2af9b64ac8c949b02a12aebe
+    react: ^16.8.0-0 || >=17.0.1 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0-0 || >=17.0.1 || ^18.0.0 || ^19.0.0
+  checksum: 10/c63da9277b09588fc459f63ec2e9c7a64b20fb50d62cca6b4e86603587e6a14aa4805a6537b8cab36dbd01412766e024cfd5d9c8ec61f2f94e84d61335eeb072
   languageName: node
   linkType: hard
 
@@ -9089,10 +9089,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~7.12.0":
-  version: 7.12.0
-  resolution: "undici-types@npm:7.12.0"
-  checksum: 10/4a0f927c98828f76fb0d64f356e36e5ac6e074ae4c7bec08d6de8bc36b7cf08ae27a3518fa8eb703f51c1a675241e2d07359bbce63f5575299148a270cea7e43
+"undici-types@npm:~7.13.0":
+  version: 7.13.0
+  resolution: "undici-types@npm:7.13.0"
+  checksum: 10/1088ad68dd57981aa6eced5b3f5d74129ac619fbe558b30cb584d6096d32b084ae30d7cdc480d622226e6ffc8d31e01ac30215816439a0d784e0fe64db873b0f
   languageName: node
   linkType: hard
 

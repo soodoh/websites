@@ -19,7 +19,7 @@
     "next": "^15.5.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-scroll-parallax": "^3.4.5"
+    "react-scroll-parallax": "^3.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
@@ -31,8 +31,8 @@
     "@netlify/plugin-nextjs": "^5.13.3",
     "@playwright/test": "^1.55.1",
     "@tsconfig/next": "^2.0.3",
-    "@types/node": "24.5.2",
-    "@types/react": "^19.1.14",
+    "@types/node": "24.6.0",
+    "@types/react": "^19.1.15",
     "cssnano": "^7.1.1",
     "eslint": "^9.36.0",
     "eslint-config-next": "15.5.4",
