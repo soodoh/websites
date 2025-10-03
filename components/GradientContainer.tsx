@@ -6,14 +6,7 @@ const GradientContainer = ({ children }: { children: ReactNode }) => {
     <div className={styles.container}>
       <div className={styles.topGradient} />
 
-      <div className={styles.content}>
-        {children}
-        <div className={styles.gradientBackground}>
-          <div className={styles.firstColor} />
-          <div className={styles.halfwayGradient} />
-          <div className={styles.secondColor} />
-        </div>
-      </div>
+      <div className={styles.content}>{children}</div>
 
       <div className={styles.bottomGradient} />
     </div>

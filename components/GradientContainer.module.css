@@ -8,14 +8,23 @@
 }
 
 .topGradient {
-  background: linear-gradient(to bottom, var(--dark-blue), var(--light-blue));
+  background: linear-gradient(to bottom,
+      var(--dark-blue),
+      var(--light-blue));
 }
 
 .bottomGradient {
-  background: linear-gradient(to bottom, var(--purple), var(--dark-blue));
+  background: linear-gradient(to bottom,
+      var(--purple),
+      var(--dark-blue));
 }
 
 .content {
+  background: linear-gradient(to bottom,
+      var(--light-blue),
+      var(--light-blue) 40%,
+      var(--purple) 60%,
+      var(--purple));
   position: relative;
   display: flex;
   flex-direction: column;
@@ -27,29 +36,4 @@
       padding: 0 2rem;
     }
   }
-}
-
-.gradientBackground {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 16rem 1fr;
-}
-
-.firstColor {
-  background-color: var(--light-blue);
-}
-
-.secondColor {
-  background-color: var(--purple);
-}
-
-.halfwayGradient {
-  background: linear-gradient(to bottom,
-      var(--light-blue),
-      var(--purple));
 }
