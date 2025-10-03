@@ -5,12 +5,11 @@ import cx from "classnames";
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
 import styles from "./AllProjects.module.css";
-import GradientContainer from "./GradientContainer";
 import ProjectContainer from "./ProjectContainer";
 
 const AllProjects = () => {
   return (
-    <GradientContainer>
+    <div className={styles.gradientContainer}>
       <Parallax
         className={cx(titleStyles.title, styles.projectTitle)}
         translateY={[-30, 150]}
@@ -28,7 +27,7 @@ const AllProjects = () => {
           </React.Fragment>
         ))}
       </div>
-    </GradientContainer>
+    </div>
   );
 };
 
