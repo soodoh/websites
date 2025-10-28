@@ -1518,10 +1518,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/plugin-nextjs@npm:^5.14.3":
-  version: 5.14.3
-  resolution: "@netlify/plugin-nextjs@npm:5.14.3"
-  checksum: 10/cbfdaf98eb4155ef3a3bce01123c884c6b8d3a58be0f17ca534aef1e83ddf64258201d6a78237347827d40196953c0a0ebca84e9383af4e041b9167938fa6b71
+"@netlify/plugin-nextjs@npm:^5.14.4":
+  version: 5.14.4
+  resolution: "@netlify/plugin-nextjs@npm:5.14.4"
+  checksum: 10/06f691014e955fbba292782e9a61bb3e566d63df7f4ec3403c9c3787a069331cbee0cce010dce970c7510e0b4dede6e99fa2f73d67ccc8d652a51d2556f110b6
   languageName: node
   linkType: hard
 
@@ -7127,7 +7127,7 @@ __metadata:
     "@contentful/rich-text-types": "npm:^17.2.4"
     "@csstools/postcss-global-data": "npm:^3.1.0"
     "@netlify/plugin-lighthouse": "npm:^6.0.3"
-    "@netlify/plugin-nextjs": "npm:^5.14.3"
+    "@netlify/plugin-nextjs": "npm:^5.14.4"
     "@playwright/test": "npm:^1.56.1"
     "@tsconfig/next": "npm:^2.0.3"
     "@types/node": "npm:24.9.1"

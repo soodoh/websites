@@ -28,7 +28,7 @@
     "@contentful/rich-text-types": "^17.2.4",
     "@csstools/postcss-global-data": "^3.1.0",
     "@netlify/plugin-lighthouse": "^6.0.3",
-    "@netlify/plugin-nextjs": "^5.14.3",
+    "@netlify/plugin-nextjs": "^5.14.4",
     "@playwright/test": "^1.56.1",
     "@tsconfig/next": "^2.0.3",
     "@types/node": "24.9.1",
