@@ -16,7 +16,7 @@
   "dependencies": {
     "classnames": "^2.5.1",
     "motion": "^12.23.24",
-    "next": "^16.0.1",
+    "next": "^16.0.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-scroll-parallax": "^3.5.0"
@@ -25,17 +25,17 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@commitlint/types": "^20.0.0",
-    "@contentful/rich-text-types": "^17.2.4",
+    "@contentful/rich-text-types": "^17.2.5",
     "@csstools/postcss-global-data": "^3.1.0",
-    "@netlify/plugin-lighthouse": "^6.0.3",
-    "@netlify/plugin-nextjs": "^5.14.4",
+    "@netlify/plugin-lighthouse": "^6.0.4",
+    "@netlify/plugin-nextjs": "^5.14.7",
     "@playwright/test": "^1.56.1",
-    "@tsconfig/next": "^2.0.3",
-    "@types/node": "24.10.0",
-    "@types/react": "^19.2.2",
+    "@tsconfig/next": "^2.0.4",
+    "@types/node": "24.10.1",
+    "@types/react": "^19.2.6",
     "cssnano": "^7.1.2",
-    "eslint": "^9.39.0",
-    "eslint-config-next": "16.0.1",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "16.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
@@ -65,5 +65,5 @@
     "type": "git",
     "url": "git+https://github.com/sudopseudocode/portfolio-website.git"
   },
-  "packageManager": "yarn@4.10.3"
+  "packageManager": "yarn@4.12.0"
 }
