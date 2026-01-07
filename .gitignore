@@ -2,8 +2,7 @@
 
 # dependencies
 /node_modules
-/.pnp
-.pnp.js
+pnpm-debug.log*
 
 # testing
 /coverage
@@ -18,10 +17,6 @@
 # misc
 .DS_Store
 *.pem
-
-# debug
-npm-debug.log*
-pnpm-debug.log*
 
 # local env files
 .env
