@@ -4,7 +4,7 @@
   "private": true,
   "author": "Paul DiLoreto <paul.diloreto@gmail.com>",
   "bugs": {
-    "url": "https://github.com/paulmichaelxd/portfolio-website/issues"
+    "url": "https://github.com/soodoh/portfolio-website/issues"
   },
   "scripts": {
     "dev": "next dev",
@@ -63,7 +63,7 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sudopseudocode/portfolio-website.git"
+    "url": "git+https://github.com/soodoh/portfolio-website.git"
   },
   "packageManager": "pnpm@10.27.0"
 }
