@@ -21,7 +21,11 @@
     "netlify",
     "serverless"
   ],
-  "packageManager": "pnpm@10.27.0",
+  "trustedDependencies": [
+    "puppeteer",
+    "sharp",
+    "unrs-resolver"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
