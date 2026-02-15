@@ -1,24 +1,37 @@
 import VerticalBar from "@/components/VerticalBar";
 import { projects } from "@/content/projects";
-import titleStyles from "@/styles/backgroundTitle.module.css";
-import cx from "classnames";
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
-import styles from "./AllProjects.module.css";
 import ProjectContainer from "./ProjectContainer";
 
 const AllProjects = () => {
   return (
-    <div className={styles.gradientContainer}>
+    <div
+      className="z-[1] w-full relative flex flex-col bg-light-blue py-80 px-40 max-xs:px-8 max-xs:py-0"
+      style={{
+        background: `linear-gradient(to bottom,
+          var(--color-dark-blue),
+          var(--color-light-blue) 20%,
+          var(--color-light-blue) 45%,
+          var(--color-purple) 55%,
+          var(--color-purple) 80%,
+          var(--color-dark-blue))`,
+      }}
+    >
       <Parallax
-        className={cx(titleStyles.title, styles.projectTitle)}
+        className="background-title z-[2] text-lighter-blue absolute top-0 left-[8vw] max-xs:left-8"
         translateY={[-30, 150]}
         translateX={[-10, 10]}
       >
-        <h1>Projects</h1>
+        <h1 className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]">
+          Projects
+        </h1>
       </Parallax>
 
-      <div id="projects" className={styles.projectsContainer}>
+      <div
+        id="projects"
+        className="z-[2] flex flex-col gap-8 items-center justify-center pt-60 text-dark-blue"
+      >
         {projects.map((project, index) => (
           <React.Fragment key={`project-${index}`}>
             <ProjectContainer project={project} isEven={index % 2 === 0} />

@@ -1,15 +1,15 @@
 import Image from "next/image";
-import React from "react";
-import styles from "./ProjectThumbnail.module.css";
 import type { Project } from "@/content/projects";
 
 const ProjectThumbnail = ({ project }: { project: Project }) => {
   return (
-    <div className={styles.container}>
-      <h2 className={styles.title}>{project.title}</h2>
+    <div className="relative flex justify-center items-start min-w-[400px] max-w-[600px] w-1/2 max-md:w-full max-md:mt-8">
+      <h2 className="absolute -top-8 z-[3] whitespace-nowrap bg-light-yellow text-dark-blue p-4 m-0 font-header text-5xl">
+        {project.title}
+      </h2>
 
       <Image
-        className={styles.thumbnail}
+        className="w-full h-auto opacity-50"
         alt={project.ariaLabel}
         src={project.image}
       />

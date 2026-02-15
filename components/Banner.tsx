@@ -1,22 +1,20 @@
 import { about } from "@/content/about";
-import titleStyles from "@/styles/backgroundTitle.module.css";
-import cx from "classnames";
 import * as motion from "motion/react-client";
 import Link from "next/link";
 import { Parallax } from "react-scroll-parallax";
 import ArrowForward from "./ArrowForward";
-import styles from "./Banner.module.css";
 import ContactButtons from "./ContactButtons";
 import VerticalBar from "./VerticalBar";
 
 const Banner = () => {
   return (
-    <div className={styles.container}>
+    <div className="h-screen flex flex-col bg-dark-blue text-light-yellow relative overflow-hidden">
       <Parallax
-        className={cx(titleStyles.title, styles.titleBackground)}
+        className="background-title absolute top-[10vh] left-[8vw] max-sm:top-0 max-sm:left-4"
         translateY={[-60, 60]}
       >
         <motion.h1
+          className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
           initial={{ opacity: 0, y: 500 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
@@ -31,7 +29,7 @@ const Banner = () => {
       </Parallax>
 
       <Parallax
-        className={styles.titleGroup}
+        className="absolute top-[30vh] left-[11vw] z-5 max-sm:top-[25vh] max-sm:left-12 [&_h2]:m-0 [&_h2]:p-0 [&_p]:m-0 [&_p]:p-0"
         translateY={[5, -5]}
         translateX={[-10, 10]}
       >
@@ -44,25 +42,28 @@ const Banner = () => {
             y: { type: "spring", delay: 0.5, visualDuration: 1, bounce: 0.3 },
           }}
         >
-          <h2 className={styles.title}>{about.title}</h2>
+          <h2 className="text-[3.7rem]">{about.title}</h2>
 
-          <p className={styles.jobTitle}>{about.jobTitle}</p>
+          <p className="text-2xl">{about.jobTitle}</p>
 
-          <p className={styles.tagLine}>{about.tagLine}</p>
+          <p className="text-base italic">{about.tagLine}</p>
 
-          <Link className={styles.contactButton} href={`mailto:${about.email}`}>
+          <Link
+            className="bg-light-blue text-dark-blue uppercase px-4 py-2 mt-12 inline-flex items-center gap-4 hover:bg-purple transition-colors duration-300 [&_line]:stroke-dark-blue [&_line]:fill-dark-blue [&_path]:stroke-dark-blue [&_path]:fill-dark-blue"
+            href={`mailto:${about.email}`}
+          >
             Contact Me
             <ArrowForward />
           </Link>
         </motion.div>
       </Parallax>
 
-      <div className={styles.socialMediaButtons}>
+      <div className="absolute bottom-32 right-16 max-sm:top-0 max-sm:left-12 max-sm:right-auto max-sm:z-[1100]">
         <ContactButtons />
       </div>
 
       <motion.div
-        className={styles.viewMore}
+        className="absolute bottom-0 w-full flex flex-col justify-center items-center p-4 gap-[5px]"
         initial={{ opacity: 0, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{

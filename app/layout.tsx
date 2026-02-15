@@ -29,7 +29,7 @@ export default async function RootLayout({
       </head>
       <body>
         <Header />
-        <main style={{ flexGrow: 1 }}>{children}</main>
+        <main className="grow">{children}</main>
         <Footer />
       </body>
     </html>
