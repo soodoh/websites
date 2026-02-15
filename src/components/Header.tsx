@@ -1,5 +1,5 @@
-"use client";
-
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,9 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, X } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -24,13 +21,13 @@ const Header = () => {
     <header className="fixed top-0 w-full bg-dark-blue z-10 p-4 box-border flex justify-end max-md:py-2 max-md:px-4">
       <nav className="flex gap-8 max-md:hidden">
         {links.map(({ label, url }) => (
-          <Link
+          <a
             key={`nav-${label}`}
             className="text-base px-12 text-light-yellow bg-transparent border-none cursor-pointer lowercase"
             href={url}
           >
             {label}
-          </Link>
+          </a>
         ))}
       </nav>
 
@@ -64,14 +61,14 @@ const Header = () => {
             </SheetClose>
             <nav className="flex flex-col items-center justify-center h-full gap-8">
               {links.map(({ label, url }) => (
-                <Link
+                <a
                   key={`nav-${label}`}
                   className="text-light-yellow text-2xl lowercase"
                   href={url}
                   onClick={() => setOpen(false)}
                 >
                   {label}
-                </Link>
+                </a>
               ))}
             </nav>
           </SheetContent>

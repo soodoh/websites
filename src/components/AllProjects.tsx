@@ -1,8 +1,8 @@
-import VerticalBar from "@/components/VerticalBar";
-import { projects } from "@/content/projects";
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
 import ProjectContainer from "./ProjectContainer";
+import VerticalBar from "@/components/VerticalBar";
+import { projects } from "@/content/projects";
 
 const AllProjects = () => {
   return (

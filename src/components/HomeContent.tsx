@@ -1,5 +1,3 @@
-"use client";
-
 import { ParallaxProvider } from "react-scroll-parallax";
 import About from "./About";
 import Projects from "./AllProjects";

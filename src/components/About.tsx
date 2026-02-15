@@ -1,7 +1,7 @@
-import { about } from "@/content/about";
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import { Fragment } from "react";
 import { Parallax } from "react-scroll-parallax";
+import { about } from "@/content/about";
 
 const About = () => {
   return (
@@ -23,7 +23,11 @@ const About = () => {
         className="absolute top-16 right-12 w-[30vw] min-w-[200px] max-w-[400px] z-0 max-sm:relative max-sm:top-52 max-sm:right-0 max-sm:w-full max-sm:px-12 max-sm:mx-auto [&_img]:opacity-80 [&_img]:w-full [&_img]:h-auto"
         translateY={[10, -60]}
       >
-        <Image src={about.image} alt="Profile photo of Paul DiLoreto" />
+        <Image
+          src={about.image}
+          alt="Profile photo of Paul DiLoreto"
+          layout="fullWidth"
+        />
       </Parallax>
 
       <div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] max-xs:grid-cols-1 relative z-5 [&_h2]:text-2xl [&_h2]:text-light-blue [&_h2]:m-0">

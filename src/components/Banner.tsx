@@ -1,10 +1,9 @@
-import { about } from "@/content/about";
-import * as motion from "motion/react-client";
-import Link from "next/link";
+import { motion } from "motion/react";
 import { Parallax } from "react-scroll-parallax";
 import ArrowForward from "./ArrowForward";
 import ContactButtons from "./ContactButtons";
 import VerticalBar from "./VerticalBar";
+import { about } from "@/content/about";
 
 const Banner = () => {
   return (
@@ -48,13 +47,13 @@ const Banner = () => {
 
           <p className="text-base italic">{about.tagLine}</p>
 
-          <Link
+          <a
             className="bg-light-blue text-dark-blue uppercase px-4 py-2 mt-12 inline-flex items-center gap-4 hover:bg-purple transition-colors duration-300 [&_line]:stroke-dark-blue [&_line]:fill-dark-blue [&_path]:stroke-dark-blue [&_path]:fill-dark-blue"
             href={`mailto:${about.email}`}
           >
             Contact Me
             <ArrowForward />
-          </Link>
+          </a>
         </motion.div>
       </Parallax>
 

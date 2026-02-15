@@ -1,13 +1,10 @@
-import ProfilePhoto from "@/assets/profile.jpeg";
-import type { StaticImageData } from "next/image";
-
 export type About = {
   title: string;
   jobTitle: string;
   tagLine: string;
   email: string;
   bio: string[];
-  image: StaticImageData;
+  image: string;
   skills: {
     title: string;
     bullets: string[];
@@ -18,7 +15,7 @@ export const about: About = {
   title: "Paul DiLoreto",
   jobTitle: "Lead Software Engineer",
   tagLine: "Currently working at Docusign",
-  image: ProfilePhoto,
+  image: "/images/profile.jpeg",
   email: "paul@diloreto.com",
   bio: [
     `After receiving his Bachelor of Art's from UCLA's School of Theater, Film and Television, Paul performed professionally throughout Los Angeles, including playing "Shorty" in the Red Car Trolley Newsboys at Disney California Adventure for several years.`,

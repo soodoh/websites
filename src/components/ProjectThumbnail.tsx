@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { Image } from "@unpic/react";
 import type { Project } from "@/content/projects";
 
 const ProjectThumbnail = ({ project }: { project: Project }) => {
@@ -12,6 +12,7 @@ const ProjectThumbnail = ({ project }: { project: Project }) => {
         className="w-full h-auto opacity-50"
         alt={project.ariaLabel}
         src={project.image}
+        layout="fullWidth"
       />
     </div>
   );

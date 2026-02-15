@@ -1,13 +1,9 @@
-import CarolynPortfolio from "@/assets/carolyn-portfolio.png";
-import FamilyWebsite from "@/assets/family-website.png";
-import type { StaticImageData } from "next/image";
-
 export type Project = {
   title: string;
   description?: string;
   ariaLabel: string;
   url: string;
-  image: StaticImageData;
+  image: string;
   bullets: string[];
 };
 
@@ -16,7 +12,7 @@ export const projects: Project[] = [
     title: "UX Portfolio",
     ariaLabel: "Screenshot of Carolyn's UX Portfolio",
     url: "https://carolyndiloreto.com/",
-    image: CarolynPortfolio,
+    image: "/images/carolyn-portfolio.png",
     bullets: [
       "Provided Contentful CMS for non-technical users to manage content",
       "Used React, CSS Modules, and TypeScript",
@@ -29,7 +25,7 @@ export const projects: Project[] = [
     title: "Family Website",
     ariaLabel: "Screenshot of DiLoreto.com Family Website",
     url: "https://diloreto.com/",
-    image: FamilyWebsite,
+    image: "/images/family-website.png",
     bullets: [
       "Provided Contentful CMS for non-technical users to manage content",
       "Used React, CSS Modules, and TypeScript",

@@ -1,9 +1,8 @@
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 import ArrowBack from "./ArrowBack";
 import ArrowForward from "./ArrowForward";
 import ProjectThumbnail from "./ProjectThumbnail";
 import type { Project } from "@/content/projects";
+import { cn } from "@/lib/utils";
 
 const ProjectContainer = ({
   project,
@@ -42,14 +41,14 @@ const ProjectContainer = ({
           ))}
         </ul>
 
-        <Link
+        <a
           className="mt-8 bg-light-yellow uppercase px-4 py-2 flex items-center gap-4"
           href={project.url}
         >
           {!isEven && <ArrowBack className="max-md:hidden" />}
           View Site
           {isEven && <ArrowForward className="max-md:hidden" />}
-        </Link>
+        </a>
       </div>
     </div>
   );
