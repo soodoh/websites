@@ -33,7 +33,15 @@
     "start": "node .output/server/index.mjs",
     "lint": "oxlint && prettier --check .",
     "lint:fix": "oxlint --fix && prettier --write .",
+    "lint-staged": "lint-staged",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "oxlint --fix",
+      "prettier --write"
+    ],
+    "*.{css,html,json,md,mdx,yaml,yml}": "prettier --write"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -65,6 +73,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^4.5.2",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "oxlint": "^1.48.0",
     "prettier": "^3.8.1",
     "shadcn": "^3.8.4",
