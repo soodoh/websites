@@ -1,6 +1,6 @@
-import { socialMedia } from "@/content/socialMedia";
+import { socialMedia } from "@/content/social-media";
 
-const ContactButtons = () => {
+const ContactButtons = (): JSX.Element => {
   return (
     <div className="flex flex-col justify-center max-sm:flex-row">
       {socialMedia.map(({ label, ariaLabel, url }) => (

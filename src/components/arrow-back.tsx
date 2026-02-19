@@ -1,4 +1,4 @@
-const ArrowBack = ({ className }: { className?: string }) => {
+const ArrowBack = ({ className }: { className?: string }): JSX.Element => {
   return (
     <svg
       className={className}

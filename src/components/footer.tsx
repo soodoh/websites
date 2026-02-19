@@ -1,8 +1,8 @@
-import ArrowForward from "@/components/ArrowForward";
-import ContactButtons from "@/components/ContactButtons";
+import ArrowForward from "@/components/arrow-forward";
+import ContactButtons from "@/components/contact-buttons";
 import { about } from "@/content/about";
 
-const Footer = () => {
+const Footer = (): JSX.Element => {
   return (
     <footer className="flex flex-wrap text-light-blue my-12 px-[10vw] max-sm:flex-col-reverse max-sm:items-center max-sm:px-8">
       <ContactButtons />

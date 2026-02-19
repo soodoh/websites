@@ -1,9 +1,9 @@
 import { ParallaxProvider } from "react-scroll-parallax";
-import About from "./About";
-import Projects from "./AllProjects";
-import Banner from "./Banner";
+import About from "./about";
+import Projects from "./all-projects";
+import Banner from "./banner";
 
-const HomeContent = () => {
+const HomeContent = (): JSX.Element => {
   return (
     <ParallaxProvider>
       <Banner />

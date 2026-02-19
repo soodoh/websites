@@ -1,10 +1,10 @@
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
-import ProjectContainer from "./ProjectContainer";
-import VerticalBar from "@/components/VerticalBar";
+import ProjectContainer from "./project-container";
+import VerticalBar from "@/components/vertical-bar";
 import { projects } from "@/content/projects";
 
-const AllProjects = () => {
+const AllProjects = (): JSX.Element => {
   return (
     <div
       className="z-[1] w-full relative flex flex-col bg-light-blue py-80 px-40 max-xs:px-8 max-xs:py-0"
@@ -33,7 +33,7 @@ const AllProjects = () => {
         className="z-[2] flex flex-col gap-8 items-center justify-center pt-60 text-dark-blue"
       >
         {projects.map((project, index) => (
-          <React.Fragment key={`project-${index}`}>
+          <React.Fragment key={`project-${project.title}`}>
             <ProjectContainer project={project} isEven={index % 2 === 0} />
 
             {index < projects.length - 1 && <VerticalBar dark />}

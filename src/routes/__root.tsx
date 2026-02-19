@@ -6,36 +6,10 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { about } from "@/content/about";
 import appCss from "@/styles/globals.css?url";
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PD Portfolio" },
-      { name: "description", content: about.tagLine },
-      { name: "robots", content: "index, follow" },
-    ],
-    links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.png" },
-    ],
-  }),
-  notFoundComponent: NotFound,
-  component: RootComponent,
-});
-
-function RootComponent() {
-  return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
-  );
-}
 
 function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -53,6 +27,14 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   );
 }
 
+function RootComponent() {
+  return (
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
+  );
+}
+
 function NotFound() {
   return (
     <div className="mt-20 px-[10vw] max-sm:px-8 [&_h1]:text-[2rem] [&_h2]:text-base">
@@ -61,3 +43,23 @@ function NotFound() {
     </div>
   );
 }
+
+export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      { charSet: "utf8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "PD Portfolio" },
+      { name: "description", content: about.tagLine },
+      { name: "robots", content: "index, follow" },
+    ],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", href: "/favicon.png" },
+    ],
+  }),
+  notFoundComponent: NotFound,
+  component: RootComponent,
+});
+
+export default Route;

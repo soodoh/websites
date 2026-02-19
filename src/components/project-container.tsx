@@ -1,6 +1,6 @@
-import ArrowBack from "./ArrowBack";
-import ArrowForward from "./ArrowForward";
-import ProjectThumbnail from "./ProjectThumbnail";
+import ArrowBack from "./arrow-back";
+import ArrowForward from "./arrow-forward";
+import ProjectThumbnail from "./project-thumbnail";
 import type { Project } from "@/content/projects";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ const ProjectContainer = ({
 }: {
   project: Project;
   isEven: boolean;
-}) => {
+}): JSX.Element => {
   return (
     <div
       className={cn(
@@ -36,8 +36,8 @@ const ProjectContainer = ({
             isEven ? "[&_li]:text-left" : "[&_li]:text-right",
           )}
         >
-          {project.bullets.map((bullet, index) => (
-            <li key={`project-${project.title}-bullet-${index}`}>{bullet}</li>
+          {project.bullets.map((bullet) => (
+            <li key={`project-${project.title}-bullet-${bullet}`}>{bullet}</li>
           ))}
         </ul>
 

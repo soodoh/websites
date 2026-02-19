@@ -1,4 +1,4 @@
-const ArrowForward = ({ className }: { className?: string }) => {
+const ArrowForward = ({ className }: { className?: string }): JSX.Element => {
   return (
     <svg
       className={className}

@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
 import { Parallax } from "react-scroll-parallax";
-import ArrowForward from "./ArrowForward";
-import ContactButtons from "./ContactButtons";
-import VerticalBar from "./VerticalBar";
+import ArrowForward from "./arrow-forward";
+import ContactButtons from "./contact-buttons";
+import VerticalBar from "./vertical-bar";
 import { about } from "@/content/about";
 
-const Banner = () => {
+const Banner = (): JSX.Element => {
   return (
     <div className="h-screen flex flex-col bg-dark-blue text-light-yellow relative overflow-hidden">
       <Parallax

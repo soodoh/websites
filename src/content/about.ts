@@ -5,10 +5,10 @@ export type About = {
   email: string;
   bio: string[];
   image: string;
-  skills: {
+  skills: Array<{
     title: string;
     bullets: string[];
-  }[];
+  }>;
 };
 
 export const about: About = {

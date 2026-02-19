@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const Header = () => {
+const Header = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const links = [
     { label: "Work", url: "/#projects" },

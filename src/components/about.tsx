@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Parallax } from "react-scroll-parallax";
 import { about } from "@/content/about";
 
-const About = () => {
+const About = (): JSX.Element => {
   return (
     <div className="relative pt-12 px-[10vw] overflow-hidden">
       <Parallax
@@ -34,8 +34,8 @@ const About = () => {
         <h2>About</h2>
 
         <div className="pr-40 max-sm:pr-0 [&_p]:m-0 [&_p]:mb-2">
-          {about.bio.map((paragraph, index) => (
-            <p key={`about-paragraph-${index}`}>{paragraph}</p>
+          {about.bio.map((paragraph) => (
+            <p key={`about-paragraph-${paragraph}`}>{paragraph}</p>
           ))}
         </div>
 
@@ -46,8 +46,8 @@ const About = () => {
             <Fragment key={`skill-category-${title}`}>
               <h3>{title}</h3>
               <ul>
-                {bullets.map((bullet, index) => (
-                  <li key={`skill-${title}-${index}`}>{bullet}</li>
+                {bullets.map((bullet) => (
+                  <li key={`skill-${title}-${bullet}`}>{bullet}</li>
                 ))}
               </ul>
             </Fragment>
