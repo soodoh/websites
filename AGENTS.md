@@ -18,7 +18,7 @@ Use Bun for all local workflows:
 - `bun run dev`: start the Vite dev server
 - `bun run build`: produce production build output
 - `bun run start`: run the built server (`.output/server/index.mjs`)
-- `bun run lint`: run ESLint
+- `bun run lint`: run Oxlint
 - `bun run lint:fix`: apply safe lint fixes
 
 Before opening a PR, run at least `bun run lint` and `bun run build`.
@@ -26,7 +26,7 @@ Before opening a PR, run at least `bun run lint` and `bun run build`.
 ## Coding Style & Naming Conventions
 - Language: TypeScript + TSX, strict mode enabled.
 - Indentation: 2 spaces; keep imports sorted/alphabetized.
-- Prefer absolute imports via `@/`; relative imports outside the same folder are blocked by ESLint.
+- Prefer absolute imports via `@/`; relative imports outside the same folder are blocked by linting.
 - Components and route modules: `PascalCase` files for components, route filenames follow TanStack conventions.
 - Keep content constants in `src/content/*.ts` and UI logic in `src/components/*`.
 
