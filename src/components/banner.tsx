@@ -58,7 +58,7 @@ const Banner = (): JSX.Element => {
         </motion.div>
       </Parallax>
 
-      <div className="absolute bottom-32 right-16 max-sm:top-0 max-sm:left-12 max-sm:right-auto max-sm:z-[1100]">
+      <div className="absolute bottom-32 right-16 max-sm:top-0 max-sm:left-12 max-sm:right-auto max-sm:z-20">
         <ContactButtons />
       </div>
 
