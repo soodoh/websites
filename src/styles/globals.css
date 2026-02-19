@@ -8,12 +8,12 @@
 @theme {
   --font-header: "Fjalla One", serif;
   --font-body: "Geo", serif;
-  --color-light-yellow: #D7DFC2;
-  --color-lighter-blue: #C0D8E8;
-  --color-light-blue: #9DC7E2;
-  --color-purple: #969BCC;
-  --color-background-text: #1F294F;
-  --color-dark-blue: #0E0827;
+  --color-light-yellow: #d7dfc2;
+  --color-lighter-blue: #c0d8e8;
+  --color-light-blue: #9dc7e2;
+  --color-purple: #969bcc;
+  --color-background-text: #1f294f;
+  --color-dark-blue: #0e0827;
   --breakpoint-xs: 414px;
   --breakpoint-sm: 700px;
   --breakpoint-md: 960px;

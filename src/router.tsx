@@ -15,5 +15,5 @@ export default getRouter;
 declare module "@tanstack/react-router" {
   type Register = {
     router: ReturnType<typeof getRouter>;
-  }
+  };
 }
