@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 const ArrowBack = ({ className }: { className?: string }): JSX.Element => {
   return (
     <svg

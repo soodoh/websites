@@ -1,5 +1,6 @@
 import { Image } from "@unpic/react";
 import { Fragment } from "react";
+import type { JSX } from "react";
 import { Parallax } from "react-scroll-parallax";
 import { about } from "@/content/about";
 

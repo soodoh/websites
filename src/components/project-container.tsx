@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import ArrowBack from "./arrow-back";
 import ArrowForward from "./arrow-forward";
 import ProjectThumbnail from "./project-thumbnail";

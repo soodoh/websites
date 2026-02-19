@@ -1,6 +1,7 @@
 import ArrowForward from "@/components/arrow-forward";
 import ContactButtons from "@/components/contact-buttons";
 import { about } from "@/content/about";
+import type { JSX } from "react";
 
 const Footer = (): JSX.Element => {
   return (

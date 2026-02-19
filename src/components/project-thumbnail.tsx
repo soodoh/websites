@@ -1,5 +1,6 @@
 import { Image } from "@unpic/react";
 import type { Project } from "@/content/projects";
+import type { JSX } from "react";
 
 const ProjectThumbnail = ({ project }: { project: Project }): JSX.Element => {
   return (

@@ -4,6 +4,7 @@ import ArrowForward from "./arrow-forward";
 import ContactButtons from "./contact-buttons";
 import VerticalBar from "./vertical-bar";
 import { about } from "@/content/about";
+import type { JSX } from "react";
 
 const Banner = (): JSX.Element => {
   return (

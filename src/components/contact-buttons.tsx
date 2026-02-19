@@ -1,4 +1,5 @@
 import { socialMedia } from "@/content/social-media";
+import type { JSX } from "react";
 
 const ContactButtons = (): JSX.Element => {
   return (

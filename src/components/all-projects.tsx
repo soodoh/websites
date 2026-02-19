@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import React from "react";
 import { Parallax } from "react-scroll-parallax";
 import ProjectContainer from "./project-container";
