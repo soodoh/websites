@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Parallax } from "react-scroll-parallax";
+import Parallax from "./parallax";
 import ArrowForward from "./arrow-forward";
 import ContactButtons from "./contact-buttons";
 import VerticalBar from "./vertical-bar";
@@ -11,7 +11,8 @@ const Banner = (): JSX.Element => {
     <div className="h-screen flex flex-col bg-dark-blue text-light-yellow relative overflow-hidden">
       <Parallax
         className="background-title absolute top-[10vh] left-[8vw] max-sm:top-0 max-sm:left-4"
-        translateY={[-60, 60]}
+        startY={-60}
+        endY={60}
       >
         <motion.h1
           className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
@@ -30,8 +31,10 @@ const Banner = (): JSX.Element => {
 
       <Parallax
         className="absolute top-[30vh] left-[11vw] z-5 max-sm:top-[25vh] max-sm:left-12 [&_h2]:m-0 [&_h2]:p-0 [&_p]:m-0 [&_p]:p-0"
-        translateY={[5, -5]}
-        translateX={[-10, 10]}
+        startY={5}
+        endY={-5}
+        startX={-10}
+        endX={10}
       >
         <motion.div
           initial={{ opacity: 0, y: -100 }}

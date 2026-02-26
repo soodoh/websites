@@ -1,7 +1,7 @@
 import { Image } from "@unpic/react";
 import { Fragment } from "react";
 import type { JSX } from "react";
-import { Parallax } from "react-scroll-parallax";
+import Parallax from "./parallax";
 import { about } from "@/content/about";
 
 const About = (): JSX.Element => {
@@ -9,8 +9,10 @@ const About = (): JSX.Element => {
     <div className="relative pt-12 px-[10vw] overflow-hidden">
       <Parallax
         className="background-title absolute max-xs:left-0"
-        translateY={[-40, 60]}
-        translateX={[5, -5]}
+        startY={-40}
+        endY={60}
+        startX={5}
+        endX={-5}
       >
         <h1
           id="about"
@@ -22,7 +24,8 @@ const About = (): JSX.Element => {
 
       <Parallax
         className="absolute top-16 right-12 w-[30vw] min-w-[200px] max-w-[400px] z-0 max-sm:relative max-sm:top-52 max-sm:right-0 max-sm:w-full max-sm:px-12 max-sm:mx-auto [&_img]:opacity-80 [&_img]:w-full [&_img]:h-auto"
-        translateY={[10, -60]}
+        startY={10}
+        endY={-60}
       >
         <Image
           src={about.image}
