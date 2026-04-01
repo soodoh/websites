@@ -1,14 +1,9 @@
 pre-commit:
   parallel: true
   jobs:
-    - name: lint-fix
-      glob: "*.{js,jsx,ts,tsx}"
-      run: bunx oxlint --fix {staged_files} && prettier --write {staged_files}
-      stage_fixed: true
-
-    - name: format
-      glob: "*.{css,html,json,md,mdx,yaml,yml}"
-      run: bunx prettier --write {staged_files}
+    - name: biome-check
+      glob: "*.{js,jsx,ts,tsx,css,json}"
+      run: bunx biome check --fix {staged_files}
       stage_fixed: true
 
 commit-msg:
