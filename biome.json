@@ -8,6 +8,14 @@
 	"files": {
 		"includes": ["**", "!!**/dist", "!!**/.output", "!!**/src/routeTree.gen.ts"]
 	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
 	"formatter": {
 		"enabled": true
 	},
@@ -33,14 +41,6 @@
 	"css": {
 		"parser": {
 			"tailwindDirectives": true
-		}
-	},
-	"assist": {
-		"enabled": true,
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
 		}
 	}
 }
