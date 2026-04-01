@@ -41,7 +41,7 @@ When adding tests, prefer Playwright (already included in dev dependencies) and 
 
 ## Commit & Pull Request Guidelines
 
-Commits follow Conventional Commits (examples in history: `feat: ...`, `fix: ...`, `chore: ...`). Commitlint is enforced via Husky and currently requires no scope in the subject (for example, `feat: add banner animation`).
+Commits follow Conventional Commits (examples in history: `feat: ...`, `fix: ...`, `chore: ...`). Commitlint is enforced via lefthook and currently requires no scope in the subject (for example, `feat: add banner animation`).
 
 PRs should include:
 
