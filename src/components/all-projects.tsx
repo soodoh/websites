@@ -1,5 +1,4 @@
-import type { JSX } from "react";
-import React from "react";
+import { Fragment, type JSX } from "react";
 import VerticalBar from "@/components/vertical-bar";
 import { projects } from "@/content/projects";
 import Parallax from "./parallax";
@@ -36,11 +35,11 @@ const AllProjects = (): JSX.Element => {
 				className="z-[2] flex flex-col gap-8 items-center justify-center pt-60 text-dark-blue"
 			>
 				{projects.map((project, index) => (
-					<React.Fragment key={`project-${project.title}`}>
+					<Fragment key={`project-${project.title}`}>
 						<ProjectContainer project={project} isEven={index % 2 === 0} />
 
 						{index < projects.length - 1 && <VerticalBar dark />}
-					</React.Fragment>
+					</Fragment>
 				))}
 			</div>
 		</div>
