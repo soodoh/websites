@@ -8,7 +8,7 @@ export const socialMedia: SocialMedia[] = [
 	{
 		label: "GH",
 		ariaLabel: "Github Link",
-		url: "https://github.com/sudopseudocode",
+		url: "https://github.com/soodoh",
 	},
 	{
 		label: "LI",
