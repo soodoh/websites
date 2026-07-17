@@ -1,4 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Geo&family=Geo:wght@500&family=Fjalla+One:wght@500&family=Fjalla+One&display=swap");
+@import "@fontsource/fjalla-one/latin-400.css";
+@import "@fontsource/geo/latin-400.css";
+@import "@fontsource/geo/latin-400-italic.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";

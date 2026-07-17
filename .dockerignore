@@ -1,0 +1,14 @@
+.git
+.github
+.netlify
+.output
+.vercel
+.vinxi
+build
+coverage
+dist
+node_modules
+playwright-report
+test-results
+.env*
+.DS_Store
