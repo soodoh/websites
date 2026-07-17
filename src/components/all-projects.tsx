@@ -7,7 +7,7 @@ import ProjectContainer from "./project-container";
 const AllProjects = (): JSX.Element => {
 	return (
 		<div
-			className="z-[1] w-full relative flex flex-col bg-light-blue py-80 px-40 max-xs:px-8 max-xs:py-0"
+			className="z-[1] w-full relative flex flex-col bg-light-blue py-80 px-40 max-md:px-[10vw] max-xs:py-0"
 			style={{
 				background: `linear-gradient(to bottom,
           var(--color-dark-blue),

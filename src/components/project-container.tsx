@@ -15,7 +15,7 @@ const ProjectContainer = ({
 	return (
 		<div
 			className={cn(
-				"text-dark-blue flex gap-8 justify-center max-md:flex-col",
+				"text-dark-blue flex gap-8 justify-center max-md:w-full max-md:min-w-0 max-md:flex-col",
 				isEven
 					? "flex-row max-md:items-start"
 					: "flex-row-reverse max-md:items-end",
@@ -25,7 +25,7 @@ const ProjectContainer = ({
 
 			<div
 				className={cn(
-					"flex flex-col [&_h3]:text-2xl [&_h3]:m-0",
+					"flex flex-col max-md:w-full max-md:min-w-0 [&_h3]:text-2xl [&_h3]:m-0",
 					isEven ? "items-start" : "items-end",
 				)}
 			>
@@ -33,7 +33,7 @@ const ProjectContainer = ({
 
 				<ul
 					className={cn(
-						"text-[1.2rem] leading-6 m-0 p-0 list-none [&_li]:p-0 [&_li]:my-4",
+						"text-[1.2rem] leading-6 m-0 p-0 list-none max-md:w-full max-md:min-w-0 max-md:[&_li]:break-words [&_li]:p-0 [&_li]:my-4",
 						isEven ? "[&_li]:text-left" : "[&_li]:text-right",
 					)}
 				>
