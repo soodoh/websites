@@ -1,6 +1,5 @@
 import { Image } from "@unpic/react";
 import type { JSX } from "react";
-import { Fragment } from "react";
 import { about } from "@/content/about";
 import Parallax from "./parallax";
 
@@ -34,27 +33,26 @@ const About = (): JSX.Element => {
 				/>
 			</Parallax>
 
-			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] max-xs:grid-cols-1 relative z-5 [&_h2]:text-2xl [&_h2]:text-light-blue [&_h2]:m-0">
+			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] gap-y-12 max-xs:grid-cols-1 relative z-5 [&_h2]:text-2xl [&_h2]:text-light-blue [&_h2]:m-0">
 				<h2>About</h2>
 
-				<div className="pr-40 max-sm:pr-0 [&_p]:m-0 [&_p]:mb-2">
+				<div className="pr-[min(30vw,400px)] max-sm:pr-0 [&_p]:m-0 [&_p]:mb-2">
 					{about.bio.map((paragraph) => (
 						<p key={`about-paragraph-${paragraph}`}>{paragraph}</p>
 					))}
 				</div>
 
-				<h2>Skills</h2>
+				<h2>Focus</h2>
 
-				<div className="[&_h3]:text-2xl [&_h3]:m-0 [&_h3]:mb-4 [&_ul]:text-[1.2rem] [&_ul]:m-0 [&_ul]:mb-4 [&_ul]:p-0 [&_ul]:grid [&_ul]:grid-cols-[50%_50%] [&_ul]:ml-2 [&_ul]:list-none max-sm:[&_ul]:grid-cols-1 [&_li]:before:content-['+'] [&_li]:before:pr-2">
-					{about.skills.map(({ title, bullets }) => (
-						<Fragment key={`skill-category-${title}`}>
-							<h3>{title}</h3>
-							<ul>
-								{bullets.map((bullet) => (
-									<li key={`skill-${title}-${bullet}`}>{bullet}</li>
-								))}
-							</ul>
-						</Fragment>
+				<div className="grid grid-cols-2 gap-x-10 gap-y-8 max-sm:grid-cols-1">
+					{about.focusAreas.map(({ title, description }) => (
+						<article
+							key={`focus-area-${title}`}
+							className="border-l-2 border-light-blue pl-4"
+						>
+							<h3 className="text-xl text-light-blue mt-0 mb-2">{title}</h3>
+							<p className="m-0">{description}</p>
+						</article>
 					))}
 				</div>
 			</div>

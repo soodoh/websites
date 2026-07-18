@@ -5,74 +5,53 @@ export type About = {
 	email: string;
 	bio: string[];
 	image: string;
-	skills: Array<{
+	focusAreas: Array<{
 		title: string;
-		bullets: string[];
+		description: string;
 	}>;
 };
 
 export const about: About = {
 	title: "Paul DiLoreto",
 	jobTitle: "Lead Software Engineer",
-	tagLine: "Currently working at Docusign",
+	tagLine: "Frontend platforms, technical strategy, and developer experience.",
 	image: "/images/profile.jpeg",
 	email: "paul@diloreto.com",
 	bio: [
-		`After receiving his Bachelor of Art's from UCLA's School of Theater, Film and Television, Paul performed professionally throughout Los Angeles, including playing "Shorty" in the Red Car Trolley Newsboys at Disney California Adventure for several years.`,
-		`He is also a adept, self-taught software engineer. After building his first desktop computer and coding his first website at the age of 13, his thirst for technical knowledge has yet to be quenched. To date, Paul has developed expeterise with numerous languages, frameworks, and system architectures. Today, Paul mainly works with Node.js (TypeScript), React, and designs scalable systems with whatever tools appropriate for the requirements and scale.`,
-		"Paul is currently a Lead Software Engineer at Docusign.",
+		"I’m a Lead Software Engineer at Docusign with nearly a decade of experience building and modernizing web platforms. I specialize in frontend platform architecture, working at the intersection of product development, system design, and developer experience. I turn ambiguous, cross-team problems into practical technical strategies—and stay close enough to implementation to ensure those strategies ship.",
+		"At Docusign, I lead onboarding and platform initiatives that improve customer experiences while making engineering teams faster and systems easier to operate. My work has strengthened shared frontend foundations, substantially improved automated-test reliability and coverage, reduced operational noise, and introduced reusable tooling and patterns adopted beyond my immediate team. Previously, at Twitter, Healthline, and Disney, I helped guide large-scale platform migrations, built full-stack systems supporting multiple digital communities, and modernized legacy applications without disrupting delivery.",
+		"Before engineering, I studied theater at UCLA and performed professionally at Disney California Adventure. That experience still shapes how I lead: communicating clearly, understanding the audience, building alignment, and staying composed amid ambiguity. I’m most energized by durable frontend platforms, healthy engineering systems, and pragmatic uses of AI that multiply what teams can accomplish.",
 	],
-	skills: [
+	focusAreas: [
 		{
-			title: "Front End",
-			bullets: [
-				"TypeScript, React, and related frameworks (NextJS, etc.)",
-				"Vanilla HTML, CSS, JS (when appropriate) & browser APIs",
-				"Web Components",
-				"CSS modules, Emotion, PostCSS, Sass, JSS, etc.",
-				"Meteor (at Disney)",
-				"jQuery (back in the day)",
-			],
+			title: "Frontend Platform Architecture",
+			description:
+				"Scalable React and TypeScript foundations, shared APIs, modular architecture, and sustainable patterns.",
 		},
 		{
-			title: "Back End",
-			bullets: [
-				"Node.js",
-				"Rust",
-				"WebSockets",
-				"WebRTC",
-				"NextJS",
-				"Express",
-				"Terraform",
-				"Meteor (at Disney)",
-				"PHP (in the distant past)",
-				"MongoDB",
-				"SQL (Postgres, MySQL, etc.)",
-			],
+			title: "Technical Strategy and Delivery",
+			description:
+				"Turning ambiguous product goals into executable plans spanning teams, systems, and stakeholders.",
 		},
 		{
-			title: "Platforms",
-			bullets: [
-				"AWS",
-				"Azure",
-				"Github Actions",
-				"Circle CI",
-				"Jenkins",
-				"Data Dog",
-				"In-house proprietary services (when applicable)",
-			],
+			title: "Developer Experience",
+			description:
+				"Tooling, code generation, platform utilities, migrations, and standards that reduce engineering friction.",
 		},
 		{
-			title: "Tools",
-			bullets: [
-				"Neovim (I could go on and on about configs/plugins)",
-				"Custom agentic dev workflows, with additional MCP tools configured",
-				"Tmux/Zellij",
-				"Git (obviously?)",
-				"Docker, Docker Compose, Kubernetes",
-				"CLI usage, from bash scripts to general server management tools",
-				"Most common Linux distros (currently using Arch, btw)",
-			],
+			title: "Quality and Operational Excellence",
+			description:
+				"Test architecture, observability, experimentation, reliability, and production readiness.",
+		},
+		{
+			title: "Full-Stack System Design",
+			description:
+				"Node.js services, asynchronous workflows, cloud infrastructure, data systems, and distributed integrations.",
+		},
+		{
+			title: "AI-Assisted Engineering",
+			description:
+				"Repeatable, human-reviewed workflows that accelerate maintenance, testing, investigation, and delivery.",
 		},
 	],
 };
