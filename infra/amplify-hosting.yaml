@@ -171,7 +171,6 @@ Resources:
                 Action:
                   - amplify:GetBranch
                   - amplify:ListJobs
-                  - amplify:StartDeployment
                 Resource:
                   - !GetAtt ProductionBranch.Arn
                   - !GetAtt CandidateBranch.Arn
@@ -179,6 +178,7 @@ Resources:
                 Effect: Allow
                 Action:
                   - amplify:CreateDeployment
+                  - amplify:StartDeployment
                 Resource:
                   - !Sub ${ProductionBranch.Arn}/deployments/*
                   - !Sub ${CandidateBranch.Arn}/deployments/*
