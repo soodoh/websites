@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import type { JSX } from "react";
 import { about } from "@/content/about";
 import ArrowForward from "./arrow-forward";
@@ -14,19 +13,11 @@ const Banner = (): JSX.Element => {
 				startY={-60}
 				endY={60}
 			>
-				<motion.h1
-					className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
-					initial={{ opacity: 0, y: 500 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						duration: 1,
-						y: { type: "spring", visualDuration: 1, bounce: 0.3 },
-					}}
-				>
+				<h1 className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]">
 					Paul
 					<br />
 					DiLoreto
-				</motion.h1>
+				</h1>
 			</Parallax>
 
 			<Parallax
@@ -36,15 +27,7 @@ const Banner = (): JSX.Element => {
 				startX={-10}
 				endX={10}
 			>
-				<motion.div
-					initial={{ opacity: 0, y: -100 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						delay: 0.5,
-						duration: 1,
-						y: { type: "spring", delay: 0.5, visualDuration: 1, bounce: 0.3 },
-					}}
-				>
+				<div>
 					<h2 className="text-[3.7rem]">{about.title}</h2>
 
 					<p className="text-2xl">{about.jobTitle}</p>
@@ -58,26 +41,17 @@ const Banner = (): JSX.Element => {
 						Contact Me
 						<ArrowForward />
 					</a>
-				</motion.div>
+				</div>
 			</Parallax>
 
 			<div className="absolute bottom-32 right-16 max-sm:top-0 max-sm:left-12 max-sm:right-auto max-sm:z-20">
 				<ContactButtons />
 			</div>
 
-			<motion.div
-				className="absolute bottom-0 w-full flex flex-col justify-center items-center p-4 gap-[5px]"
-				initial={{ opacity: 0, y: 200 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{
-					delay: 1,
-					duration: 1,
-					y: { type: "spring", delay: 1, visualDuration: 1, bounce: 0.3 },
-				}}
-			>
+			<div className="absolute bottom-0 w-full flex flex-col justify-center items-center p-4 gap-[5px]">
 				<span>View More</span>
 				<VerticalBar />
-			</motion.div>
+			</div>
 		</div>
 	);
 };

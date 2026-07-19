@@ -1,4 +1,3 @@
-import { Image } from "@unpic/react";
 import type { JSX } from "react";
 import type { Project } from "@/content/projects";
 
@@ -9,12 +8,18 @@ const ProjectThumbnail = ({ project }: { project: Project }): JSX.Element => {
 				{project.title}
 			</h2>
 
-			<Image
-				className="w-full h-auto opacity-50"
-				alt={project.ariaLabel}
-				src={project.image}
-				layout="fullWidth"
-			/>
+			<picture className="block w-full">
+				<source type="image/webp" srcSet={project.image.webpSrc} />
+				<img
+					className="w-full h-auto opacity-50"
+					alt={project.ariaLabel}
+					src={project.image.src}
+					width={project.image.width}
+					height={project.image.height}
+					loading="lazy"
+					decoding="async"
+				/>
+			</picture>
 		</div>
 	);
 };

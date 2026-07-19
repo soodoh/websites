@@ -62,6 +62,10 @@
 	.background-title {
 		@apply uppercase text-background-text whitespace-nowrap z-0;
 	}
+
+	.background-title-text::before {
+		content: attr(data-title);
+	}
 }
 
 @theme inline {

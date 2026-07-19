@@ -2,6 +2,9 @@ import { defineConfig } from "@playwright/test";
 
 const desktopViewport = { width: 1440, height: 900 };
 const mobileViewport = { width: 390, height: 844 };
+const localBaseUrl = "http://127.0.0.1:3000";
+const externalBaseUrl = process.env.PLAYWRIGHT_BASE_URL;
+const useStaticBuild = process.env.PLAYWRIGHT_STATIC === "1";
 
 export default defineConfig({
 	testDir: "./e2e",
@@ -12,7 +15,7 @@ export default defineConfig({
 	snapshotPathTemplate:
 		"{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}",
 	use: {
-		baseURL: "http://127.0.0.1:3000",
+		baseURL: externalBaseUrl ?? localBaseUrl,
 		browserName: "chromium",
 		colorScheme: "dark",
 		deviceScaleFactor: 1,
@@ -33,10 +36,14 @@ export default defineConfig({
 			},
 		},
 	],
-	webServer: {
-		command: "PLAYWRIGHT_TEST=1 bun run dev --host 0.0.0.0",
-		reuseExistingServer: !process.env.CI,
-		timeout: 120_000,
-		url: "http://127.0.0.1:3000",
-	},
+	webServer: externalBaseUrl
+		? undefined
+		: {
+				command: useStaticBuild
+					? "bun run start"
+					: "bun run dev --host 0.0.0.0",
+				reuseExistingServer: !process.env.CI,
+				timeout: 120_000,
+				url: localBaseUrl,
+			},
 });

@@ -5,6 +5,10 @@
 		{
 			"matchDepTypes": ["dependencies", "devDependencies"],
 			"rangeStrategy": "bump"
+		},
+		{
+			"matchManagers": ["github-actions"],
+			"pinDigests": true
 		}
 	]
 }

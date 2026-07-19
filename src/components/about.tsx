@@ -1,4 +1,3 @@
-import { Image } from "@unpic/react";
 import type { JSX } from "react";
 import { about } from "@/content/about";
 import Parallax from "./parallax";
@@ -15,9 +14,10 @@ const About = (): JSX.Element => {
 			>
 				<h1
 					id="about"
-					className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
+					className="background-title-text text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
+					data-title="About Me"
 				>
-					About Me
+					<span className="sr-only">About Me</span>
 				</h1>
 			</Parallax>
 
@@ -26,11 +26,26 @@ const About = (): JSX.Element => {
 				startY={10}
 				endY={-60}
 			>
-				<Image
-					src={about.image}
-					alt="Profile photo of Paul DiLoreto"
-					layout="fullWidth"
-				/>
+				<picture>
+					<source
+						type="image/avif"
+						srcSet="/images/profile-480.avif 480w, /images/profile-960.avif 960w, /images/profile-1200.avif 1200w"
+						sizes="(max-width: 640px) calc(100vw - 6rem), (max-width: 1333px) 30vw, 400px"
+					/>
+					<source
+						type="image/webp"
+						srcSet="/images/profile-480.webp 480w, /images/profile-960.webp 960w, /images/profile-1200.webp 1200w"
+						sizes="(max-width: 640px) calc(100vw - 6rem), (max-width: 1333px) 30vw, 400px"
+					/>
+					<img
+						src={about.image}
+						alt="Paul DiLoreto"
+						width={960}
+						height={1280}
+						loading="lazy"
+						decoding="async"
+					/>
+				</picture>
 			</Parallax>
 
 			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] gap-y-12 max-xs:grid-cols-1 relative z-5 [&_h2]:text-2xl [&_h2]:text-light-blue [&_h2]:m-0">

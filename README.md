@@ -2,7 +2,20 @@
 
 My Portfolio website displaying various work and information about myself as a Software Engineer. Feel free to review my code and check out the [live website](https://pauldiloreto.com).
 
-Website is powered by TanStack Start + React, with Netlify for continuous deployments.
+The website is a fully static TanStack Start + React application hosted by AWS Amplify. GitHub Actions validates and deploys the prerendered `dist/client` artifact through a candidate branch before production promotion. See the [hosting runbook](docs/hosting.md) for architecture, deployment, DNS, and rollback procedures.
+
+## Local development
+
+Use the Bun version pinned in `.bun-version` and `package.json`.
+
+```bash
+bun install --frozen-lockfile
+bun run dev
+
+# Build and serve the same static directory deployed to Amplify
+bun run build
+bun run start
+```
 
 ## End-to-end tests
 

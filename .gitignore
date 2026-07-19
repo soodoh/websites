@@ -4,6 +4,9 @@
 /node_modules
 bun-debug.log*
 
+# local agent artifacts
+/.pi-subagents
+
 # testing
 /coverage
 /playwright-report
@@ -28,8 +31,8 @@ bun-debug.log*
 .env.test.local
 .env.production.local
 
+# lighthouse
+.lighthouseci/
+
 # vercel
 .vercel
-
-# Local Netlify folder
-.netlify

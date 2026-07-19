@@ -15,7 +15,7 @@ export const about: About = {
 	title: "Paul DiLoreto",
 	jobTitle: "Lead Software Engineer",
 	tagLine: "Frontend platforms, technical strategy, and developer experience.",
-	image: "/images/profile.jpeg",
+	image: "/images/profile-960.jpg",
 	email: "paul@diloreto.com",
 	bio: [
 		"I’m a Lead Software Engineer at Docusign with nearly a decade of experience building and modernizing web platforms. I specialize in frontend platform architecture, working at the intersection of product development, system design, and developer experience. I turn ambiguous, cross-team problems into practical technical strategies—and stay close enough to implementation to ensure those strategies ship.",

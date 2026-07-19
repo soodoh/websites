@@ -1,0 +1,213 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Static AWS Amplify Hosting, Route 53 DNS, and GitHub OIDC deployment access for pauldiloreto.com.
+
+Parameters:
+  AmplifyAppName:
+    Type: String
+    Default: pauldiloreto-portfolio
+    Description: Name of the manual Amplify Hosting app.
+  DomainName:
+    Type: String
+    Default: pauldiloreto.com
+    Description: Apex domain hosted by Route 53 and optionally associated with Amplify.
+  ProductionBranchName:
+    Type: String
+    Default: main
+    Description: Amplify branch that serves production.
+  CandidateBranchName:
+    Type: String
+    Default: candidate
+    Description: Amplify branch used to verify an artifact before production promotion.
+  GitHubRepository:
+    Type: String
+    Default: soodoh/portfolio-website
+    AllowedPattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    Description: GitHub owner/repository allowed to assume the deployment role.
+  GitHubOidcProviderArn:
+    Type: String
+    NoEcho: true
+    AllowedPattern: "^arn:[^:]+:iam::[0-9]{12}:oidc-provider/token\\.actions\\.githubusercontent\\.com$"
+    Description: ARN of the existing account-level GitHub Actions OIDC provider.
+  EnableCustomDomain:
+    Type: String
+    Default: "false"
+    AllowedValues:
+      - "true"
+      - "false"
+    Description: Create the native Amplify domain association after the initial infrastructure bootstrap.
+
+Conditions:
+  CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
+
+Resources:
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref DomainName
+      HostedZoneConfig:
+        Comment: !Sub Authoritative DNS for ${DomainName}, managed by the ${AWS::StackName} stack.
+
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: !Ref AmplifyAppName
+      Description: Provider-neutral static portfolio deployed exclusively by GitHub Actions.
+      Platform: WEB
+      EnableBranchAutoDeletion: false
+      CustomRules:
+        - Source: !Sub https://www.${DomainName}
+          Target: !Sub https://${DomainName}
+          Status: "301"
+        - Source: /<*>
+          Target: /404.html
+          Status: "404"
+      CustomHeaders: |
+        customHeaders:
+          - pattern: "**/*"
+            headers:
+              - key: "Strict-Transport-Security"
+                value: "max-age=63072000; includeSubDomains"
+              - key: "X-Content-Type-Options"
+                value: "nosniff"
+              - key: "Referrer-Policy"
+                value: "strict-origin-when-cross-origin"
+              - key: "X-Frame-Options"
+                value: "DENY"
+              - key: "Permissions-Policy"
+                value: "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+          - pattern: "**/*.html"
+            headers:
+              - key: "Cache-Control"
+                value: "no-cache, no-store, must-revalidate"
+          - pattern: "/"
+            headers:
+              - key: "Cache-Control"
+                value: "no-cache, no-store, must-revalidate"
+          - pattern: "/assets/*"
+            headers:
+              - key: "Cache-Control"
+                value: "public, max-age=31536000, immutable"
+          - pattern: "/images/*"
+            headers:
+              - key: "Cache-Control"
+                value: "public, max-age=86400, must-revalidate"
+          - pattern: "/favicon.png"
+            headers:
+              - key: "Cache-Control"
+                value: "public, max-age=86400, must-revalidate"
+          - pattern: "/release.json"
+            headers:
+              - key: "Cache-Control"
+                value: "no-cache, no-store, must-revalidate"
+
+  ProductionBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref ProductionBranchName
+      Description: Production branch promoted only after candidate acceptance succeeds.
+      EnableAutoBuild: false
+      EnablePerformanceMode: false
+      EnablePullRequestPreview: false
+      Framework: TanStack Start (static)
+      Stage: PRODUCTION
+
+  CandidateBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref CandidateBranchName
+      Description: Pre-production branch for verification of the exact release artifact.
+      EnableAutoBuild: false
+      EnablePerformanceMode: false
+      EnablePullRequestPreview: false
+      Framework: TanStack Start (static)
+      Stage: BETA
+
+  AmplifyDomain:
+    Type: AWS::Amplify::Domain
+    Condition: CreateCustomDomain
+    DependsOn:
+      - ProductionBranch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      DomainName: !Ref DomainName
+      EnableAutoSubDomain: false
+      SubDomainSettings:
+        - Prefix: ""
+          BranchName: !Ref ProductionBranchName
+        - Prefix: www
+          BranchName: !Ref ProductionBranchName
+
+  GitHubDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Description: GitHub Actions OIDC role for manual deployments to this app's candidate and production branches.
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: GitHubProductionEnvironmentOnly
+            Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                "token.actions.githubusercontent.com:aud": sts.amazonaws.com
+                "token.actions.githubusercontent.com:sub": !Sub repo:${GitHubRepository}:environment:production
+      Policies:
+        - PolicyName: DeployVerifiedStaticArtifacts
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ReadTargetApp
+                Effect: Allow
+                Action:
+                  - amplify:GetApp
+                Resource: !GetAtt AmplifyApp.Arn
+              - Sid: DeployTargetBranches
+                Effect: Allow
+                Action:
+                  - amplify:CreateDeployment
+                  - amplify:GetBranch
+                  - amplify:ListJobs
+                  - amplify:StartDeployment
+                Resource:
+                  - !GetAtt ProductionBranch.Arn
+                  - !GetAtt CandidateBranch.Arn
+              - Sid: ManageTargetBranchJobs
+                Effect: Allow
+                Action:
+                  - amplify:GetJob
+                  - amplify:StopJob
+                Resource:
+                  - !Sub ${ProductionBranch.Arn}/jobs/*
+                  - !Sub ${CandidateBranch.Arn}/jobs/*
+
+Outputs:
+  AmplifyAppId:
+    Description: Amplify app ID used by deployment workflows.
+    Value: !GetAtt AmplifyApp.AppId
+  GitHubDeploymentRoleArn:
+    Description: OIDC role ARN used by the GitHub production environment.
+    Value: !GetAtt GitHubDeploymentRole.Arn
+  AmplifyDefaultDomain:
+    Description: Amplify-managed default domain for the app.
+    Value: !GetAtt AmplifyApp.DefaultDomain
+  ProductionBranchUrl:
+    Description: Default Amplify URL for the production branch.
+    Value: !Sub https://${ProductionBranchName}.${AmplifyApp.DefaultDomain}
+  CandidateBranchUrl:
+    Description: Default Amplify URL for the candidate branch.
+    Value: !Sub https://${CandidateBranchName}.${AmplifyApp.DefaultDomain}
+  HostedZoneId:
+    Description: Route 53 hosted zone ID for the apex domain.
+    Value: !Ref HostedZone
+  Route53NameServers:
+    Description: Comma-delimited Route 53 authoritative nameservers for the later registrar cutover.
+    Value: !Join [",", !GetAtt HostedZone.NameServers]
+  AmplifyCertificateRecord:
+    Condition: CreateCustomDomain
+    Description: Amplify-managed certificate validation DNS record.
+    Value: !GetAtt AmplifyDomain.CertificateRecord

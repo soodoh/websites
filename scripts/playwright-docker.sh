@@ -20,7 +20,27 @@ copy_artifacts() {
 trap cleanup EXIT
 
 docker build --file Dockerfile.playwright --tag "${image}" .
-container=$(docker create --ipc=host "${image}" bun run test:e2e:container "$@")
+
+docker_arguments=(--ipc=host)
+if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
+	if [[ ! -f dist/client/index.html || ! -f dist/client/404.html ]]; then
+		echo "Static Playwright mode requires a completed bun run build." >&2
+		exit 1
+	fi
+	docker_arguments+=(
+		--volume "$(pwd)/dist/client:/app/dist/client:ro"
+	)
+fi
+
+for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_STATIC; do
+	if [[ -n "${!variable:-}" ]]; then
+		docker_arguments+=(--env "${variable}=${!variable}")
+	fi
+done
+
+container=$(
+	docker create "${docker_arguments[@]}" "${image}" bun run test:e2e:container "$@"
+)
 
 set +e
 docker start --attach "${container}"

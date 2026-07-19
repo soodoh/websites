@@ -1,4 +1,6 @@
 /// <reference types="vite/client" />
+
+import headerFont from "@fontsource/fjalla-one/files/fjalla-one-latin-400-normal.woff2?url";
 import {
 	createRootRoute,
 	HeadContent,
@@ -8,6 +10,7 @@ import {
 import type { ReactNode } from "react";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import NotFound from "@/components/not-found";
 import { about } from "@/content/about";
 import appCss from "@/styles/globals.css?url";
 
@@ -35,15 +38,6 @@ function RootComponent() {
 	);
 }
 
-function NotFound() {
-	return (
-		<div className="mt-20 px-[10vw] max-sm:px-8 [&_h1]:text-[2rem] [&_h2]:text-base">
-			<h1>404: Page Not Found</h1>
-			<h2>Please check your URL, or select something from the nav bar</h2>
-		</div>
-	);
-}
-
 export const Route = createRootRoute({
 	head: () => ({
 		meta: [
@@ -54,8 +48,16 @@ export const Route = createRootRoute({
 			{ name: "robots", content: "index, follow" },
 		],
 		links: [
+			{ rel: "canonical", href: "https://pauldiloreto.com/" },
+			{
+				rel: "preload",
+				href: headerFont,
+				as: "font",
+				type: "font/woff2",
+				crossOrigin: "anonymous",
+			},
 			{ rel: "stylesheet", href: appCss },
-			{ rel: "icon", href: "/favicon.png" },
+			{ rel: "icon", href: "/favicon.png", sizes: "96x96" },
 		],
 	}),
 	notFoundComponent: NotFound,

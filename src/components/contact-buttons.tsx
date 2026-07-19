@@ -8,10 +8,10 @@ const ContactButtons = (): JSX.Element => {
 				<a
 					key={`socialMedia-${label}`}
 					className="w-10 h-10 flex justify-center items-center border-none rounded-full bg-light-blue text-dark-blue no-underline m-2 transition-colors duration-300 hover:bg-purple"
-					aria-label={ariaLabel}
 					href={url}
 				>
-					{label}
+					<span className="sr-only">{ariaLabel}</span>
+					<span aria-hidden="true">{label}</span>
 				</a>
 			))}
 		</div>

@@ -8,7 +8,6 @@ export const Route = createFileRoute("/")({
 			{ title: "PD: Portfolio" },
 			{ name: "description", content: about.tagLine },
 		],
-		links: [{ rel: "icon", href: "/favicon.png" }],
 	}),
 	component: HomeContent,
 });

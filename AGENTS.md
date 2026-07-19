@@ -19,7 +19,7 @@ Use Bun for all local workflows:
 
 - `bun run dev`: start the Vite dev server
 - `bun run build`: produce production build output
-- `bun run start`: run the built server (`.output/server/index.mjs`)
+- `bun run start`: serve the built static site from `dist/client`
 - `bun run lint`: run Biome (lint + format check)
 - `bun run lint:fix`: apply Biome fixes (lint + format)
 
