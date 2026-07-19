@@ -169,13 +169,19 @@ Resources:
               - Sid: DeployTargetBranches
                 Effect: Allow
                 Action:
-                  - amplify:CreateDeployment
                   - amplify:GetBranch
                   - amplify:ListJobs
                   - amplify:StartDeployment
                 Resource:
                   - !GetAtt ProductionBranch.Arn
                   - !GetAtt CandidateBranch.Arn
+              - Sid: CreateTargetBranchDeployments
+                Effect: Allow
+                Action:
+                  - amplify:CreateDeployment
+                Resource:
+                  - !Sub ${ProductionBranch.Arn}/deployments/*
+                  - !Sub ${CandidateBranch.Arn}/deployments/*
               - Sid: ManageTargetBranchJobs
                 Effect: Allow
                 Action:
