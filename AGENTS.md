@@ -22,8 +22,9 @@ Use Bun for all local workflows:
 - `bun run start`: serve the built static site from `dist/client`
 - `bun run lint`: run Biome (lint + format check)
 - `bun run lint:fix`: apply Biome fixes (lint + format)
+- `bun run typecheck`: type-check application, Playwright, config, and tooling files
 
-Before opening a PR, run at least `bun run lint` and `bun run build`.
+Before opening a PR, run at least `bun run lint`, `bun run typecheck`, and `bun run build`.
 
 ## Coding Style & Naming Conventions
 
@@ -35,9 +36,9 @@ Before opening a PR, run at least `bun run lint` and `bun run build`.
 
 ## Testing Guidelines
 
-There is currently no committed automated test suite in this repository. Treat linting and build success as required quality gates.
+Playwright functional and visual tests are committed under `e2e/`. Run `bun run test:e2e` against the committed Docker-pinned snapshots, or `bun run test:e2e:static` to build and exercise the production-static output. Update snapshots only for intentional visual changes.
 
-When adding tests, prefer Playwright (already included in dev dependencies) and use `*.spec.ts` naming under a dedicated `tests/` or `e2e/` directory.
+Treat `bun run lint`, `bun run typecheck`, `bun run build`, `bun run test:static`, and the relevant Playwright command as required quality gates.
 
 ## Commit & Pull Request Guidelines
 

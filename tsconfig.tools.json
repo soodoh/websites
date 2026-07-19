@@ -1,0 +1,14 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"types": ["node"]
+	},
+	"include": [
+		"commitlint.config.ts",
+		"e2e/**/*.ts",
+		"playwright.config.ts",
+		"scripts/*.mjs"
+	]
+}

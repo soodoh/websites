@@ -21,14 +21,14 @@ const Banner = (): JSX.Element => {
 			</Parallax>
 
 			<Parallax
-				className="absolute top-[30vh] left-[11vw] z-5 max-sm:top-[25vh] max-sm:left-12 [&_h2]:m-0 [&_h2]:p-0 [&_p]:m-0 [&_p]:p-0"
+				className="absolute top-[30vh] left-[11vw] z-5 max-sm:top-[25vh] max-sm:left-12 [&_p]:m-0 [&_p]:p-0"
 				startY={5}
 				endY={-5}
 				startX={-10}
 				endX={10}
 			>
 				<div>
-					<h2 className="text-[3.7rem]">{about.title}</h2>
+					<p className="font-header font-medium text-[3.7rem]">{about.title}</p>
 
 					<p className="text-2xl">{about.jobTitle}</p>
 
@@ -45,7 +45,7 @@ const Banner = (): JSX.Element => {
 			</Parallax>
 
 			<div className="absolute bottom-32 right-16 max-sm:top-0 max-sm:left-12 max-sm:right-auto max-sm:z-20">
-				<ContactButtons />
+				<ContactButtons label="Introductory social links" />
 			</div>
 
 			<div className="absolute bottom-0 w-full flex flex-col justify-center items-center p-4 gap-[5px]">

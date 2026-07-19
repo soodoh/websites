@@ -16,21 +16,18 @@ const expectScreenshot = async (page: Page, name: string): Promise<void> => {
 };
 
 test.describe("home page visuals", () => {
-	test("captures every 10% scroll checkpoint", async ({ page }) => {
-		await loadHome(page);
+	for (const percentage of scrollPercentages) {
+		test(`captures the ${percentage}% scroll checkpoint`, async ({ page }) => {
+			await loadHome(page);
+			await scrollToPercentage(page, percentage);
+			await waitForVisibleImages(page);
 
-		for (const percentage of scrollPercentages) {
-			await test.step(`${percentage}% scroll`, async () => {
-				await scrollToPercentage(page, percentage);
-				await waitForVisibleImages(page);
-
-				await expectScreenshot(
-					page,
-					`home-scroll-${percentage.toString().padStart(3, "0")}.png`,
-				);
-			});
-		}
-	});
+			await expectScreenshot(
+				page,
+				`home-scroll-${percentage.toString().padStart(3, "0")}.png`,
+			);
+		});
+	}
 
 	test("captures the open mobile navigation", async ({ page }, testInfo) => {
 		test.skip(testInfo.project.name !== "mobile", "Mobile-only navigation");

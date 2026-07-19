@@ -4,13 +4,21 @@ const baseUrl = new URL(
 const expectAmplify = process.env.HOSTING_EXPECT_AMPLIFY === "1";
 const expectDomainRedirects =
 	process.env.HOSTING_EXPECT_DOMAIN_REDIRECTS === "1";
+const expectedRunId = process.env.HOSTING_EXPECT_RUN_ID;
+const expectedRunAttempt = process.env.HOSTING_EXPECT_RUN_ATTEMPT;
+const expectedCommit = process.env.HOSTING_EXPECT_COMMIT;
 
+/** @type {(condition: unknown, message: string) => asserts condition} */
 const assert = (condition, message) => {
 	if (!condition) {
 		throw new Error(message);
 	}
 };
 
+/**
+ * @param {string | URL} url
+ * @param {RequestInit} options
+ */
 const request = async (url, options = {}) => {
 	const response = await fetch(url, {
 		redirect: "manual",
@@ -65,6 +73,33 @@ assert(
 	image.response.headers.get("content-type")?.startsWith("image/webp"),
 	"Responsive image has an incorrect content type",
 );
+
+if (expectedRunId || expectedRunAttempt || expectedCommit) {
+	assert(
+		expectedRunId && expectedRunAttempt && expectedCommit,
+		"Expected release identity requires run ID, run attempt, and commit",
+	);
+	const releaseUrl = new URL("/release.json", baseUrl);
+	releaseUrl.searchParams.set("expectedRunId", expectedRunId);
+	const release = await request(releaseUrl, { cache: "no-store" });
+	assert(
+		release.response.status === 200,
+		`Release marker returned ${release.response.status}`,
+	);
+	const releaseIdentity = JSON.parse(release.body);
+	assert(
+		releaseIdentity.runId === expectedRunId,
+		`Release marker run ID ${releaseIdentity.runId} does not match ${expectedRunId}`,
+	);
+	assert(
+		releaseIdentity.runAttempt === expectedRunAttempt,
+		`Release marker run attempt ${releaseIdentity.runAttempt} does not match ${expectedRunAttempt}`,
+	);
+	assert(
+		releaseIdentity.commit === expectedCommit,
+		`Release marker commit ${releaseIdentity.commit} does not match ${expectedCommit}`,
+	);
+}
 
 const missing = await request(
 	new URL("/hosting-migration-smoke/missing-page.missing", baseUrl),

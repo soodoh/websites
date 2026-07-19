@@ -1,6 +1,14 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export const loadHome = async (page: Page): Promise<void> => {
+	const browserErrors: string[] = [];
+	page.on("pageerror", (error) => browserErrors.push(error.message));
+	page.on("response", (response) => {
+		if (response.status() >= 400) {
+			browserErrors.push(`${response.status()} ${response.url()}`);
+		}
+	});
+
 	await page.goto("/");
 	await expect(
 		page.getByRole("heading", { name: "Paul DiLoreto", level: 1 }),
@@ -9,6 +17,7 @@ export const loadHome = async (page: Page): Promise<void> => {
 	await page.evaluate(async () => {
 		await document.fonts.ready;
 	});
+	await expect(browserErrors).toEqual([]);
 };
 
 export const scrollToPercentage = async (
@@ -41,13 +50,21 @@ export const waitForVisibleImages = async (page: Page): Promise<void> => {
 		await Promise.all(
 			visibleImages.map(async (image) => {
 				if (!image.complete) {
-					await new Promise<void>((resolve) => {
+					await new Promise<void>((resolve, reject) => {
 						image.addEventListener("load", () => resolve(), { once: true });
-						image.addEventListener("error", () => resolve(), { once: true });
+						image.addEventListener(
+							"error",
+							() =>
+								reject(new Error(`Failed to load image: ${image.currentSrc}`)),
+							{ once: true },
+						);
 					});
 				}
 
-				await image.decode().catch(() => undefined);
+				if (image.naturalWidth === 0) {
+					throw new Error(`Image has no decoded width: ${image.currentSrc}`);
+				}
+				await image.decode();
 			}),
 		);
 	});

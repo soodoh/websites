@@ -7,7 +7,7 @@ import ProjectContainer from "./project-container";
 const AllProjects = (): JSX.Element => {
 	return (
 		<div
-			className="z-[1] w-full relative flex flex-col bg-light-blue py-80 px-40 max-md:px-[10vw] max-xs:py-0"
+			className="z-[1] w-full relative flex flex-col overflow-x-clip bg-light-blue py-80 px-40 max-md:px-[10vw] max-xs:py-0"
 			style={{
 				background: `linear-gradient(to bottom,
           var(--color-dark-blue),
@@ -25,9 +25,9 @@ const AllProjects = (): JSX.Element => {
 				startX={-10}
 				endX={10}
 			>
-				<h1 className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]">
+				<h2 className="text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]">
 					Projects
-				</h1>
+				</h2>
 			</Parallax>
 
 			<div

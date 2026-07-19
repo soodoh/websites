@@ -3,6 +3,10 @@
 .output
 .vercel
 .vinxi
+.lighthouseci
+.playwright-cli
+.playwright-mcp
+.pi-subagents
 build
 coverage
 dist

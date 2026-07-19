@@ -1,9 +1,12 @@
 import type { JSX } from "react";
 import { socialMedia } from "@/content/social-media";
 
-const ContactButtons = (): JSX.Element => {
+const ContactButtons = ({ label }: { label: string }): JSX.Element => {
 	return (
-		<div className="flex flex-col justify-center max-sm:flex-row">
+		<nav
+			aria-label={label}
+			className="flex flex-col justify-center max-sm:flex-row"
+		>
 			{socialMedia.map(({ label, ariaLabel, url }) => (
 				<a
 					key={`socialMedia-${label}`}
@@ -14,7 +17,7 @@ const ContactButtons = (): JSX.Element => {
 					<span aria-hidden="true">{label}</span>
 				</a>
 			))}
-		</div>
+		</nav>
 	);
 };
 

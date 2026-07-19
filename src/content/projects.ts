@@ -1,11 +1,11 @@
 export type Project = {
 	title: string;
-	description?: string;
 	ariaLabel: string;
 	url: string;
 	image: {
 		src: string;
-		webpSrc: string;
+		avifSrcSet: string;
+		webpSrcSet: string;
 		width: number;
 		height: number;
 	};
@@ -19,7 +19,10 @@ export const projects: Project[] = [
 		url: "https://carolyndiloreto.com/",
 		image: {
 			src: "/images/carolyn-portfolio.png",
-			webpSrc: "/images/carolyn-portfolio.webp",
+			avifSrcSet:
+				"/images/carolyn-portfolio-320.avif 320w, /images/carolyn-portfolio-480.avif 480w, /images/carolyn-portfolio.avif 698w",
+			webpSrcSet:
+				"/images/carolyn-portfolio-320.webp 320w, /images/carolyn-portfolio-480.webp 480w, /images/carolyn-portfolio.webp 698w",
 			width: 698,
 			height: 453,
 		},
@@ -37,7 +40,10 @@ export const projects: Project[] = [
 		url: "https://diloreto.com/",
 		image: {
 			src: "/images/family-website.png",
-			webpSrc: "/images/family-website.webp",
+			avifSrcSet:
+				"/images/family-website-320.avif 320w, /images/family-website-480.avif 480w, /images/family-website.avif 702w",
+			webpSrcSet:
+				"/images/family-website-320.webp 320w, /images/family-website-480.webp 480w, /images/family-website.webp 702w",
 			width: 702,
 			height: 439,
 		},

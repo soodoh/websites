@@ -13,7 +13,7 @@ const ProjectContainer = ({
 	isEven: boolean;
 }): JSX.Element => {
 	return (
-		<div
+		<article
 			className={cn(
 				"text-dark-blue flex gap-8 justify-center max-md:w-full max-md:min-w-0 max-md:flex-col",
 				isEven
@@ -51,7 +51,7 @@ const ProjectContainer = ({
 					{isEven && <ArrowForward className="max-md:hidden" />}
 				</a>
 			</div>
-		</div>
+		</article>
 	);
 };
 

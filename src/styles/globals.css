@@ -56,6 +56,13 @@
 		font-family: var(--font-header);
 		font-weight: 500;
 	}
+
+	@media (prefers-reduced-motion: reduce) {
+		html,
+		body {
+			scroll-behavior: auto;
+		}
+	}
 }
 
 @layer components {
@@ -65,6 +72,14 @@
 
 	.background-title-text::before {
 		content: attr(data-title);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-slot="sheet-overlay"],
+	[data-slot="sheet-content"] {
+		animation: none;
+		transition-duration: 0s;
 	}
 }
 

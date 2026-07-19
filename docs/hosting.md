@@ -9,6 +9,7 @@ AWS resources are owned by the `pauldiloreto-amplify-hosting` CloudFormation sta
 - an Amplify Hosting `WEB` app named `pauldiloreto-portfolio`
 - manual `candidate` and `main` Amplify branches with repository auto-builds and PR previews disabled
 - a Route 53 hosted zone for `pauldiloreto.com`
+- a private, versioned S3 store for every successfully promoted release
 - a repository-scoped GitHub OIDC deployment role
 - an optional native Amplify domain association for the apex and `www`
 
@@ -21,15 +22,15 @@ The custom-domain association is initially disabled. Until DNS cutover is explic
 `.github/workflows/deploy.yml` runs for pull requests and pushes to `main`.
 
 1. Install with Bun 1.3.14 and `bun install --frozen-lockfile`.
-2. Run Biome, a production build, static-output assertions, Docker-pinned functional/visual Playwright tests, and three-run mobile Lighthouse CI.
-3. Add a public `release.json` marker containing the workflow run and commit, normalize file timestamps, and package the contents of `dist/client` at the root of a deterministic zip.
-4. Record SHA-256 metadata and retain the verified zip and reports as a GitHub artifact for 30 days.
+2. Run Biome, TypeScript, ShellCheck, actionlint, cfn-lint, a production build, static-output assertions, Docker-pinned functional/visual Playwright tests, and three-run mobile Lighthouse CI.
+3. Add a public `release.json` marker containing the workflow run, attempt, and commit, normalize file timestamps, and package the contents of `dist/client` at the root of a deterministic zip.
+4. Record SHA-256 metadata and retain the verified zip and reports as a GitHub artifact for 90 days.
 5. Pull requests stop after local verification and never create Amplify previews.
 6. A successful `main` push enters the GitHub `production` environment and assumes the AWS role through OIDC.
 7. Upload the exact zip to `candidate`, wait for Amplify, then run hosting smoke checks, full Playwright, and Lighthouse against the candidate URL.
-8. Resolve the artifact currently deployed to `main` from its uncached `release.json` marker and retain it for automatic recovery.
-9. Promote the unchanged candidate zip to `main` and run default-domain smoke tests. Production-domain tests are added after cutover.
-10. If post-promotion checks fail, restore the previously deployed retained zip, verify recovery, and fail the workflow with evidence. On the first deployment there is no prior artifact; Netlify is still live and the workflow reports that rollback is unavailable.
+8. Resolve the artifact currently deployed to `main` from its uncached `release.json` marker and download it from the private verified-release store for automatic recovery.
+9. Persist the candidate-verified release under its immutable run/attempt identity in the private S3 store, promote the unchanged zip to `main`, and verify the exact run, attempt, and commit through `release.json`.
+10. If post-promotion checks fail, restore the previously deployed retained zip, verify its exact release identity, and fail the workflow with evidence. The first deployment after introducing the release store may have no stored predecessor; the workflow reports that rollback is unavailable instead of using an unverified artifact.
 
 Production deployments are serialized and never cancelled in progress. The deployment helper stops unfinished Amplify jobs when polling times out or receives a termination signal.
 
@@ -48,6 +49,7 @@ Environment variables (none are secrets):
 | `AMPLIFY_CANDIDATE_BRANCH` | `candidate` |
 | `AMPLIFY_PRODUCTION_URL` | Default Amplify URL for `main` |
 | `AMPLIFY_CANDIDATE_URL` | Default Amplify URL for `candidate` |
+| `AMPLIFY_RELEASE_BUCKET` | CloudFormation verified-release bucket output |
 | `PRODUCTION_DOMAIN_ACTIVE` | `false` until the nameserver cutover is accepted |
 
 Never add long-lived AWS credentials or presigned Amplify upload URLs to logs, artifacts, variables, or secrets.
@@ -120,13 +122,15 @@ aws cloudformation execute-change-set \
 
 ## Rollback
 
-Run `.github/workflows/rollback.yml` with the successful `main` deployment run ID whose retained artifact should be restored:
+Run `.github/workflows/rollback.yml` with the deployment run ID and artifact-build attempt recorded in the verified release marker:
 
 ```bash
-gh workflow run rollback.yml --ref main -f run_id=<successful-run-id>
+gh workflow run rollback.yml --ref main \
+  -f run_id=<successful-run-id> \
+  -f run_attempt=<artifact-build-attempt>
 ```
 
-The workflow validates the selected run identity, branch, commit, artifact checksum, and embedded release marker. It deploys the zip to `candidate`, runs candidate smoke/Playwright/Lighthouse acceptance, deploys the identical zip to `main`, verifies recovery, and records the artifact hash and Amplify job IDs.
+The workflow validates the selected GitHub run and commit, downloads the matching immutable run/attempt release from the private S3 store, and verifies its checksum and embedded marker. It deploys the zip to `candidate`, runs candidate smoke/Playwright/Lighthouse acceptance, deploys the identical zip to `main`, verifies the restored release identity, and records the artifact hash and Amplify job IDs.
 
 ## Redacted Netlify archive
 

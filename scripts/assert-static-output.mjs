@@ -4,12 +4,17 @@ import { join, relative, resolve } from "node:path";
 const clientRoot = resolve("dist/client");
 const requiredFiles = ["index.html", "404.html", "favicon.png"];
 
+/** @type {(condition: unknown, message: string) => asserts condition} */
 const assert = (condition, message) => {
 	if (!condition) {
 		throw new Error(message);
 	}
 };
 
+/**
+ * @param {string} directory
+ * @returns {Promise<string[]>}
+ */
 const listFiles = async (directory) => {
 	const entries = await readdir(directory, { withFileTypes: true });
 	const nestedFiles = await Promise.all(
@@ -27,6 +32,10 @@ for (const file of requiredFiles) {
 
 const indexHtml = await readFile(join(clientRoot, "index.html"), "utf8");
 const notFoundHtml = await readFile(join(clientRoot, "404.html"), "utf8");
+/** @type {{ label: string, url: string }[]} */
+const navigationLinks = JSON.parse(
+	await readFile(resolve("src/content/navigation.json"), "utf8"),
+);
 const files = await listFiles(clientRoot);
 const relativeFiles = files.map((file) => relative(clientRoot, file));
 
@@ -50,6 +59,12 @@ assert(
 	!notFoundHtml.includes("<script"),
 	"404.html contains client scripts and could hydrate against an unknown URL",
 );
+for (const { label, url } of navigationLinks) {
+	assert(
+		notFoundHtml.includes(`href="${url}">${label}</a>`),
+		`404.html is missing the ${label} navigation link`,
+	);
+}
 assert(
 	relativeFiles.every(
 		(file) => !file.endsWith(".mjs") && !file.includes("server"),
@@ -57,10 +72,12 @@ assert(
 	"dist/client contains a server artifact",
 );
 assert(
-	relativeFiles.includes("images/profile-480.avif") &&
+	relativeFiles.includes("images/profile-240.avif") &&
 		relativeFiles.includes("images/profile-1200.webp") &&
+		relativeFiles.includes("images/carolyn-portfolio-320.avif") &&
+		relativeFiles.includes("images/family-website-480.webp") &&
 		!relativeFiles.includes("images/profile.jpeg"),
-	"responsive profile assets are incomplete or the oversized source leaked into the artifact",
+	"responsive image assets are incomplete or the oversized profile source leaked into the artifact",
 );
 
 const assetReferences = [

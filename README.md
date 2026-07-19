@@ -13,6 +13,8 @@ bun install --frozen-lockfile
 bun run dev
 
 # Build and serve the same static directory deployed to Amplify
+bun run typecheck
+bun run lint
 bun run build
 bun run start
 ```

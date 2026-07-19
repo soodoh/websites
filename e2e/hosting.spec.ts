@@ -1,9 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const canonicalUrl = "https://pauldiloreto.com/";
-const expectsStatic404 =
-	process.env.PLAYWRIGHT_STATIC === "1" ||
-	Boolean(process.env.PLAYWRIGHT_BASE_URL);
+const expectsStatic404 = process.env.PLAYWRIGHT_EXPECT_STATIC_404 === "1";
 
 test("home exposes canonical metadata and static assets", async ({ page }) => {
 	const response = await page.goto("/");

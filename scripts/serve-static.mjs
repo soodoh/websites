@@ -32,6 +32,7 @@ const compressibleExtensions = new Set([
 ]);
 const imageExtensions = new Set([".avif", ".jpeg", ".jpg", ".png", ".webp"]);
 
+/** @param {string} path */
 const isFile = async (path) => {
 	try {
 		return (await stat(path)).isFile();
@@ -40,6 +41,7 @@ const isFile = async (path) => {
 	}
 };
 
+/** @param {string} pathname */
 const resolveRequestPath = async (pathname) => {
 	const decodedPath = decodeURIComponent(pathname);
 	const relativePath = normalize(decodedPath).replace(/^[/\\]+/, "");
@@ -81,6 +83,7 @@ const server = createServer(async (request, response) => {
 		}
 
 		const extension = extname(file).toLowerCase();
+		/** @type {Record<string, string | number>} */
 		const headers = {
 			"Cache-Control": "public, max-age=3600, must-revalidate",
 			"Content-Type": contentTypes.get(extension) ?? "application/octet-stream",

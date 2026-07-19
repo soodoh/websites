@@ -139,11 +139,28 @@ Resources:
         - Prefix: www
           BranchName: !Ref ProductionBranchName
 
+  VerifiedReleaseBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
   GitHubDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
       Description: GitHub Actions OIDC role for manual deployments to this app's candidate and production branches.
-      MaxSessionDuration: 3600
+      MaxSessionDuration: 10800
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -180,8 +197,8 @@ Resources:
                   - amplify:CreateDeployment
                   - amplify:StartDeployment
                 Resource:
-                  - !Sub ${ProductionBranch.Arn}/deployments/*
-                  - !Sub ${CandidateBranch.Arn}/deployments/*
+                  - !GetAtt ProductionBranch.Arn
+                  - !GetAtt CandidateBranch.Arn
               - Sid: ManageTargetBranchJobs
                 Effect: Allow
                 Action:
@@ -190,6 +207,17 @@ Resources:
                 Resource:
                   - !Sub ${ProductionBranch.Arn}/jobs/*
                   - !Sub ${CandidateBranch.Arn}/jobs/*
+              - Sid: ListVerifiedReleases
+                Effect: Allow
+                Action:
+                  - s3:ListBucket
+                Resource: !GetAtt VerifiedReleaseBucket.Arn
+              - Sid: ManageVerifiedReleases
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/*
 
 Outputs:
   AmplifyAppId:
@@ -198,6 +226,9 @@ Outputs:
   GitHubDeploymentRoleArn:
     Description: OIDC role ARN used by the GitHub production environment.
     Value: !GetAtt GitHubDeploymentRole.Arn
+  VerifiedReleaseBucketName:
+    Description: Private release store used for deployment recovery and manual rollback.
+    Value: !Ref VerifiedReleaseBucket
   AmplifyDefaultDomain:
     Description: Amplify-managed default domain for the app.
     Value: !GetAtt AmplifyApp.DefaultDomain

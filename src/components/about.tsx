@@ -12,13 +12,13 @@ const About = (): JSX.Element => {
 				startX={5}
 				endX={-5}
 			>
-				<h1
+				<h2
 					id="about"
 					className="background-title-text text-[10rem] leading-[11rem] my-[0.67em] max-sm:text-[8rem]"
 					data-title="About Me"
 				>
 					<span className="sr-only">About Me</span>
-				</h1>
+				</h2>
 			</Parallax>
 
 			<Parallax
@@ -29,13 +29,13 @@ const About = (): JSX.Element => {
 				<picture>
 					<source
 						type="image/avif"
-						srcSet="/images/profile-480.avif 480w, /images/profile-960.avif 960w, /images/profile-1200.avif 1200w"
-						sizes="(max-width: 640px) calc(100vw - 6rem), (max-width: 1333px) 30vw, 400px"
+						srcSet="/images/profile-240.avif 240w, /images/profile-320.avif 320w, /images/profile-480.avif 480w, /images/profile-960.avif 960w, /images/profile-1200.avif 1200w"
+						sizes="(width < 700px) min(calc(80vw - 6rem), 304px), (width < 1333px) 30vw, 400px"
 					/>
 					<source
 						type="image/webp"
-						srcSet="/images/profile-480.webp 480w, /images/profile-960.webp 960w, /images/profile-1200.webp 1200w"
-						sizes="(max-width: 640px) calc(100vw - 6rem), (max-width: 1333px) 30vw, 400px"
+						srcSet="/images/profile-240.webp 240w, /images/profile-320.webp 320w, /images/profile-480.webp 480w, /images/profile-960.webp 960w, /images/profile-1200.webp 1200w"
+						sizes="(width < 700px) min(calc(80vw - 6rem), 304px), (width < 1333px) 30vw, 400px"
 					/>
 					<img
 						src={about.image}
@@ -48,8 +48,8 @@ const About = (): JSX.Element => {
 				</picture>
 			</Parallax>
 
-			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] gap-y-12 max-xs:grid-cols-1 relative z-5 [&_h2]:text-2xl [&_h2]:text-light-blue [&_h2]:m-0">
-				<h2>About</h2>
+			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] gap-y-12 max-xs:grid-cols-1 relative z-5 [&>h3]:text-2xl [&>h3]:text-light-blue [&>h3]:m-0">
+				<h3>About</h3>
 
 				<div className="pr-[min(30vw,400px)] max-sm:pr-0 [&_p]:m-0 [&_p]:mb-2">
 					{about.bio.map((paragraph) => (
@@ -57,7 +57,7 @@ const About = (): JSX.Element => {
 					))}
 				</div>
 
-				<h2>Focus</h2>
+				<h3>Focus</h3>
 
 				<div className="grid grid-cols-2 gap-x-10 gap-y-8 max-sm:grid-cols-1">
 					{about.focusAreas.map(({ title, description }) => (
@@ -65,7 +65,7 @@ const About = (): JSX.Element => {
 							key={`focus-area-${title}`}
 							className="border-l-2 border-light-blue pl-4"
 						>
-							<h3 className="text-xl text-light-blue mt-0 mb-2">{title}</h3>
+							<h4 className="text-xl text-light-blue mt-0 mb-2">{title}</h4>
 							<p className="m-0">{description}</p>
 						</article>
 					))}

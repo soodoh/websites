@@ -6,7 +6,7 @@ import { about } from "@/content/about";
 const Footer = (): JSX.Element => {
 	return (
 		<footer className="flex flex-wrap text-light-blue my-12 px-[10vw] max-sm:flex-col-reverse max-sm:items-center max-sm:px-8">
-			<ContactButtons />
+			<ContactButtons label="Footer social links" />
 
 			<div
 				className="flex-1 flex flex-wrap justify-center items-center font-header text-xl max-sm:justify-start max-sm:mb-12"

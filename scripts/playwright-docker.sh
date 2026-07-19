@@ -32,7 +32,7 @@ if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
 	)
 fi
 
-for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_STATIC; do
+for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_EXPECT_STATIC_404 PLAYWRIGHT_STATIC; do
 	if [[ -n "${!variable:-}" ]]; then
 		docker_arguments+=(--env "${variable}=${!variable}")
 	fi
@@ -50,12 +50,28 @@ set -e
 copy_artifacts
 
 for argument in "$@"; do
-	if [[ "${argument}" == "--update-snapshots" ]]; then
-		rm -rf e2e/__screenshots__
-		mkdir -p e2e/__screenshots__
-		docker cp "${container}:/app/e2e/__screenshots__/." e2e/__screenshots__
+	if [[ "${argument}" == "--update-snapshots" && "${status}" -eq 0 ]]; then
+		staging_directory="$(mktemp -d e2e/.screenshots-staging.XXXXXX)"
+		backup_directory="e2e/.screenshots-backup"
+		docker cp "${container}:/app/e2e/__screenshots__/." "${staging_directory}"
+		if ! find "${staging_directory}" -type f -name '*.png' -print -quit | grep -q .; then
+			echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
+			rm -rf "${staging_directory}"
+			exit 1
+		fi
+
+		rm -rf "${backup_directory}"
+		mv e2e/__screenshots__ "${backup_directory}"
+		if mv "${staging_directory}" e2e/__screenshots__; then
+			rm -rf "${backup_directory}"
+		else
+			mv "${backup_directory}" e2e/__screenshots__
+			exit 1
+		fi
 		break
 	fi
 done
 
+trap - EXIT
+cleanup
 exit "${status}"

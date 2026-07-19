@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from "react";
-import { useMemo } from "react";
 import { Parallax as ScrollParallax } from "react-scroll-parallax";
+import { useReducedMotion } from "./parallax-motion";
 
 type ParallaxProps = {
 	className?: string;
@@ -19,25 +19,16 @@ const Parallax = ({
 	startX,
 	endX,
 }: ParallaxProps): JSX.Element => {
-	const translateY = useMemo(
-		() =>
-			startY !== undefined && endY !== undefined
-				? ([startY, endY] as [number, number])
-				: undefined,
-		[startY, endY],
-	);
-
-	const translateX = useMemo(
-		() =>
-			startX !== undefined && endX !== undefined
-				? ([startX, endX] as [number, number])
-				: undefined,
-		[startX, endX],
-	);
+	const prefersReducedMotion = useReducedMotion();
+	const translateY: [number, number] | undefined =
+		startY !== undefined && endY !== undefined ? [startY, endY] : undefined;
+	const translateX: [number, number] | undefined =
+		startX !== undefined && endX !== undefined ? [startX, endX] : undefined;
 
 	return (
 		<ScrollParallax
 			className={className}
+			disabled={prefersReducedMotion}
 			translateY={translateY}
 			translateX={translateX}
 		>
