@@ -20,7 +20,7 @@ The custom-domain association is initially disabled. Until DNS cutover is explic
 
 `.github/workflows/deploy.yml` runs for pull requests and pushes to `main`.
 
-1. Install with Bun 1.3.13 and `bun install --frozen-lockfile`.
+1. Install with Bun 1.3.14 and `bun install --frozen-lockfile`.
 2. Run Biome, a production build, static-output assertions, Docker-pinned functional/visual Playwright tests, and three-run mobile Lighthouse CI.
 3. Add a public `release.json` marker containing the workflow run and commit, normalize file timestamps, and package the contents of `dist/client` at the root of a deterministic zip.
 4. Record SHA-256 metadata and retain the verified zip and reports as a GitHub artifact for 30 days.

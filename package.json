@@ -45,23 +45,23 @@
 		"lighthouse": "lhci autorun"
 	},
 	"dependencies": {
-		"@fontsource/fjalla-one": "^5.2.7",
-		"@fontsource/geo": "^5.2.7",
-		"@tailwindcss/vite": "^4.3.2",
-		"@tanstack/react-router": "^1.170.17",
-		"@tanstack/react-start": "^1.168.27",
+		"@fontsource/fjalla-one": "^5.3.0",
+		"@fontsource/geo": "^5.3.0",
+		"@tailwindcss/vite": "^4.3.3",
+		"@tanstack/react-router": "^1.170.18",
+		"@tanstack/react-start": "^1.168.30",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"lucide-react": "^1.24.0",
+		"lucide-react": "^1.25.0",
 		"radix-ui": "^1.6.2",
 		"react": "^19.2.7",
 		"react-dom": "^19.2.7",
 		"react-scroll-parallax": "^3.5.0",
 		"tailwind-merge": "^3.6.0",
-		"tailwindcss": "^4.3.2"
+		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.5.3",
+		"@biomejs/biome": "^2.5.4",
 		"@commitlint/cli": "^21.2.1",
 		"@commitlint/config-conventional": "^21.2.0",
 		"@commitlint/types": "^21.2.0",
@@ -72,15 +72,15 @@
 		"@types/react": "^19.2.17",
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^6.0.3",
-		"find-up": "^7.0.0",
+		"find-up": "^8.0.0",
 		"lefthook": "^2.1.10",
-		"shadcn": "^4.13.0",
+		"shadcn": "^4.13.1",
 		"tw-animate-css": "^1.4.0",
-		"typescript": "^5.9.3",
-		"vite": "^8.1.4"
+		"typescript": "^7.0.2",
+		"vite": "^8.1.5"
 	},
-	"packageManager": "bun@1.3.13",
+	"packageManager": "bun@1.3.14",
 	"engines": {
-		"bun": "1.3.13"
+		"bun": "1.3.14"
 	}
 }
