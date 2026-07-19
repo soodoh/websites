@@ -60,7 +60,7 @@ Resources:
           Status: "301"
         - Source: /<*>
           Target: /404.html
-          Status: "404"
+          Status: "404-200"
       CustomHeaders: |
         customHeaders:
           - pattern: "**/*"

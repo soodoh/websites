@@ -67,7 +67,7 @@ assert(
 );
 
 const missing = await request(
-	new URL("/hosting-migration-smoke/missing-page", baseUrl),
+	new URL("/hosting-migration-smoke/missing-page.missing", baseUrl),
 );
 assert(
 	missing.response.status === 404,
