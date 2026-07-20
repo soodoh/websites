@@ -183,6 +183,19 @@ if (expectDomainRedirects) {
 			`https://pauldiloreto.com${redirectPath}`,
 		"www redirect did not preserve the path and query",
 	);
+
+	const legacyRedirect = await request(
+		`https://paul.diloreto.com${redirectPath}`,
+	);
+	assert(
+		legacyRedirect.response.status === 301,
+		`paul.diloreto.com redirect returned ${legacyRedirect.response.status}`,
+	);
+	assert(
+		legacyRedirect.response.headers.get("location") ===
+			`https://pauldiloreto.com${redirectPath}`,
+		"paul.diloreto.com redirect did not preserve the path and query",
+	);
 }
 
 console.log(

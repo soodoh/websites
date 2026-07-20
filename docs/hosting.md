@@ -11,11 +11,13 @@ AWS resources are owned by the `pauldiloreto-amplify-hosting` CloudFormation sta
 - a Route 53 hosted zone for `pauldiloreto.com`
 - a private, versioned S3 store for every successfully promoted release
 - a repository-scoped GitHub OIDC deployment role
-- an optional native Amplify domain association for the apex and `www`
+- a native Amplify domain association for the apex and `www`
 
-The existing account-level GitHub OIDC provider remains owned by the unrelated `diloreto-amplify-hosting` stack and is only referenced by ARN. No AWS access keys are stored in GitHub.
+The existing account-level GitHub OIDC provider remains owned by the `diloreto-amplify-hosting` stack and is only referenced by ARN. No AWS access keys are stored in GitHub.
 
-The custom-domain association is initially disabled. Until DNS cutover is explicitly approved and completed, Netlify remains authoritative and the GitHub `PRODUCTION_DOMAIN_ACTIVE` variable remains `false`.
+The legacy `paul.diloreto.com` hostname is intentionally not added to this stack's Amplify domain association. The separate `diloreto-amplify-hosting` stack owns the shared `diloreto.com` Route 53 zone, exact `paul` CloudFront alias, TLS SAN, and permanent redirect to this site's apex. This keeps every source hostname with its authoritative-zone owner and prevents either portfolio stack from changing the `diloreto.com` apex, `www`, mail, or the cross-account `carolyn` records.
+
+The custom-domain association is enabled, Route 53 is authoritative, and the GitHub `PRODUCTION_DOMAIN_ACTIVE` variable is `true`. The former Netlify deployment is retained only as the redacted historical archive described below.
 
 ## Deployment flow
 
@@ -50,21 +52,22 @@ Environment variables (none are secrets):
 | `AMPLIFY_PRODUCTION_URL` | Default Amplify URL for `main` |
 | `AMPLIFY_CANDIDATE_URL` | Default Amplify URL for `candidate` |
 | `AMPLIFY_RELEASE_BUCKET` | CloudFormation verified-release bucket output |
-| `PRODUCTION_DOMAIN_ACTIVE` | `false` until the nameserver cutover is accepted |
+| `PRODUCTION_DOMAIN_ACTIVE` | `true` in the completed Route 53/Amplify production state |
 
 Never add long-lived AWS credentials or presigned Amplify upload URLs to logs, artifacts, variables, or secrets.
 
 ## DNS and TLS ownership
 
-Route 53 will become authoritative for `pauldiloreto.com` only after the native Amplify domain association is `AVAILABLE` and the explicit nameserver confirmation gate is approved. Amplify owns CDN delivery and managed TLS for the apex and `www`; there is no additional CloudFront distribution.
+Route 53 is authoritative for `pauldiloreto.com`, and the native Amplify domain association is `AVAILABLE`. Amplify owns CDN delivery and managed TLS for the apex and `www`; there is no additional CloudFront distribution for this apex.
 
 The intended routing is:
 
 - apex is canonical
 - `https://www.pauldiloreto.com` permanently redirects to the apex and preserves the path/query
+- `https://paul.diloreto.com` is terminated and permanently redirected by the `diloreto-amplify-hosting` CloudFront distribution, preserving the path/query
 - missing paths serve `/404.html` with HTTP 404
 
-The staged cutover is:
+The completed staged cutover was:
 
 1. Update the stack through a reviewed change set with `EnableCustomDomain=true`.
 2. Retrieve the Amplify certificate validation CNAME and add it to both the still-authoritative Netlify zone and the new Route 53 zone.
@@ -132,6 +135,12 @@ gh workflow run rollback.yml --ref main \
 
 The workflow validates the selected GitHub run and commit, downloads the matching immutable run/attempt release from the private S3 store, and verifies its checksum and embedded marker. It deploys the zip to `candidate`, runs candidate smoke/Playwright/Lighthouse acceptance, deploys the identical zip to `main`, verifies the restored release identity, and records the artifact hash and Amplify job IDs.
 
+## Shared `diloreto.com` ownership
+
+AWS account `658271954302` owns `pauldiloreto.com`, the shared `diloreto.com` hosted zone, and the `diloreto-amplify-hosting` CloudFront distribution. That distribution owns only the exact `paul.diloreto.com` redirect in addition to the family site's apex/`www` names.
+
+The Carolyn portfolio runs in AWS account `725669362139`. Its Amplify app owns a separate `diloreto.com` domain association containing only the `carolyn` prefix. Because there is no cross-account IAM trust, the Carolyn account provisions the Amplify certificate/distribution while account `658271954302` supplies only the exact certificate-validation and traffic CNAMEs for `carolyn.diloreto.com`. Exact `paul` and `carolyn` CloudFront aliases do not overlap, and neither project changes the other's records.
+
 ## Redacted Netlify archive
 
 The complete redacted inventory is stored at [`netlify-inventory.redacted.json`](./netlify-inventory.redacted.json). It records:
@@ -143,4 +152,4 @@ The complete redacted inventory is stored at [`netlify-inventory.redacted.json`]
 - site-specific GitHub status/check hooks
 - the last published production deploy and the latest failed production attempt, with identifiers redacted
 
-Do not delete or alter Netlify resources until all AWS production acceptance checks pass and explicit deletion confirmation is obtained. Cleanup must remain site-specific and must not alter account-wide integrations used by other sites.
+The Netlify inventory is historical. On 2026-07-20, authenticated Netlify CLI 26.2.0 returned no projects or DNS zones for the account, and the former `pauldiloreto.netlify.app` URL returned 404. There was therefore no remaining site or zone for this migration to delete. Do not recreate those resources or remove account-wide integrations used by unrelated sites.
