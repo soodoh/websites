@@ -197,8 +197,8 @@ Resources:
                   - amplify:CreateDeployment
                   - amplify:StartDeployment
                 Resource:
-                  - !GetAtt ProductionBranch.Arn
-                  - !GetAtt CandidateBranch.Arn
+                  - !Sub ${ProductionBranch.Arn}/deployments/*
+                  - !Sub ${CandidateBranch.Arn}/deployments/*
               - Sid: ManageTargetBranchJobs
                 Effect: Allow
                 Action:
