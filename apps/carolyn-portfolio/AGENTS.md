@@ -7,12 +7,12 @@
 - `lib/` includes data fetching and shared utilities (`fetch-*.ts`, Contentful helpers, image utilities, type definitions).
 - `tests/` contains Playwright specs and visual baselines (`*.test.ts` and `*-snapshots/`).
 - `scripts/` stores build-time tasks, including `generate-auth-manifest.ts`.
-- `infra/` contains the self-contained AWS CDK v2 TypeScript project for Amplify, IAM, Route 53, monitoring, and budgets.
+- `infra/` retains the AWS CDK v2 source/layout for Amplify, IAM, Route 53, monitoring, and budgets. Its tools now belong to this app's manifest; run `infra:typecheck`, `infra:test`, and offline `infra:synth` from this app.
 - `public/` is for static assets. `lib/project-auth-manifest.json` is generated and must stay uncommitted.
 
 ## Build, Test, and Development Commands
 
-- `bun install`: install dependencies.
+- Run `bun install --frozen-lockfile` at the workspace root, not in this app or infra. See root AGENTS.md for migration boundaries and root verification commands.
 - `bun dev`: generate auth manifest, then start local dev server (`http://localhost:3000`).
 - `bun run build`: generate auth data, prerender public pages, and emit the cleaned AWS Amplify Hosting bundle under `.amplify-hosting/`.
 - `bun run typecheck`: generate fixture build artifacts, then run TypeScript.

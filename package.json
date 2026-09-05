@@ -1,0 +1,34 @@
+{
+  "name": "websites",
+  "private": true,
+  "packageManager": "bun@1.4.0",
+  "engines": {
+    "node": "24.20.0",
+    "bun": "1.4.0"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev:workspace --concurrency=4",
+    "lint": "turbo run lint --concurrency=1",
+    "typecheck": "turbo run typecheck --concurrency=1",
+    "ci:verify": "bun run test:workspace && turbo run ci:verify --concurrency=1",
+    "prepare": "test ! -e .git || lefthook install",
+    "verify:sarabeth-studio": "turbo run ci:verify --filter=sarabeth-studio --concurrency=1",
+    "verify:portfolio-website": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
+    "verify:carolyn-portfolio": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
+    "verify:diloreto-website": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
+    "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts"
+  },
+  "devDependencies": {
+    "turbo": "2.10.12",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "@commitlint/types": "21.2.0",
+    "lefthook": "2.1.12"
+  },
+  "trustedDependencies": [
+    "unrs-resolver"
+  ]
+}

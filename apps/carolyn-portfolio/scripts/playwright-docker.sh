@@ -1,25 +1,70 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly IMAGE_NAME="carolyn-portfolio-playwright:1.61.1"
-readonly DOCKER_ARCHITECTURE="$(docker info --format '{{.Architecture}}')"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly ROOT_DIR
+WORKSPACE_ROOT="$(cd "${ROOT_DIR}/../.." && pwd)"
+readonly WORKSPACE_ROOT
+LOCK_HASH="$(shasum -a 256 "${WORKSPACE_ROOT}/bun.lock" | cut -c1-16)"
+readonly LOCK_HASH
+readonly IMAGE_NAME="websites-carolyn-playwright:1.62.1-bun1.4.0-${LOCK_HASH}"
+DOCKER_ARCHITECTURE="$(docker info --format '{{.Architecture}}')"
+readonly DOCKER_ARCHITECTURE
+container=""
+cleanup() {
+	if [[ -n "${container}" ]]; then
+		docker rm --force "${container}" >/dev/null 2>&1 || true
+	fi
+}
+trap cleanup EXIT
 
 if [[ "${DOCKER_ARCHITECTURE}" != "aarch64" && "${DOCKER_ARCHITECTURE}" != "arm64" ]]; then
 	echo "Visual snapshots require an ARM64 Docker engine; found ${DOCKER_ARCHITECTURE}." >&2
 	exit 1
 fi
 
-docker build --file "${ROOT_DIR}/Dockerfile.playwright" --tag "${IMAGE_NAME}" "${ROOT_DIR}"
-docker run --rm --init --ipc=host \
+docker build --file "${ROOT_DIR}/Dockerfile.playwright" --tag "${IMAGE_NAME}" "${WORKSPACE_ROOT}"
+container=$(docker create --init --ipc=host \
 	--env "CI=${CI:-}" \
 	--env AMPLIFY_BASE_URL \
 	--env AMPLIFY_DEFAULT_ORIGIN \
 	--env AMPLIFY_EXPECTED_RELEASE_COMMIT \
 	--env EXPECTED_ARTIFACT_MODE \
 	--env HERMETIC_ARTIFACT_TEST \
-	--mount "type=bind,source=${ROOT_DIR},target=/work" \
-	--mount "type=volume,source=carolyn-portfolio-playwright-node-modules,target=/work/node_modules" \
-	--mount "type=volume,source=carolyn-portfolio-playwright-output,target=/work/.output" \
-	"${IMAGE_NAME}" \
-	bash -lc 'PLAYWRIGHT_CONTAINER=true bun install --frozen-lockfile && bunx playwright test "$@"' bash "$@"
+	"${IMAGE_NAME}" bash -c '
+		set -euo pipefail
+		if [[ -z "${AMPLIFY_BASE_URL:-}" ]]; then
+			case "${EXPECTED_ARTIFACT_MODE:-}" in
+				fixture) bun run build:test ;;
+				production) bun run build:production:test ;;
+				*) echo "Local browser tests require an explicit fixture artifact mode" >&2; exit 1 ;;
+			esac
+		fi
+		bun x --no-install playwright test "$@"
+	' bash "$@")
+set +e
+docker start --attach "${container}"
+status=$?
+set -e
+for report in playwright-report test-results; do
+	rm -rf "${ROOT_DIR:?}/${report}"
+	docker cp "${container}:/work/apps/carolyn-portfolio/${report}" "${ROOT_DIR}/${report}" >/dev/null 2>&1 || true
+done
+if [[ "${status}" -eq 0 ]]; then
+	for argument in "$@"; do
+		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
+			staging=$(mktemp -d)
+			docker cp "${container}:/work/apps/carolyn-portfolio/tests/." "${staging}"
+			while IFS= read -r -d '' snapshot; do
+				relative="${snapshot#"${staging}/"}"
+				mkdir -p "$(dirname "${ROOT_DIR}/tests/${relative}")"
+				cp "${snapshot}" "${ROOT_DIR}/tests/${relative}"
+			done < <(find "${staging}" -path '*-snapshots/*.png' -print0)
+			rm -rf "${staging}"
+			break
+		fi
+	done
+fi
+trap - EXIT
+cleanup
+exit "${status}"

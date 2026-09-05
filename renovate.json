@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "group:allNonMajor"],
+  "github-actions": { "managerFilePatterns": ["/apps/[^/]+/\\.github/workflows/[^/]+\\.ya?ml$/"] },
+  "packageRules": [
+    { "matchDepTypes": ["dependencies", "devDependencies"], "rangeStrategy": "bump" },
+    { "matchManagers": ["github-actions", "dockerfile"], "pinDigests": true }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)\\.bun-version$/"],
+      "matchStrings": ["^(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s*$"],
+      "depNameTemplate": "oven-sh/bun",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/package\\.json$/"],
+      "matchStrings": ["cfn-lint==(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "cfn-lint",
+      "datasourceTemplate": "pypi"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+[install]
+# Explicit workspace isolation; never depend on another app's undeclared packages.
+linker = "isolated"

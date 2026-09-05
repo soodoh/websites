@@ -1,16 +1,22 @@
 FROM oven/bun:1.4.0@sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6 AS bun
+FROM node:24.20.0-bookworm-slim AS node
 
 FROM mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
 
 COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
-
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN ln -s bun /usr/local/bin/bunx
+WORKDIR /work
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/carolyn-portfolio/package.json apps/carolyn-portfolio/package.json
+COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
+COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
+COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
+RUN bun install --frozen-lockfile --ignore-scripts
+COPY apps/diloreto-website apps/diloreto-website
+WORKDIR /work/apps/diloreto-website
+RUN mkdir -p dist/client && chmod -R a+rX /work
+RUN chmod -R a+rwX tests
 ENV CI=1
 ENV PLAYWRIGHT_IN_DOCKER=1
-WORKDIR /app
-
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --ignore-scripts
-
-COPY . .
-
-CMD ["bun", "x", "playwright", "test"]
+CMD ["bun", "x", "--no-install", "playwright", "test"]
