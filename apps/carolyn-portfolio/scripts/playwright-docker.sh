@@ -34,9 +34,10 @@ container=$(docker create --init --ipc=host \
 	"${IMAGE_NAME}" bash -c '
 		set -euo pipefail
 		if [[ -z "${AMPLIFY_BASE_URL:-}" ]]; then
+			# Keep Linux localhost preview binding and Node fetch on the same address family.
 			case "${EXPECTED_ARTIFACT_MODE:-}" in
-				fixture) bun run build:test ;;
-				production) bun run build:production:test ;;
+				fixture) NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test ;;
+				production) NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test ;;
 				*) echo "Local browser tests require an explicit fixture artifact mode" >&2; exit 1 ;;
 			esac
 		fi
