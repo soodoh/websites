@@ -1,5 +1,12 @@
 # Carolyn DiLoreto Portfolio
 
+> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
+> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
+> `apps/carolyn`, or use root `bun run verify:carolyn` for the complete fixture/offline
+> chain. See [root guidance](../../README.md). Standalone clone/install and deployment
+> examples below describe the original production-owner repository; they are not
+> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+
 Portfolio website for a Film Editor / Graphic Designer / UX Engineer. It uses TanStack Start, React 19, Vite, Nitro, and Contentful.
 
 **Production domain:** [carolyndiloreto.com](https://carolyndiloreto.com)

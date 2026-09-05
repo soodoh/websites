@@ -1,5 +1,12 @@
 # portfolio-website
 
+> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
+> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
+> `apps/paul`, or use root `bun run verify:paul` for the complete fixture/offline
+> chain. See [root guidance](../../README.md). Standalone clone/install and deployment
+> examples below describe the original production-owner repository; they are not
+> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+
 My Portfolio website displaying various work and information about myself as a Software Engineer. Feel free to review my code and check out the [live website](https://pauldiloreto.com).
 
 The website is a fully static TanStack Start + React application hosted by AWS Amplify. GitHub Actions validates and deploys the prerendered `dist/client` artifact through a candidate branch before production promotion. See the [hosting runbook](docs/hosting.md) for architecture, deployment, DNS, and rollback procedures.
