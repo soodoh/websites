@@ -1,4 +1,87 @@
 {
+  ".": {
+    "packages": 73,
+    "edgesChecked": 108,
+    "peerAndDirectEdges": [
+      {
+        "parent": "websites",
+        "type": "direct",
+        "dep": "turbo",
+        "range": "2.10.12",
+        "resolved": "2.10.12"
+      },
+      {
+        "parent": "websites",
+        "type": "direct",
+        "dep": "@commitlint/cli",
+        "range": "21.2.2",
+        "resolved": "21.2.2"
+      },
+      {
+        "parent": "cosmiconfig",
+        "version": "9.0.1",
+        "type": "peerDependencies",
+        "dep": "typescript",
+        "range": ">=4.9.5",
+        "resolved": "7.0.2"
+      },
+      {
+        "parent": "cosmiconfig-typescript-loader",
+        "version": "6.2.0",
+        "type": "peerDependencies",
+        "dep": "@types/node",
+        "range": "*",
+        "resolved": "26.4.1"
+      },
+      {
+        "parent": "cosmiconfig-typescript-loader",
+        "version": "6.2.0",
+        "type": "peerDependencies",
+        "dep": "cosmiconfig",
+        "range": ">=9",
+        "resolved": "9.0.1"
+      },
+      {
+        "parent": "cosmiconfig-typescript-loader",
+        "version": "6.2.0",
+        "type": "peerDependencies",
+        "dep": "typescript",
+        "range": ">=5",
+        "resolved": "7.0.2"
+      },
+      {
+        "parent": "@conventional-changelog/git-client",
+        "version": "3.1.0",
+        "type": "peerDependencies",
+        "dep": "conventional-commits-parser",
+        "range": "^7.0.1",
+        "resolved": "7.1.0"
+      },
+      {
+        "parent": "websites",
+        "type": "direct",
+        "dep": "@commitlint/config-conventional",
+        "range": "21.2.2",
+        "resolved": "21.2.2"
+      },
+      {
+        "parent": "websites",
+        "type": "direct",
+        "dep": "@commitlint/types",
+        "range": "21.2.0",
+        "resolved": "21.2.0"
+      },
+      {
+        "parent": "websites",
+        "type": "direct",
+        "dep": "lefthook",
+        "range": "2.1.12",
+        "resolved": "2.1.12"
+      }
+    ],
+    "violations": [],
+    "missing": []
+  },
   "apps/sarabeth-studio": {
     "packages": 574,
     "edgesChecked": 1554,
