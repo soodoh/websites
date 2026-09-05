@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "PRE-RENAME local verification passed; requested rename/scopes, proposed history normalization and final acceptance remain pending",
+  "status": "Renamed workspace and required scopes verified locally; parent-owned all-history normalization and final acceptance pending",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -10,7 +10,7 @@
     "startingSha": "5b236ef3a519759c84ebd3504809d391baf085ea",
     "finalMigrationSha": null,
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
-    "workspaceCandidateCommit": "2aecd5bbbec414f43ca50646ff64ed6347276d2c",
+    "workspaceCandidateCommit": "0d7912745c02f1f30e2c36074fd275b7dff46dd6",
     "reviewedCandidateCommit": "bb6eb584524d1efecd0f675214261fd8c8600017",
     "targetedReview": "targeted-final-review.md; both P2 issues resolved; full phase-1 acceptance still blocked",
     "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373",
@@ -21,7 +21,8 @@
     "preRenameCompatibilityFixCommits": [
       "0b70576e",
       "2aecd5bbbec414f43ca50646ff64ed6347276d2c"
-    ]
+    ],
+    "renameImplementationCommit": "92c9079855beea5f2eac5fd8ba002097ce938213"
   },
   "backupDirectory": "/Users/pauldiloreto/Projects/websites-migration-backups",
   "scanner": {
@@ -189,7 +190,7 @@
     "cleanAllAppLintPassed": true,
     "cleanAllAppTypecheckPassed": true,
     "fullVerificationAccepted": false,
-    "blocker": "No remaining PRE-RENAME test failure. Requested directory renames/required scopes, proposed historical-message normalization and independent final review are not covered; no overall phase1 acceptance.",
+    "blocker": "No post-rename test failure; parent-owned approved all-history message normalization (including published initial commit) and final review remain. No publication authorization.",
     "publication": "LOCAL ONLY; no push authorized",
     "reviewFixValidation": {
       "rangeRegressionTests": 5,
@@ -239,6 +240,37 @@
       "futureRenameAndCommitScopePolicyApplied": false,
       "futureHistoricalMessageNormalizationApplied": false,
       "newCompatibilityReview": "pending"
-    }
+    },
+    "requiredCommitScopes": [
+      "carolyn",
+      "paul",
+      "diloreto",
+      "sarabeth",
+      "repo",
+      "ci",
+      "deps"
+    ],
+    "postRenameVerification": {
+      "testedCommit": "0d7912745c02f1f30e2c36074fd275b7dff46dd6",
+      "evidence": "post-rename-validation-evidence.json",
+      "rootCiExit": 0,
+      "tasksPassed": 4,
+      "tasksTotal": 4,
+      "cachedTasks": 0,
+      "concurrency": 1,
+      "contractsPassed": 24,
+      "contractAssertions": 391,
+      "exactLockParityExceptPaths": true,
+      "exactFullInstalledAndPeerGraphParity": true,
+      "dependencyVersionChanges": 0,
+      "validSymlinks": 3472,
+      "brokenSymlinks": 0,
+      "originalHistoricalSourceMetadataPreserved": true,
+      "canonicalScreenshotsUnchanged": true,
+      "historyNormalizationPerformed": false,
+      "newCleanupScopeDeviations": 0,
+      "finalReview": "pending"
+    },
+    "nextStage": "Parent-owned normalization of every local-main reachable commit message including published initial commit; future non-fast-forward publication requires separate approval."
   }
 }

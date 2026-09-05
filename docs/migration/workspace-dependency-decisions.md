@@ -78,7 +78,9 @@ Approved constrained experiment:
 To reproduce original runtime/peer evidence, extract only the committed package.json
 and bun.lock at each recorded import into disposable `apps/<name>` (plus Carolyn
 infra), install each with `bun install --frozen-lockfile --ignore-scripts`, then run:
-`bun docs/migration/scripts/audit-installed-ranges.ts <scratch-root> <output-json>`.
+`bun docs/migration/scripts/audit-installed-ranges.ts <scratch-root> <output-json> --historical-paths`.
+The explicit historical flag selects original import prefixes; default audits now use
+`source-imports.json` currentPrefix mappings for the renamed directories.
 That original five-install audit is `dependency-baseline-peer-evidence.json`.
 Original Portfolio/DiLoreto each had a vitefu 1.1.1 peer range that excluded their
 Vite 8.2.2; the candidate has no such unsatisfied peer. These are actual scratch
@@ -92,6 +94,32 @@ installs (never source installations):
 The script requires that baseline location explicitly rather than treating raw lock
 entries as installed versions. Run from the candidate checkout being inspected;
 its optional output path allows clean-checkout comparisons without dirtying that tree.
+
+## Post-rename parity checkpoint
+
+The approved short directory names do not rename package.json package identities.
+Bun's supported `bun install --lockfile-only --ignore-scripts` operation changed only
+four workspace keys and four workspace locators; frozen reinstallation passed. All
+1,245 lock package entries and all other lock metadata are exactly equal after those
+path substitutions: **zero resolved-version changes**.
+
+For full installed graph comparison, add `--full-graph` to the range auditor and use
+explicit output files. The pre-rename target installation, independent pre-rename
+checkout selected with `--historical-paths`, renamed target, and clean renamed checkout
+all have identical dependency/peer edges after root-key path mapping. All six locations
+have zero missing required edges or incompatible ranges; 3,472 symlinks are valid and
+none targets an old workspace path. The historical installed-resolution comparison
+also remains exactly unchanged, including the genuine schema change already below.
+
+See `post-rename-validation-evidence.json` for exact lock/graph hashes, counts, command
+exits and the clean root-ci source SHA. Full graph captures are under
+`/tmp/websites-workspace/rename-validation`; reproduction uses the auditor above and
+compares JSON after mapping only top-level location keys. Earlier peer/evidence JSON
+captures retain their historical pre-rename location labels; do not globally rewrite
+those labels or pristine import prefixes. `targetPrefix`/`importCommit` remain historical;
+`currentPrefix` alone selects current app directories. Root complete verification and
+all four filters passed after rename with unchanged browser baselines. All-history
+message normalization remains a separate parent-owned step, not part of these proofs.
 
 ## Remaining resolution differences and acceptance boundary
 

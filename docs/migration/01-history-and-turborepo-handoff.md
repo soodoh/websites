@@ -1,8 +1,14 @@
-# Phase 1 handoff — PRE-RENAME verification passed; next-stage work pending
+# Phase 1 handoff — renamed workspace/scopes verified; history normalization pending
 
 **LOCAL ONLY. Nothing pushed. Phase 1 is not accepted; do not begin phase 2.**
 
-Latest tested PRE-RENAME implementation: `2aecd5bbbec414f43ca50646ff64ed6347276d2c`.
+**Latest tested renamed/scoped candidate: `0d7912745c02f1f30e2c36074fd275b7dff46dd6`.**
+Root full CI and all four new convenience filters pass. See the post-rename checkpoint
+below and `post-rename-validation-evidence.json`. No history was rewritten; the approved
+all-history normalization (including published initial commit) remains parent-owned,
+and eventual non-fast-forward publication requires separate approval.
+
+Earlier tested PRE-RENAME implementation: `2aecd5bbbec414f43ca50646ff64ed6347276d2c`.
 All four individual complete verification filters and root serial `ci:verify` passed.
 See the latest checkpoint below and `pre-rename-validation-evidence.json` for exact
 commands, versions, exits, images and cleanup disclosure. This does **not** cover
@@ -331,7 +337,7 @@ resize or volume deletion occurred. Final disk:98G total/87G used/**6.7G availab
 93%; **19 running containers,70 volumes**, unchanged counts. Tagged browser/Bun/Node
 bases remain. No rollback/recreation of discarded cache was requested.
 
-## Next steps — user-requested work intentionally deferred
+## Historical next steps at the PRE-RENAME checkpoint
 
 1. Parent reviews the two new compatibility fixes and this PRE-RENAME checkpoint.
 2. In a separate sole-writer stage, implement the approved directory names
@@ -347,3 +353,112 @@ bases remain. No rollback/recreation of discarded cache was requested.
 4. Final migration SHA/phase1 acceptance remains pending these requested stages and
    independent review. No push/publication, phase2 or production cutover is authorized.
    Source repositories remain production deployment owners.
+
+## Post-rename checkpoint — complete local gates passed
+
+The separate approved rename/scope stage starts at
+`bddc54064ae984280b62ea27181f44aa835fe685`. Implementation is
+`92c9079855beea5f2eac5fd8ba002097ce938213`; two follow-up app-documentation commits
+end at the exact fully tested candidate **`0d7912745c02f1f30e2c36074fd275b7dff46dd6`**.
+All are forward scoped commits, not rewrites of any earlier message or ref history.
+
+| Historical import prefix (unchanged) | Current prefix / convenience command | Unchanged package-name filter |
+| --- | --- | --- |
+| apps/carolyn-portfolio | apps/carolyn / `verify:carolyn` | carolyn-portfolio |
+| apps/portfolio-website | apps/paul / `verify:paul` | portfolio-website |
+| apps/diloreto-website | apps/diloreto / `verify:diloreto` | diloreto-website |
+| apps/sarabeth-studio | apps/sarabeth / `verify:sarabeth` | sarabeth-studio |
+
+`git mv` retained tracked files/modes and moved current ignored outputs without adding
+them to Git. Original source URLs/filesystem paths, `targetPrefix`, `importCommit`,
+pristine import trees and all other source metadata are unchanged. `currentPrefix`
+was added explicitly for current audit resolution; `--historical-paths` selects old
+baseline layout rather than implicitly searching old directories. The standalone
+infra manifest remains folded into Carolyn; its import-time manifest is read through
+the historical prefix, while dependencies resolve from the current infra location.
+
+Root workspaces remain the non-overlapping `apps/*` pattern. Docker COPY/workdir/report
+paths, Sarabeth compose paths, root aliases, tests and instructions now use short current
+names. Existing generic ignore patterns and package-name Turbo task filters remain valid.
+Carolyn's reviewed DNS fixture seam and Sarabeth's explicit Gitless provenance seam,
+canonical ports/platforms/browser images, fixtures, screenshots, app behavior and deployed
+CDK/CloudFormation identities were retained. No runtime compatibility fix was needed.
+
+New commit subjects require exactly the approved scope vocabulary:
+**carolyn, paul, diloreto, sarabeth, repo, ci, deps**. Commitlint uses scope-empty=never
+and that seven-value scope-enum. Tests invoke the actual CLI for all seven positives,
+missing/unknown negatives, and Renovate's enabled semantic `deps` default. Root/app
+instructions and current examples reflect this policy; original execution-plan text,
+historical messages and original nested workflow files remain unchanged. The existing
+production-policy assertions were not weakened or removed.
+
+### Dependency/path parity — no re-resolution upgrade
+
+Only supported Bun operations regenerated the lock:
+`bun install --lockfile-only --ignore-scripts`, followed by root frozen reinstall.
+The resulting diff is exactly **four workspace keys and four workspace locators**.
+After those explicit path substitutions, all **1,245 package entries and every other
+lock field** are exactly equal to the pre-rename lock. No dependency version changed.
+
+The full actual installed dependency/peer graph was captured before moving directories.
+The renamed target, an independent clean renamed checkout, and the existing pre-rename
+checkout inspected with `--historical-paths --full-graph` all reproduce that graph exactly
+after mapping only top-level root labels. All six roots have zero missing required edges
+or incompatible ranges. Both target and clean checkout have **3,472 valid symlinks**, no
+broken links and no old-workspace targets. The original-installed-to-candidate comparison
+is also unchanged, including the one genuine previously accepted schema deviation.
+
+Exact normalized graph/lock hashes, per-root counts and full capture-file digests are
+in `post-rename-validation-evidence.json`; captures and command logs are under
+`/tmp/websites-workspace/rename-validation`. Audit reproduction is documented in
+`workspace-dependency-decisions.md`. Earlier captured evidence keeps its historical path
+labels; current prefixes are not a pretext to rewrite historical provenance.
+
+### Actual clean-checkout validation
+
+A new `git clone --no-local --single-branch --branch main --no-tags` of the TARGET was
+installed at the root only, under empty HOME / env-i with Node24.20.0 PATH, CI=1, explicit
+local Docker socket and local Chrome path. No old source installs, hidden config,
+production credentials/CMS/email/AWS lookup, or deployed-smoke commands were used.
+
+| Command/gate | Exit/result |
+| --- | --- |
+| Supported lock regeneration; target and clean frozen reinstalls | 0; path-only lock delta |
+| Clean root `test:workspace` | 0; **24 tests /391 assertions** across workspace, wrapper, scope-policy and audit regression contracts |
+| Full current / clean / explicit pre-rename graph audits and equality assertions | 0; exact six-root full graph/peer parity |
+| Historical installed-resolution comparison + equality assertion | 0; unchanged comparison |
+| `bun run verify:carolyn` | 0;117 unit,9 infra,3 fixture artifact,3 production artifact,92 visual; full validate/types/workflow/offline synth |
+| `bun run verify:sarabeth` | 0;196 canonical tests,7 provenance tests, provider/fixture/Amplify/shell/types/workflow/CF gates |
+| `bun run verify:paul` | 0;56 canonical tests,4 unchanged viewport-only skips,3 Lighthouse runs; static/both types/shell/workflow/CF gates |
+| `bun run verify:diloreto` | 0;37 canonical tests,1 unchanged mobile-only skip,13 genealogy; static/types/CF gates |
+| **Root `bun run ci:verify` at0d791274** | **0;4/4 tasks,0 cached,concurrency1;9m19.174s** |
+| Final Gitless Sarabeth artifact proof | 0; __deployment.json exactly identifies **0d7912745c02f1f30e2c36074fd275b7dff46dd6**, in `/work/apps/sarabeth`, with no .git copied |
+| Real image tool/path proofs | 0; current short workdirs, ARM64,Bun1.4.0,Node24.20.0,Playwright1.62.1, executable bunx; DiLoreto invoking UID501 retained |
+| Carolyn full 19-resource CloudFormation template | SHA256 remains **d3692bfbbe154221c8ab34133a712c54f97005025ded527437615fddec435002**, byte-identical to original/pre-rename |
+| Historical source-metadata equality; pre-rename checkpoint ancestry | 0; only added currentPrefix fields; bddc5406 remains ancestor |
+| Changed wrappers' ShellCheck and diff checks | 0 |
+
+Carolyn/Sarabeth/Paul individual filters ran at92c90798; DiLoreto ran at0d791274.
+The intervening commits change app documentation only. Root CI reran all four complete
+chains at0d791274. The same original viewport skip predicates and nonfatal mocked-email /
+SSR-stream diagnostics remain; no screenshot update or threshold change occurred.
+
+### Storage and stopping boundary
+
+No further old-image removal was requested or performed in this stage. Only image IDs
+positively recorded as freshly created by this run were removed, using **--no-prune**,
+no force, and a fresh no-container-reference check before every removal. Creation/ref/
+cleanup outputs are preserved; safe IDs/exits are in the committed evidence. Exact
+invocation-owned ephemeral test containers use the previously approved trap cleanup.
+There was **no new cleanup scope deviation**, broad prune, volume deletion, restart or
+resize. All own test images and proven new intermediate layers were cleaned; tagged
+bases retained. End state: **6.7 GiB free**,93% usage; **19 running containers,70 volumes**.
+Target/index and the tested checkout are clean after verification.
+
+Stop here for parent-owned **all-history message normalization**, which the user has
+approved for every local-main reachable commit **including the published initial commit**.
+That normalization is not implemented or validated by this rename stage. No rewrite,
+source-repository mutation, publication/force-push, deployment, active root workflow or
+phase2 action occurred. Rewriting the initial commit precludes ordinary fast-forward
+publication; any eventual non-fast-forward publication needs separate approval and fresh
+clone checks. Final independent review and overall phase1 acceptance remain pending.
