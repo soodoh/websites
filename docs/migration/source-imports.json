@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "histories imported locally; workspace implementation and validation pending",
+  "status": "workspace candidate implemented locally; full Docker/browser acceptance blocked by daemon disk exhaustion",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -8,7 +8,10 @@
     "url": "git@github.com:soodoh/websites.git",
     "visibility": "PUBLIC",
     "startingSha": "5b236ef3a519759c84ebd3504809d391baf085ea",
-    "finalMigrationSha": null
+    "finalMigrationSha": null,
+    "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
+    "workspaceCandidateCommit": "7fc0034c822f7e128237ae5b91ed122ae29c965e",
+    "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373"
   },
   "backupDirectory": "/Users/pauldiloreto/Projects/websites-migration-backups",
   "scanner": {
@@ -156,5 +159,23 @@
         "pristineImportTreeVerified": true
       }
     }
-  ]
+  ],
+  "workspace": {
+    "packageManager": "bun@1.4.0",
+    "node": "24.20.0",
+    "turbo": "2.10.12",
+    "linker": "isolated",
+    "lockfile": "bun.lock",
+    "lockfileVersion": 2,
+    "directVersionsPreserved": true,
+    "persistentOverrides": false,
+    "dependencyDecisions": "workspace-dependency-decisions.md",
+    "cleanFrozenInstallPassed": true,
+    "cleanWorkspaceTestsPassed": 8,
+    "cleanAllAppLintPassed": true,
+    "cleanAllAppTypecheckPassed": true,
+    "fullVerificationAccepted": false,
+    "blocker": "Docker daemon no space left on device during dependency-layer export/application; final browser wrappers and full ci:verify not yet accepted",
+    "publication": "LOCAL ONLY; no push authorized"
+  }
 }
