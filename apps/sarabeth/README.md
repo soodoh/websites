@@ -1,5 +1,12 @@
 # sarabeth-studio
 
+> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
+> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
+> `apps/sarabeth`, or use root `bun run verify:sarabeth` for the complete fixture/offline
+> chain. See [root guidance](../../README.md). Standalone clone/install and deployment
+> examples below describe the original production-owner repository; they are not
+> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+
 Website for Sarabeth Belón's music studio, voice lessons, performances, media, Square booking, and SES-backed contact form.
 
 Powered by TanStack Start, React, Contentful, AWS Amplify Hosting, Amazon SES, and the YouTube Data API v3.
