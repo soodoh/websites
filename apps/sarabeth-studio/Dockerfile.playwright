@@ -13,6 +13,7 @@ COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
 COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
 COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
+COPY renovate.json ./
 COPY apps/sarabeth-studio apps/sarabeth-studio
 WORKDIR /work/apps/sarabeth-studio
 ENV CI=1
