@@ -1,0 +1,74 @@
+{
+  "head": "910584aff8472845ab5f85b0f466b8e50c161ec7",
+  "checked": 1109,
+  "defaultIgnores": false,
+  "failures": [],
+  "warnings": [
+    {
+      "sha": "685ca6a973e9e97c84809be0f9fba3adf7bc9238",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    },
+    {
+      "sha": "04b9071bdeb5b2a04d735b07a6411e8a21511f29",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    },
+    {
+      "sha": "3e47a670bd1af71786246098dae0352ae8a1d278",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    },
+    {
+      "sha": "554174a7e29e28f4dc063a943da6b696df00ff1a",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    },
+    {
+      "sha": "16aa05d4c8639c7e8258d69a8a6e09a5f452b0cc",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    },
+    {
+      "sha": "635f8d0917fb6630902917835df7c87c7afae8a1",
+      "warnings": [
+        {
+          "level": 1,
+          "valid": false,
+          "name": "footer-leading-blank",
+          "message": "footer must have leading blank line"
+        }
+      ]
+    }
+  ]
+}
