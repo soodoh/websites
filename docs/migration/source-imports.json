@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "Renamed workspace and required scopes verified locally; parent-owned all-history normalization and final acceptance pending",
+  "status": "Renamed workspace/scopes verified; all-main history messages normalized locally; final review and normalized-SHA validation pending",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -8,6 +8,10 @@
     "url": "git@github.com:soodoh/websites.git",
     "visibility": "PUBLIC",
     "startingSha": "5b236ef3a519759c84ebd3504809d391baf085ea",
+    "normalizedStartingSha": "2e6fb629522ff1ced21533bd572aff874bd2db90",
+    "preNormalizationHead": "c2c8f0ea4dcf924464fca66d37272e0a215e3421",
+    "normalizedHistoryHead": "910584aff8472845ab5f85b0f466b8e50c161ec7",
+    "historicalEvidenceShaConvention": "Existing checkpoint SHAs below remain original evidence identities; resolve them through history-normalization-commit-map.txt for current main navigation",
     "finalMigrationSha": null,
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
     "workspaceCandidateCommit": "0d7912745c02f1f30e2c36074fd275b7dff46dd6",
@@ -47,7 +51,10 @@
       "sourceTreeId": "375e6f988878b833b1ef124d41fa311974cd24e1",
       "sourceCommitCount": 454,
       "targetPrefix": "apps/sarabeth-studio",
-      "importCommit": "dab13bd3d4769f66567586982cec20ae9cb16205",
+      "importCommit": "db5ead5cc697df2c0606d6b48a75ebfc8b98f750",
+      "importedSha": "c3e8a41c4fca59c77a47a1150c61ea8ac747703c",
+      "preNormalizationImportCommit": "dab13bd3d4769f66567586982cec20ae9cb16205",
+      "preNormalizationImportedSha": "dc3e3f956ccbc49a0361cddc0b79b655e46c000d",
       "approvedBundleSha256": "de58084aa59e09e47ed6cb76445ef6106e70f75535cb38119d98b2fbc4cc2f46",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -80,8 +87,10 @@
       "sourceTreeId": "ec111cab17f9d014bdce093d6297d57653b1e016",
       "sourceCommitCount": 152,
       "targetPrefix": "apps/portfolio-website",
-      "importCommit": "a2cebdbbe15ec8fdfd311cd2a6cf9be2610c0d84",
-      "importedSha": "af5ac5840aac9126357a7ca22dea0ff753c5a4b3",
+      "importCommit": "e7c9bd9787534d2c2d12a340cefcd981e5c1d8a2",
+      "importedSha": "2980d3aa065d80b55e8c670f75a24609617dc3d6",
+      "preNormalizationImportCommit": "a2cebdbbe15ec8fdfd311cd2a6cf9be2610c0d84",
+      "preNormalizationImportedSha": "af5ac5840aac9126357a7ca22dea0ff753c5a4b3",
       "rewriteAuthorization": "User confirmed old Contentful credential invalid and authorized history rewriting; then selected removal of all flagged Portfolio values, including Google API keys. Source repository remains untouched.",
       "originalShaPreservationException": true,
       "commitMap": "portfolio-commit-map.txt",
@@ -103,7 +112,7 @@
         "currentTreeGitleaksExit": 0,
         "historicalLfsSubmoduleAuditComplete": true,
         "targetAncestryVerified": true,
-        "ancestrySubject": "importedSha (sanitized), not original approvedSha",
+        "ancestrySubject": "importedSha (credential-redacted then message-normalized), not original approvedSha",
         "pristineImportTreeVerified": true
       },
       "currentPrefix": "apps/paul"
@@ -120,7 +129,10 @@
       "sourceTreeId": "c459afbb2a15ca9e3529ae85cd3c4a71ac21dd31",
       "sourceCommitCount": 357,
       "targetPrefix": "apps/carolyn-portfolio",
-      "importCommit": "e05ce97e526c3b8413a8e8443ddce216e635faf6",
+      "importCommit": "432f654a4fca3d22f6fb0f1eb333b3a246cd6cc1",
+      "importedSha": "7d10d05de25c10b3ec8e621d21530d13564a37a5",
+      "preNormalizationImportCommit": "e05ce97e526c3b8413a8e8443ddce216e635faf6",
+      "preNormalizationImportedSha": "8c70afc7748ab4a18e596df597a641c9aad97ad6",
       "approvedBundleSha256": "5133b020e26b528e055d138f4455381e982d469311192ad0057d2026eda235b4",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -153,7 +165,10 @@
       "sourceTreeId": "d584ea76cfcbd64dcc1f5ec6dd8363b88fa69463",
       "sourceCommitCount": 123,
       "targetPrefix": "apps/diloreto-website",
-      "importCommit": "392fb4fe1a6163e23de77bc760134e16ba079147",
+      "importCommit": "f0911dee05244794057ebedd01b97f16bc62289e",
+      "importedSha": "920d93ffad09a0e97a2ba5b2e13f9a2165fd173b",
+      "preNormalizationImportCommit": "392fb4fe1a6163e23de77bc760134e16ba079147",
+      "preNormalizationImportedSha": "02e49ba0c4229b864659f787493ff24678c93e6c",
       "approvedBundleSha256": "774849bfc4add119b5ef46b2c486042047720c31af153337547293c7c23f05bc",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -190,7 +205,7 @@
     "cleanAllAppLintPassed": true,
     "cleanAllAppTypecheckPassed": true,
     "fullVerificationAccepted": false,
-    "blocker": "No post-rename test failure; parent-owned approved all-history message normalization (including published initial commit) and final review remain. No publication authorization.",
+    "blocker": "No post-rename test failure; message normalization verified locally; final independent review and normalized-commit artifact validation remain. Publication requires separate non-fast-forward approval.",
     "publication": "LOCAL ONLY; no push authorized",
     "reviewFixValidation": {
       "rangeRegressionTests": 5,
@@ -217,7 +232,7 @@
         "infra": 1
       },
       "countScope": "Matched original lock locator/import contexts, not unique packages or complete graph differences",
-      "targetedFinalReview": "pending"
+      "targetedFinalReview": "passed for both original P2 fixes; targeted-final-review.md"
     },
     "preRenameFullVerificationPassed": true,
     "preRenameVerification": {
@@ -271,6 +286,26 @@
       "newCleanupScopeDeviations": 0,
       "finalReview": "pending"
     },
-    "nextStage": "Parent-owned normalization of every local-main reachable commit message including published initial commit; future non-fast-forward publication requires separate approval."
+    "nextStage": "Final independent review and fresh normalized-history artifact validation; no publication or phase2 until separately authorized."
+  },
+  "messageNormalization": {
+    "authorization": "User requested Conventional Commit messages with correct scopes for every local-main reachable commit and explicitly selected rewriting the published initial commit too. All source repositories remain untouched.",
+    "originalIdPreservationSupersededForAllSources": true,
+    "scope": "all 1109 commits reachable from preNormalizationHead",
+    "tool": "git-filter-repo 2.47.0 in disposable bare repository",
+    "commitMap": "history-normalization-commit-map.txt",
+    "subjectMap": "history-message-subjects.json",
+    "verification": "history-normalization-verification.json",
+    "decision": "history-normalization-decision.md",
+    "commitlintChecked": 1109,
+    "commitlintErrors": 0,
+    "preservedFooterSpacingWarnings": 6,
+    "treeAuthorCommitterDatesBodyAndParentTopologyPreserved": true,
+    "signaturesRemoved": 40,
+    "ancestryRule": "Check importedSha and normalizedStartingSha; approvedSha/startingSha preserve original source and public-remote provenance, not current-main ancestry",
+    "beforeBundle": "websites-before-message-normalization.bundle",
+    "beforeBundleSha256": "380d73673d752a96af4358ed2c875ce2b25dfd16ea14bdb630c2155cecc095ec",
+    "normalizedBundle": "websites-normalized-main.bundle",
+    "publication": "LOCAL ONLY; origin/main still points to original initial commit; no fast-forward publication possible and no push/force-push authorized"
   }
 }

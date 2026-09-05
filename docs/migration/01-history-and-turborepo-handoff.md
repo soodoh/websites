@@ -1,12 +1,16 @@
-# Phase 1 handoff — renamed workspace/scopes verified; history normalization pending
+# Phase 1 handoff — scoped history normalized; final validation/review pending
 
 **LOCAL ONLY. Nothing pushed. Phase 1 is not accepted; do not begin phase 2.**
 
-**Latest tested renamed/scoped candidate: `0d7912745c02f1f30e2c36074fd275b7dff46dd6`.**
-Root full CI and all four new convenience filters pass. See the post-rename checkpoint
-below and `post-rename-validation-evidence.json`. No history was rewritten; the approved
-all-history normalization (including published initial commit) remains parent-owned,
-and eventual non-fast-forward publication requires separate approval.
+The four short app folders and required scopes passed complete clean-checkout gates.
+The parent then normalized all 1,109 local-main reachable commits, including the published
+initial commit, with exhaustive tree/metadata/topology verification. See
+`history-normalization-decision.md` and the complete SHA map. Final independent review and
+fresh normalized-SHA validation remain. Publication requires separate non-fast-forward approval.
+
+All checkpoint sections below retain their **original historical SHAs and stage-local
+statements**. Resolve old SHAs through `history-normalization-commit-map.txt` when navigating
+current main; do not reinterpret old artifact SHA evidence as a newly normalized run.
 
 Earlier tested PRE-RENAME implementation: `2aecd5bbbec414f43ca50646ff64ed6347276d2c`.
 All four individual complete verification filters and root serial `ci:verify` passed.
@@ -103,9 +107,9 @@ appropriate daemon before further builds. Exact build headroom is not measured.
 **No resize, prune, reset, or further Docker build/retry is authorized.** Do not claim
 browser/visual acceptance or change screenshots to bypass this blocker.
 
-## History/provenance and security
+## Historical history/provenance and security — before global message normalization
 
-Target initial commit `5b236ef3a519759c84ebd3504809d391baf085ea` survives. Live GitHub
+At this earlier checkpoint, initial commit `5b236ef3a519759c84ebd3504809d391baf085ea` survived. Live GitHub
 heads were checked read-only by the parent; newer Portfolio/DiLoreto revisions were
 explicitly approved. No sources were updated. The target remains the existing linked
 worktree with common Git directory `/Users/pauldiloreto/Projects/websites/.git` and

@@ -34,14 +34,16 @@ not runnable monorepo deployment configurations. Existing infra/deploy-shaped sc
 remain for continuity but are NOT authorized to execute. Never use production CMS,
 email, deployed-smoke, or AWS lookup commands for local validation.
 
-This stage preserves existing histories, source repositories, and pristine import prefixes.
-The user approved later normalization of every local-main commit message, including
-published initial commit, but ONLY the parent owns that separate rewrite stage. Do not
-rewrite history/refs here. Portfolio credential redaction remains recorded in
-`docs/migration/portfolio-redaction-decision.md`. Historical paths remain root-relative
-before imports: use `git log <imported-head> -- <old-path>`, not promises of seamless
-`--follow apps/...`. Future normalized history publication requires separate non-fast-forward
-approval and fresh-clone checks; no push or force-push is authorized now.
+The approved Portfolio credential redaction and all-main scoped message normalization
+are complete. Preserve the resulting commit graph; do not rewrite further history.
+Source repositories remain untouched. Read `docs/migration/history-normalization-decision.md`
+and use its SHA map when navigating older evidence. `source-imports.json` distinguishes
+original approved source SHAs from normalized imported heads and initial target commit.
+Pristine import prefixes remain historical; current folders are the four short names.
+Before imports, paths were root-relative: use `git log <normalized-imported-head> --
+<old-path>`, not promises of seamless `--follow apps/...`. The published initial commit
+was also normalized locally, so publication requires a separately approved non-fast-forward
+strategy and fresh-clone checks. No push or force-push is authorized now.
 
 Root Lefthook/commitlint own target hooks; Conventional Commits require a scope:
 `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`
