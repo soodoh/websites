@@ -8,12 +8,12 @@ COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN ln -s bun /usr/local/bin/bunx
 WORKDIR /work
 COPY package.json bun.lock bunfig.toml ./
-COPY apps/carolyn-portfolio/package.json apps/carolyn-portfolio/package.json
-COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
-COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
-COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
+COPY apps/carolyn/package.json apps/carolyn/package.json
+COPY apps/diloreto/package.json apps/diloreto/package.json
+COPY apps/paul/package.json apps/paul/package.json
+COPY apps/sarabeth/package.json apps/sarabeth/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
-COPY apps/carolyn-portfolio apps/carolyn-portfolio
-WORKDIR /work/apps/carolyn-portfolio
+COPY apps/carolyn apps/carolyn
+WORKDIR /work/apps/carolyn
 ENV CI=1
 CMD ["bun", "x", "--no-install", "playwright", "test"]

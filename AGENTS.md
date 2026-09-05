@@ -14,7 +14,10 @@ Do not add overlapping/nested workspaces; Carolyn infra tools belong to its app.
   deliberately builds fixture output. Never run builds/typechecks/tests concurrently
   against the same app directories.
 - `bun run test:workspace`: workspace configuration and direct-resolution contracts.
-- `bun run verify:<app-directory-name>`: one complete sequential fixture/offline chain.
+- `bun run verify:carolyn`, `verify:paul`, `verify:diloreto`, `verify:sarabeth`: one
+  complete sequential fixture/offline chain. Directories use these short names;
+  package-name filters remain carolyn-portfolio, portfolio-website, diloreto-website,
+  sarabeth-studio respectively.
 - `bun run ci:verify`: workspace contracts, then all four complete chains, concurrency 1.
 - App-local scripts still run from `apps/<app>`; canonical Playwright ports are unchanged.
   Docker wrappers find the workspace by script location. Do not update screenshots to
@@ -31,15 +34,18 @@ not runnable monorepo deployment configurations. Existing infra/deploy-shaped sc
 remain for continuity but are NOT authorized to execute. Never use production CMS,
 email, deployed-smoke, or AWS lookup commands for local validation.
 
-Preserve unsquashed subtree imports and initial target ancestry. The sole approved
-history exception was Portfolio's completed credential redaction, recorded in
-`docs/migration/portfolio-redaction-decision.md`; do not rewrite further history.
-Historical paths remain root-relative before imports. Use `git log <imported-head>
--- <old-path>`, not promises of seamless `--follow apps/...`. Do not squash/rebase
-imports or force-push. Publication requires separate approval and fresh-clone checks.
+This stage preserves existing histories, source repositories, and pristine import prefixes.
+The user approved later normalization of every local-main commit message, including
+published initial commit, but ONLY the parent owns that separate rewrite stage. Do not
+rewrite history/refs here. Portfolio credential redaction remains recorded in
+`docs/migration/portfolio-redaction-decision.md`. Historical paths remain root-relative
+before imports: use `git log <imported-head> -- <old-path>`, not promises of seamless
+`--follow apps/...`. Future normalized history publication requires separate non-fast-forward
+approval and fresh-clone checks; no push or force-push is authorized now.
 
-Root Lefthook/commitlint own target hooks; Conventional Commits require **no scope**
-(`type: summary`). Root Renovate owns dependency/tool updates. Keep app Biome settings,
+Root Lefthook/commitlint own target hooks; Conventional Commits require a scope:
+`carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`
+(example: `chore(repo): update workspace guidance`). Root Renovate owns dependency/tool updates. Keep app Biome settings,
 fixtures, screenshot baselines, and deployed CDK/CloudFormation identities intact.
 All Turbo tasks are uncached, strict-env mode remains enabled, and remote cache is
 explicitly disabled. Keep dependencies, secrets, auth manifests, bundles, reports,

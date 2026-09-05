@@ -5,10 +5,10 @@ import { join, resolve } from "node:path";
 
 const root = resolve(import.meta.dir, "..");
 const wrappers = [
-	["sarabeth-studio", "playwright-docker.sh"],
-	["portfolio-website", "playwright-docker.sh"],
-	["carolyn-portfolio", "playwright-docker.sh"],
-	["diloreto-website", "test-playwright-docker.sh"],
+	["sarabeth", "playwright-docker.sh"],
+	["paul", "playwright-docker.sh"],
+	["carolyn", "playwright-docker.sh"],
+	["diloreto", "test-playwright-docker.sh"],
 ];
 
 // No Docker daemon, network, production configuration, or actual project artifacts.
@@ -61,11 +61,11 @@ echo 0123456789abcdef0123456789abcdef01234567
 				expect(commands).not.toContain("prune");
 				expect(commands).not.toContain("tests/.");
 				expect(commands).not.toContain("__screenshots__");
-				if (app === "sarabeth-studio") {
+				if (app === "sarabeth") {
 					expect(commands).toContain("--env RELEASE_COMMIT=0123456789abcdef0123456789abcdef01234567");
 					expect(commands).not.toContain("untrusted-inherited-value");
 				}
-				if (app === "carolyn-portfolio") {
+				if (app === "carolyn") {
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test");
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test");
 				}

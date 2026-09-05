@@ -8,14 +8,14 @@ COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN ln -s bun /usr/local/bin/bunx
 WORKDIR /work
 COPY package.json bun.lock bunfig.toml ./
-COPY apps/carolyn-portfolio/package.json apps/carolyn-portfolio/package.json
-COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
-COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
-COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
+COPY apps/carolyn/package.json apps/carolyn/package.json
+COPY apps/diloreto/package.json apps/diloreto/package.json
+COPY apps/paul/package.json apps/paul/package.json
+COPY apps/sarabeth/package.json apps/sarabeth/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY renovate.json ./
-COPY apps/sarabeth-studio apps/sarabeth-studio
-WORKDIR /work/apps/sarabeth-studio
+COPY apps/sarabeth apps/sarabeth
+WORKDIR /work/apps/sarabeth
 ENV CI=1
 ENTRYPOINT ["bash", "scripts/playwright-container.sh"]
 CMD ["bun", "run", "test:ci:prebuilt"]

@@ -51,13 +51,9 @@ Code conventions:
 
 ## Commit & Pull Request Guidelines
 
-Recent history favors short, imperative commits with optional prefixes:
-
-- Examples: `feat: ...`, `fix: ...`, `chore: ...`.
-
-For pull requests:
-
-- Include a concise summary of user-visible changes.
-- Link related issues when applicable.
-- Add before/after screenshots for UI work.
-- Note any deployment-impacting changes to Amplify infrastructure, GitHub Actions, Vite plugins, or environment usage.
+- Root Lefthook/commitlint require Conventional Commits with one approved scope:
+  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
+- Use this app's scope for app-specific changes (example: `fix(diloreto): handle missing data`).
+- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
+- Install at the workspace root; this app lives at `apps/diloreto`. Historical source
+  repository URLs and deployed identities are unchanged.

@@ -6,9 +6,9 @@ const baselineRoot=process.argv[2];
 if(!baselineRoot)throw new Error('Pass the pristine disposable baseline install root; raw lock entries are not installed-version evidence.');
 const reports:any={};
 const carolyn=imports.sources.find((s:any)=>s.name==='carolyn-portfolio');
-imports.sources.push({...carolyn,name:'carolyn-portfolio/infra',targetPrefix:carolyn.targetPrefix+'/infra'});
+imports.sources.push({...carolyn,name:'carolyn-portfolio/infra',targetPrefix:carolyn.targetPrefix+'/infra',currentPrefix:carolyn.currentPrefix+'/infra'});
 for(const s of imports.sources){
- const root=join(process.cwd(),s.targetPrefix);
+ const root=join(process.cwd(),s.currentPrefix);
  const old=Bun.JSONC.parse(execFileSync('git',['show',`${s.importCommit}:${s.targetPrefix}/bun.lock`],{encoding:'utf8',maxBuffer:10e6}));
  const oldPackages=old.packages;
  function oldLookup(parent:string,dep:string):string|undefined{let p=parent;for(;;){const k=p?`${p}/${dep}`:dep;if(oldPackages[k])return k;if(!p)return;const parts=p.split('/');parts.pop();if(parts.at(-1)?.startsWith('@'))parts.pop();p=parts.join('/');}}

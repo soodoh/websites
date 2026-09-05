@@ -35,10 +35,12 @@
 
 ## Commit & Pull Request Guidelines
 
-- Commits must follow Conventional Commits with no scope (`scope-empty` is enforced in commitlint).
-- Format: `type: summary`.
-- Examples: `feat: add form validation`, `fix: handle missing asset fields`.
-- PRs should include: concise description, linked issue (if any), test steps, and screenshots for UI changes.
+- Root Lefthook/commitlint require Conventional Commits with one approved scope:
+  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
+- Use this app's scope for app-specific changes (example: `fix(sarabeth): handle missing data`).
+- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
+- Install at the workspace root; this app lives at `apps/sarabeth`. Historical source
+  repository URLs and deployed identities are unchanged.
 
 ## Security & Configuration Tips
 

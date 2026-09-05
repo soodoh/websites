@@ -20,8 +20,8 @@ cleanup() {
 
 copy_artifacts() {
 	rm -rf test-results playwright-report
-	docker cp "${container}:/work/apps/portfolio-website/test-results" test-results >/dev/null 2>&1 || true
-	docker cp "${container}:/work/apps/portfolio-website/playwright-report" playwright-report >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/paul/test-results" test-results >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/paul/playwright-report" playwright-report >/dev/null 2>&1 || true
 }
 
 trap cleanup EXIT
@@ -46,7 +46,7 @@ container=$(
 	docker create "${docker_arguments[@]}" "${image}" bun run test:e2e:container "$@"
 )
 if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
-	docker cp "${app_root}/dist/client/." "${container}:/work/apps/portfolio-website/dist/client"
+	docker cp "${app_root}/dist/client/." "${container}:/work/apps/paul/dist/client"
 fi
 
 set +e
@@ -60,7 +60,7 @@ for argument in "$@"; do
 	if [[ "${argument}" == "--update-snapshots" && "${status}" -eq 0 ]]; then
 		staging_directory="$(mktemp -d e2e/.screenshots-staging.XXXXXX)"
 		backup_directory="e2e/.screenshots-backup"
-		docker cp "${container}:/work/apps/portfolio-website/e2e/__screenshots__/." "${staging_directory}"
+		docker cp "${container}:/work/apps/paul/e2e/__screenshots__/." "${staging_directory}"
 		if ! find "${staging_directory}" -type f -name '*.png' -print -quit | grep -q .; then
 			echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
 			rm -rf "${staging_directory}"
