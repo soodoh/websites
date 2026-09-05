@@ -8,4 +8,5 @@ services:
     platform: linux/arm64
     environment:
       CI: "1"
+      RELEASE_COMMIT: "${RELEASE_COMMIT:?Set RELEASE_COMMIT to git rev-parse HEAD before running fixture tests}"
     command: ["bun", "run", "test:ci:prebuilt"]

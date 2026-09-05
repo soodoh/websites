@@ -1,9 +1,8 @@
-import { execFile } from "node:child_process";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { promisify } from "node:util";
 import { productionComputePaths } from "@/scripts/amplify-routing";
 import publicRoutes from "@/scripts/public-routes.json" with { type: "json" };
+import { resolveReleaseCommit } from "@/scripts/release-commit";
 
 const outputDirectory = ".amplify-hosting";
 const manifestPath = join(outputDirectory, "deploy-manifest.json");
@@ -20,12 +19,9 @@ assert(manifest.version === 1, "Amplify deployment manifest must be version 1");
 const deploymentMetadata = JSON.parse(
 	await readFile(join(outputDirectory, "static", "__deployment.json"), "utf8"),
 );
-const { stdout: gitCommitOutput } = await promisify(execFile)("git", [
-	"rev-parse",
-	"HEAD",
-]);
+const expectedCommit = await resolveReleaseCommit();
 assert(
-	deploymentMetadata.commit === gitCommitOutput.trim(),
+	deploymentMetadata.commit === expectedCommit,
 	"Deployment metadata must identify the exact Git commit built by Amplify",
 );
 assert(

@@ -37,7 +37,7 @@
 		"contentful:snapshot": "bun scripts/record-contentful-snapshot.ts",
 		"test:e2e": "playwright test --update-snapshots=none",
 		"test:e2e:update": "playwright test --update-snapshots",
-		"test:deployment-scripts": "tests/scripts/wait-for-amplify-job.sh",
+		"test:deployment-scripts": "bun test scripts/release-commit.test.ts && tests/scripts/wait-for-amplify-job.sh",
 		"test:ci": "bun run lint && bun run test:deployment-scripts && bun run test:e2e",
 		"test:ci:prebuilt": "bun run test:deployment-scripts && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
