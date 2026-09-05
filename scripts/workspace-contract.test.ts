@@ -5,12 +5,13 @@ import { resolve } from "node:path";
 const root = resolve(import.meta.dir, "..");
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const json = (path: string) => JSON.parse(read(path));
-const apps = [
-	"sarabeth-studio",
-	"portfolio-website",
-	"carolyn-portfolio",
-	"diloreto-website",
-];
+const packageNames: Record<string, string> = {
+ sarabeth: "sarabeth-studio",
+ paul: "portfolio-website",
+ carolyn: "carolyn-portfolio",
+ diloreto: "diloreto-website",
+};
+const apps = Object.keys(packageNames);
 
 describe("phase 1 workspace contract", () => {
 	test("has one root lock, unique workspaces, and one hook owner", () => {
@@ -21,12 +22,15 @@ describe("phase 1 workspace contract", () => {
 		expect(Bun.JSONC.parse(read("bun.lock")).workspaces).toHaveProperty("");
 		for (const app of apps) {
 			const local = json(`apps/${app}/package.json`);
-			expect(local.name).toBe(app);
+			expect(local.name).toBe(packageNames[app]);
 			expect(local.scripts.prepare).toBeUndefined();
+			expect(json("package.json").scripts[`verify:${app}`]).toBe(`turbo run ci:verify --filter=${packageNames[app]} --concurrency=1`);
+			expect(Bun.JSONC.parse(read("bun.lock")).workspaces[`apps/${app}`].name).toBe(packageNames[app]);
+			expect(existsSync(resolve(root, `apps/${packageNames[app]}`))).toBe(false);
 			expect(local.packageManager).toBeUndefined();
 			expect(existsSync(resolve(root, `apps/${app}/bun.lock`))).toBe(false);
 		}
-		expect(existsSync(resolve(root, "apps/carolyn-portfolio/infra/package.json"))).toBe(false);
+		expect(existsSync(resolve(root, "apps/carolyn/infra/package.json"))).toBe(false);
 		expect(existsSync(resolve(root, ".github/workflows"))).toBe(false);
 	});
 
@@ -38,7 +42,7 @@ describe("phase 1 workspace contract", () => {
 				...manifest.dependencies,
 				...manifest.devDependencies,
 			})) {
-				const old = before[`apps/${app}`][name] ?? before["apps/carolyn-portfolio/infra"][name];
+				const old = before[`apps/${packageNames[app]}`][name] ?? before["apps/carolyn-portfolio/infra"][name];
 				expect(`${name}@${version}`).toBe(old);
 				const installed = json(`apps/${app}/node_modules/${name}/package.json`);
 				expect(installed.version).toBe(version);
@@ -69,7 +73,7 @@ describe("phase 1 workspace contract", () => {
 				expect(dockerfile).toContain(`COPY apps/${workspace}/package.json`);
 			}
 		}
-		expect(read("apps/sarabeth-studio/Dockerfile.playwright")).toContain("COPY renovate.json ./");
+		expect(read("apps/sarabeth/Dockerfile.playwright")).toContain("COPY renovate.json ./");
 		expect(read(".dockerignore")).toContain("**/.env.*");
 		expect(read(".dockerignore")).toContain("**/node_modules");
 	});

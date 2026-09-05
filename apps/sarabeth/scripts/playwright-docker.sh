@@ -25,7 +25,7 @@ docker start --attach "${container}"
 status=$?
 set -e
 rm -rf "${app_root:?}/test-results"
-docker cp "${container}:/work/apps/sarabeth-studio/test-results" "${app_root}/test-results" >/dev/null 2>&1 || true
+docker cp "${container}:/work/apps/sarabeth/test-results" "${app_root}/test-results" >/dev/null 2>&1 || true
 trap - EXIT
 cleanup
 exit "${status}"

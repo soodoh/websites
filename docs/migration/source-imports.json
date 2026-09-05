@@ -64,7 +64,8 @@
         "historicalLfsSubmoduleAuditComplete": true,
         "targetAncestryVerified": true,
         "pristineImportTreeVerified": true
-      }
+      },
+      "currentPrefix": "apps/sarabeth"
     },
     {
       "name": "portfolio-website",
@@ -103,7 +104,8 @@
         "targetAncestryVerified": true,
         "ancestrySubject": "importedSha (sanitized), not original approvedSha",
         "pristineImportTreeVerified": true
-      }
+      },
+      "currentPrefix": "apps/paul"
     },
     {
       "name": "carolyn-portfolio",
@@ -135,7 +137,8 @@
         "historicalLfsSubmoduleAuditComplete": true,
         "targetAncestryVerified": true,
         "pristineImportTreeVerified": true
-      }
+      },
+      "currentPrefix": "apps/carolyn"
     },
     {
       "name": "diloreto-website",
@@ -167,7 +170,8 @@
         "historicalLfsSubmoduleAuditComplete": true,
         "targetAncestryVerified": true,
         "pristineImportTreeVerified": true
-      }
+      },
+      "currentPrefix": "apps/diloreto"
     }
   ],
   "workspace": {

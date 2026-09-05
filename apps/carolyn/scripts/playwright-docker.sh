@@ -49,13 +49,13 @@ status=$?
 set -e
 for report in playwright-report test-results; do
 	rm -rf "${ROOT_DIR:?}/${report}"
-	docker cp "${container}:/work/apps/carolyn-portfolio/${report}" "${ROOT_DIR}/${report}" >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/carolyn/${report}" "${ROOT_DIR}/${report}" >/dev/null 2>&1 || true
 done
 if [[ "${status}" -eq 0 ]]; then
 	for argument in "$@"; do
 		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
 			staging=$(mktemp -d)
-			docker cp "${container}:/work/apps/carolyn-portfolio/tests/." "${staging}"
+			docker cp "${container}:/work/apps/carolyn/tests/." "${staging}"
 			while IFS= read -r -d '' snapshot; do
 				relative="${snapshot#"${staging}/"}"
 				mkdir -p "$(dirname "${ROOT_DIR}/tests/${relative}")"

@@ -42,7 +42,9 @@
 
 ## Commit & Pull Request Guidelines
 
-- Commits are enforced by lefthook + commitlint and must follow Conventional Commits.
-- Use `type: summary` format with no scope (example: `feat: add project password gate`).
-- Keep commits focused, with passing lint/tests where applicable.
-- PRs should include a short description, linked issue (if relevant), and screenshots for visual changes.
+- Root Lefthook/commitlint require Conventional Commits with one approved scope:
+  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
+- Use this app's scope for app-specific changes (example: `fix(carolyn): handle missing data`).
+- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
+- Install at the workspace root; this app lives at `apps/carolyn`. Historical source
+  repository URLs and deployed identities are unchanged.

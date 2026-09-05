@@ -15,11 +15,11 @@
     "typecheck": "turbo run typecheck --concurrency=1",
     "ci:verify": "bun run test:workspace && turbo run ci:verify --concurrency=1",
     "prepare": "test ! -e .git || lefthook install",
-    "verify:sarabeth-studio": "turbo run ci:verify --filter=sarabeth-studio --concurrency=1",
-    "verify:portfolio-website": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
-    "verify:carolyn-portfolio": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
-    "verify:diloreto-website": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
-    "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts"
+    "verify:sarabeth": "turbo run ci:verify --filter=sarabeth-studio --concurrency=1",
+    "verify:paul": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
+    "verify:carolyn": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
+    "verify:diloreto": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
+    "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts scripts/commit-policy.test.ts docs/migration/scripts/audit-installed-ranges.test.ts"
   },
   "devDependencies": {
     "turbo": "2.10.12",

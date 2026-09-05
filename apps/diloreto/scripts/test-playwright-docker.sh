@@ -39,7 +39,7 @@ fi
 container=$(docker create "${docker_args[@]}" "${image_name}" bun x --no-install playwright test "$@")
 if [[ -z "${PLAYWRIGHT_BASE_URL:-}" ]]; then
 	# Preserve invoking user's ownership for the existing non-root test runner.
-	docker cp --archive "${repository_root}/dist/client/." "${container}:/work/apps/diloreto-website/dist/client"
+	docker cp --archive "${repository_root}/dist/client/." "${container}:/work/apps/diloreto/dist/client"
 fi
 set +e
 docker start --attach "${container}"
@@ -53,7 +53,7 @@ if [[ "${status}" -eq 0 ]]; then
 	for argument in "$@"; do
 		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
 			staging=$(mktemp -d)
-			docker cp "${container}:/work/apps/diloreto-website/tests/." "${staging}"
+			docker cp "${container}:/work/apps/diloreto/tests/." "${staging}"
 			while IFS= read -r -d '' snapshot; do
 				relative="${snapshot#"${staging}/"}"
 				mkdir -p "$(dirname "${repository_root}/tests/${relative}")"
