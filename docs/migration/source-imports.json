@@ -10,8 +10,12 @@
     "startingSha": "5b236ef3a519759c84ebd3504809d391baf085ea",
     "finalMigrationSha": null,
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
-    "workspaceCandidateCommit": "7fc0034c822f7e128237ae5b91ed122ae29c965e",
-    "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373"
+    "workspaceCandidateCommit": "271ef39f2a356ef62b14793b57ed8aae4c5f64b7",
+    "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373",
+    "workspaceReviewFixCommits": [
+      "143949cd9d849f2cbb5e73dc81929b6c28113908",
+      "271ef39f2a356ef62b14793b57ed8aae4c5f64b7"
+    ]
   },
   "backupDirectory": "/Users/pauldiloreto/Projects/websites-migration-backups",
   "scanner": {
@@ -175,7 +179,34 @@
     "cleanAllAppLintPassed": true,
     "cleanAllAppTypecheckPassed": true,
     "fullVerificationAccepted": false,
-    "blocker": "Docker daemon no space left on device during dependency-layer export/application; final browser wrappers and full ci:verify not yet accepted",
-    "publication": "LOCAL ONLY; no push authorized"
+    "blocker": "Colima default separate 100 GiB /dev/vdb1 has 0 available (100% full), inode usage 56%; host has 214 GiB free; Docker has 19 running containers. No resize/prune/reset or further Docker builds/retries authorized; full browser and ci:verify acceptance remains blocked.",
+    "publication": "LOCAL ONLY; no push authorized",
+    "reviewFixValidation": {
+      "rangeRegressionTests": 5,
+      "rangeRegressionAssertions": 13,
+      "rangeRegressionExit": 0,
+      "oldAuditorRegressionExit": 1,
+      "cleanDependencyAuditRootIncluded": true,
+      "currentAndCleanAuditExit": 0,
+      "currentAndCleanEvidenceEqual": true,
+      "originalBaselineAuditExit": 1,
+      "originalBaselineUnchangedPeerViolations": 2,
+      "rawLockDifferenceCounts": {
+        "sarabeth": 10,
+        "portfolio": 55,
+        "carolyn": 41,
+        "diloreto": 52,
+        "infra": 3
+      },
+      "verifiedInstalledDifferenceCounts": {
+        "sarabeth": 10,
+        "portfolio": 55,
+        "carolyn": 41,
+        "diloreto": 52,
+        "infra": 1
+      },
+      "countScope": "Matched original lock locator/import contexts, not unique packages or complete graph differences",
+      "targetedFinalReview": "pending"
+    }
   }
 }

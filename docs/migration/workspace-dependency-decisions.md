@@ -35,7 +35,10 @@ phase 3 must reconcile their root workspace paths/toolchain before any cutover.
 ## Deliberate lock construction, not a mass upgrade
 
 `dependency-resolutions-before.json` inventories every locator/resolved version in
-all five pristine import locks. Exact original direct versions were retained and
+all five pristine import locks; `dependency-resolutions-after.json` inventories the
+candidate raw lock. **Neither inventory is installed-version evidence.** Bundled
+packages can disagree with these metadata locators, as the CDK case below shows.
+Exact original direct versions were retained and
 made explicit in app manifests; four app names remain unchanged. Shared commitlint
 and Lefthook dependencies moved to root. Carolyn's exact original CDK dependencies
 moved to its app's devDependencies. Five obsolete locks and the nested infra
@@ -67,8 +70,9 @@ Approved constrained experiment:
 5. Audit **actual installed** dependency and peer edges, including each app's direct
    versions and infra's new import location. `scripts/audit-installed-ranges.ts`
    records the current results; `scripts/audit-installed-resolutions.ts` compares
-   old locator resolutions to actual installed counterparts. These scripts run
-   from root and regenerate the corresponding JSON evidence. They do not install,
+   raw old lock locators AND verified baseline installed versions to candidate
+   installed counterparts, in separate fields. These scripts run from root and
+   regenerate the corresponding JSON evidence. They do not install,
    access secrets, or mutate source repositories.
 
 To reproduce original runtime/peer evidence, extract only the committed package.json
@@ -78,15 +82,38 @@ infra), install each with `bun install --frozen-lockfile --ignore-scripts`, then
 That original five-install audit is `dependency-baseline-peer-evidence.json`.
 Original Portfolio/DiLoreto each had a vitefu 1.1.1 peer range that excluded their
 Vite 8.2.2; the candidate has no such unsatisfied peer. These are actual scratch
-installs, not tests or installs in source worktrees.
+installs, not tests or installs in source worktrees. The range auditor includes the
+root manifest whenever present, even with an explicit checkout path; it fails on
+missing required direct packages as well as invalid dependency/peer edges.
+
+For installed-to-installed comparisons, use the already-existing pristine scratch
+installs (never source installations):
+`bun docs/migration/scripts/audit-installed-resolutions.ts <scratch-root> [output-json]`.
+The script requires that baseline location explicitly rather than treating raw lock
+entries as installed versions. Run from the candidate checkout being inspected;
+its optional output path allows clean-checkout comparisons without dirtying that tree.
 
 ## Remaining resolution differences and acceptance boundary
 
-`dependency-resolution-comparison.json` lists every observed difference with the
-original importing parent and requested range, plus unavailable locators. Counts
-on macOS ARM64: Sarabeth 10, Portfolio 55, Carolyn 41, DiLoreto 52, Carolyn infra 3.
-Counts include changed native subpackages; unavailable platform-specific optionals
-are **not** passes on those platforms. Identical package versions with different
+`dependency-resolution-comparison.json` separates `rawLockLocatorDifferences`
+(raw old lock vs candidate installation), `verifiedInstalledVersionDifferences`
+(actual pristine baseline vs candidate installations), and
+`baselineLockMetadataDiscrepancies` (old raw metadata vs its actual installation).
+`via` parent/range metadata comes from the raw original lock, not inferred installed
+package metadata. Counts are matched locator/import contexts, **not unique package
+counts or a complete graph diff**, and include native subpackages:
+
+| macOS ARM64 | Raw-lock-to-candidate differences | Verified installed-to-installed differences |
+| --- | ---: | ---: |
+| Sarabeth | 10 | 10 |
+| Portfolio | 55 | 55 |
+| Carolyn app | 41 | 41 |
+| DiLoreto | 52 | 52 |
+| Carolyn infra | 3 | **1** |
+
+Every compared locator has a resolved baseline installation (`baselineUnavailable`
+is empty); unavailable candidate platform-specific optionals are separately listed
+and are **not** passes on those platforms. Identical package versions with different
 historical transitive selections are shared/deduplicated in the new graph. Direct
 application versions did not change. This candidate was approved only for a LOCAL
 commit and independent full validation, not final phase-1 acceptance.
@@ -101,8 +128,11 @@ Material cases requiring unchanged-baseline functional/visual validation:
 - Runtime isbot and srvx selections consolidate within their declared ranges.
   The complete parent/range records are in the comparison JSON; fixture SSR,
   prerender, and browser tests remain required, not inferred from semver validity.
-- Carolyn infra cloud-assembly-api 2.3.0 becomes 2.2.6 under CDK's `^2.2.6`;
-  brace-expansion 5.0.7 becomes 5.0.9 under minimatch's `^5.0.5`.
+- Carolyn infra's bundled cloud-assembly-api was **already 2.2.6** in the original
+  installation and remains 2.2.6. Its old raw lock entry says 2.3.0; that is metadata
+  disagreement, **not a downgrade**. Likewise brace-expansion was already 5.0.9 and
+  remains 5.0.9 despite raw lock metadata of 5.0.7. These two discrepancies are not
+  installed drift. The genuine infra installed change is the schema below.
 
 The **only novel resolution** beyond the old five-lock union (excluding new Turbo
 platform packages) is `@aws-cdk/cloud-assembly-schema@54.22.0`, previously 54.12.0,
