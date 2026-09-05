@@ -1,0 +1,490 @@
+import type { StackProps } from "aws-cdk-lib";
+import {
+	ArnFormat,
+	Aws,
+	CfnCondition,
+	CfnOutput,
+	CfnParameter,
+	Duration,
+	Fn,
+	RemovalPolicy,
+	Stack,
+	Token,
+} from "aws-cdk-lib";
+import { CfnApp, CfnBranch, CfnDomain } from "aws-cdk-lib/aws-amplify";
+import { CfnBudget } from "aws-cdk-lib/aws-budgets";
+import {
+	Alarm,
+	ComparisonOperator,
+	MathExpression,
+	Metric,
+	TreatMissingData,
+} from "aws-cdk-lib/aws-cloudwatch";
+import { SnsAction } from "aws-cdk-lib/aws-cloudwatch-actions";
+import {
+	CfnOIDCProvider,
+	Effect,
+	PolicyStatement,
+	Role,
+	ServicePrincipal,
+	WebIdentityPrincipal,
+} from "aws-cdk-lib/aws-iam";
+import { Alias, Key } from "aws-cdk-lib/aws-kms";
+import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
+import { Topic } from "aws-cdk-lib/aws-sns";
+import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
+import type { Construct } from "constructs";
+import { getCleanUrlRules } from "../../lib/amplify-artifact";
+import {
+	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
+	PRODUCTION_SECRET_PARAMETERS,
+	PROJECT_AUTH_SECRET_PARAMETER,
+} from "../../lib/deployment-parameters";
+import { PRODUCTION_AWS_ACCOUNT, PRODUCTION_AWS_REGION } from "./environment";
+
+const DOMAIN_NAME = "carolyndiloreto.com";
+const LEGACY_DOMAIN_NAME = "diloreto.com";
+const LEGACY_DOMAIN_PREFIX = "carolyn";
+const REPOSITORY_URL = "https://github.com/soodoh/carolyn-portfolio";
+const PRODUCTION_BRANCH = "amplify-production";
+
+// Route 53 Registrar created this zone when the domain was registered. It is
+// imported so CDK does not create a duplicate hosted zone during migration.
+const HOSTED_ZONE_ID = "Z32YJCERCJ1WLI";
+const HOSTED_ZONE_NAME_SERVERS = [
+	"ns-1056.awsdns-04.org",
+	"ns-1780.awsdns-30.co.uk",
+	"ns-362.awsdns-45.com",
+	"ns-917.awsdns-50.net",
+];
+
+export class HostingStack extends Stack {
+	constructor(scope: Construct, id: string, props: StackProps) {
+		super(scope, id, props);
+
+		if (Stack.of(this).account !== PRODUCTION_AWS_ACCOUNT) {
+			throw new Error(
+				`This stack must be deployed in AWS account ${PRODUCTION_AWS_ACCOUNT}`,
+			);
+		}
+		if (Stack.of(this).region !== PRODUCTION_AWS_REGION) {
+			throw new Error(
+				`This stack must be deployed in ${PRODUCTION_AWS_REGION}`,
+			);
+		}
+
+		const contentfulSpaceId = new CfnParameter(this, "ContentfulSpaceId", {
+			description: "Non-secret Contentful space identifier",
+			type: "String",
+		});
+		const notificationEmail = new CfnParameter(this, "NotificationEmail", {
+			description: "Email address for the AWS budget and 5xx alarm",
+			type: "String",
+		});
+		const githubAccessTokenSecretArn = new CfnParameter(
+			this,
+			"GitHubAccessTokenSecretArn",
+			{
+				default: "",
+				description:
+					"Temporary Secrets Manager ARN containing a token field for initial GitHub App authorization",
+				type: "String",
+			},
+		);
+		const enableDomainAssociation = new CfnParameter(
+			this,
+			"EnableDomainAssociation",
+			{
+				allowedValues: ["true", "false"],
+				default: "true",
+				description:
+					"Create the validated production and legacy Amplify domain associations",
+				type: "String",
+			},
+		);
+		const hasGitHubAccessToken = new CfnCondition(
+			this,
+			"HasGitHubAccessToken",
+			{
+				expression: Fn.conditionNot(
+					Fn.conditionEquals(githubAccessTokenSecretArn.valueAsString, ""),
+				),
+			},
+		);
+		const shouldCreateDomainAssociation = new CfnCondition(
+			this,
+			"ShouldCreateDomainAssociation",
+			{
+				expression: Fn.conditionEquals(
+					enableDomainAssociation.valueAsString,
+					"true",
+				),
+			},
+		);
+
+		const hostedZone = HostedZone.fromHostedZoneAttributes(
+			this,
+			"ProductionHostedZone",
+			{
+				hostedZoneId: HOSTED_ZONE_ID,
+				zoneName: DOMAIN_NAME,
+			},
+		);
+
+		const secretKey = new Key(this, "ProductionSecretKey", {
+			description: "Encrypts Carolyn Portfolio production SecureStrings",
+			enableKeyRotation: true,
+			removalPolicy: RemovalPolicy.RETAIN,
+		});
+		new Alias(this, "ProductionSecretKeyAlias", {
+			aliasName: "alias/carolyn-portfolio-prod-secrets",
+			targetKey: secretKey,
+		});
+
+		const productionSecretParameterArns = PRODUCTION_SECRET_PARAMETERS.map(
+			(parameterName) => this.parameterArn(parameterName),
+		);
+
+		const amplifySourceArn = this.formatArn({
+			arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+			resource: "apps",
+			resourceName: "*",
+			service: "amplify",
+		});
+		const amplifyServicePrincipal = new ServicePrincipal(
+			"amplify.amazonaws.com",
+		).withConditions({
+			ArnLike: { "aws:SourceArn": amplifySourceArn },
+			StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
+		});
+		const amplifyServiceRole = new Role(this, "AmplifyServiceAndLoggingRole", {
+			assumedBy: amplifyServicePrincipal,
+			description:
+				"Allows Amplify builds to read production secrets and Amplify SSR to publish bounded CloudWatch logs",
+		});
+		amplifyServiceRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["ssm:GetParameter"],
+				resources: productionSecretParameterArns,
+			}),
+		);
+		amplifyServiceRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["kms:Decrypt"],
+				conditions: {
+					StringEquals: {
+						"kms:EncryptionContext:PARAMETER_ARN":
+							productionSecretParameterArns,
+					},
+				},
+				resources: [secretKey.keyArn],
+			}),
+		);
+		amplifyServiceRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["logs:CreateLogGroup"],
+				resources: [
+					this.formatArn({
+						arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+						resource: "log-group",
+						resourceName: "/aws/amplify/*",
+						service: "logs",
+					}),
+				],
+			}),
+		);
+		amplifyServiceRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["logs:CreateLogStream", "logs:PutLogEvents"],
+				resources: [
+					this.formatArn({
+						arnFormat: ArnFormat.COLON_RESOURCE_NAME,
+						resource: "log-group",
+						resourceName: "/aws/amplify/*:log-stream:*",
+						service: "logs",
+					}),
+				],
+			}),
+		);
+		amplifyServiceRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["logs:DescribeLogGroups"],
+				resources: ["*"],
+			}),
+		);
+
+		const githubAccessToken = Token.asString(
+			Fn.conditionIf(
+				hasGitHubAccessToken.logicalId,
+				Fn.join("", [
+					"{{resolve:secretsmanager:",
+					githubAccessTokenSecretArn.valueAsString,
+					":SecretString:token}}",
+				]),
+				Aws.NO_VALUE,
+			),
+		);
+		const amplifyApp = new CfnApp(this, "AmplifyApp", {
+			accessToken: githubAccessToken,
+			cacheConfig: { type: "AMPLIFY_MANAGED" },
+			customRules: [
+				{
+					source: `https://www.${DOMAIN_NAME}`,
+					status: "301",
+					target: `https://${DOMAIN_NAME}`,
+				},
+				{
+					source: `https://${LEGACY_DOMAIN_PREFIX}.${LEGACY_DOMAIN_NAME}`,
+					status: "301",
+					target: `https://${DOMAIN_NAME}`,
+				},
+				...getCleanUrlRules(),
+			],
+			description: "Carolyn DiLoreto portfolio production hosting",
+			enableBranchAutoDeletion: false,
+			iamServiceRole: amplifyServiceRole.roleArn,
+			name: "carolyn-portfolio",
+			platform: "WEB_COMPUTE",
+			repository: REPOSITORY_URL,
+		});
+		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
+			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
+				ArnLike: {
+					"aws:SourceArn": `${amplifyApp.attrArn}/branches/*`,
+				},
+				StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
+			}),
+			description:
+				"App-scoped SSR role for the two Carolyn Portfolio production SecureStrings",
+		});
+		amplifyComputeRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["ssm:GetParameter"],
+				resources: productionSecretParameterArns,
+			}),
+		);
+		amplifyComputeRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["kms:Decrypt"],
+				conditions: {
+					StringEquals: {
+						"kms:EncryptionContext:PARAMETER_ARN":
+							productionSecretParameterArns,
+					},
+				},
+				resources: [secretKey.keyArn],
+			}),
+		);
+
+		const branch = new CfnBranch(this, "ProductionBranch", {
+			appId: amplifyApp.attrAppId,
+			branchName: PRODUCTION_BRANCH,
+			computeRoleArn: amplifyComputeRole.roleArn,
+			description: "Exact-SHA production releases from GitHub Actions",
+			enableAutoBuild: false,
+			enablePerformanceMode: false,
+			enablePullRequestPreview: false,
+			environmentVariables: [
+				{
+					name: "CONTENTFUL_SPACE_ID",
+					value: contentfulSpaceId.valueAsString,
+				},
+			],
+			framework: "Nitro",
+			stage: "PRODUCTION",
+		});
+		branch.addDependency(amplifyApp);
+
+		const domain = new CfnDomain(this, "ProductionDomain", {
+			appId: amplifyApp.attrAppId,
+			domainName: hostedZone.zoneName,
+			enableAutoSubDomain: false,
+			subDomainSettings: [
+				{ branchName: PRODUCTION_BRANCH, prefix: "" },
+				{ branchName: PRODUCTION_BRANCH, prefix: "www" },
+			],
+		});
+		domain.cfnOptions.condition = shouldCreateDomainAssociation;
+		domain.addDependency(branch);
+
+		// This association attaches only carolyn.diloreto.com to the Carolyn app.
+		// The shared diloreto.com Route 53 zone is owned by a separate AWS account;
+		// this stack must never manage its apex, www, home, wildcard, mail, or paul records.
+		const legacyDomain = new CfnDomain(this, "LegacyDomain", {
+			appId: amplifyApp.attrAppId,
+			domainName: LEGACY_DOMAIN_NAME,
+			enableAutoSubDomain: false,
+			subDomainSettings: [
+				{
+					branchName: PRODUCTION_BRANCH,
+					prefix: LEGACY_DOMAIN_PREFIX,
+				},
+			],
+		});
+		legacyDomain.cfnOptions.condition = shouldCreateDomainAssociation;
+		legacyDomain.addDependency(branch);
+
+		new LogGroup(this, "AmplifySsrLogGroup", {
+			logGroupName: `/aws/amplify/${amplifyApp.attrAppId}`,
+			removalPolicy: RemovalPolicy.RETAIN,
+			retention: RetentionDays.TWO_WEEKS,
+		});
+
+		const alarmTopic = new Topic(this, "OperationalAlarmTopic", {
+			displayName: "Carolyn Portfolio production alarms",
+		});
+		alarmTopic.addSubscription(
+			new EmailSubscription(notificationEmail.valueAsString),
+		);
+		const serverErrorAlarm = new Alarm(this, "Amplify5xxAlarm", {
+			alarmDescription:
+				"Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods",
+			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
+			datapointsToAlarm: 2,
+			evaluationPeriods: 3,
+			metric: new MathExpression({
+				expression: "IF(requests >= 20, 100 * errors / requests, 0)",
+				label: "Amplify Hosting 5xx error rate (%)",
+				period: Duration.minutes(5),
+				usingMetrics: {
+					errors: new Metric({
+						dimensionsMap: { App: amplifyApp.attrAppId },
+						metricName: "5xxErrors",
+						namespace: "AWS/AmplifyHosting",
+						period: Duration.minutes(5),
+						statistic: "Sum",
+					}),
+					requests: new Metric({
+						dimensionsMap: { App: amplifyApp.attrAppId },
+						metricName: "Requests",
+						namespace: "AWS/AmplifyHosting",
+						period: Duration.minutes(5),
+						statistic: "Sum",
+					}),
+				},
+			}),
+			threshold: 2,
+			treatMissingData: TreatMissingData.NOT_BREACHING,
+		});
+		serverErrorAlarm.addAlarmAction(new SnsAction(alarmTopic));
+
+		new CfnBudget(this, "MonthlyBudget", {
+			budget: {
+				budgetLimit: { amount: 5, unit: "USD" },
+				budgetName: "carolyn-portfolio-account-monthly",
+				budgetType: "COST",
+				timeUnit: "MONTHLY",
+			},
+			notificationsWithSubscribers: [
+				{
+					notification: {
+						comparisonOperator: "GREATER_THAN",
+						notificationType: "FORECASTED",
+						threshold: 100,
+						thresholdType: "PERCENTAGE",
+					},
+					subscribers: [
+						{
+							address: notificationEmail.valueAsString,
+							subscriptionType: "EMAIL",
+						},
+					],
+				},
+				{
+					notification: {
+						comparisonOperator: "GREATER_THAN",
+						notificationType: "ACTUAL",
+						threshold: 100,
+						thresholdType: "PERCENTAGE",
+					},
+					subscribers: [
+						{
+							address: notificationEmail.valueAsString,
+							subscriptionType: "EMAIL",
+						},
+					],
+				},
+			],
+		});
+
+		const githubOidcProvider = new CfnOIDCProvider(
+			this,
+			"GitHubActionsOidcProvider",
+			{
+				clientIdList: ["sts.amazonaws.com"],
+				url: "https://token.actions.githubusercontent.com",
+			},
+		);
+		const githubSubjectConditions = {
+			StringEquals: {
+				"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+				"token.actions.githubusercontent.com:sub": [
+					"repo:soodoh/carolyn-portfolio:environment:production",
+				],
+			},
+		};
+		const deploymentRole = new Role(this, "GitHubDeploymentRole", {
+			assumedBy: new WebIdentityPrincipal(
+				githubOidcProvider.ref,
+				githubSubjectConditions,
+			),
+			description:
+				"Allows the Carolyn Portfolio production environment to release and monitor Amplify production",
+		});
+		deploymentRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["amplify:GetApp"],
+				effect: Effect.ALLOW,
+				resources: [amplifyApp.attrArn],
+			}),
+		);
+		deploymentRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["amplify:GetBranch"],
+				effect: Effect.ALLOW,
+				resources: [branch.attrArn],
+			}),
+		);
+		deploymentRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["amplify:GetJob", "amplify:StartJob"],
+				effect: Effect.ALLOW,
+				resources: [`${branch.attrArn}/jobs/*`],
+			}),
+		);
+
+		new CfnOutput(this, "AmplifyAppId", { value: amplifyApp.attrAppId });
+		new CfnOutput(this, "AmplifyDefaultDomain", {
+			value: amplifyApp.attrDefaultDomain,
+		});
+		new CfnOutput(this, "AmplifyProductionUrl", {
+			value: `https://${PRODUCTION_BRANCH}.${amplifyApp.attrDefaultDomain}`,
+		});
+		new CfnOutput(this, "ProductionBranchName", {
+			value: PRODUCTION_BRANCH,
+		});
+		new CfnOutput(this, "HostedZoneId", { value: HOSTED_ZONE_ID });
+		new CfnOutput(this, "HostedZoneNameServers", {
+			value: HOSTED_ZONE_NAME_SERVERS.join(","),
+		});
+		new CfnOutput(this, "GitHubDeploymentRoleArn", {
+			value: deploymentRole.roleArn,
+		});
+		new CfnOutput(this, "SecretKmsKeyArn", { value: secretKey.keyArn });
+		new CfnOutput(this, "ContentfulAccessTokenParameter", {
+			value: CONTENTFUL_ACCESS_TOKEN_PARAMETER,
+		});
+		new CfnOutput(this, "ProjectAuthSecretParameter", {
+			value: PROJECT_AUTH_SECRET_PARAMETER,
+		});
+	}
+
+	private parameterArn(parameterName: string): string {
+		return this.formatArn({
+			resource: "parameter",
+			resourceName: parameterName.slice(1),
+			service: "ssm",
+		});
+	}
+}

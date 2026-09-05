@@ -1,0 +1,56 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+bun-debug.log*
+
+# testing
+/coverage
+/playwright-report/
+/test-results/
+/.pi-subagents/
+/.playwright-mcp/
+
+# TanStack Start
+/.output/
+/.tanstack/
+/src/routeTree.gen.ts
+
+# Nitro / Amplify Hosting
+/.nitro/
+/.amplify-hosting/
+/infra/cdk.out/
+/infra/node_modules/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+# Local Netlify folder
+.netlify
+
+# Generated auth manifest
+lib/project-auth-manifest.json
+
+# Fixture/build transaction recovery artifacts
+/public/.test-assets-staging/
+/public/.test-assets-backup/
+/tests/fixtures/contentful.json.tmp
+/tests/fixtures/contentful.json.backup
+/tests/fixtures/.contentful-fixture-commit
+/tests/fixtures/.contentful-fixture.lock
