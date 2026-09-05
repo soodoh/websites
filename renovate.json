@@ -20,6 +20,13 @@
       "matchStrings": ["cfn-lint==(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
       "depNameTemplate": "cfn-lint",
       "datasourceTemplate": "pypi"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/package\\.json$/"],
+      "matchStrings": ["github.com/rhysd/actionlint/cmd/actionlint@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "rhysd/actionlint",
+      "datasourceTemplate": "github-releases"
     }
   ]
 }
