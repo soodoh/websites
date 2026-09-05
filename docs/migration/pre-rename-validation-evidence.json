@@ -1,0 +1,616 @@
+{
+  "status": "PRE-RENAME validation passed; future renamed layout/scoped-commit policy and final acceptance are not covered",
+  "testedRootCiCommit": "2aecd5bbbec414f43ca50646ff64ed6347276d2c",
+  "cleanCheckout": "/tmp/websites-workspace/resumed-validation/checkout",
+  "environment": "env -i; empty scratch HOME; Node24.20.0 PATH; CI=1; explicit local DOCKER_HOST; Portfolio Chrome path only; no source secrets or old installs",
+  "tools": {
+    "bun": "1.4.0",
+    "node": "24.20.0",
+    "playwright": "1.62.1",
+    "dockerPlatform": "linux/arm64",
+    "chrome": "152.0.7977.77"
+  },
+  "rootCi": {
+    "exit": 0,
+    "tasksSuccessful": 4,
+    "tasksTotal": 4,
+    "cached": 0,
+    "concurrency": 1,
+    "duration": "8m42.492s"
+  },
+  "results": {
+    "workspace": {
+      "passed": 8,
+      "assertions": 351
+    },
+    "sarabeth": {
+      "playwrightPassed": 196,
+      "newProvenanceTestsPassed": 7
+    },
+    "carolyn": {
+      "unitPassed": 117,
+      "infraPassed": 9,
+      "fixtureArtifactPassed": 3,
+      "productionArtifactPassed": 3,
+      "visualPassed": 92
+    },
+    "portfolio": {
+      "playwrightPassed": 56,
+      "unchangedViewportSkips": 4,
+      "lighthouseRunsPassed": 3
+    },
+    "diloreto": {
+      "genealogyPassed": 13,
+      "playwrightPassed": 37,
+      "unchangedViewportSkips": 1
+    }
+  },
+  "gitlessArtifactCommitVerified": "2aecd5bbbec414f43ca50646ff64ed6347276d2c",
+  "finalImageProofs": {
+    "carolyn-fixed-image.id": "sha256:53ec0892fd45f74b84cc4341b3d63830f3e26534ecc86dab0034227a28cf88a6",
+    "sarabeth-fixed-image.id": "sha256:314035df2fe68925c931109d7aff4c5af08aab107310feb82af58daf9f65b056",
+    "portfolio-final-image.id": "sha256:742e9eb0370cbe594bf41e1e398efda9b6a7ea8a7fbde89aabcf4738298414db",
+    "diloreto-final-image.id": "sha256:9451025f0f94e25b32ed7d9ae809d7c5088472cefb8e5a40906096c4cb3fe93f",
+    "root-sarabeth-image.id": "sha256:3096642e415fe92e4f72b3668c5c4cf4331e8498cdfd2ad41390bb575c64aa7f",
+    "root-diloreto-image.id": "sha256:05d928e4ec9a41aa5c2651fcb958994f2b8eddf2663feb9f4e497e8e6c4e013a",
+    "root-carolyn-image.id": "sha256:c733d1228209b1c936244572354a555cb27df332611e672d8f811d5c4793050f",
+    "root-portfolio-image.id": "sha256:fef7618fd6ef821bb95ab8c3641a20c72fb9db458b81abd8b77ff67745a67d87"
+  },
+  "checks": [
+    {
+      "command": "bun install --frozen-lockfile",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/install.log",
+      "logSha256": "4dd0c0d78a490fe7213a5efc7d0311ca8748abf1ac1aa50197978e07131cbfdc"
+    },
+    {
+      "command": "bun run verify:carolyn-portfolio",
+      "exit": 1,
+      "log": "/tmp/websites-workspace/resumed-validation/carolyn-verify.log",
+      "logSha256": "bb559ef588b397665bb621e4afb92fe9cff7becd835e175678330c6a892549d5"
+    },
+    {
+      "command": "bun run verify:carolyn-portfolio (DNS fix)",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/carolyn-verify-fixed.log",
+      "logSha256": "b5adfb24a9140d96411bcc29b08b6b0a2e348423ace3f64194a218ceed8aa5a0"
+    },
+    {
+      "command": "bun run verify:sarabeth-studio",
+      "exit": 1,
+      "log": "/tmp/websites-workspace/resumed-validation/sarabeth-verify.log",
+      "logSha256": "9446b4ff4320feecdd71297a87426f3f1fabc58c9a0ae34e953dfb78cff0e3ea"
+    },
+    {
+      "command": "bun run verify:sarabeth-studio (provenance fix)",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/sarabeth-verify-fixed.log",
+      "logSha256": "6a5ceec9ad38ad6db9fabe761c48844b932a8df881a63cf723d7bfce9a2bd059"
+    },
+    {
+      "command": "bun run verify:portfolio-website",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/portfolio-verify.log",
+      "logSha256": "5556f5a54ebe3c0d95710779d0d92c774de642f4a9329c8a59e21c57e47102e4"
+    },
+    {
+      "command": "bun run verify:diloreto-website",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/diloreto-verify.log",
+      "logSha256": "451007934e17eec1f0cba4dc04a4d9fa37a25968a9bf0deef586cbefdfbe75f4"
+    },
+    {
+      "command": "bun run ci:verify",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/root-ci-verify.log",
+      "logSha256": "7d8e7b24d489f2780d7955aca431f8d78c143b1a050918ec7fecea663c4db998"
+    },
+    {
+      "command": "Sarabeth Gitless artifact and versions proof",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/sarabeth-fixed-proof.log",
+      "logSha256": "a12a6a51c08a6410d24df359d1b2fab365dd8324a47cf7de0ef3a9a2c1a4ef5f"
+    },
+    {
+      "command": "Sarabeth provenance unit, deployment-shell and type checks",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/sarabeth-release-tests.log",
+      "logSha256": "c8bc0231b881eeb11c4b3b57db090e0f02236d4793abd275729817358a079987"
+    },
+    {
+      "command": "bun run test:workspace after compatibility fixes",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/sarabeth-contract.log",
+      "logSha256": "abdbfb53a12c5eb42f17461be350b28e770ee12954b439e9a678b8a5fbbda5ff"
+    },
+    {
+      "command": "docker compose config without RELEASE_COMMIT (expected rejection)",
+      "exit": 1,
+      "log": "/tmp/websites-workspace/resumed-validation/compose-missing-sha.log",
+      "logSha256": "645c9f73ee96faff43d7cfbd99501d3d460ef284254a68abdcf23ec96790b5b8"
+    },
+    {
+      "command": "docker compose config with explicit RELEASE_COMMIT",
+      "exit": 0,
+      "log": "/tmp/websites-workspace/resumed-validation/compose-valid-sha.log",
+      "logSha256": "f452a580f7c45c8769eec18da644461a3986dc6d066d0909bb7b7a7e06750f7e"
+    }
+  ],
+  "storage": {
+    "parentApprovedEightRemovals": [
+      {
+        "reference": "portfolio-review-playwright-amd64:latest",
+        "id": "sha256:fa33c0baba0ada4e6b686fecb18c66389450bc508c8cce629f504d12a6ffa329",
+        "exit": 0
+      },
+      {
+        "reference": "portfolio-review-bun-1.3.14:latest",
+        "id": "sha256:3ed56ce9edd423ee5ee346c2250ba37134cc727b1b28a28e1537cdf841762cdf",
+        "exit": 0
+      },
+      {
+        "reference": "sarabeth-readonly-audit-playwright:latest",
+        "id": "sha256:82308313f8a7ee5154747026d86fde77bb5963a94516c58efac2981b1a6ec545",
+        "exit": 0
+      },
+      {
+        "reference": "readonly-audit-main-playwright:latest",
+        "id": "sha256:69742ecab8ee5686dfd5c47c5680bb5bb1449e9b92e543649f57668a4a42dd6b",
+        "exit": 0
+      },
+      {
+        "reference": "renovate-playwright:latest",
+        "id": "sha256:e184fa30895e843f23902681cf188757700d9f4a4fac40adf1b7ce981afe9268",
+        "exit": 0
+      },
+      {
+        "reference": "diloreto-playwright:acceptance",
+        "id": "sha256:4f8400a6468527206e964431139e43ad98e2312dee28470778c5bbcf4bf415ca",
+        "exit": 0
+      },
+      {
+        "reference": "diloreto-playwright-review:local",
+        "id": "sha256:344ba423bee85cbf91414b93d09d3f9ddf8d5121688dfc5fcc534a75ebee203e",
+        "exit": 0
+      },
+      {
+        "reference": "sarabeth-playwright-review:latest",
+        "id": "sha256:273618b48e69787d8d9545b28bfce0960ab05ff05d6cb0614173ba614b8a351a",
+        "exit": 0
+      }
+    ],
+    "beforeResumption": "98G total;87G used;6.7G available;93% on Colima /dev/vdb1",
+    "afterRun": "98G total;87G used;6.7G available;93%;19 running containers;70 volumes",
+    "unintendedEarlierCacheAncestorRemoval": [
+      "72b13137159107fd34a2f764e70e11ca492f077682521e0a79c28fd9cabeda43",
+      "e31751a0d90c1d0e279a358000fcc0f8d4073e28039f067d4da53a8a076483b9",
+      "d1e8f4265781d43157fad3c8ccbd2f799a48b5cc8492ea2c5a4249efb7ab1a2c",
+      "7c85e839fda4d858ada92c8c02effd22ab1b0dbea9f4e3be55c5c9953ffa9366"
+    ],
+    "deviation": "Default docker image rm parent pruning removed these four untagged earlier migration-cache ancestors in addition to selected current-run images. Disclosed immediately; supervisor authorized continuation with --no-prune and explicit current-run ownership/ref checks. No tagged base image, unrelated container or volume removed. Original output retained outside Git.",
+    "correctedOwnImageCleanup": [
+      {
+        "image": "sha256:314035df2fe68925c931109d7aff4c5af08aab107310feb82af58daf9f65b056",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:159a623f042ade4854b0a8d320b2cd5cccac75050c512e4a938445ee952921cc",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:535d709db40d42fa72246df3c089cf18986a83303f09e5d8faa9994650cd464e",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:b39b90217db94d15199dc00d0b26e52eda115d5c5b421083f0fdaa6c7b8b91d5",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:05d2a1f5525fd4a12c2422511082511e64b9a69aa74202c484fd6a1642e27532",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:8095056a8c2b737745ff39d5f20745f64641d8e2fee428a6b2a1a0dc39be2799",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:742e9eb0370cbe594bf41e1e398efda9b6a7ea8a7fbde89aabcf4738298414db",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:1574bc77aab2a855489749d5423b078f37ec76da2869a7c69298e191d5490281",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:17b5feecdd132a1864f9fb9246532f916e85421c41b540f38be2538b8e229db1",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:2f0517562875acdd8a37971bb41b70968b7d533f62079785c86e166f21c216c1",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:d7ce4e297dab1bcc4772780d2e20195d2acdab0af48ccd09813f4c1d5f98b69e",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:9451025f0f94e25b32ed7d9ae809d7c5088472cefb8e5a40906096c4cb3fe93f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:8f5f9a0194a401975d5fc2baad41215512d8abccc4b883e903932090a0e294b7",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:84894264e3019934417763f62ede8a7175f0ec8c872bba07348fa730319d3c79",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:b2fdd175f7137d38e04231f82c86812df1e4467663fb1db49a06730d78042a9f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:769264bc5d0902b829b639cf33dabd5837805c2a12988002acb58dcee35901c8",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:c0f5e3c873d61c4629c54b928ace9aa96aaad2b96099bf626cbcd69458e2524d",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:6bc89bfa440ab1041f17bb537037ecc5936862d7efbcefe8762207c23d2bee6a",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:3096642e415fe92e4f72b3668c5c4cf4331e8498cdfd2ad41390bb575c64aa7f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:7880d917e185ecf5f831a96617530e14de125a4aeaf31aba5ff688aafa14f243",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:dcc4d7ecaecdfe021c501346fd1a63935441caa015e8630c5ad9a645d691823f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:2652a4f6bf6c5e0584304bc05c0b3678e0ba004e50eff4a08bc3ef26f28bcd28",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:017e8b9396ebb499d3dbbbdd8a59f2a8a157c70a5d7f02a8c6b8ebdced824957",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:20ba7f59e134fc77d50a52e8d93ddef5ff763ba746756f7a4fa36b1ddf66a663",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:05d928e4ec9a41aa5c2651fcb958994f2b8eddf2663feb9f4e497e8e6c4e013a",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:598fd8e2b92cf9262435f44b657cba9142b34ed92a6eaf2efe31167abafa9d84",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:f4ff632da8acf2beecfa56bb84cf6e2daea1373839b4707157049ceb472b10f1",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:9957edca30ef6e5bf2d063dbe2571b9193aa5b85dc71e864b19e704bbe3f46d9",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:cd4f63f8c36b1b8d54e11d4eaad89886d8b4714e947360b3fee2495f0f725d22",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:d5c62d845177ae994af3e8a5531f3c90582b6fb1709a44b77d63f29bef0f6e06",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:643cf8f9673895334467e2ef125abd9b637e8761eefe2e1425f5893895d57d5b",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:c733d1228209b1c936244572354a555cb27df332611e672d8f811d5c4793050f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:3546d9995c94ebca1f9eeb28c6b1289d46df12897347b613d02f6aa91a676745",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:0074520234e0de7a4ed2e86fb1a3d201130ae42ffa1c11d35ecd1c1b658d3a51",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:856a119e917b16a592f1b8795ea938424c89f1db6419a517bb7584bdcb8487ec",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:fef7618fd6ef821bb95ab8c3641a20c72fb9db458b81abd8b77ff67745a67d87",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:3ee8e368263d6b3046cb4d6fc6475d666123ef8d186b1d8c8f8997858986f9ce",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:19bd2462175b7d59de76f55dd2043c3fd2777317ea6de4d8d830f1b350e9fc05",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:b908eb9744c45d17bfcd3509dd717f00345e6921967c6178754d02ca95019104",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:06f74f80a76c73d39a982270a0fe27565028df168daed5d3e173841ebe3f927f",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:9551ba97591bede62eb19f0542214386aed6e5dfe058003b716575947e9a6fd2",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:1ec927700a3cb76d2579e73eb19eaab03f4c439ac51657682387186845269fa8",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:36f53d986e3b1c8722389350656ed865c511dc9283e055d3d4b037c50e2233a9",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:5109b6a7eb9c172187f6d07d34b325a3c65e19da8d78763454b7184956548cc9",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:4dc50b4c476ada069089239dab5fa201aa65425da9fe21082230b2cec470b34a",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:a0f2e336d76319e96df16d172c420dc5e3d7315847aadb78b60c9ed097d52543",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:2509243d442171a750b1c06cbc47540519f5b33129c1e5de8bab94e475348e28",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:5f222299bf761a3a87c061cb57db67686b2bf2f9bbb14670eb9d64aad0d4ea47",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:5c61558a7da12aeacb855dc388771859c3aaa8232781ff5ac9dd962560c17d31",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      },
+      {
+        "image": "sha256:0ecbe0cf46d459cf25adc39e2e4a776fa1afd1409d7a85ab73d0371baae67bba",
+        "exit": 0,
+        "flags": [
+          "--no-prune"
+        ],
+        "ownership": "fresh build result in this run; no container references rechecked"
+      }
+    ],
+    "ephemeralTestContainerCleanup": "Existing reviewed wrappers may force-remove ONLY the exact container ID returned by that same invocation docker create, as explicitly clarified by supervisor. Administrative image cleanup never forced."
+  },
+  "nextStage": {
+    "approvedButNotAppliedDirectoryNames": [
+      "apps/carolyn",
+      "apps/paul",
+      "apps/diloreto",
+      "apps/sarabeth"
+    ],
+    "approvedButNotAppliedRequiredCommitScopes": [
+      "carolyn",
+      "paul",
+      "diloreto",
+      "sarabeth",
+      "repo",
+      "ci",
+      "deps"
+    ],
+    "historicalMessagesAndImportPrefixes": "Unchanged in this run; proposed historical-message normalization is pending parent clarification of published initial commit/publication implications. No rewrite in this checkpoint.",
+    "postRenameVerification": "not run; parent owns next bounded stage",
+    "proposedHistoricalMessageNormalization": "pending; not implemented or covered by pre-rename evidence"
+  },
+  "acceptance": "No overall phase1 acceptance, publication or phase2 authorization inferred."
+}

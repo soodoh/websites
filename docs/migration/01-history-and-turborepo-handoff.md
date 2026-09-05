@@ -1,8 +1,14 @@
-# Phase 1 handoff — local workspace candidate; Docker acceptance BLOCKED
+# Phase 1 handoff — PRE-RENAME verification passed; next-stage work pending
 
 **LOCAL ONLY. Nothing pushed. Phase 1 is not accepted; do not begin phase 2.**
 
-Implementation candidate with accepted review fixes:
+Latest tested PRE-RENAME implementation: `2aecd5bbbec414f43ca50646ff64ed6347276d2c`.
+All four individual complete verification filters and root serial `ci:verify` passed.
+See the latest checkpoint below and `pre-rename-validation-evidence.json` for exact
+commands, versions, exits, images and cleanup disclosure. This does **not** cover
+future directory renames, required scopes, or proposed historical-message normalization.
+
+Previously independently reviewed P2-fix candidate:
 `271ef39f2a356ef62b14793b57ed8aae4c5f64b7`.
 The original reviewed candidate was `ed73a00f698caf39a032d5b7b079400f122d8f41`.
 Core integration is `30a60b3c7783678bb6182ab394bea171f238cae5`
@@ -42,7 +48,7 @@ SHA remains null in `source-imports.json` until full validation/review succeeds.
   only, root .dockerignore, unchanged browser images/architectures, and pinned Node
   binary overlay. Old ambiguous dependency volumes are no longer used.
 
-## Docker assumptions and current blocker
+## Historical Docker assumptions and storage blocker (superseded by latest checkpoint)
 
 The available Docker daemon is ARM64 but **does not share host `/Users/...` paths**.
 An initial Carolyn artifact run failed exit 125 on a host bind source not existing
@@ -232,15 +238,112 @@ The parent separately reran all five audit regression tests (exit 0, 13 assertio
 and reverified all imported heads/ancestors, pristine import trees, and initial
 target ancestry at `bb6eb584` (all passed; working tree clean).
 
-## Next steps
+## Latest checkpoint — PRE-RENAME full local verification passed
 
-1. Targeted independent final review is complete; both P2 findings are resolved.
-   Passing host gates and targeted review are not final phase-1 acceptance.
-2. Owner resolves Docker daemon disk capacity. Rebuild/validate final remote-safe
-   wrappers and unchanged canonical browser baselines; rerun full per-app chains and
-   root all-app command from a clean checkout. No screenshot updates, no coverage drops.
-3. Update final migration SHA/status and this handoff only after all gates pass or
-   record the exact remaining blocker. Publication still needs explicit approval,
-   normal push/history-preserving merge, then fresh-clone history/frozen checks.
-4. **Phase 2 is next only after phase 1 acceptance**: diff-scoped CI with production
-   disabled. Phase 3 environments/IAM/Amplify/cutover remains separately authorized.
+The user authorized exactly eight old unused test/review image removals after parent
+read-only inventory/ref checks. Parent removed all eight without force, recovering
+6.7 GiB on Colima's separate disk. Safe names/IDs/exits are committed in
+`pre-rename-validation-evidence.json`; broad unrelated Docker inventory is not.
+This superseded the earlier no-retry prohibition only for required local validation.
+
+Validation used a new `git clone --no-local --single-branch --branch main --no-tags`
+of the TARGET at `ff2f6386`, advanced by fast-forward to the two committed fixes below.
+The checkout is `/tmp/websites-workspace/resumed-validation/checkout`, with a new
+empty HOME and `env -i`, explicit Node24.20.0/tools PATH, CI=1 and only the local
+Docker socket passed. Portfolio additionally uses the installed Chrome152.0.7977.77.
+Root frozen installs passed at the starting and final implementation revisions.
+No source checkout install, old ignored config, production CMS/email/secret/AWS lookup,
+active root workflow, publication or deployment was used.
+
+Two real runtime compatibility failures were fixed minimally in forward commits:
+
+- `0b70576e`: Carolyn's Linux fixture preview bound localhost differently from Node
+  fetch, causing ECONNREFUSED127.0.0.1:3000. The same image's build passed with
+  `NODE_OPTIONS=--dns-result-order=ipv4first`; only the wrapper's fixture and hermetic
+  production fixture build subprocesses now receive this option. Failure-contract
+  regression assertions cover both modes. Production app code/policy is unchanged.
+- `2aecd5bb`: Sarabeth's runtime Amplify preparation/validation required Git metadata
+  correctly excluded from images. The approved explicit RELEASE_COMMIT seam accepts
+  exactly40 hex characters or retains Git HEAD fallback only when unset; malformed
+  or empty explicit values fail. The wrapper derives the actual target SHA using
+  `git -C "$workspace_root" rev-parse HEAD`, ignoring arbitrary inherited provenance,
+  and passes it at runtime, not in cached layers. Direct compose now requires the
+  explicit value; app docs show `RELEASE_COMMIT=$(git rev-parse HEAD)` invocation.
+  Seven focused tests cover valid Gitless input, malformed/empty rejection and Git
+  fallback. Existing metadata equality assertions remain; both preparation and
+  validation use the same resolver. Nested original workflows remain unchanged;
+  phase2 adaptation must inject explicit provenance into Gitless container runs.
+
+### Actual final gates and immutable source correspondence
+
+| Gate | Exit/result |
+| --- | --- |
+| Carolyn original resumed filter before DNS fix | 1; fixture runtime ECONNREFUSED, not a test pass |
+| Carolyn complete `bun run verify:carolyn-portfolio` after fix | 0;117 unit,9 infra,3 fixture artifact,3 production artifact,92 visual; full validate/types/synth/workflow checks |
+| Sarabeth original resumed filter before provenance fix | 1; Gitless prepare failed, not a test pass |
+| Sarabeth complete `bun run verify:sarabeth-studio` after fix | 0;196 canonical Playwright,7 provenance tests, unchanged deployment-shell tests, provider/fixture builds, Amplify prep/validation, types, workflow/CF lint |
+| Portfolio complete `bun run verify:portfolio-website` | 0;56 canonical functional/visual tests,4 existing viewport-specific skips;3 Lighthouse runs; static/output, both type configs, shell/workflow/CF lint |
+| DiLoreto complete `bun run verify:diloreto-website` | 0;37 canonical tests,1 existing mobile-only skip;13 genealogy tests, static/output/types/CF lint |
+| Root `bun run ci:verify` at **2aecd5bbbec414f43ca50646ff64ed6347276d2c** | **0;4/4 tasks,0 cached,concurrency1;8m42.492s**; repeats all four complete chains on the final committed PRE-RENAME code |
+| Root workspace/mock contracts | 0;8 tests/351 assertions |
+| New Sarabeth provenance + deployment-shell + type checks | 0;7 focused tests plus unchanged shell tests and TypeScript |
+| Direct compose config without / with required RELEASE_COMMIT | 1 expected /0 |
+| Gitless Sarabeth final-image artifact proof | 0; `__deployment.json.commit` equals **2aecd5bbbec414f43ca50646ff64ed6347276d2c**; no .git copied |
+| Final real image tools | ARM64, Bun1.4.0, Node24.20.0, Playwright1.62.1, executable bunx in all four; DiLoreto proof also uses invoking UID501 |
+
+Carolyn's individual filter passed at0b70576e; the full root chain reran its unchanged
+app code at2aecd5bb along with all other apps. All browser image/version/platform pairs,
+snapshot files, comparison thresholds and original skip predicates are unchanged.
+Portfolio's four skips are three mobile-only cases excluded on desktop plus one
+viewport-independent desktop-only case excluded on mobile. DiLoreto skips touch drag
+on desktop. No screenshot update command ran. The usual Carolyn SSR-stream maximum-
+lifetime warning and intentional mocked Sarabeth email failures were nonfatal test
+output, not external production calls.
+
+Logs, artifact proofs, image IDs and command exits are under
+`/tmp/websites-workspace/resumed-validation`; the committed JSON records log SHA256s
+and durable summaries. Both target and clean checkout were Git-clean after root CI.
+Per mid-run user steering, **no further validation round** was started after this root
+command completed. Existing five-test audit/history proof evidence remains as recorded
+above; it was not relabeled as a fresh post-root run.
+
+### Cleanup authorization, deviation and corrected practice
+
+Only one app/image was worked at a time, with read-only disk monitoring and cleanup
+of unused invocation-owned resources. Existing reviewed wrappers may force-remove
+**only their own exact container ID returned by that invocation's docker create**;
+the supervisor explicitly distinguished this interruption-safe cleanup from forbidden
+administrative force cleanup of images/pre-existing resources.
+
+**Scope deviation disclosed:** removing selected run-created obsolete images with
+Docker's default `image rm` also automatically removed four untagged earlier migration-
+cache ancestors: `72b131371591`, `e31751a0d90c`, `d1e8f4265781`, `7c85e839fda4`.
+This default parent pruning was unintended and exceeded the current-run-only cleanup
+boundary. The worker immediately reported it; the parent authorized continuation with
+`image rm --no-prune`, no force, explicit logged current-run creation proof and a fresh
+no-container-reference check before each removal. No tagged base image, unrelated
+container or volume was removed. Full old cleanup output remains outside Git; exact
+IDs and the deviation are preserved in the committed evidence JSON.
+
+All subsequent image cleanup used that corrected rule, including explicitly proven
+new intermediate layers; no additional old-image selection, prune command, restart,
+resize or volume deletion occurred. Final disk:98G total/87G used/**6.7G available**,
+93%; **19 running containers,70 volumes**, unchanged counts. Tagged browser/Bun/Node
+bases remain. No rollback/recreation of discarded cache was requested.
+
+## Next steps — user-requested work intentionally deferred
+
+1. Parent reviews the two new compatibility fixes and this PRE-RENAME checkpoint.
+2. In a separate sole-writer stage, implement the approved directory names
+   `apps/carolyn`, `apps/paul`, `apps/diloreto`, `apps/sarabeth` and required commit
+   scopes `carolyn/paul/diloreto/sarabeth/repo/ci/deps`. None is applied here; current
+   hooks still enforce no-scope commits until that policy is changed. Revalidate the
+   renamed layout rather than treating this evidence as proof of it.
+3. Proposed normalization of historical commit messages is pending parent clarification
+   about the published initial target commit and publication/history implications.
+   **No history rewrite occurred or is authorized in this worker run.** Historical
+   messages, source repositories, imported heads and pristine import prefixes remain
+   unchanged here. Parent must resolve that separate direction before any rewrite.
+4. Final migration SHA/phase1 acceptance remains pending these requested stages and
+   independent review. No push/publication, phase2 or production cutover is authorized.
+   Source repositories remain production deployment owners.

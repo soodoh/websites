@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "workspace candidate implemented locally; full Docker/browser acceptance blocked by daemon disk exhaustion",
+  "status": "PRE-RENAME local verification passed; requested rename/scopes, proposed history normalization and final acceptance remain pending",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -10,13 +10,17 @@
     "startingSha": "5b236ef3a519759c84ebd3504809d391baf085ea",
     "finalMigrationSha": null,
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
-    "workspaceCandidateCommit": "271ef39f2a356ef62b14793b57ed8aae4c5f64b7",
+    "workspaceCandidateCommit": "2aecd5bbbec414f43ca50646ff64ed6347276d2c",
     "reviewedCandidateCommit": "bb6eb584524d1efecd0f675214261fd8c8600017",
     "targetedReview": "targeted-final-review.md; both P2 issues resolved; full phase-1 acceptance still blocked",
     "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373",
     "workspaceReviewFixCommits": [
       "143949cd9d849f2cbb5e73dc81929b6c28113908",
       "271ef39f2a356ef62b14793b57ed8aae4c5f64b7"
+    ],
+    "preRenameCompatibilityFixCommits": [
+      "0b70576e",
+      "2aecd5bbbec414f43ca50646ff64ed6347276d2c"
     ]
   },
   "backupDirectory": "/Users/pauldiloreto/Projects/websites-migration-backups",
@@ -181,7 +185,7 @@
     "cleanAllAppLintPassed": true,
     "cleanAllAppTypecheckPassed": true,
     "fullVerificationAccepted": false,
-    "blocker": "Colima default separate 100 GiB /dev/vdb1 has 0 available (100% full), inode usage 56%; host has 214 GiB free; Docker has 19 running containers. No resize/prune/reset or further Docker builds/retries authorized; full browser and ci:verify acceptance remains blocked.",
+    "blocker": "No remaining PRE-RENAME test failure. Requested directory renames/required scopes, proposed historical-message normalization and independent final review are not covered; no overall phase1 acceptance.",
     "publication": "LOCAL ONLY; no push authorized",
     "reviewFixValidation": {
       "rangeRegressionTests": 5,
@@ -209,6 +213,28 @@
       },
       "countScope": "Matched original lock locator/import contexts, not unique packages or complete graph differences",
       "targetedFinalReview": "pending"
+    },
+    "preRenameFullVerificationPassed": true,
+    "preRenameVerification": {
+      "testedCommit": "2aecd5bbbec414f43ca50646ff64ed6347276d2c",
+      "rootCiExit": 0,
+      "rootCiTasksSuccessful": 4,
+      "rootCiTasksTotal": 4,
+      "rootCiCachedTasks": 0,
+      "individualCompleteFiltersPassed": [
+        "carolyn-portfolio",
+        "sarabeth-studio",
+        "portfolio-website",
+        "diloreto-website"
+      ],
+      "evidence": "pre-rename-validation-evidence.json",
+      "artifactCommitMatchesTestedCommit": true,
+      "canonicalScreenshotsUnchanged": true,
+      "remainingDaemonSpace": "6.7 GiB;19 running containers;70 volumes",
+      "cleanupDeviation": "Four earlier untagged migration-cache ancestors automatically removed by default image rm parent pruning; disclosed and continuation approved with --no-prune; see evidence JSON",
+      "futureRenameAndCommitScopePolicyApplied": false,
+      "futureHistoricalMessageNormalizationApplied": false,
+      "newCompatibilityReview": "pending"
     }
   }
 }
