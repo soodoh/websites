@@ -1,0 +1,8 @@
+pre-commit:
+  commands:
+    lint:
+      run: bun run lint
+commit-msg:
+  commands:
+    commitlint:
+      run: bun x --no-install commitlint --edit {1}

@@ -33,6 +33,7 @@ export interface YouTubeSsmClient {
 }
 
 export interface YouTubeServerEnvironment {
+	[key: string]: string | undefined;
 	YOUTUBE_API_KEY_PARAMETER?: string;
 	YOUTUBE_API_KEY?: string;
 }

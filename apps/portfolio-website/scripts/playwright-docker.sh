@@ -2,7 +2,14 @@
 
 set -euo pipefail
 
-readonly image="portfolio-website-playwright:1.61.1"
+app_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly app_root
+workspace_root="$(cd "${app_root}/../.." && pwd)"
+readonly workspace_root
+lock_hash="$(shasum -a 256 "${workspace_root}/bun.lock" | cut -c1-16)"
+readonly lock_hash
+readonly image="websites-portfolio-playwright:1.62.1-bun1.4.0-${lock_hash}"
+cd "${app_root}"
 container=""
 
 cleanup() {
@@ -13,13 +20,13 @@ cleanup() {
 
 copy_artifacts() {
 	rm -rf test-results playwright-report
-	docker cp "${container}:/app/test-results" test-results >/dev/null 2>&1 || true
-	docker cp "${container}:/app/playwright-report" playwright-report >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/portfolio-website/test-results" test-results >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/portfolio-website/playwright-report" playwright-report >/dev/null 2>&1 || true
 }
 
 trap cleanup EXIT
 
-docker build --file Dockerfile.playwright --tag "${image}" .
+docker build --file "${app_root}/Dockerfile.playwright" --tag "${image}" "${workspace_root}"
 
 docker_arguments=(--ipc=host)
 if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
@@ -27,9 +34,6 @@ if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
 		echo "Static Playwright mode requires a completed bun run build." >&2
 		exit 1
 	fi
-	docker_arguments+=(
-		--volume "$(pwd)/dist/client:/app/dist/client:ro"
-	)
 fi
 
 for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_EXPECT_STATIC_404 PLAYWRIGHT_STATIC; do
@@ -41,6 +45,9 @@ done
 container=$(
 	docker create "${docker_arguments[@]}" "${image}" bun run test:e2e:container "$@"
 )
+if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
+	docker cp "${app_root}/dist/client/." "${container}:/work/apps/portfolio-website/dist/client"
+fi
 
 set +e
 docker start --attach "${container}"
@@ -53,7 +60,7 @@ for argument in "$@"; do
 	if [[ "${argument}" == "--update-snapshots" && "${status}" -eq 0 ]]; then
 		staging_directory="$(mktemp -d e2e/.screenshots-staging.XXXXXX)"
 		backup_directory="e2e/.screenshots-backup"
-		docker cp "${container}:/app/e2e/__screenshots__/." "${staging_directory}"
+		docker cp "${container}:/work/apps/portfolio-website/e2e/__screenshots__/." "${staging_directory}"
 		if ! find "${staging_directory}" -type f -name '*.png' -print -quit | grep -q .; then
 			echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
 			rm -rf "${staging_directory}"

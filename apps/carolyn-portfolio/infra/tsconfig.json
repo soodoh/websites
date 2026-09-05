@@ -8,7 +8,7 @@
 		"noUncheckedIndexedAccess": true,
 		"strict": true,
 		"target": "ES2023",
-		"typeRoots": ["./node_modules/@types"],
+		"typeRoots": ["../node_modules/@types"],
 		"types": ["bun", "node"]
 	},
 	"include": ["bin/**/*.ts", "lib/**/*.ts", "test/**/*.ts"]

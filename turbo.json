@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "remoteCache": { "enabled": false },
+  "globalPassThroughEnv": [
+    "CI", "GITHUB_SHA", "GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT", "RUNNER_TEMP",
+    "PLAYWRIGHT_*", "EXPECTED_ARTIFACT_MODE", "HERMETIC_ARTIFACT_TEST",
+    "HERMETIC_PRODUCTION_BUILD", "PRODUCTION_BUILD_TEST", "AMPLIFY_ARTIFACT_MODE",
+    "ARTIFACT_PORT", "ARTIFACT_COMPUTE_PORT", "VERIFY_DEPLOYMENT_SECRETS",
+    "NODE_ENV", "PORT", "HOST", "RELEASE_COMMIT", "AWS_COMMIT_ID",
+    "CHROME_PATH", "PUPPETEER_*", "DOCKER_HOST", "DOCKER_CONTEXT", "DOCKER_CONFIG",
+    "DOCKER_TLS_VERIFY", "DOCKER_CERT_PATH", "UV_CACHE_DIR", "XDG_CACHE_HOME"
+  ],
+  "tasks": {
+    "dev:workspace": {
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": ["CONTENTFUL_SPACE_ID", "CONTENTFUL_ACCESS_TOKEN", "PROJECT_AUTH_SECRET"]
+    },
+    "lint": { "cache": false },
+    "typecheck": { "cache": false },
+    "ci:verify": { "cache": false },
+    "build": { "cache": false },
+    "validate": { "cache": false },
+    "infra:typecheck": { "cache": false },
+    "infra:test": { "cache": false },
+    "infra:synth": { "cache": false },
+    "infra:diff": { "cache": false },
+    "infra:deploy": { "cache": false }
+  }
+}

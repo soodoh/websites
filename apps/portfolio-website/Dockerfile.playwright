@@ -1,16 +1,20 @@
 FROM oven/bun:1.4.0 AS bun
+FROM node:24.20.0-bookworm-slim AS node
 
 FROM mcr.microsoft.com/playwright:v1.62.1-noble
 
 COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
-
-WORKDIR /app
-
-COPY package.json bun.lock ./
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN ln -s bun /usr/local/bin/bunx
+WORKDIR /work
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/carolyn-portfolio/package.json apps/carolyn-portfolio/package.json
+COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
+COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
+COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
-
-COPY . .
-
+COPY apps/portfolio-website apps/portfolio-website
+WORKDIR /work/apps/portfolio-website
+RUN mkdir -p dist/client && chmod -R a+rX /work
 ENV CI=1
-
-CMD ["bun", "run", "test:e2e:container"]
+CMD ["bun", "x", "--no-install", "playwright", "test"]

@@ -1,6 +1,19 @@
+FROM oven/bun:1.4.0 AS bun
+FROM node:24.20.0-bookworm-slim AS node
+
 FROM mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
 
-ARG BUN_VERSION=1.3.14
-RUN npm install --global "bun@${BUN_VERSION}"
-
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN ln -s bun /usr/local/bin/bunx
 WORKDIR /work
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/carolyn-portfolio/package.json apps/carolyn-portfolio/package.json
+COPY apps/diloreto-website/package.json apps/diloreto-website/package.json
+COPY apps/portfolio-website/package.json apps/portfolio-website/package.json
+COPY apps/sarabeth-studio/package.json apps/sarabeth-studio/package.json
+RUN bun install --frozen-lockfile --ignore-scripts
+COPY apps/carolyn-portfolio apps/carolyn-portfolio
+WORKDIR /work/apps/carolyn-portfolio
+ENV CI=1
+CMD ["bun", "x", "--no-install", "playwright", "test"]

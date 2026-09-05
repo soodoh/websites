@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import renovateConfiguration from "@/renovate.json" with { type: "json" };
 import { extractYamlBlock } from "@/tests/support/yaml-block";
+
+const renovateConfiguration = JSON.parse(
+	readFileSync(new URL("../../../../renovate.json", import.meta.url), "utf8"),
+);
 
 const ciWorkflow = readFileSync(
 	new URL("../../.github/workflows/ci.yaml", import.meta.url),
