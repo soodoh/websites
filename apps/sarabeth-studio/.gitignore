@@ -1,0 +1,41 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+bun-debug.log*
+
+# testing
+/coverage
+/.lighthouseci/
+/playwright-report
+/test-results
+
+# generated application output
+/.output/
+/.amplify-hosting/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+*.tsbuildinfo
+core
+*.core
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# vercel
+.vercel
+
+# Local Netlify folder
+.netlify
+
+# AI Agents
+.pi-subagents/
