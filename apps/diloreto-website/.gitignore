@@ -1,0 +1,38 @@
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+bun-debug.log*
+
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+
+# Build output
+.output/
+dist/
+amplify-deployment.zip
+
+# Deployment recovery snapshots (local only)
+.aws-migration/
+
+# Playwright output
+playwright-report/
+test-results/
+.playwright-mcp/
+
+# Vite
+*.local
+
+# TanStack generated
+.tanstack
+
+# lint cache
+.oxlintcache
+
+# AI Agents
+.pi-subagents/
