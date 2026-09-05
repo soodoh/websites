@@ -69,6 +69,7 @@ describe("phase 1 workspace contract", () => {
 				expect(dockerfile).toContain(`COPY apps/${workspace}/package.json`);
 			}
 		}
+		expect(read("apps/sarabeth-studio/Dockerfile.playwright")).toContain("COPY renovate.json ./");
 		expect(read(".dockerignore")).toContain("**/.env.*");
 		expect(read(".dockerignore")).toContain("**/node_modules");
 	});
