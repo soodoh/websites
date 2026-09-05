@@ -30,7 +30,7 @@
 ## Testing Guidelines
 
 - Playwright coverage lives under `tests/`.
-- Minimum verification is `bun lint`, then `docker compose -f compose.playwright.yaml run --build --rm playwright` for affected browser behavior.
+- Minimum verification is `bun lint`, then `RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright` for affected browser behavior.
 - For new tests, prefer colocated `*.test.ts` or `*.test.tsx` files near the code they cover.
 
 ## Commit & Pull Request Guidelines

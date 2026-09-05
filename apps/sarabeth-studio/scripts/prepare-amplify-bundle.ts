@@ -1,9 +1,8 @@
-import { execFile } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { promisify } from "node:util";
 import { createProductionRoutes } from "@/scripts/amplify-routing";
 import publicRoutes from "@/scripts/public-routes.json" with { type: "json" };
+import { resolveReleaseCommit } from "@/scripts/release-commit";
 
 const manifestPath = join(".amplify-hosting", "deploy-manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
@@ -15,9 +14,7 @@ for (const path of publicRoutes.filter((path) => path !== "/")) {
 	const html = await readFile(join(outputPath, "index.html"));
 	await writeFile(`${outputPath}.html`, html);
 }
-const run = promisify(execFile);
-const { stdout } = await run("git", ["rev-parse", "HEAD"]);
-const commit = stdout.trim();
+const commit = await resolveReleaseCommit();
 await writeFile(
 	join(".amplify-hosting", "static", "__deployment.json"),
 	`${JSON.stringify({ commit })}\n`,

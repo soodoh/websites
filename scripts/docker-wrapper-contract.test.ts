@@ -36,12 +36,18 @@ case "$1" in
   *) exit 99 ;;
 esac
 `, { mode: 0o755 });
+				writeFileSync(join(bin, "git"), `#!/usr/bin/env bash
+[[ "$*" == "-C $MOCK_WORKSPACE_ROOT rev-parse HEAD" ]] || exit 99
+echo 0123456789abcdef0123456789abcdef01234567
+`, { mode: 0o755 });
 				const run = Bun.spawnSync(["bash", join(appRoot, "scripts", script), "--update-snapshots=none"], {
 					cwd: scratch,
 					env: {
 						PATH: `${bin}:${process.env.PATH}`,
 						HOME: scratch,
 						MOCK_DOCKER_LOG: log,
+						MOCK_WORKSPACE_ROOT: scratch,
+						RELEASE_COMMIT: "untrusted-inherited-value",
 						PLAYWRIGHT_SKIP_BUILD: "1",
 						PLAYWRIGHT_BASE_URL: "http://127.0.0.1:4173",
 						EXPECTED_ARTIFACT_MODE: "fixture",
@@ -55,6 +61,10 @@ esac
 				expect(commands).not.toContain("prune");
 				expect(commands).not.toContain("tests/.");
 				expect(commands).not.toContain("__screenshots__");
+				if (app === "sarabeth-studio") {
+					expect(commands).toContain("--env RELEASE_COMMIT=0123456789abcdef0123456789abcdef01234567");
+					expect(commands).not.toContain("untrusted-inherited-value");
+				}
 				if (app === "carolyn-portfolio") {
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test");
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test");

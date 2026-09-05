@@ -19,7 +19,7 @@ loopback.
 Run tests in the same ARM64 Linux/Chromium environment used by CI:
 
 ```sh
-docker compose -f compose.playwright.yaml run --build --rm playwright
+RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright
 ```
 
 `bun run test:e2e` uses `--update-snapshots=none` and cannot create or update
@@ -27,7 +27,7 @@ baselines. After an intentional, reviewed UI change, the only recording command
 is:
 
 ```sh
-docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
+RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
 ```
 
 Refresh the Contentful fixture intentionally with real Contentful variables in
@@ -37,7 +37,7 @@ and swaps it into place while retaining the previous fixture for rollback:
 
 ```sh
 bun run contentful:snapshot
-docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
+RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
 ```
 
 Visual baselines should only be recorded in the container so host font and
