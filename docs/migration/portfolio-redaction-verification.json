@@ -1,0 +1,26 @@
+{
+  "originalHead": "15630718474e8b97f7c9150dfc2357825e352adb",
+  "sanitizedHead": "af5ac5840aac9126357a7ca22dea0ff753c5a4b3",
+  "commitsVerified": 152,
+  "changedCommitIds": 147,
+  "changedBlobPairs": 6,
+  "authorsCommittersMessagesTopologyPathsModesVerified": true,
+  "additionalHeaderChanges": [
+    "14e43ffddd8eab6f187eb930de8caabb5ea9e1d2",
+    "15630718474e8b97f7c9150dfc2357825e352adb",
+    "4ba9e07411cb08c7a708f3e304c4fb077047f1ac",
+    "5aaa4bd6f588d55439d7b490540a1a73f4b4a427",
+    "70c9d1df64ae3f0543540ed7f49299ccc7b2f247",
+    "80e2df6a7d5e0badd2f07a71a14bc8fa71f40a2b",
+    "910c26434644c1b33d5be0202e7076f3074aca30",
+    "98127b8ab2eae9d9465f1d7e2eaeb6031946ad10",
+    "c850c3e5aec0b211a2fe1c94f5bd61abf73547e1",
+    "ca23eafa315332ff1f3ffc7d654049a7ae75b708",
+    "ccacbe4e1b2251cc8e662aca51da1bc7c504c9be",
+    "d351ff5fa1fca7795eac611b1e3c086277414fbb",
+    "eb2e8e1d3373f44db67642ae140abc692244c56b",
+    "f1b81cb08c9449fa673aa7b454d99de13f49171f",
+    "f26aa4239d3c6227f60d9732f59c54a115552f74",
+    "fb735e17a5026d98dacaa1c8a99a563f139ffa69"
+  ]
+}

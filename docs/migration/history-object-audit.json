@@ -1,0 +1,58 @@
+{
+  "sarabeth-studio": {
+    "reachableObjects": 5023,
+    "blobsInspected": 2630,
+    "lfsPointers": [],
+    "treesWithGitlinks": [],
+    "nestedGitEntries": [],
+    "sensitivePathCandidates": []
+  },
+  "portfolio-website": {
+    "reachableObjects": 12614,
+    "blobsInspected": 10286,
+    "lfsPointers": [],
+    "treesWithGitlinks": [],
+    "nestedGitEntries": [],
+    "sensitivePathCandidates": [
+      "keys.js",
+      "node_modules/babel-runtime/core-js/array/keys.js",
+      "node_modules/babel-runtime/core-js/object/keys.js",
+      "node_modules/core-js/fn/array/keys.js",
+      "node_modules/core-js/fn/array/virtual/keys.js",
+      "node_modules/core-js/fn/object/keys.js",
+      "node_modules/eventsource/test/certificate.pem",
+      "node_modules/eventsource/test/key.pem",
+      "node_modules/extsprintf/.gitmodules",
+      "node_modules/globule/node_modules/lodash/fp/keys.js",
+      "node_modules/globule/node_modules/lodash/keys.js",
+      "node_modules/htmlparser2/.gitattributes",
+      "node_modules/node-gyp/test/fixtures/server.key",
+      "node_modules/node-sass/src/libsass/.gitattributes",
+      "node_modules/preserve/.gitattributes",
+      "node_modules/public-encrypt/test/test_key.pem",
+      "node_modules/public-encrypt/test/test_rsa_privkey.pem",
+      "node_modules/public-encrypt/test/test_rsa_privkey_encrypted.pem",
+      "node_modules/public-encrypt/test/test_rsa_pubkey.pem",
+      "node_modules/style-loader/.gitattributes",
+      "node_modules/webpack-dev-server/ssl/server.pem"
+    ]
+  },
+  "carolyn-portfolio": {
+    "reachableObjects": 4224,
+    "blobsInspected": 2374,
+    "lfsPointers": [],
+    "treesWithGitlinks": [],
+    "nestedGitEntries": [],
+    "sensitivePathCandidates": [
+      ".env.example"
+    ]
+  },
+  "diloreto-website": {
+    "reachableObjects": 2523,
+    "blobsInspected": 1767,
+    "lfsPointers": [],
+    "treesWithGitlinks": [],
+    "nestedGitEntries": [],
+    "sensitivePathCandidates": []
+  }
+}
