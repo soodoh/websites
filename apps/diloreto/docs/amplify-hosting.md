@@ -1,5 +1,12 @@
 # AWS Amplify and CloudFront hosting runbook
 
+> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
+> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
+> `apps/diloreto`, or use root `bun run verify:diloreto` for the complete fixture/offline
+> chain. See [root guidance](../../../README.md). Standalone clone/install and deployment
+> examples below describe the original production-owner repository; they are not
+> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+
 The site is a static TanStack Start build published to an AWS Amplify `WEB` app in `us-east-1`. CloudFront is the public delivery layer. It supplies the generated `404.html` body with HTTP status `404`, redirects `www` to the apex, redirects `paul.diloreto.com` to `pauldiloreto.com`, and serves the shared edge certificate. Route 53 and ACM complete the custom-domain setup.
 
 CloudFormation owns the Amplify app and branch, CloudFront resources, ACM certificate, Route 53 aliases, GitHub OIDC provider, and deployment role. GitHub Actions only validates and publishes the static artifact to Amplify.
