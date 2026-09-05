@@ -1,0 +1,172 @@
+name: Roll back Amplify artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful main deployment workflow run ID whose retained artifact should be restored
+        required: true
+        type: string
+      run_attempt:
+        description: Artifact-build attempt recorded in the selected release marker
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    name: Verify and restore selected artifact
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    environment: production
+    concurrency:
+      group: amplify-production-deployment
+      cancel-in-progress: false
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Validate selected workflow run
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SELECTED_RUN_ID: ${{ inputs.run_id }}
+          SELECTED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "${SELECTED_RUN_ID}" =~ ^[0-9]+$ ]]
+          [[ "${SELECTED_RUN_ATTEMPT}" =~ ^[0-9]+$ ]]
+          run="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${SELECTED_RUN_ID}")"
+          test "$(jq -r '.head_branch' <<< "${run}")" = "main"
+          test "$(jq -r '.event' <<< "${run}")" = "push"
+          test "$(jq -r '.path' <<< "${run}")" = ".github/workflows/deploy.yml"
+          printf 'SELECTED_RUN_COMMIT=%s\n' "$(jq -r '.head_sha' <<< "${run}")" >> "${GITHUB_ENV}"
+
+      - name: Configure AWS credentials through OIDC
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          role-session-name: portfolio-rollback-${{ github.run_id }}
+          role-duration-seconds: 10800
+          mask-aws-account-id: true
+
+      - name: Download selected verified release
+        env:
+          SELECTED_RUN_ID: ${{ inputs.run_id }}
+          SELECTED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+          VERIFIED_RELEASE_BUCKET: ${{ vars.AMPLIFY_RELEASE_BUCKET }}
+        run: |
+          ./scripts/download-release.sh \
+            "${VERIFIED_RELEASE_BUCKET}" \
+            "${SELECTED_RUN_ID}" \
+            "${SELECTED_RUN_ATTEMPT}" \
+            release
+
+      - name: Verify selected artifact integrity
+        env:
+          SELECTED_RUN_ID: ${{ inputs.run_id }}
+          SELECTED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+        run: |
+          ./scripts/verify-release.sh \
+            release \
+            "${SELECTED_RUN_ID}" \
+            "${SELECTED_RUN_ATTEMPT}" \
+            "${SELECTED_RUN_COMMIT}"
+
+      - name: Deploy selected zip to candidate
+        id: candidate
+        env:
+          AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH: ${{ vars.AMPLIFY_CANDIDATE_BRANCH }}
+        run: ./scripts/amplify-deploy.sh "${AMPLIFY_APP_ID}" "${AMPLIFY_BRANCH}" release/site.zip
+
+      - name: Smoke test candidate hosting
+        run: |
+          ./scripts/hosting-acceptance.sh \
+            "${{ vars.AMPLIFY_CANDIDATE_URL }}" \
+            "${{ inputs.run_id }}" \
+            "${{ inputs.run_attempt }}" \
+            "${SELECTED_RUN_COMMIT}"
+
+      - name: Run Playwright acceptance against candidate
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ vars.AMPLIFY_CANDIDATE_URL }}
+          PLAYWRIGHT_EXPECT_STATIC_404: "1"
+        run: bun run test:e2e
+
+      - name: Run Lighthouse acceptance against candidate
+        env:
+          LHCI_URL: ${{ vars.AMPLIFY_CANDIDATE_URL }}
+        run: bun run lighthouse
+
+      - name: Deploy identical selected zip to production
+        id: production
+        continue-on-error: true
+        env:
+          AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH: ${{ vars.AMPLIFY_PRODUCTION_BRANCH }}
+        run: ./scripts/amplify-deploy.sh "${AMPLIFY_APP_ID}" "${AMPLIFY_BRANCH}" release/site.zip
+
+      - name: Verify restored production
+        if: ${{ !cancelled() }}
+        env:
+          AMPLIFY_PRODUCTION_URL: ${{ vars.AMPLIFY_PRODUCTION_URL }}
+          PRODUCTION_DOMAIN_ACTIVE: ${{ vars.PRODUCTION_DOMAIN_ACTIVE }}
+          SELECTED_RUN_ID: ${{ inputs.run_id }}
+          SELECTED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+          PRODUCTION_DEPLOY_OUTCOME: ${{ steps.production.outcome }}
+          PRODUCTION_JOB_RECONCILED: ${{ steps.production.outputs.job-reconciled }}
+        run: |
+          set -euo pipefail
+          if [[ "${PRODUCTION_JOB_RECONCILED}" != "true" ]]; then
+            echo "Production deployment job did not reach a terminal state; refusing to certify restoration." >&2
+            exit 1
+          fi
+          ./scripts/hosting-acceptance.sh \
+            "${AMPLIFY_PRODUCTION_URL}" \
+            "${SELECTED_RUN_ID}" \
+            "${SELECTED_RUN_ATTEMPT}" \
+            "${SELECTED_RUN_COMMIT}"
+          if [[ "${PRODUCTION_DOMAIN_ACTIVE}" == "true" ]]; then
+            ./scripts/hosting-acceptance.sh \
+              "https://pauldiloreto.com/" \
+              "${SELECTED_RUN_ID}" \
+              "${SELECTED_RUN_ATTEMPT}" \
+              "${SELECTED_RUN_COMMIT}" \
+              1
+          else
+            echo "Production-domain checks are intentionally skipped until DNS cutover is active."
+          fi
+          if [[ "${PRODUCTION_DEPLOY_OUTCOME}" != "success" ]]; then
+            echo "Production serves the selected release despite an ambiguous deployment-helper failure."
+          fi
+
+      - name: Record rollback evidence
+        env:
+          SELECTED_RUN_ID: ${{ inputs.run_id }}
+          SELECTED_RUN_ATTEMPT: ${{ inputs.run_attempt }}
+        run: |
+          restored_hash="$(cut -d ' ' -f 1 release/site.zip.sha256)"
+          {
+            echo "### Manual Amplify rollback"
+            echo "- Restored workflow run: \`${SELECTED_RUN_ID}\` attempt \`${SELECTED_RUN_ATTEMPT}\`"
+            echo "- Restored artifact SHA-256: \`${restored_hash}\`"
+            echo "- Candidate job: \`${{ steps.candidate.outputs.job-id }}\`"
+            echo "- Production job: \`${{ steps.production.outputs.job-id }}\`"
+            echo "- Recovery smoke checks: passed"
+          } >> "${GITHUB_STEP_SUMMARY}"

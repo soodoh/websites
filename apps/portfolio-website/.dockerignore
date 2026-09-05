@@ -1,0 +1,17 @@
+.git
+.github
+.output
+.vercel
+.vinxi
+.lighthouseci
+.playwright-cli
+.playwright-mcp
+.pi-subagents
+build
+coverage
+dist
+node_modules
+playwright-report
+test-results
+.env*
+.DS_Store

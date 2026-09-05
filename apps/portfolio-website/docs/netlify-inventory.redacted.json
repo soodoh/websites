@@ -1,0 +1,258 @@
+{
+	"exportedAt": "2026-07-19",
+	"redactionNotice": "Account, site, deploy, hook, installation, deploy-key, and DNS-zone identifiers are intentionally redacted. Environment values and hook payloads are omitted.",
+	"site": {
+		"id": "[REDACTED]",
+		"name": "pauldiloreto",
+		"state": "current",
+		"url": "https://pauldiloreto.com",
+		"ssl_url": "https://pauldiloreto.com",
+		"admin_url": "https://app.netlify.com/projects/pauldiloreto",
+		"custom_domain": "pauldiloreto.com",
+		"domain_aliases": ["paul.diloreto.com"],
+		"force_ssl": true,
+		"managed_dns": true,
+		"deploy_url": "http://main--pauldiloreto.netlify.app",
+		"processing_settings": {
+			"html": {
+				"pretty_urls": true
+			},
+			"ignore_html_forms": true
+		},
+		"plugins": [
+			{
+				"package": "@netlify/plugin-nextjs"
+			},
+			{
+				"package": "@netlify/plugin-lighthouse"
+			}
+		],
+		"build_settings": {
+			"provider": "github",
+			"repo_path": "soodoh/portfolio-website",
+			"repo_url": "https://github.com/soodoh/portfolio-website",
+			"repo_branch": "main",
+			"dir": ".next",
+			"functions_dir": null,
+			"cmd": "yarn build",
+			"allowed_branches": ["main"],
+			"public_repo": true,
+			"stop_builds": false,
+			"installation_id": "[REDACTED]",
+			"deploy_key_id": null,
+			"environment_keys": ["DEPRECATED"]
+		}
+	},
+	"githubIntegration": {
+		"hookCount": 15,
+		"hooks": [
+			{
+				"id": "[REDACTED]",
+				"type": "email",
+				"event": "deploy_request_pending",
+				"disabled": null,
+				"created_at": "2020-03-26T20:10:16.132Z",
+				"updated_at": "2020-09-29T07:16:14.093Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "email",
+				"event": "deploy_request_accepted",
+				"disabled": null,
+				"created_at": "2020-03-26T20:10:16.138Z",
+				"updated_at": "2020-09-29T07:16:14.096Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "email",
+				"event": "deploy_request_rejected",
+				"disabled": null,
+				"created_at": "2020-03-26T20:10:16.142Z",
+				"updated_at": "2020-09-29T07:16:14.099Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_checks",
+				"event": "deploy_building",
+				"disabled": false,
+				"created_at": "2021-11-02T09:52:26.802Z",
+				"updated_at": "2026-02-08T01:28:54.257Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_checks",
+				"event": "deploy_created",
+				"disabled": false,
+				"created_at": "2021-11-02T09:52:26.812Z",
+				"updated_at": "2022-02-19T06:23:48.406Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_checks",
+				"event": "deploy_failed",
+				"disabled": false,
+				"created_at": "2021-11-02T09:52:26.819Z",
+				"updated_at": "2026-02-08T01:28:47.138Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_commit_status",
+				"event": "deploy_building",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.751Z",
+				"updated_at": "2025-08-12T23:45:06.940Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_building",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.759Z",
+				"updated_at": "2025-08-12T23:45:06.969Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_commit_status",
+				"event": "deploy_created",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.764Z",
+				"updated_at": "2025-08-12T23:55:35.099Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_created",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.772Z",
+				"updated_at": "2025-08-12T23:55:35.085Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_commit_status",
+				"event": "deploy_failed",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.776Z",
+				"updated_at": "2025-08-12T23:46:24.370Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_failed",
+				"disabled": false,
+				"created_at": "2025-08-12T23:45:05.783Z",
+				"updated_at": "2025-08-12T23:46:24.376Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_request_pending",
+				"disabled": null,
+				"created_at": "2025-08-12T23:45:05.792Z",
+				"updated_at": "2025-08-12T23:45:05.792Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_request_accepted",
+				"disabled": null,
+				"created_at": "2025-08-12T23:45:05.799Z",
+				"updated_at": "2025-08-12T23:45:05.799Z"
+			},
+			{
+				"id": "[REDACTED]",
+				"type": "github_app_review_comment",
+				"event": "deploy_request_rejected",
+				"disabled": null,
+				"created_at": "2025-08-12T23:45:05.805Z",
+				"updated_at": "2025-08-12T23:45:05.805Z"
+			}
+		],
+		"buildHookCount": 0,
+		"buildHooks": [],
+		"deployedBranches": [],
+		"serviceIntegrationCount": 0
+	},
+	"deploys": {
+		"fetchedCount": 22,
+		"buildCount": 33,
+		"publishedProduction": {
+			"id": "[REDACTED]",
+			"state": "ready",
+			"context": "production",
+			"branch": "main",
+			"created_at": "2026-02-15T11:33:34.365Z",
+			"published_at": "2026-02-15T11:34:08.102Z",
+			"title": "feat: migrate from CSS modules to Tailwind CSS v4 + shadcn/ui\n\nReplace all CSS modules with Tailwind utility classes across every\ncomponent. Add shadcn/ui Sheet for mobile navigation (replacing the\ncustom hamburger overlay) and Lucide icons for menu/close. Remove\nclassnames, sanitize.css, and legacy PostCSS plugins in favor of\n@tailwindcss/postcss.",
+			"commit_ref": "4e1fefc3cac76200e415de216550c4463fa9b506",
+			"framework": "next",
+			"error_message": null,
+			"deploy_time": 32
+		},
+		"latestProductionAttempt": {
+			"id": "[REDACTED]",
+			"state": "error",
+			"context": "production",
+			"branch": "main",
+			"created_at": "2026-07-18T21:32:14.724Z",
+			"published_at": null,
+			"title": "feat: update About copy",
+			"commit_ref": "66a6491923133efb3093813d0987478033520192",
+			"framework": "tanstack-start",
+			"error_message": "Failed during stage 'building site': Build script returned non-zero exit code: 2",
+			"deploy_time": null
+		}
+	},
+	"dns": {
+		"zone": {
+			"id": "[REDACTED]",
+			"account_id": "[REDACTED]",
+			"name": "pauldiloreto.com",
+			"dns_servers": [
+				"dns1.p06.nsone.net",
+				"dns2.p06.nsone.net",
+				"dns3.p06.nsone.net",
+				"dns4.p06.nsone.net"
+			],
+			"created_at": "2019-03-04T11:53:41.933Z",
+			"updated_at": "2022-12-22T23:08:31.396Z"
+		},
+		"records": [
+			{
+				"type": "NETLIFY",
+				"hostname": "pauldiloreto.com",
+				"value": "pauldiloreto.netlify.com",
+				"ttl": 3600,
+				"priority": null,
+				"flag": null,
+				"tag": null
+			},
+			{
+				"type": "NETLIFYv6",
+				"hostname": "pauldiloreto.com",
+				"value": "pauldiloreto.netlify.com",
+				"ttl": 3600,
+				"priority": null,
+				"flag": null,
+				"tag": null
+			},
+			{
+				"type": "NETLIFY",
+				"hostname": "www.pauldiloreto.com",
+				"value": "pauldiloreto.netlify.com",
+				"ttl": 3600,
+				"priority": null,
+				"flag": null,
+				"tag": null
+			},
+			{
+				"type": "NETLIFYv6",
+				"hostname": "www.pauldiloreto.com",
+				"value": "pauldiloreto.netlify.com",
+				"ttl": 3600,
+				"priority": null,
+				"flag": null,
+				"tag": null
+			}
+		]
+	}
+}
