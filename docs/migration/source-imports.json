@@ -11,6 +11,8 @@
     "finalMigrationSha": null,
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
     "workspaceCandidateCommit": "271ef39f2a356ef62b14793b57ed8aae4c5f64b7",
+    "reviewedCandidateCommit": "bb6eb584524d1efecd0f675214261fd8c8600017",
+    "targetedReview": "targeted-final-review.md; both P2 issues resolved; full phase-1 acceptance still blocked",
     "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373",
     "workspaceReviewFixCommits": [
       "143949cd9d849f2cbb5e73dc81929b6c28113908",
