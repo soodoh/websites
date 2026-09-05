@@ -55,6 +55,10 @@ esac
 				expect(commands).not.toContain("prune");
 				expect(commands).not.toContain("tests/.");
 				expect(commands).not.toContain("__screenshots__");
+				if (app === "carolyn-portfolio") {
+					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test");
+					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test");
+				}
 			} finally {
 				rmSync(scratch, { recursive: true, force: true });
 			}
