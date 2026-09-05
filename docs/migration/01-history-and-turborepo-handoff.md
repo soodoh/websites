@@ -184,7 +184,7 @@ other workflow assertions. No other phase-2-only assertion failures are claimed.
 
 The independent review of `d63d1cd1..ed73a00f` found two P2 evidence defects, not a
 proven missing installed dependency or an app/runtime failure. Both accepted fixes
-are now implemented; targeted final review is still required:
+are now implemented and independently reviewed with no remaining findings in the fix scope:
 
 1. `143949cd9d849f2cbb5e73dc81929b6c28113908`: range auditor records missing required
    direct dependencies/devDependencies and includes the root manifest even when an
@@ -224,12 +224,18 @@ Actual follow-up commands/results (logs: `/tmp/websites-workspace/review-fixes`)
 This follow-up changes only the two accepted audit defects, their regression tests,
 and evidence/docs. Earlier app build/lint/types/unit/static/Lighthouse results above
 remain historical evidence, not newly rerun full acceptance. The aborted orchestration
-will not continue automatically; the parent will arrange targeted final review.
+was recovered through the existing worker and reviewer. Targeted final review of
+`ed73a00f..bb6eb584524d1efecd0f675214261fd8c8600017` found both P2 issues resolved,
+no new issue in their blast radius, and approved the targeted fixes only. The full
+review is preserved in `targeted-final-review.md`; phase-1 acceptance remains blocked.
+The parent separately reran all five audit regression tests (exit 0, 13 assertions)
+and reverified all imported heads/ancestors, pristine import trees, and initial
+target ancestry at `bb6eb584` (all passed; working tree clean).
 
 ## Next steps
 
-1. Targeted independent final review of the two P2 fixes and corrected evidence.
-   Passing host gates is not final acceptance.
+1. Targeted independent final review is complete; both P2 findings are resolved.
+   Passing host gates and targeted review are not final phase-1 acceptance.
 2. Owner resolves Docker daemon disk capacity. Rebuild/validate final remote-safe
    wrappers and unchanged canonical browser baselines; rerun full per-app chains and
    root all-app command from a clean checkout. No screenshot updates, no coverage drops.
