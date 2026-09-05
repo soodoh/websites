@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "blocked-before-import: historical credential findings require owner decision",
+  "status": "histories imported locally; workspace implementation and validation pending",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -16,7 +16,9 @@
     "version": "8.30.1",
     "scope": "git main history in disposable bare repositories",
     "arguments": "git <scratch-repo> --log-opts=main --ignore-gitleaks-allow --redact=100 --no-banner --report-format json --report-path <private-scratch-report>",
-    "currentTreeAndPrivateContentAuditComplete": false
+    "currentTreeAndPrivateContentAuditComplete": true,
+    "auditScope": "Gitleaks history/current trees plus all reachable objects for LFS/gitlinks/nested Git and sensitive path inventory; not a guarantee against all private content",
+    "historyObjectAudit": "history-object-audit.json"
   },
   "sources": [
     {
@@ -31,7 +33,7 @@
       "sourceTreeId": "375e6f988878b833b1ef124d41fa311974cd24e1",
       "sourceCommitCount": 454,
       "targetPrefix": "apps/sarabeth-studio",
-      "importCommit": null,
+      "importCommit": "dab13bd3d4769f66567586982cec20ae9cb16205",
       "approvedBundleSha256": "de58084aa59e09e47ed6cb76445ef6106e70f75535cb38119d98b2fbc4cc2f46",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -44,10 +46,11 @@
         "bundleVerifyExit": 0,
         "gitleaksExit": 1,
         "gitleaksFindings": 1,
-        "scanTriage": "vendored Yarn MismatchedTokenException assignment; likely false positive, not formally cleared",
-        "historicalLfsSubmoduleAuditComplete": false,
-        "targetAncestryVerified": false,
-        "pristineImportTreeVerified": false
+        "scanTriage": "false positive: vendored Yarn MismatchedTokenException code assignment, not credential material",
+        "currentTreeGitleaksExit": 0,
+        "historicalLfsSubmoduleAuditComplete": true,
+        "targetAncestryVerified": true,
+        "pristineImportTreeVerified": true
       }
     },
     {
@@ -62,7 +65,12 @@
       "sourceTreeId": "ec111cab17f9d014bdce093d6297d57653b1e016",
       "sourceCommitCount": 152,
       "targetPrefix": "apps/portfolio-website",
-      "importCommit": null,
+      "importCommit": "a2cebdbbe15ec8fdfd311cd2a6cf9be2610c0d84",
+      "importedSha": "af5ac5840aac9126357a7ca22dea0ff753c5a4b3",
+      "rewriteAuthorization": "User confirmed old Contentful credential invalid and authorized history rewriting; then selected removal of all flagged Portfolio values, including Google API keys. Source repository remains untouched.",
+      "originalShaPreservationException": true,
+      "commitMap": "portfolio-commit-map.txt",
+      "redactionVerification": "portfolio-redaction-verification.json",
       "approvedBundleSha256": "b8f27cafbabe62eca2a106ea46f4564f6012830c171d5193db1fedb40aeaf8cd",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -75,10 +83,13 @@
         "bundleVerifyExit": 0,
         "gitleaksExit": 1,
         "gitleaksFindings": 5,
-        "scanTriage": "BLOCKED: historical accessToken assignment and Google API keys; validity/revocation not tested",
-        "historicalLfsSubmoduleAuditComplete": false,
-        "targetAncestryVerified": false,
-        "pristineImportTreeVerified": false
+        "scanTriage": "user-authorized exact-value redaction of two distinct historical credential values; sanitized history Gitleaks exit 0",
+        "sanitizedHistoryGitleaksExit": 0,
+        "currentTreeGitleaksExit": 0,
+        "historicalLfsSubmoduleAuditComplete": true,
+        "targetAncestryVerified": true,
+        "ancestrySubject": "importedSha (sanitized), not original approvedSha",
+        "pristineImportTreeVerified": true
       }
     },
     {
@@ -93,7 +104,7 @@
       "sourceTreeId": "c459afbb2a15ca9e3529ae85cd3c4a71ac21dd31",
       "sourceCommitCount": 357,
       "targetPrefix": "apps/carolyn-portfolio",
-      "importCommit": null,
+      "importCommit": "e05ce97e526c3b8413a8e8443ddce216e635faf6",
       "approvedBundleSha256": "5133b020e26b528e055d138f4455381e982d469311192ad0057d2026eda235b4",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -106,10 +117,11 @@
         "bundleVerifyExit": 0,
         "gitleaksExit": 1,
         "gitleaksFindings": 1,
-        "scanTriage": "vendored Yarn MismatchedTokenException assignment; likely false positive, not formally cleared",
-        "historicalLfsSubmoduleAuditComplete": false,
-        "targetAncestryVerified": false,
-        "pristineImportTreeVerified": false
+        "scanTriage": "false positive: vendored Yarn MismatchedTokenException code assignment, not credential material",
+        "currentTreeGitleaksExit": 0,
+        "historicalLfsSubmoduleAuditComplete": true,
+        "targetAncestryVerified": true,
+        "pristineImportTreeVerified": true
       }
     },
     {
@@ -124,7 +136,7 @@
       "sourceTreeId": "d584ea76cfcbd64dcc1f5ec6dd8363b88fa69463",
       "sourceCommitCount": 123,
       "targetPrefix": "apps/diloreto-website",
-      "importCommit": null,
+      "importCommit": "392fb4fe1a6163e23de77bc760134e16ba079147",
       "approvedBundleSha256": "774849bfc4add119b5ef46b2c486042047720c31af153337547293c7c23f05bc",
       "verification": {
         "sourceCleanBeforeAndAfter": true,
@@ -137,10 +149,11 @@
         "bundleVerifyExit": 0,
         "gitleaksExit": 0,
         "gitleaksFindings": 0,
-        "scanTriage": "no Gitleaks history findings; not a complete private-content clearance",
-        "historicalLfsSubmoduleAuditComplete": false,
-        "targetAncestryVerified": false,
-        "pristineImportTreeVerified": false
+        "scanTriage": "no Gitleaks history/current-tree findings; object and sensitive-path audits complete within stated scope",
+        "currentTreeGitleaksExit": 0,
+        "historicalLfsSubmoduleAuditComplete": true,
+        "targetAncestryVerified": true,
+        "pristineImportTreeVerified": true
       }
     }
   ]
