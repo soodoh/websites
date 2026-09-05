@@ -1,0 +1,494 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Production AWS Amplify Hosting, IAM, deployment role, and monitoring for sarabeth-studio.
+
+Parameters:
+  GitHubOwner:
+    Type: String
+    Default: soodoh
+  GitHubRepository:
+    Type: String
+    Default: sarabeth-studio
+  GitHubBranch:
+    Type: String
+    Default: main
+  GitHubOidcProviderArn:
+    Type: String
+    Description: ARN output from the bootstrap stack.
+  WorkloadPermissionsBoundaryArn:
+    Type: String
+    Description: Workload-role boundary ARN output from the bootstrap stack.
+  GitHubAccessToken:
+    Type: String
+    NoEcho: true
+    Default: ""
+    Description: Temporary GitHub token used only when creating the Amplify GitHub App connection.
+  NotificationEmail:
+    Type: String
+    Default: paul@diloreto.com
+  ContentfulSpaceId:
+    Type: String
+    MinLength: 1
+    Description: Non-secret Contentful space identifier used during production builds.
+  WebhookRotationVersion:
+    Type: String
+    Default: "2"
+    Description: Increment only to rotate the CMS build webhook URL.
+
+Conditions:
+  HasGitHubAccessToken: !Not [!Equals [!Ref GitHubAccessToken, ""]]
+
+Resources:
+  AmplifyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: sarabeth-amplify-service
+      Description: Allows Amplify builds to read the Contentful SSM parameter and deliver SSR logs.
+      PermissionsBoundary: !Ref WorkloadPermissionsBoundaryArn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              ArnLike:
+                aws:SourceArn: !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/*
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+      Policies:
+        - PolicyName: ContentfulBuildParameterAndSsrLogs
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: ReadContentfulBuildParameter
+                Effect: Allow
+                Action: ssm:GetParameter
+                Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/sarabeth-studio/production/contentful/access-token
+              - Sid: VerifyAmplifyBuildSource
+                Effect: Allow
+                Action: amplify:GetJob
+                Resource: !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/*/branches/*/jobs/*
+              - Sid: DescribeAmplifyLogGroups
+                Effect: Allow
+                Action: logs:DescribeLogGroups
+                Resource: "*"
+              - Sid: CreateAmplifyLogGroups
+                Effect: Allow
+                Action: logs:CreateLogGroup
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/amplify/*
+              - Sid: WriteAmplifyLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/amplify/*:log-stream:*
+
+  EmailRateLimitTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      TableName: sarabeth-contact-email-rate-limit
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: window
+          AttributeType: S
+      KeySchema:
+        - AttributeName: window
+          KeyType: HASH
+      SSESpecification:
+        SSEEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: expiresAt
+        Enabled: true
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
+
+  AmplifyComputeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: sarabeth-amplify-compute-main
+      Description: Least-privilege contact email and YouTube playlist access for the production Amplify compute branch.
+      PermissionsBoundary: !Ref WorkloadPermissionsBoundaryArn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              ArnLike:
+                aws:SourceArn: !Sub ${AmplifyApp.Arn}/branches/${GitHubBranch}
+              StringEquals:
+                aws:SourceAccount: !Ref AWS::AccountId
+      Policies:
+        - PolicyName: ProductionRuntimeAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: SendContactEmail
+                Effect: Allow
+                Action: ses:SendEmail
+                Resource: !Sub arn:${AWS::Partition}:ses:${AWS::Region}:${AWS::AccountId}:identity/sarabethbelon.com
+                Condition:
+                  StringEquals:
+                    ses:FromAddress: contact@sarabethbelon.com
+                  ForAllValues:StringEquals:
+                    ses:Recipients: sarabethstudio@gmail.com
+              - Sid: UpdateContactEmailRateLimit
+                Effect: Allow
+                Action: dynamodb:UpdateItem
+                Resource: !GetAtt EmailRateLimitTable.Arn
+              - Sid: ReadYouTubeApiKey
+                Effect: Allow
+                Action: ssm:GetParameter
+                Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/sarabeth-studio/production/youtube/api-key
+
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: sarabeth-studio-production
+      Description: Production TanStack Start application for sarabethbelon.com.
+      Repository: !Sub https://github.com/${GitHubOwner}/${GitHubRepository}
+      AccessToken: !If
+        - HasGitHubAccessToken
+        - !Ref GitHubAccessToken
+        - !Ref AWS::NoValue
+      Platform: WEB_COMPUTE
+      IAMServiceRole: !GetAtt AmplifyServiceRole.Arn
+      EnableBranchAutoDeletion: false
+      CustomHeaders: |
+        customHeaders:
+          - pattern: "**/*"
+            headers:
+              - key: "Strict-Transport-Security"
+                value: "max-age=31536000"
+              - key: "X-Content-Type-Options"
+                value: "nosniff"
+              - key: "Referrer-Policy"
+                value: "strict-origin-when-cross-origin"
+      CustomRules:
+        - Source: https://www.sarabethbelon.com
+          Target: https://sarabethbelon.com
+          Status: "301"
+        - Source: /about
+          Target: /about.html
+          Status: "200"
+        - Source: /contact
+          Target: /contact.html
+          Status: "200"
+        - Source: /engagements
+          Target: /engagements.html
+          Status: "200"
+        - Source: /lessons
+          Target: /lessons.html
+          Status: "200"
+        - Source: /media
+          Target: /media.html
+          Status: "200"
+        - Source: /privacy
+          Target: /privacy.html
+          Status: "200"
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
+
+  MainBranch:
+    Type: AWS::Amplify::Branch
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !Ref GitHubBranch
+      Description: Production branch; releases are started only after GitHub Actions CI succeeds.
+      ComputeRoleArn: !GetAtt AmplifyComputeRole.Arn
+      EnableAutoBuild: false
+      EnablePerformanceMode: false
+      EnablePullRequestPreview: false
+      EnableSkewProtection: false
+      Framework: TanStack Start
+      Stage: PRODUCTION
+      EnvironmentVariables:
+        - Name: CONTENTFUL_SPACE_ID
+          Value: !Ref ContentfulSpaceId
+        - Name: CONTENTFUL_ACCESS_TOKEN_PARAMETER
+          Value: /sarabeth-studio/production/contentful/access-token
+        - Name: YOUTUBE_API_KEY_PARAMETER
+          Value: /sarabeth-studio/production/youtube/api-key
+        - Name: EMAIL_RATE_LIMIT_TABLE
+          Value: !Ref EmailRateLimitTable
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
+
+  WebhookCustomResourceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: sarabeth-amplify-webhook-provider
+      PermissionsBoundary: !Ref WorkloadPermissionsBoundaryArn
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ManageContentfulAmplifyWebhook
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - amplify:CreateWebhook
+                  - amplify:DeleteWebhook
+                  - amplify:GetWebhook
+                  - amplify:UpdateWebhook
+                Resource:
+                  - !GetAtt AmplifyApp.Arn
+                  - !Sub ${AmplifyApp.Arn}/*
+                  - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:webhooks/*
+              - Effect: Allow
+                Action: logs:CreateLogGroup
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource:*
+
+  WebhookCustomResourceFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: WebhookCustomResourceLogGroup
+    Properties:
+      FunctionName: sarabeth-amplify-webhook-custom-resource
+      Description: CloudFormation provider for the Amplify CMS build webhook.
+      Runtime: python3.13
+      Handler: index.handler
+      Role: !GetAtt WebhookCustomResourceRole.Arn
+      Timeout: 60
+      Code:
+        ZipFile: |
+          import boto3
+          import json
+          import urllib.request
+
+          amplify = boto3.client("amplify")
+
+          def respond(event, context, status, physical_id, data, reason=None):
+              body = json.dumps({
+                  "Status": status,
+                  "Reason": reason or f"See CloudWatch log stream {context.log_stream_name}",
+                  "PhysicalResourceId": physical_id,
+                  "StackId": event["StackId"],
+                  "RequestId": event["RequestId"],
+                  "LogicalResourceId": event["LogicalResourceId"],
+                  "NoEcho": False,
+                  "Data": data,
+              }).encode()
+              request = urllib.request.Request(
+                  event["ResponseURL"],
+                  data=body,
+                  method="PUT",
+                  headers={"content-type": "", "content-length": str(len(body))},
+              )
+              urllib.request.urlopen(request).read()
+
+          def handler(event, context):
+              physical_id = event.get("PhysicalResourceId", context.log_stream_name)
+              try:
+                  properties = event["ResourceProperties"]
+                  request_type = event["RequestType"]
+                  if request_type == "Delete":
+                      if event.get("PhysicalResourceId"):
+                          try:
+                              amplify.delete_webhook(webhookId=event["PhysicalResourceId"])
+                          except amplify.exceptions.NotFoundException:
+                              pass
+                      respond(event, context, "SUCCESS", physical_id, {})
+                      return
+                  rotate = (
+                      request_type == "Update"
+                      and event.get("OldResourceProperties", {}).get("RotationVersion")
+                      != properties.get("RotationVersion")
+                  )
+                  if request_type == "Update" and event.get("PhysicalResourceId") and not rotate:
+                      result = amplify.update_webhook(
+                          webhookId=event["PhysicalResourceId"],
+                          branchName=properties["BranchName"],
+                          description=properties["Description"],
+                      )["webhook"]
+                  else:
+                      result = amplify.create_webhook(
+                          appId=properties["AppId"],
+                          branchName=properties["BranchName"],
+                          description=properties["Description"],
+                      )["webhook"]
+                  physical_id = result["webhookId"]
+                  respond(event, context, "SUCCESS", physical_id, {
+                      "WebhookUrl": result["webhookUrl"],
+                      "WebhookArn": result["webhookArn"],
+                  })
+              except Exception as error:
+                  respond(event, context, "FAILED", physical_id, {}, str(error))
+
+  WebhookCustomResourceLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: /aws/lambda/sarabeth-amplify-webhook-custom-resource
+      RetentionInDays: 14
+
+  ContentfulBuildWebhook:
+    Type: Custom::AmplifyWebhook
+    Properties:
+      ServiceToken: !GetAtt WebhookCustomResourceFunction.Arn
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: !GetAtt MainBranch.BranchName
+      Description: Contentful publish and unpublish production rebuilds.
+      RotationVersion: !Ref WebhookRotationVersion
+
+  AmplifyComputeLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: RetainExceptOnCreate
+    UpdateReplacePolicy: Retain
+    Properties:
+      LogGroupName: !Sub /aws/amplify/${AmplifyApp.AppId}
+      RetentionInDays: 30
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
+
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: sarabeth-amplify-production-alarms
+      DisplayName: Sarabeth Amplify production alarms
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+
+  AlarmEmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref AlarmTopic
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
+
+  Amplify5xxAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: sarabeth-amplify-production-5xx
+      AlarmDescription: Amplify Hosting returned one or more 5xx responses in five minutes.
+      Namespace: AWS/AmplifyHosting
+      MetricName: 5xxErrors
+      Dimensions:
+        - Name: App
+          Value: !GetAtt AmplifyApp.AppId
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
+      OKActions:
+        - !Ref AlarmTopic
+
+  AmplifyLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: sarabeth-amplify-production-latency
+      AlarmDescription: Amplify Hosting average time to first byte exceeded five seconds twice.
+      Namespace: AWS/AmplifyHosting
+      MetricName: Latency
+      Dimensions:
+        - Name: App
+          Value: !GetAtt AmplifyApp.AppId
+      Statistic: Average
+      Unit: Seconds
+      Period: 300
+      EvaluationPeriods: 2
+      DatapointsToAlarm: 2
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref AlarmTopic
+      OKActions:
+        - !Ref AlarmTopic
+
+  RoutineDeploymentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: sarabeth-amplify-deploy-main
+      Description: GitHub Actions role restricted to production releases of this Amplify app.
+      PermissionsBoundary: !Ref WorkloadPermissionsBoundaryArn
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Ref GitHubOidcProviderArn
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:ref:refs/heads/${GitHubBranch}
+      Policies:
+        - PolicyName: ReleaseSpecificAmplifyApp
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - amplify:GetApp
+                  - amplify:GetBranch
+                  - amplify:GetJob
+                  - amplify:ListJobs
+                  - amplify:StartJob
+                  - amplify:StopJob
+                Resource:
+                  - !GetAtt AmplifyApp.Arn
+                  - !Sub ${AmplifyApp.Arn}/*
+              - Sid: ManageLastKnownGoodDeployment
+                Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:PutParameter
+                Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/sarabeth-studio/production/last-known-good-sha
+
+Outputs:
+  AmplifyAppId:
+    Value: !GetAtt AmplifyApp.AppId
+  AmplifyAppArn:
+    Value: !GetAtt AmplifyApp.Arn
+  AmplifyDefaultDomain:
+    Value: !GetAtt AmplifyApp.DefaultDomain
+  AmplifyBranchUrl:
+    Value: !Sub https://${GitHubBranch}.${AmplifyApp.DefaultDomain}
+  AmplifyServiceRoleArn:
+    Value: !GetAtt AmplifyServiceRole.Arn
+  AmplifyComputeRoleArn:
+    Value: !GetAtt AmplifyComputeRole.Arn
+  RoutineDeploymentRoleArn:
+    Value: !GetAtt RoutineDeploymentRole.Arn
+  ContentfulWebhookUrl:
+    Value: !GetAtt ContentfulBuildWebhook.WebhookUrl
+  AlarmTopicArn:
+    Value: !Ref AlarmTopic
+  ComputeLogGroupName:
+    Value: !Ref AmplifyComputeLogGroup

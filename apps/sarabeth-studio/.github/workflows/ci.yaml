@@ -1,0 +1,259 @@
+name: CI and production deployment
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-infrastructure:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version: 1.27.x
+          cache: false
+
+      - name: Validate GitHub Actions workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yaml
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+
+      - name: Install CloudFormation linter
+        run: python -m pip install cfn-lint==1.53.0
+
+      - name: Validate CloudFormation semantics
+        run: cfn-lint infrastructure/cloudformation/*.yaml
+
+  test:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Type-check
+        run: bun run typecheck
+
+      - name: Build production data-provider graph
+        run: bun run build:production-provider
+
+      - name: Build and validate deterministic Amplify bundle
+        run: |
+          bun run build:amplify:fixture
+          bun run prepare:amplify
+          bun run validate:amplify
+
+      - name: Build deterministic Playwright target
+        run: bun run build:playwright:unchecked
+
+      - name: Run Playwright tests
+        run: docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:ci:prebuilt
+
+      - name: Upload Playwright diagnostics
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-test-results-${{ github.run_attempt }}
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 14
+
+  deploy:
+    name: Deploy production
+    needs:
+      - test
+      - validate-infrastructure
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    concurrency:
+      group: amplify-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: us-west-2
+      AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+      AMPLIFY_BRANCH: main
+      DEPLOYMENT_URL: ${{ vars.AMPLIFY_PRODUCTION_URL }}
+      LAST_KNOWN_GOOD_PARAMETER: /sarabeth-studio/production/last-known-good-sha
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.0
+
+      - name: Install deployment tools
+        run: bun install --frozen-lockfile
+
+      - name: Check whether this commit was superseded
+        id: freshness
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          latest_sha=$(gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha)
+          if [[ "$latest_sha" == "$GITHUB_SHA" ]]; then
+            echo "superseded=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "superseded=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping $GITHUB_SHA because main now points to $latest_sha"
+          fi
+
+      - name: Configure production AWS credentials
+        if: steps.freshness.outputs.superseded == 'false'
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          role-to-assume: ${{ vars.AMPLIFY_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: sarabeth-amplify-release
+
+      - name: Start Amplify release
+        if: steps.freshness.outputs.superseded == 'false'
+        id: release
+        run: |
+          job=$(aws amplify start-job \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$AMPLIFY_BRANCH" \
+            --job-type RELEASE \
+            --commit-id "$GITHUB_SHA" \
+            --commit-message "GitHub Actions release $GITHUB_SHA" \
+            --job-reason "GitHub Actions release $GITHUB_SHA" \
+            --query 'jobSummary.[jobId,commitId]' \
+            --output text)
+          read -r job_id commit_id <<< "$job"
+          echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
+          if [[ "$commit_id" != "$GITHUB_SHA" ]]; then
+            aws amplify stop-job \
+              --app-id "$AMPLIFY_APP_ID" \
+              --branch-name "$AMPLIFY_BRANCH" \
+              --job-id "$job_id" >/dev/null
+            echo "Stopped Amplify job $job_id because it selected superseding commit $commit_id" >&2
+            exit 1
+          fi
+
+      - name: Wait for matching Amplify release
+        if: steps.freshness.outputs.superseded == 'false'
+        id: release_wait
+        continue-on-error: true
+        run: scripts/wait-for-amplify-job.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" "${{ steps.release.outputs.job_id }}" "$GITHUB_SHA" 1800
+
+      - name: Run non-sending functional smoke tests
+        if: steps.freshness.outputs.superseded == 'false' && steps.release_wait.outcome == 'success'
+        id: functional_smoke
+        continue-on-error: true
+        run: bun scripts/smoke-deployment.ts "$DEPLOYMENT_URL" "$GITHUB_SHA"
+
+      - name: Persist last-known-good deployment SHA
+        if: steps.freshness.outputs.superseded == 'false' && steps.functional_smoke.outcome == 'success'
+        id: last_known_good
+        continue-on-error: true
+        run: |
+          aws ssm put-parameter \
+            --name "$LAST_KNOWN_GOOD_PARAMETER" \
+            --type String \
+            --value "$GITHUB_SHA" \
+            --overwrite >/dev/null
+          echo "Recorded validated deployment $GITHUB_SHA"
+
+      - name: Stop an active failed release
+        if: steps.freshness.outputs.superseded == 'false' && steps.release_wait.outcome == 'failure'
+        run: |
+          failed_job_id="${{ steps.release.outputs.job_id }}"
+          failed_status=$(aws amplify get-job \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$AMPLIFY_BRANCH" \
+            --job-id "$failed_job_id" \
+            --query 'job.summary.status' \
+            --output text)
+          case "$failed_status" in
+            CREATED | PENDING | PROVISIONING | RUNNING | CANCELLING)
+              aws amplify stop-job \
+                --app-id "$AMPLIFY_APP_ID" \
+                --branch-name "$AMPLIFY_BRANCH" \
+                --job-id "$failed_job_id" >/dev/null
+              ;;
+          esac
+
+      - name: Fail release validation
+        if: steps.freshness.outputs.superseded == 'false' && (steps.release_wait.outcome == 'failure' || steps.functional_smoke.outcome == 'failure' || steps.last_known_good.outcome == 'failure')
+        run: |
+          if validated_sha=$(aws ssm get-parameter \
+            --name "$LAST_KNOWN_GOOD_PARAMETER" \
+            --query 'Parameter.Value' \
+            --output text 2>&1); then
+            echo "Last-known-good deployment SHA: $validated_sha" >&2
+          else
+            echo "Last-known-good deployment SHA could not be read: $validated_sha" >&2
+          fi
+          echo "Release validation failed for $GITHUB_SHA. Restore the durable last-known-good source revision with a new commit on main; Amplify RETRY does not restore repository-connected artifacts." >&2
+          exit 1
+
+      - name: Run mobile Lighthouse CI
+        if: steps.freshness.outputs.superseded == 'false' && steps.functional_smoke.outcome == 'success'
+        id: lhci_mobile
+        continue-on-error: true
+        env:
+          LHCI_BASE_URL: ${{ env.DEPLOYMENT_URL }}
+          LHCI_FORM_FACTOR: mobile
+        run: bunx lhci autorun --config=lighthouserc.cjs
+
+      - name: Run desktop Lighthouse CI
+        if: steps.freshness.outputs.superseded == 'false' && steps.functional_smoke.outcome == 'success'
+        id: lhci_desktop
+        continue-on-error: true
+        env:
+          LHCI_BASE_URL: ${{ env.DEPLOYMENT_URL }}
+          LHCI_FORM_FACTOR: desktop
+        run: bunx lhci autorun --config=lighthouserc.cjs
+
+      - name: Upload Lighthouse reports
+        if: always() && steps.freshness.outputs.superseded == 'false' && steps.functional_smoke.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: lighthouse-${{ github.sha }}-${{ github.run_attempt }}
+          path: .lighthouseci
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Enforce Lighthouse baseline policy
+        if: steps.freshness.outputs.superseded == 'false' && steps.functional_smoke.outcome == 'success' && (steps.lhci_mobile.outcome == 'failure' || steps.lhci_desktop.outcome == 'failure')
+        run: |
+          echo "Lighthouse regressed below the measured Netlify baseline policy; no rollback was triggered" >&2
+          exit 1

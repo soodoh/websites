@@ -1,0 +1,31 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install 24.18.0
+        - nvm use 24.18.0
+        - npm install --global bun@1.3.14
+        - node --version && bun --version
+        - export AMPLIFY_JOB_COMMIT="$(aws amplify get-job --app-id "$AWS_APP_ID" --branch-name "$AWS_BRANCH" --job-id "$AWS_JOB_ID" --query 'job.summary.commitId' --output text)"
+        - export AMPLIFY_JOB_MESSAGE="$(aws amplify get-job --app-id "$AWS_APP_ID" --branch-name "$AWS_BRANCH" --job-id "$AWS_JOB_ID" --query 'job.summary.commitMessage' --output text)"
+        - bun scripts/verify-amplify-source.ts
+        - unset AMPLIFY_JOB_COMMIT AMPLIFY_JOB_MESSAGE
+        - test "$(aws ssm get-parameter --name "$CONTENTFUL_ACCESS_TOKEN_PARAMETER" --query 'Parameter.Type' --output text)" = "SecureString"
+        - export CONTENTFUL_ACCESS_TOKEN="$(aws ssm get-parameter --name "$CONTENTFUL_ACCESS_TOKEN_PARAMETER" --with-decryption --query 'Parameter.Value' --output text)"
+        - test -n "$CONTENTFUL_SPACE_ID" && test "$CONTENTFUL_SPACE_ID" != "undefined"
+        - test -n "$CONTENTFUL_ACCESS_TOKEN" && test "$CONTENTFUL_ACCESS_TOKEN" != "undefined"
+        - bun install --frozen-lockfile
+    build:
+      commands:
+        - NITRO_PRESET=aws-amplify bun run build
+        - bun run prepare:amplify
+        - bun run validate:amplify
+  artifacts:
+    baseDirectory: .amplify-hosting
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+      - ~/.bun/install/cache/**/*
