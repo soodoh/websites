@@ -1,0 +1,2025 @@
+{
+  "sarabeth-studio": {
+    "checked": 620,
+    "diffs": [
+      {
+        "oldKey": "zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/router-generator@1.167.33",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "lodash",
+        "expected": "lodash@4.17.23",
+        "actual": "lodash@4.18.1",
+        "via": {
+          "parent": "contentful-sdk-core@9.4.4",
+          "dependency": "lodash",
+          "range": "^4.17.23"
+        }
+      },
+      {
+        "oldKey": "contentful-sdk-core/qs",
+        "expected": "qs@6.15.0",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "contentful-sdk-core@9.4.4",
+          "dependency": "qs",
+          "range": "^6.15.0"
+        }
+      },
+      {
+        "oldKey": "contentful-sdk-core/qs/side-channel",
+        "expected": "side-channel@1.1.0",
+        "actual": "side-channel@1.1.1",
+        "via": {
+          "parent": "qs@6.15.0",
+          "dependency": "side-channel",
+          "range": "^1.1.0"
+        }
+      },
+      {
+        "oldKey": "contentful-sdk-core/qs/side-channel/side-channel-list",
+        "expected": "side-channel-list@1.0.0",
+        "actual": "side-channel-list@1.0.1",
+        "via": {
+          "parent": "side-channel@1.1.0",
+          "dependency": "side-channel-list",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "socks",
+        "expected": "socks@2.8.9",
+        "actual": "socks@2.8.10",
+        "via": {
+          "parent": "socks-proxy-agent@8.0.5",
+          "dependency": "socks",
+          "range": "^2.8.3"
+        }
+      },
+      {
+        "oldKey": "ip-address",
+        "expected": "ip-address@10.2.0",
+        "actual": "ip-address@10.7.0",
+        "via": {
+          "parent": "socks@2.8.9",
+          "dependency": "ip-address",
+          "range": "^10.1.1"
+        }
+      },
+      {
+        "oldKey": "ws",
+        "expected": "ws@7.5.12",
+        "actual": "ws@7.5.13",
+        "via": {
+          "parent": "lighthouse@12.6.1",
+          "dependency": "ws",
+          "range": "^7.0.0"
+        }
+      },
+      {
+        "oldKey": "mime-db",
+        "expected": "mime-db@1.52.0",
+        "actual": "mime-db@1.54.0",
+        "via": {
+          "parent": "compressible@2.0.18",
+          "dependency": "mime-db",
+          "range": ">= 1.43.0 < 2"
+        }
+      },
+      {
+        "oldKey": "enhanced-resolve",
+        "expected": "enhanced-resolve@5.24.2",
+        "actual": "enhanced-resolve@5.24.3",
+        "via": {
+          "parent": "@tailwindcss/node@4.3.3",
+          "dependency": "enhanced-resolve",
+          "range": "^5.24.1"
+        }
+      }
+    ],
+    "unavailable": [
+      "@biomejs/cli-darwin-x64",
+      "@biomejs/cli-linux-arm64",
+      "@biomejs/cli-linux-arm64-musl",
+      "@biomejs/cli-linux-x64",
+      "@biomejs/cli-linux-x64-musl",
+      "@biomejs/cli-win32-arm64",
+      "@biomejs/cli-win32-x64",
+      "@img/sharp-darwin-x64",
+      "@img/sharp-freebsd-wasm32",
+      "@img/sharp-libvips-darwin-x64",
+      "@img/sharp-libvips-linux-arm",
+      "@img/sharp-libvips-linux-arm64",
+      "@img/sharp-libvips-linux-ppc64",
+      "@img/sharp-libvips-linux-riscv64",
+      "@img/sharp-libvips-linux-s390x",
+      "@img/sharp-libvips-linux-x64",
+      "@img/sharp-libvips-linuxmusl-arm64",
+      "@img/sharp-libvips-linuxmusl-x64",
+      "@img/sharp-linux-arm",
+      "@img/sharp-linux-arm64",
+      "@img/sharp-linux-ppc64",
+      "@img/sharp-linux-riscv64",
+      "@img/sharp-linux-s390x",
+      "@img/sharp-linux-x64",
+      "@img/sharp-linuxmusl-arm64",
+      "@img/sharp-linuxmusl-x64",
+      "@img/sharp-webcontainers-wasm32",
+      "@img/sharp-win32-arm64",
+      "@img/sharp-win32-ia32",
+      "@img/sharp-win32-x64",
+      "@rolldown/binding-android-arm-eabi",
+      "@rolldown/binding-android-arm64",
+      "@rolldown/binding-darwin-x64",
+      "@rolldown/binding-freebsd-x64",
+      "@rolldown/binding-linux-arm-gnueabihf",
+      "@rolldown/binding-linux-arm64-gnu",
+      "@rolldown/binding-linux-arm64-musl",
+      "@rolldown/binding-linux-ppc64-gnu",
+      "@rolldown/binding-linux-s390x-gnu",
+      "@rolldown/binding-linux-x64-gnu",
+      "@rolldown/binding-linux-x64-musl",
+      "@rolldown/binding-openharmony-arm64",
+      "@rolldown/binding-win32-arm64-msvc",
+      "@rolldown/binding-win32-x64-msvc",
+      "@rollup/rollup-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-android-arm64",
+      "@tailwindcss/node/lightningcss/lightningcss-darwin-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-freebsd-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm-gnueabihf",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-arm64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-x64-msvc",
+      "@tailwindcss/oxide-android-arm64",
+      "@tailwindcss/oxide-darwin-x64",
+      "@tailwindcss/oxide-freebsd-x64",
+      "@tailwindcss/oxide-linux-arm-gnueabihf",
+      "@tailwindcss/oxide-linux-arm64-gnu",
+      "@tailwindcss/oxide-linux-arm64-musl",
+      "@tailwindcss/oxide-linux-x64-gnu",
+      "@tailwindcss/oxide-linux-x64-musl",
+      "@tailwindcss/oxide-wasm32-wasi",
+      "@tailwindcss/oxide-win32-arm64-msvc",
+      "@tailwindcss/oxide-win32-x64-msvc",
+      "@typescript/typescript-aix-ppc64",
+      "@typescript/typescript-darwin-x64",
+      "@typescript/typescript-freebsd-arm64",
+      "@typescript/typescript-freebsd-x64",
+      "@typescript/typescript-linux-arm",
+      "@typescript/typescript-linux-arm64",
+      "@typescript/typescript-linux-loong64",
+      "@typescript/typescript-linux-mips64el",
+      "@typescript/typescript-linux-ppc64",
+      "@typescript/typescript-linux-riscv64",
+      "@typescript/typescript-linux-s390x",
+      "@typescript/typescript-linux-x64",
+      "@typescript/typescript-netbsd-arm64",
+      "@typescript/typescript-netbsd-x64",
+      "@typescript/typescript-openbsd-arm64",
+      "@typescript/typescript-openbsd-x64",
+      "@typescript/typescript-sunos-x64",
+      "@typescript/typescript-win32-arm64",
+      "@typescript/typescript-win32-x64",
+      "lightningcss-android-arm64",
+      "lightningcss-darwin-x64",
+      "lightningcss-freebsd-x64",
+      "lightningcss-linux-arm-gnueabihf",
+      "lightningcss-linux-arm64-gnu",
+      "lightningcss-linux-arm64-musl",
+      "lightningcss-linux-x64-gnu",
+      "lightningcss-linux-x64-musl",
+      "lightningcss-win32-arm64-msvc",
+      "lightningcss-win32-x64-msvc"
+    ]
+  },
+  "portfolio-website": {
+    "checked": 746,
+    "diffs": [
+      {
+        "oldKey": "enhanced-resolve",
+        "expected": "enhanced-resolve@5.24.2",
+        "actual": "enhanced-resolve@5.24.3",
+        "via": {
+          "parent": "@tailwindcss/node@4.3.3",
+          "dependency": "enhanced-resolve",
+          "range": "^5.24.1"
+        }
+      },
+      {
+        "oldKey": "isbot",
+        "expected": "isbot@5.1.35",
+        "actual": "isbot@5.2.0",
+        "via": {
+          "parent": "@tanstack/react-router@1.170.32",
+          "dependency": "isbot",
+          "range": "^5.1.22"
+        }
+      },
+      {
+        "oldKey": "@babel/generator",
+        "expected": "@babel/generator@7.29.1",
+        "actual": "@babel/generator@7.29.7",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "@babel/generator",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "@babel/parser",
+        "expected": "@babel/parser@7.29.0",
+        "actual": "@babel/parser@7.29.7",
+        "via": {
+          "parent": "@babel/generator@7.29.1",
+          "dependency": "@babel/parser",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/types",
+        "expected": "@babel/types@7.29.0",
+        "actual": "@babel/types@7.29.7",
+        "via": {
+          "parent": "@babel/parser@7.29.0",
+          "dependency": "@babel/types",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-string-parser",
+        "expected": "@babel/helper-string-parser@7.27.1",
+        "actual": "@babel/helper-string-parser@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-string-parser",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-identifier",
+        "expected": "@babel/helper-validator-identifier@7.28.5",
+        "actual": "@babel/helper-validator-identifier@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-validator-identifier",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "ansis",
+        "expected": "ansis@4.2.0",
+        "actual": "ansis@4.3.1",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "ansis",
+          "range": "^4.1.0"
+        }
+      },
+      {
+        "oldKey": "@babel/core",
+        "expected": "@babel/core@7.29.0",
+        "actual": "@babel/core@7.29.7",
+        "via": {
+          "parent": "babel-dead-code-elimination@1.0.12",
+          "dependency": "@babel/core",
+          "range": "^7.23.7"
+        }
+      },
+      {
+        "oldKey": "@babel/code-frame",
+        "expected": "@babel/code-frame@7.29.0",
+        "actual": "@babel/code-frame@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/code-frame",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-compilation-targets",
+        "expected": "@babel/helper-compilation-targets@7.28.6",
+        "actual": "@babel/helper-compilation-targets@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-compilation-targets",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/compat-data",
+        "expected": "@babel/compat-data@7.29.0",
+        "actual": "@babel/compat-data@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/compat-data",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-option",
+        "expected": "@babel/helper-validator-option@7.27.1",
+        "actual": "@babel/helper-validator-option@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/helper-validator-option",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "browserslist",
+        "expected": "browserslist@4.28.1",
+        "actual": "browserslist@4.28.6",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "browserslist",
+          "range": "^4.24.0"
+        }
+      },
+      {
+        "oldKey": "baseline-browser-mapping",
+        "expected": "baseline-browser-mapping@2.9.19",
+        "actual": "baseline-browser-mapping@2.10.43",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "baseline-browser-mapping",
+          "range": "^2.9.0"
+        }
+      },
+      {
+        "oldKey": "caniuse-lite",
+        "expected": "caniuse-lite@1.0.30001769",
+        "actual": "caniuse-lite@1.0.30001805",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "caniuse-lite",
+          "range": "^1.0.30001759"
+        }
+      },
+      {
+        "oldKey": "electron-to-chromium",
+        "expected": "electron-to-chromium@1.5.286",
+        "actual": "electron-to-chromium@1.5.389",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "electron-to-chromium",
+          "range": "^1.5.263"
+        }
+      },
+      {
+        "oldKey": "node-releases",
+        "expected": "node-releases@2.0.27",
+        "actual": "node-releases@2.0.51",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "node-releases",
+          "range": "^2.0.27"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-transforms",
+        "expected": "@babel/helper-module-transforms@7.28.6",
+        "actual": "@babel/helper-module-transforms@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-module-transforms",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-imports",
+        "expected": "@babel/helper-module-imports@7.28.6",
+        "actual": "@babel/helper-module-imports@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-transforms@7.28.6",
+          "dependency": "@babel/helper-module-imports",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/traverse",
+        "expected": "@babel/traverse@7.29.0",
+        "actual": "@babel/traverse@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-imports@7.28.6",
+          "dependency": "@babel/traverse",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-globals",
+        "expected": "@babel/helper-globals@7.28.0",
+        "actual": "@babel/helper-globals@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/helper-globals",
+          "range": "^7.28.0"
+        }
+      },
+      {
+        "oldKey": "@babel/template",
+        "expected": "@babel/template@7.28.6",
+        "actual": "@babel/template@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/template",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helpers",
+        "expected": "@babel/helpers@7.28.6",
+        "actual": "@babel/helpers@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helpers",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "diff",
+        "expected": "diff@8.0.3",
+        "actual": "diff@8.0.4",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "diff",
+          "range": "^8.0.2"
+        }
+      },
+      {
+        "oldKey": "tinyglobby/picomatch",
+        "expected": "picomatch@4.0.4",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "tinyglobby@0.2.17",
+          "dependency": "picomatch",
+          "range": "^4.0.4"
+        }
+      },
+      {
+        "oldKey": "prettier",
+        "expected": "prettier@3.8.1",
+        "actual": "prettier@3.9.5",
+        "via": {
+          "parent": "@tanstack/router-generator@1.167.33",
+          "dependency": "prettier",
+          "range": "^3.5.0"
+        }
+      },
+      {
+        "oldKey": "@tanstack/router-generator/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/router-generator@1.167.33",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "unplugin",
+        "expected": "unplugin@3.0.0",
+        "actual": "unplugin@3.3.0",
+        "via": {
+          "parent": "@tanstack/router-plugin@1.168.35",
+          "dependency": "unplugin",
+          "range": "^3.0.0"
+        }
+      },
+      {
+        "oldKey": "unplugin/picomatch",
+        "expected": "picomatch@4.0.4",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "unplugin@3.0.0",
+          "dependency": "picomatch",
+          "range": "^4.0.3"
+        }
+      },
+      {
+        "oldKey": "@tanstack/router-plugin/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/router-plugin@1.168.35",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "srvx",
+        "expected": "srvx@0.11.13",
+        "actual": "srvx@0.11.22",
+        "via": {
+          "parent": "h3@2.0.1-rc.20",
+          "dependency": "srvx",
+          "range": "^0.11.13"
+        }
+      },
+      {
+        "oldKey": "exsolve",
+        "expected": "exsolve@1.0.8",
+        "actual": "exsolve@1.1.1",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "exsolve",
+          "range": "^1.0.7"
+        }
+      },
+      {
+        "oldKey": "ufo",
+        "expected": "ufo@1.6.3",
+        "actual": "ufo@1.6.4",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "ufo",
+          "range": "^1.5.4"
+        }
+      },
+      {
+        "oldKey": "vitefu",
+        "expected": "vitefu@1.1.1",
+        "actual": "vitefu@1.1.3",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "vitefu",
+          "range": "^1.1.1"
+        }
+      },
+      {
+        "oldKey": "@tanstack/start-plugin-core/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "socks",
+        "expected": "socks@2.8.9",
+        "actual": "socks@2.8.10",
+        "via": {
+          "parent": "socks-proxy-agent@8.0.5",
+          "dependency": "socks",
+          "range": "^2.8.3"
+        }
+      },
+      {
+        "oldKey": "ip-address",
+        "expected": "ip-address@10.2.0",
+        "actual": "ip-address@10.7.0",
+        "via": {
+          "parent": "socks@2.8.9",
+          "dependency": "ip-address",
+          "range": "^10.1.1"
+        }
+      },
+      {
+        "oldKey": "@puppeteer/browsers/semver",
+        "expected": "semver@7.7.4",
+        "actual": "semver@7.8.5",
+        "via": {
+          "parent": "@puppeteer/browsers@2.13.2",
+          "dependency": "semver",
+          "range": "^7.7.4"
+        }
+      },
+      {
+        "oldKey": "@dotenvx/dotenvx/picomatch",
+        "expected": "picomatch@4.0.3",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "@dotenvx/dotenvx@1.52.0",
+          "dependency": "picomatch",
+          "range": "^4.0.2"
+        }
+      },
+      {
+        "oldKey": "ajv",
+        "expected": "ajv@8.17.1",
+        "actual": "ajv@8.18.0",
+        "via": {
+          "parent": "@modelcontextprotocol/sdk@1.26.0",
+          "dependency": "ajv",
+          "range": "^8.17.1"
+        }
+      },
+      {
+        "oldKey": "@modelcontextprotocol/sdk/express/qs",
+        "expected": "qs@6.14.2",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "body-parser@2.2.2",
+          "dependency": "qs",
+          "range": "^6.14.1"
+        }
+      },
+      {
+        "oldKey": "@modelcontextprotocol/sdk/express/qs/side-channel",
+        "expected": "side-channel@1.1.0",
+        "actual": "side-channel@1.1.1",
+        "via": {
+          "parent": "qs@6.14.2",
+          "dependency": "side-channel",
+          "range": "^1.1.0"
+        }
+      },
+      {
+        "oldKey": "@modelcontextprotocol/sdk/express/qs/side-channel/side-channel-list",
+        "expected": "side-channel-list@1.0.0",
+        "actual": "side-channel-list@1.0.1",
+        "via": {
+          "parent": "side-channel@1.1.0",
+          "dependency": "side-channel-list",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "@modelcontextprotocol/sdk/zod",
+        "expected": "zod@4.3.6",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@modelcontextprotocol/sdk@1.26.0",
+          "dependency": "zod",
+          "range": "^3.25 || ^4.0"
+        }
+      },
+      {
+        "oldKey": "fs-extra",
+        "expected": "fs-extra@11.3.3",
+        "actual": "fs-extra@11.3.6",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "fs-extra",
+          "range": "^11.3.1"
+        }
+      },
+      {
+        "oldKey": "jsonfile",
+        "expected": "jsonfile@6.2.0",
+        "actual": "jsonfile@6.2.1",
+        "via": {
+          "parent": "fs-extra@11.3.3",
+          "dependency": "jsonfile",
+          "range": "^6.0.1"
+        }
+      },
+      {
+        "oldKey": "get-east-asian-width",
+        "expected": "get-east-asian-width@1.4.0",
+        "actual": "get-east-asian-width@1.6.0",
+        "via": {
+          "parent": "string-width@7.2.0",
+          "dependency": "get-east-asian-width",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "string-width/strip-ansi",
+        "expected": "strip-ansi@7.1.2",
+        "actual": "strip-ansi@7.2.0",
+        "via": {
+          "parent": "string-width@7.2.0",
+          "dependency": "strip-ansi",
+          "range": "^7.1.0"
+        }
+      },
+      {
+        "oldKey": "ora/strip-ansi",
+        "expected": "strip-ansi@7.1.2",
+        "actual": "strip-ansi@7.2.0",
+        "via": {
+          "parent": "ora@8.2.0",
+          "dependency": "strip-ansi",
+          "range": "^7.1.0"
+        }
+      },
+      {
+        "oldKey": "postcss",
+        "expected": "postcss@8.5.19",
+        "actual": "postcss@8.5.28",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "postcss",
+          "range": "^8.5.6"
+        }
+      },
+      {
+        "oldKey": "nanoid",
+        "expected": "nanoid@3.3.12",
+        "actual": "nanoid@3.3.18",
+        "via": {
+          "parent": "postcss@8.5.19",
+          "dependency": "nanoid",
+          "range": "^3.3.12"
+        }
+      },
+      {
+        "oldKey": "minimatch",
+        "expected": "minimatch@10.2.0",
+        "actual": "minimatch@10.2.5",
+        "via": {
+          "parent": "@ts-morph/common@0.27.0",
+          "dependency": "minimatch",
+          "range": "^10.0.1"
+        }
+      },
+      {
+        "oldKey": "brace-expansion",
+        "expected": "brace-expansion@5.0.2",
+        "actual": "brace-expansion@5.0.7",
+        "via": {
+          "parent": "minimatch@10.2.0",
+          "dependency": "brace-expansion",
+          "range": "^5.0.2"
+        }
+      },
+      {
+        "oldKey": "balanced-match",
+        "expected": "balanced-match@4.0.2",
+        "actual": "balanced-match@4.0.4",
+        "via": {
+          "parent": "brace-expansion@5.0.2",
+          "dependency": "balanced-match",
+          "range": "^4.0.2"
+        }
+      }
+    ],
+    "unavailable": [
+      "@biomejs/cli-darwin-x64",
+      "@biomejs/cli-linux-arm64",
+      "@biomejs/cli-linux-arm64-musl",
+      "@biomejs/cli-linux-x64",
+      "@biomejs/cli-linux-x64-musl",
+      "@biomejs/cli-win32-arm64",
+      "@biomejs/cli-win32-x64",
+      "@rolldown/binding-android-arm-eabi",
+      "@rolldown/binding-android-arm64",
+      "@rolldown/binding-darwin-x64",
+      "@rolldown/binding-freebsd-x64",
+      "@rolldown/binding-linux-arm-gnueabihf",
+      "@rolldown/binding-linux-arm64-gnu",
+      "@rolldown/binding-linux-arm64-musl",
+      "@rolldown/binding-linux-ppc64-gnu",
+      "@rolldown/binding-linux-s390x-gnu",
+      "@rolldown/binding-linux-x64-gnu",
+      "@rolldown/binding-linux-x64-musl",
+      "@rolldown/binding-openharmony-arm64",
+      "@rolldown/binding-win32-arm64-msvc",
+      "@rolldown/binding-win32-x64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-android-arm64",
+      "@tailwindcss/node/lightningcss/lightningcss-darwin-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-freebsd-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm-gnueabihf",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-arm64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-x64-msvc",
+      "@tailwindcss/oxide-android-arm64",
+      "@tailwindcss/oxide-darwin-x64",
+      "@tailwindcss/oxide-freebsd-x64",
+      "@tailwindcss/oxide-linux-arm-gnueabihf",
+      "@tailwindcss/oxide-linux-arm64-gnu",
+      "@tailwindcss/oxide-linux-arm64-musl",
+      "@tailwindcss/oxide-linux-x64-gnu",
+      "@tailwindcss/oxide-linux-x64-musl",
+      "@tailwindcss/oxide-wasm32-wasi",
+      "@tailwindcss/oxide-win32-arm64-msvc",
+      "@tailwindcss/oxide-win32-x64-msvc",
+      "@typescript/typescript-aix-ppc64",
+      "@typescript/typescript-darwin-x64",
+      "@typescript/typescript-freebsd-arm64",
+      "@typescript/typescript-freebsd-x64",
+      "@typescript/typescript-linux-arm",
+      "@typescript/typescript-linux-arm64",
+      "@typescript/typescript-linux-loong64",
+      "@typescript/typescript-linux-mips64el",
+      "@typescript/typescript-linux-ppc64",
+      "@typescript/typescript-linux-riscv64",
+      "@typescript/typescript-linux-s390x",
+      "@typescript/typescript-linux-x64",
+      "@typescript/typescript-netbsd-arm64",
+      "@typescript/typescript-netbsd-x64",
+      "@typescript/typescript-openbsd-arm64",
+      "@typescript/typescript-openbsd-x64",
+      "@typescript/typescript-sunos-x64",
+      "@typescript/typescript-win32-arm64",
+      "@typescript/typescript-win32-x64",
+      "jackspeak",
+      "lightningcss-android-arm64",
+      "lightningcss-darwin-x64",
+      "lightningcss-freebsd-x64",
+      "lightningcss-linux-arm-gnueabihf",
+      "lightningcss-linux-arm64-gnu",
+      "lightningcss-linux-arm64-musl",
+      "lightningcss-linux-x64-gnu",
+      "lightningcss-linux-x64-musl",
+      "lightningcss-win32-arm64-msvc",
+      "lightningcss-win32-x64-msvc"
+    ]
+  },
+  "carolyn-portfolio": {
+    "checked": 584,
+    "diffs": [
+      {
+        "oldKey": "lodash",
+        "expected": "lodash@4.17.23",
+        "actual": "lodash@4.18.1",
+        "via": {
+          "parent": "@contentful/rich-text-from-markdown@16.2.2",
+          "dependency": "lodash",
+          "range": "^4.17.11"
+        }
+      },
+      {
+        "oldKey": "@babel/generator",
+        "expected": "@babel/generator@7.29.1",
+        "actual": "@babel/generator@7.29.7",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "@babel/generator",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "@babel/parser",
+        "expected": "@babel/parser@7.29.0",
+        "actual": "@babel/parser@7.29.7",
+        "via": {
+          "parent": "@babel/generator@7.29.1",
+          "dependency": "@babel/parser",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/types",
+        "expected": "@babel/types@7.29.0",
+        "actual": "@babel/types@7.29.7",
+        "via": {
+          "parent": "@babel/parser@7.29.0",
+          "dependency": "@babel/types",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-string-parser",
+        "expected": "@babel/helper-string-parser@7.27.1",
+        "actual": "@babel/helper-string-parser@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-string-parser",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-identifier",
+        "expected": "@babel/helper-validator-identifier@7.28.5",
+        "actual": "@babel/helper-validator-identifier@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-validator-identifier",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "@babel/core",
+        "expected": "@babel/core@7.29.0",
+        "actual": "@babel/core@7.29.7",
+        "via": {
+          "parent": "babel-dead-code-elimination@1.0.12",
+          "dependency": "@babel/core",
+          "range": "^7.23.7"
+        }
+      },
+      {
+        "oldKey": "@babel/code-frame",
+        "expected": "@babel/code-frame@7.29.0",
+        "actual": "@babel/code-frame@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/code-frame",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-compilation-targets",
+        "expected": "@babel/helper-compilation-targets@7.28.6",
+        "actual": "@babel/helper-compilation-targets@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-compilation-targets",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/compat-data",
+        "expected": "@babel/compat-data@7.29.0",
+        "actual": "@babel/compat-data@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/compat-data",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-option",
+        "expected": "@babel/helper-validator-option@7.27.1",
+        "actual": "@babel/helper-validator-option@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/helper-validator-option",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "browserslist",
+        "expected": "browserslist@4.28.1",
+        "actual": "browserslist@4.28.6",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "browserslist",
+          "range": "^4.24.0"
+        }
+      },
+      {
+        "oldKey": "baseline-browser-mapping",
+        "expected": "baseline-browser-mapping@2.9.19",
+        "actual": "baseline-browser-mapping@2.10.43",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "baseline-browser-mapping",
+          "range": "^2.9.0"
+        }
+      },
+      {
+        "oldKey": "caniuse-lite",
+        "expected": "caniuse-lite@1.0.30001769",
+        "actual": "caniuse-lite@1.0.30001805",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "caniuse-lite",
+          "range": "^1.0.30001759"
+        }
+      },
+      {
+        "oldKey": "electron-to-chromium",
+        "expected": "electron-to-chromium@1.5.286",
+        "actual": "electron-to-chromium@1.5.389",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "electron-to-chromium",
+          "range": "^1.5.263"
+        }
+      },
+      {
+        "oldKey": "node-releases",
+        "expected": "node-releases@2.0.27",
+        "actual": "node-releases@2.0.51",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "node-releases",
+          "range": "^2.0.27"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-transforms",
+        "expected": "@babel/helper-module-transforms@7.28.6",
+        "actual": "@babel/helper-module-transforms@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-module-transforms",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-imports",
+        "expected": "@babel/helper-module-imports@7.28.6",
+        "actual": "@babel/helper-module-imports@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-transforms@7.28.6",
+          "dependency": "@babel/helper-module-imports",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/traverse",
+        "expected": "@babel/traverse@7.29.0",
+        "actual": "@babel/traverse@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-imports@7.28.6",
+          "dependency": "@babel/traverse",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-globals",
+        "expected": "@babel/helper-globals@7.28.0",
+        "actual": "@babel/helper-globals@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/helper-globals",
+          "range": "^7.28.0"
+        }
+      },
+      {
+        "oldKey": "@babel/template",
+        "expected": "@babel/template@7.28.6",
+        "actual": "@babel/template@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/template",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helpers",
+        "expected": "@babel/helpers@7.28.6",
+        "actual": "@babel/helpers@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helpers",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "diff",
+        "expected": "diff@8.0.3",
+        "actual": "diff@8.0.4",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "diff",
+          "range": "^8.0.2"
+        }
+      },
+      {
+        "oldKey": "qs",
+        "expected": "qs@6.15.0",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "contentful-sdk-core@9.4.4",
+          "dependency": "qs",
+          "range": "^6.15.0"
+        }
+      },
+      {
+        "oldKey": "side-channel",
+        "expected": "side-channel@1.1.0",
+        "actual": "side-channel@1.1.1",
+        "via": {
+          "parent": "qs@6.15.0",
+          "dependency": "side-channel",
+          "range": "^1.1.0"
+        }
+      },
+      {
+        "oldKey": "side-channel-list",
+        "expected": "side-channel-list@1.0.0",
+        "actual": "side-channel-list@1.0.1",
+        "via": {
+          "parent": "side-channel@1.1.0",
+          "dependency": "side-channel-list",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "@dotenvx/dotenvx/picomatch",
+        "expected": "picomatch@4.0.3",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "@dotenvx/dotenvx@1.52.0",
+          "dependency": "picomatch",
+          "range": "^4.0.2"
+        }
+      },
+      {
+        "oldKey": "ajv",
+        "expected": "ajv@8.17.1",
+        "actual": "ajv@8.18.0",
+        "via": {
+          "parent": "@modelcontextprotocol/sdk@1.26.0",
+          "dependency": "ajv",
+          "range": "^8.17.1"
+        }
+      },
+      {
+        "oldKey": "body-parser/qs",
+        "expected": "qs@6.14.2",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "body-parser@2.2.2",
+          "dependency": "qs",
+          "range": "^6.14.1"
+        }
+      },
+      {
+        "oldKey": "express/qs",
+        "expected": "qs@6.14.2",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "express@5.2.1",
+          "dependency": "qs",
+          "range": "^6.14.0"
+        }
+      },
+      {
+        "oldKey": "@modelcontextprotocol/sdk/zod",
+        "expected": "zod@4.3.6",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@modelcontextprotocol/sdk@1.26.0",
+          "dependency": "zod",
+          "range": "^3.25 || ^4.0"
+        }
+      },
+      {
+        "oldKey": "fs-extra",
+        "expected": "fs-extra@11.3.3",
+        "actual": "fs-extra@11.3.6",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "fs-extra",
+          "range": "^11.3.1"
+        }
+      },
+      {
+        "oldKey": "jsonfile",
+        "expected": "jsonfile@6.2.0",
+        "actual": "jsonfile@6.2.1",
+        "via": {
+          "parent": "fs-extra@11.3.3",
+          "dependency": "jsonfile",
+          "range": "^6.0.1"
+        }
+      },
+      {
+        "oldKey": "is-wsl",
+        "expected": "is-wsl@3.1.0",
+        "actual": "is-wsl@3.1.1",
+        "via": {
+          "parent": "wsl-utils@0.3.1",
+          "dependency": "is-wsl",
+          "range": "^3.1.0"
+        }
+      },
+      {
+        "oldKey": "get-east-asian-width",
+        "expected": "get-east-asian-width@1.4.0",
+        "actual": "get-east-asian-width@1.6.0",
+        "via": {
+          "parent": "string-width@7.2.0",
+          "dependency": "get-east-asian-width",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "strip-ansi",
+        "expected": "strip-ansi@7.1.2",
+        "actual": "strip-ansi@7.2.0",
+        "via": {
+          "parent": "string-width@7.2.0",
+          "dependency": "strip-ansi",
+          "range": "^7.1.0"
+        }
+      },
+      {
+        "oldKey": "postcss",
+        "expected": "postcss@8.5.17",
+        "actual": "postcss@8.5.28",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "postcss",
+          "range": "^8.5.6"
+        }
+      },
+      {
+        "oldKey": "nanoid",
+        "expected": "nanoid@3.3.12",
+        "actual": "nanoid@3.3.18",
+        "via": {
+          "parent": "postcss@8.5.17",
+          "dependency": "nanoid",
+          "range": "^3.3.12"
+        }
+      },
+      {
+        "oldKey": "minimatch",
+        "expected": "minimatch@10.2.0",
+        "actual": "minimatch@10.2.5",
+        "via": {
+          "parent": "@ts-morph/common@0.27.0",
+          "dependency": "minimatch",
+          "range": "^10.0.1"
+        }
+      },
+      {
+        "oldKey": "brace-expansion",
+        "expected": "brace-expansion@5.0.2",
+        "actual": "brace-expansion@5.0.7",
+        "via": {
+          "parent": "minimatch@10.2.0",
+          "dependency": "brace-expansion",
+          "range": "^5.0.2"
+        }
+      },
+      {
+        "oldKey": "balanced-match",
+        "expected": "balanced-match@4.0.2",
+        "actual": "balanced-match@4.0.4",
+        "via": {
+          "parent": "brace-expansion@5.0.2",
+          "dependency": "balanced-match",
+          "range": "^4.0.2"
+        }
+      }
+    ],
+    "unavailable": [
+      "@biomejs/cli-darwin-x64",
+      "@biomejs/cli-linux-arm64",
+      "@biomejs/cli-linux-arm64-musl",
+      "@biomejs/cli-linux-x64",
+      "@biomejs/cli-linux-x64-musl",
+      "@biomejs/cli-win32-arm64",
+      "@biomejs/cli-win32-x64",
+      "@img/sharp-darwin-x64",
+      "@img/sharp-freebsd-wasm32",
+      "@img/sharp-libvips-darwin-x64",
+      "@img/sharp-libvips-linux-arm",
+      "@img/sharp-libvips-linux-arm64",
+      "@img/sharp-libvips-linux-ppc64",
+      "@img/sharp-libvips-linux-riscv64",
+      "@img/sharp-libvips-linux-s390x",
+      "@img/sharp-libvips-linux-x64",
+      "@img/sharp-libvips-linuxmusl-arm64",
+      "@img/sharp-libvips-linuxmusl-x64",
+      "@img/sharp-linux-arm",
+      "@img/sharp-linux-arm64",
+      "@img/sharp-linux-ppc64",
+      "@img/sharp-linux-riscv64",
+      "@img/sharp-linux-s390x",
+      "@img/sharp-linux-x64",
+      "@img/sharp-linuxmusl-arm64",
+      "@img/sharp-linuxmusl-x64",
+      "@img/sharp-webcontainers-wasm32",
+      "@img/sharp-win32-arm64",
+      "@img/sharp-win32-ia32",
+      "@img/sharp-win32-x64",
+      "@rolldown/binding-android-arm-eabi",
+      "@rolldown/binding-android-arm64",
+      "@rolldown/binding-darwin-x64",
+      "@rolldown/binding-freebsd-x64",
+      "@rolldown/binding-linux-arm-gnueabihf",
+      "@rolldown/binding-linux-arm64-gnu",
+      "@rolldown/binding-linux-arm64-musl",
+      "@rolldown/binding-linux-ppc64-gnu",
+      "@rolldown/binding-linux-s390x-gnu",
+      "@rolldown/binding-linux-x64-gnu",
+      "@rolldown/binding-linux-x64-musl",
+      "@rolldown/binding-openharmony-arm64",
+      "@rolldown/binding-win32-arm64-msvc",
+      "@rolldown/binding-win32-x64-msvc",
+      "@rollup/rollup-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-android-arm64",
+      "@tailwindcss/node/lightningcss/lightningcss-darwin-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-freebsd-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm-gnueabihf",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-arm64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-x64-msvc",
+      "@tailwindcss/oxide-android-arm64",
+      "@tailwindcss/oxide-darwin-x64",
+      "@tailwindcss/oxide-freebsd-x64",
+      "@tailwindcss/oxide-linux-arm-gnueabihf",
+      "@tailwindcss/oxide-linux-arm64-gnu",
+      "@tailwindcss/oxide-linux-arm64-musl",
+      "@tailwindcss/oxide-linux-x64-gnu",
+      "@tailwindcss/oxide-linux-x64-musl",
+      "@tailwindcss/oxide-wasm32-wasi",
+      "@tailwindcss/oxide-win32-arm64-msvc",
+      "@tailwindcss/oxide-win32-x64-msvc",
+      "@typescript/typescript-aix-ppc64",
+      "@typescript/typescript-darwin-x64",
+      "@typescript/typescript-freebsd-arm64",
+      "@typescript/typescript-freebsd-x64",
+      "@typescript/typescript-linux-arm",
+      "@typescript/typescript-linux-arm64",
+      "@typescript/typescript-linux-loong64",
+      "@typescript/typescript-linux-mips64el",
+      "@typescript/typescript-linux-ppc64",
+      "@typescript/typescript-linux-riscv64",
+      "@typescript/typescript-linux-s390x",
+      "@typescript/typescript-linux-x64",
+      "@typescript/typescript-netbsd-arm64",
+      "@typescript/typescript-netbsd-x64",
+      "@typescript/typescript-openbsd-arm64",
+      "@typescript/typescript-openbsd-x64",
+      "@typescript/typescript-sunos-x64",
+      "@typescript/typescript-win32-arm64",
+      "@typescript/typescript-win32-x64",
+      "jackspeak",
+      "lightningcss-android-arm64",
+      "lightningcss-darwin-x64",
+      "lightningcss-freebsd-x64",
+      "lightningcss-linux-arm-gnueabihf",
+      "lightningcss-linux-arm64-gnu",
+      "lightningcss-linux-arm64-musl",
+      "lightningcss-linux-x64-gnu",
+      "lightningcss-linux-x64-musl",
+      "lightningcss-win32-arm64-msvc",
+      "lightningcss-win32-x64-msvc"
+    ]
+  },
+  "diloreto-website": {
+    "checked": 657,
+    "diffs": [
+      {
+        "oldKey": "isbot",
+        "expected": "isbot@5.1.35",
+        "actual": "isbot@5.2.0",
+        "via": {
+          "parent": "@tanstack/react-router@1.170.32",
+          "dependency": "isbot",
+          "range": "^5.1.22"
+        }
+      },
+      {
+        "oldKey": "@babel/generator",
+        "expected": "@babel/generator@7.29.1",
+        "actual": "@babel/generator@7.29.7",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "@babel/generator",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "@babel/parser",
+        "expected": "@babel/parser@7.29.0",
+        "actual": "@babel/parser@7.29.7",
+        "via": {
+          "parent": "@babel/generator@7.29.1",
+          "dependency": "@babel/parser",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/types",
+        "expected": "@babel/types@7.29.0",
+        "actual": "@babel/types@7.29.7",
+        "via": {
+          "parent": "@babel/parser@7.29.0",
+          "dependency": "@babel/types",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-string-parser",
+        "expected": "@babel/helper-string-parser@7.27.1",
+        "actual": "@babel/helper-string-parser@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-string-parser",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-identifier",
+        "expected": "@babel/helper-validator-identifier@7.28.5",
+        "actual": "@babel/helper-validator-identifier@7.29.7",
+        "via": {
+          "parent": "@babel/types@7.29.0",
+          "dependency": "@babel/helper-validator-identifier",
+          "range": "^7.28.5"
+        }
+      },
+      {
+        "oldKey": "ansis",
+        "expected": "ansis@4.2.0",
+        "actual": "ansis@4.3.1",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "ansis",
+          "range": "^4.1.0"
+        }
+      },
+      {
+        "oldKey": "@babel/core",
+        "expected": "@babel/core@7.29.0",
+        "actual": "@babel/core@7.29.7",
+        "via": {
+          "parent": "babel-dead-code-elimination@1.0.12",
+          "dependency": "@babel/core",
+          "range": "^7.23.7"
+        }
+      },
+      {
+        "oldKey": "@babel/code-frame",
+        "expected": "@babel/code-frame@7.29.0",
+        "actual": "@babel/code-frame@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/code-frame",
+          "range": "^7.29.0"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-compilation-targets",
+        "expected": "@babel/helper-compilation-targets@7.28.6",
+        "actual": "@babel/helper-compilation-targets@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-compilation-targets",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/compat-data",
+        "expected": "@babel/compat-data@7.29.0",
+        "actual": "@babel/compat-data@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/compat-data",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-validator-option",
+        "expected": "@babel/helper-validator-option@7.27.1",
+        "actual": "@babel/helper-validator-option@7.29.7",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "@babel/helper-validator-option",
+          "range": "^7.27.1"
+        }
+      },
+      {
+        "oldKey": "browserslist",
+        "expected": "browserslist@4.28.1",
+        "actual": "browserslist@4.28.6",
+        "via": {
+          "parent": "@babel/helper-compilation-targets@7.28.6",
+          "dependency": "browserslist",
+          "range": "^4.24.0"
+        }
+      },
+      {
+        "oldKey": "baseline-browser-mapping",
+        "expected": "baseline-browser-mapping@2.9.19",
+        "actual": "baseline-browser-mapping@2.10.43",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "baseline-browser-mapping",
+          "range": "^2.9.0"
+        }
+      },
+      {
+        "oldKey": "caniuse-lite",
+        "expected": "caniuse-lite@1.0.30001770",
+        "actual": "caniuse-lite@1.0.30001805",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "caniuse-lite",
+          "range": "^1.0.30001759"
+        }
+      },
+      {
+        "oldKey": "electron-to-chromium",
+        "expected": "electron-to-chromium@1.5.286",
+        "actual": "electron-to-chromium@1.5.389",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "electron-to-chromium",
+          "range": "^1.5.263"
+        }
+      },
+      {
+        "oldKey": "node-releases",
+        "expected": "node-releases@2.0.27",
+        "actual": "node-releases@2.0.51",
+        "via": {
+          "parent": "browserslist@4.28.1",
+          "dependency": "node-releases",
+          "range": "^2.0.27"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-transforms",
+        "expected": "@babel/helper-module-transforms@7.28.6",
+        "actual": "@babel/helper-module-transforms@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helper-module-transforms",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-module-imports",
+        "expected": "@babel/helper-module-imports@7.28.6",
+        "actual": "@babel/helper-module-imports@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-transforms@7.28.6",
+          "dependency": "@babel/helper-module-imports",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/traverse",
+        "expected": "@babel/traverse@7.29.0",
+        "actual": "@babel/traverse@7.29.7",
+        "via": {
+          "parent": "@babel/helper-module-imports@7.28.6",
+          "dependency": "@babel/traverse",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helper-globals",
+        "expected": "@babel/helper-globals@7.28.0",
+        "actual": "@babel/helper-globals@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/helper-globals",
+          "range": "^7.28.0"
+        }
+      },
+      {
+        "oldKey": "@babel/template",
+        "expected": "@babel/template@7.28.6",
+        "actual": "@babel/template@7.29.7",
+        "via": {
+          "parent": "@babel/traverse@7.29.0",
+          "dependency": "@babel/template",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "@babel/helpers",
+        "expected": "@babel/helpers@7.28.6",
+        "actual": "@babel/helpers@7.29.7",
+        "via": {
+          "parent": "@babel/core@7.29.0",
+          "dependency": "@babel/helpers",
+          "range": "^7.28.6"
+        }
+      },
+      {
+        "oldKey": "diff",
+        "expected": "diff@8.0.3",
+        "actual": "diff@8.0.4",
+        "via": {
+          "parent": "@tanstack/router-utils@1.162.2",
+          "dependency": "diff",
+          "range": "^8.0.2"
+        }
+      },
+      {
+        "oldKey": "prettier",
+        "expected": "prettier@3.8.1",
+        "actual": "prettier@3.9.5",
+        "via": {
+          "parent": "@tanstack/router-generator@1.167.33",
+          "dependency": "prettier",
+          "range": "^3.5.0"
+        }
+      },
+      {
+        "oldKey": "@tanstack/router-generator/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/router-generator@1.167.33",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "@tanstack/router-plugin/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/router-plugin@1.168.35",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "srvx",
+        "expected": "srvx@0.11.13",
+        "actual": "srvx@0.11.22",
+        "via": {
+          "parent": "h3@2.0.1-rc.20",
+          "dependency": "srvx",
+          "range": "^0.11.13"
+        }
+      },
+      {
+        "oldKey": "exsolve",
+        "expected": "exsolve@1.0.8",
+        "actual": "exsolve@1.1.1",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "exsolve",
+          "range": "^1.0.7"
+        }
+      },
+      {
+        "oldKey": "ufo",
+        "expected": "ufo@1.6.3",
+        "actual": "ufo@1.6.4",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "ufo",
+          "range": "^1.5.4"
+        }
+      },
+      {
+        "oldKey": "vitefu",
+        "expected": "vitefu@1.1.1",
+        "actual": "vitefu@1.1.3",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "vitefu",
+          "range": "^1.1.1"
+        }
+      },
+      {
+        "oldKey": "@tanstack/start-plugin-core/zod",
+        "expected": "zod@4.4.3",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@tanstack/start-plugin-core@1.171.39",
+          "dependency": "zod",
+          "range": "^4.4.3"
+        }
+      },
+      {
+        "oldKey": "enhanced-resolve",
+        "expected": "enhanced-resolve@5.24.2",
+        "actual": "enhanced-resolve@5.24.3",
+        "via": {
+          "parent": "@tailwindcss/node@4.3.3",
+          "dependency": "enhanced-resolve",
+          "range": "^5.24.1"
+        }
+      },
+      {
+        "oldKey": "boxen/chalk",
+        "expected": "chalk@5.6.2",
+        "actual": "chalk@5.0.1",
+        "via": {
+          "parent": "boxen@7.0.0",
+          "dependency": "chalk",
+          "range": "^5.0.1"
+        }
+      },
+      {
+        "oldKey": "strip-ansi",
+        "expected": "strip-ansi@7.1.2",
+        "actual": "strip-ansi@7.2.0",
+        "via": {
+          "parent": "string-width@5.1.2",
+          "dependency": "strip-ansi",
+          "range": "^7.0.1"
+        }
+      },
+      {
+        "oldKey": "@dotenvx/dotenvx/picomatch",
+        "expected": "picomatch@4.0.3",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "@dotenvx/dotenvx@1.52.0",
+          "dependency": "picomatch",
+          "range": "^4.0.2"
+        }
+      },
+      {
+        "oldKey": "qs",
+        "expected": "qs@6.15.0",
+        "actual": "qs@6.15.3",
+        "via": {
+          "parent": "body-parser@2.2.2",
+          "dependency": "qs",
+          "range": "^6.14.1"
+        }
+      },
+      {
+        "oldKey": "side-channel",
+        "expected": "side-channel@1.1.0",
+        "actual": "side-channel@1.1.1",
+        "via": {
+          "parent": "qs@6.15.0",
+          "dependency": "side-channel",
+          "range": "^1.1.0"
+        }
+      },
+      {
+        "oldKey": "side-channel-list",
+        "expected": "side-channel-list@1.0.0",
+        "actual": "side-channel-list@1.0.1",
+        "via": {
+          "parent": "side-channel@1.1.0",
+          "dependency": "side-channel-list",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "zod",
+        "expected": "zod@3.25.76",
+        "actual": "zod@4.5.4",
+        "via": {
+          "parent": "@modelcontextprotocol/sdk@1.26.0",
+          "dependency": "zod",
+          "range": "^3.25 || ^4.0"
+        }
+      },
+      {
+        "oldKey": "fs-extra",
+        "expected": "fs-extra@11.3.3",
+        "actual": "fs-extra@11.3.6",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "fs-extra",
+          "range": "^11.3.1"
+        }
+      },
+      {
+        "oldKey": "jsonfile",
+        "expected": "jsonfile@6.2.0",
+        "actual": "jsonfile@6.2.1",
+        "via": {
+          "parent": "fs-extra@11.3.3",
+          "dependency": "jsonfile",
+          "range": "^6.0.1"
+        }
+      },
+      {
+        "oldKey": "get-east-asian-width",
+        "expected": "get-east-asian-width@1.4.0",
+        "actual": "get-east-asian-width@1.6.0",
+        "via": {
+          "parent": "string-width@7.2.0",
+          "dependency": "get-east-asian-width",
+          "range": "^1.0.0"
+        }
+      },
+      {
+        "oldKey": "postcss",
+        "expected": "postcss@8.5.17",
+        "actual": "postcss@8.5.28",
+        "via": {
+          "parent": "shadcn@4.20.1",
+          "dependency": "postcss",
+          "range": "^8.5.6"
+        }
+      },
+      {
+        "oldKey": "nanoid",
+        "expected": "nanoid@3.3.16",
+        "actual": "nanoid@3.3.18",
+        "via": {
+          "parent": "postcss@8.5.17",
+          "dependency": "nanoid",
+          "range": "^3.3.12"
+        }
+      },
+      {
+        "oldKey": "@ts-morph/common/minimatch",
+        "expected": "minimatch@10.2.0",
+        "actual": "minimatch@10.2.5",
+        "via": {
+          "parent": "@ts-morph/common@0.27.0",
+          "dependency": "minimatch",
+          "range": "^10.0.1"
+        }
+      },
+      {
+        "oldKey": "@ts-morph/common/minimatch/brace-expansion",
+        "expected": "brace-expansion@5.0.2",
+        "actual": "brace-expansion@5.0.7",
+        "via": {
+          "parent": "minimatch@10.2.0",
+          "dependency": "brace-expansion",
+          "range": "^5.0.2"
+        }
+      },
+      {
+        "oldKey": "@ts-morph/common/minimatch/brace-expansion/balanced-match",
+        "expected": "balanced-match@4.0.2",
+        "actual": "balanced-match@4.0.4",
+        "via": {
+          "parent": "brace-expansion@5.0.2",
+          "dependency": "balanced-match",
+          "range": "^4.0.2"
+        }
+      },
+      {
+        "oldKey": "@rollup/pluginutils/picomatch",
+        "expected": "picomatch@4.0.3",
+        "actual": "picomatch@4.0.5",
+        "via": {
+          "parent": "@rollup/pluginutils@5.3.0",
+          "dependency": "picomatch",
+          "range": "^4.0.2"
+        }
+      },
+      {
+        "oldKey": "sharp",
+        "expected": "sharp@0.35.3",
+        "actual": "sharp@0.35.4",
+        "via": {
+          "parent": "vite-imagetools@12.0.1",
+          "dependency": "sharp",
+          "range": "^0.35.3"
+        }
+      },
+      {
+        "oldKey": "@img/sharp-darwin-arm64",
+        "expected": "@img/sharp-darwin-arm64@0.35.3",
+        "actual": "@img/sharp-darwin-arm64@0.35.4",
+        "via": {
+          "parent": "sharp@0.35.3",
+          "dependency": "@img/sharp-darwin-arm64",
+          "range": "0.35.3"
+        }
+      },
+      {
+        "oldKey": "@img/sharp-libvips-darwin-arm64",
+        "expected": "@img/sharp-libvips-darwin-arm64@1.3.2",
+        "actual": "@img/sharp-libvips-darwin-arm64@1.3.3",
+        "via": {
+          "parent": "@img/sharp-darwin-arm64@0.35.3",
+          "dependency": "@img/sharp-libvips-darwin-arm64",
+          "range": "1.3.2"
+        }
+      }
+    ],
+    "unavailable": [
+      "@biomejs/cli-darwin-x64",
+      "@biomejs/cli-linux-arm64",
+      "@biomejs/cli-linux-arm64-musl",
+      "@biomejs/cli-linux-x64",
+      "@biomejs/cli-linux-x64-musl",
+      "@biomejs/cli-win32-arm64",
+      "@biomejs/cli-win32-x64",
+      "@img/sharp-darwin-x64",
+      "@img/sharp-freebsd-wasm32",
+      "@img/sharp-libvips-darwin-x64",
+      "@img/sharp-libvips-linux-arm",
+      "@img/sharp-libvips-linux-arm64",
+      "@img/sharp-libvips-linux-ppc64",
+      "@img/sharp-libvips-linux-riscv64",
+      "@img/sharp-libvips-linux-s390x",
+      "@img/sharp-libvips-linux-x64",
+      "@img/sharp-libvips-linuxmusl-arm64",
+      "@img/sharp-libvips-linuxmusl-x64",
+      "@img/sharp-linux-arm",
+      "@img/sharp-linux-arm64",
+      "@img/sharp-linux-ppc64",
+      "@img/sharp-linux-riscv64",
+      "@img/sharp-linux-s390x",
+      "@img/sharp-linux-x64",
+      "@img/sharp-linuxmusl-arm64",
+      "@img/sharp-linuxmusl-x64",
+      "@img/sharp-webcontainers-wasm32",
+      "@img/sharp-win32-arm64",
+      "@img/sharp-win32-ia32",
+      "@img/sharp-win32-x64",
+      "@rolldown/binding-android-arm-eabi",
+      "@rolldown/binding-android-arm64",
+      "@rolldown/binding-darwin-x64",
+      "@rolldown/binding-freebsd-x64",
+      "@rolldown/binding-linux-arm-gnueabihf",
+      "@rolldown/binding-linux-arm64-gnu",
+      "@rolldown/binding-linux-arm64-musl",
+      "@rolldown/binding-linux-ppc64-gnu",
+      "@rolldown/binding-linux-s390x-gnu",
+      "@rolldown/binding-linux-x64-gnu",
+      "@rolldown/binding-linux-x64-musl",
+      "@rolldown/binding-openharmony-arm64",
+      "@rolldown/binding-win32-arm64-msvc",
+      "@rolldown/binding-win32-x64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-android-arm64",
+      "@tailwindcss/node/lightningcss/lightningcss-darwin-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-freebsd-x64",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm-gnueabihf",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-arm64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-gnu",
+      "@tailwindcss/node/lightningcss/lightningcss-linux-x64-musl",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-arm64-msvc",
+      "@tailwindcss/node/lightningcss/lightningcss-win32-x64-msvc",
+      "@tailwindcss/oxide-android-arm64",
+      "@tailwindcss/oxide-darwin-x64",
+      "@tailwindcss/oxide-freebsd-x64",
+      "@tailwindcss/oxide-linux-arm-gnueabihf",
+      "@tailwindcss/oxide-linux-arm64-gnu",
+      "@tailwindcss/oxide-linux-arm64-musl",
+      "@tailwindcss/oxide-linux-x64-gnu",
+      "@tailwindcss/oxide-linux-x64-musl",
+      "@tailwindcss/oxide-wasm32-wasi",
+      "@tailwindcss/oxide-win32-arm64-msvc",
+      "@tailwindcss/oxide-win32-x64-msvc",
+      "@typescript/typescript-aix-ppc64",
+      "@typescript/typescript-darwin-x64",
+      "@typescript/typescript-freebsd-arm64",
+      "@typescript/typescript-freebsd-x64",
+      "@typescript/typescript-linux-arm",
+      "@typescript/typescript-linux-arm64",
+      "@typescript/typescript-linux-loong64",
+      "@typescript/typescript-linux-mips64el",
+      "@typescript/typescript-linux-ppc64",
+      "@typescript/typescript-linux-riscv64",
+      "@typescript/typescript-linux-s390x",
+      "@typescript/typescript-linux-x64",
+      "@typescript/typescript-netbsd-arm64",
+      "@typescript/typescript-netbsd-x64",
+      "@typescript/typescript-openbsd-arm64",
+      "@typescript/typescript-openbsd-x64",
+      "@typescript/typescript-sunos-x64",
+      "@typescript/typescript-win32-arm64",
+      "@typescript/typescript-win32-x64",
+      "jackspeak",
+      "lightningcss-android-arm64",
+      "lightningcss-darwin-x64",
+      "lightningcss-freebsd-x64",
+      "lightningcss-linux-arm-gnueabihf",
+      "lightningcss-linux-arm64-gnu",
+      "lightningcss-linux-arm64-musl",
+      "lightningcss-linux-x64-gnu",
+      "lightningcss-linux-x64-musl",
+      "lightningcss-win32-arm64-msvc",
+      "lightningcss-win32-x64-msvc"
+    ]
+  },
+  "carolyn-portfolio/infra": {
+    "checked": 32,
+    "diffs": [
+      {
+        "oldKey": "aws-cdk-lib/@aws-cdk/cloud-assembly-api",
+        "expected": "@aws-cdk/cloud-assembly-api@2.3.0",
+        "actual": "@aws-cdk/cloud-assembly-api@2.2.6",
+        "via": {
+          "parent": "aws-cdk-lib@2.268.0",
+          "dependency": "@aws-cdk/cloud-assembly-api",
+          "range": "^2.2.6"
+        }
+      },
+      {
+        "oldKey": "aws-cdk-lib/@aws-cdk/cloud-assembly-schema",
+        "expected": "@aws-cdk/cloud-assembly-schema@54.12.0",
+        "actual": "@aws-cdk/cloud-assembly-schema@54.22.0",
+        "via": {
+          "parent": "aws-cdk-lib@2.268.0",
+          "dependency": "@aws-cdk/cloud-assembly-schema",
+          "range": "^54.11.0"
+        }
+      },
+      {
+        "oldKey": "aws-cdk-lib/brace-expansion",
+        "expected": "brace-expansion@5.0.7",
+        "actual": "brace-expansion@5.0.9",
+        "via": {
+          "parent": "minimatch@10.2.5",
+          "dependency": "brace-expansion",
+          "range": "^5.0.5"
+        }
+      }
+    ],
+    "unavailable": [
+      "@typescript/typescript-aix-ppc64",
+      "@typescript/typescript-darwin-x64",
+      "@typescript/typescript-freebsd-arm64",
+      "@typescript/typescript-freebsd-x64",
+      "@typescript/typescript-linux-arm",
+      "@typescript/typescript-linux-arm64",
+      "@typescript/typescript-linux-loong64",
+      "@typescript/typescript-linux-mips64el",
+      "@typescript/typescript-linux-ppc64",
+      "@typescript/typescript-linux-riscv64",
+      "@typescript/typescript-linux-s390x",
+      "@typescript/typescript-linux-x64",
+      "@typescript/typescript-netbsd-arm64",
+      "@typescript/typescript-netbsd-x64",
+      "@typescript/typescript-openbsd-arm64",
+      "@typescript/typescript-openbsd-x64",
+      "@typescript/typescript-sunos-x64",
+      "@typescript/typescript-win32-arm64",
+      "@typescript/typescript-win32-x64",
+      "aws-cdk-lib/json-source-map"
+    ]
+  }
+}
