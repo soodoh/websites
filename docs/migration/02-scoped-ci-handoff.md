@@ -1,4 +1,4 @@
-# Phase 2 — local scope-aware CI handoff
+# Phase 2 — scope-aware CI handoff
 
 Status: full fresh-clone fixture validation passed at
 `304918f0e80fb16590fc510950769b7b9c5a1fdf`. Independent reviews found two edge-case
@@ -6,8 +6,15 @@ defects and test gaps; approved fixes passed targeted validation at
 `35855a4eedec5fd015553fbe4a218a01e100eb48`. Final independent review at
 `19c46286c071f832c8475fe914cd633370ff05e0` found no remaining issues; the parent accepts
 local implementation as complete. See `phase2-final-review.md` for final evidence.
-External GitHub acceptance is **pending and not authorized**. Local completion is not
-full phase-2 acceptance or phase-3 authority. See `02-execution-plan.md`.
+Publication is accepted as verified by explicit user attestation. Hosted main-push and
+manual baselines passed at `4a947b3fd724ddfde7e633342095d41aefcbd6d6`. Six scoped PR
+cases and real PR replacement/cancellation passed; downloaded scope and artifact evidence
+was independently checked. **Phase-2 external acceptance is complete with the user's
+explicit main-push evidence exception**: "main push behavior is accepted." No additional
+main-push experiment occurred or is required to reopen this acceptance. See
+`phase2-hosted-acceptance.md` for exact evidence and limitations. Required-check enforcement
+is a separate settings decision. Phase-3 documentation preparation is authorized;
+implementation, live inventory and production actions still require explicit scope.
 
 ## Baseline and authority
 
@@ -21,13 +28,23 @@ source main/status matched their recorded identities and were clean. No catch-up
 Sources were not installed, tested, fetched into, or modified. Linked target `.git` retained.
 No rewrite, squash, rebase, source pipeline change or resource identity change is authorized.
 
-No publication operation was performed. Local origin/main still records the original
-published initial `5b236ef3a519759c84ebd3504809d391baf085ea`; it is not normalized initial
-`2e6fb629522ff1ced21533bd572aff874bd2db90`. Publication requires a separately approved exact
-non-fast-forward strategy, freshly read expected live remote SHA, recovery evidence and
-fresh-clone checks. No push/force-push/remote tracking ref falsification is authorized.
-GitHub run URLs/results: none. Branch protection/rulesets/settings unchanged; approval
-required before adding only stable `CI gate`. Merge queue is unconfigured, not supported.
+Historical local-completion state: the agent had performed no publication, and local
+origin/main recorded original initial `5b236ef3a519759c84ebd3504809d391baf085ea`, not
+normalized initial `2e6fb629522ff1ced21533bd572aff874bd2db90`. There were no GitHub run
+URLs at that checkpoint. The user subsequently reported pushing local main and explicitly
+instructed: "Consider the publication verified." That attestation supersedes the pending
+publication status, without inventing an agent-executed publication operation, exact
+publication strategy or fresh-clone command results. No main push/force-push is authorized.
+
+After inspection, the user explicitly approved validation-only dispatches and temporary
+acceptance branches/PRs, retaining the no-main-merge/settings/production boundary. One
+manual baseline, six draft PRs and one non-force PR branch advancement were performed;
+all bounded cases passed. Local evidence edits remain authorized, not commits or pushes
+of the handoff. No source-repository change or AWS access is authorized.
+Main branch protection returns `404 Branch not protected`; the repository ruleset list
+(including parents) is empty. Requiring stable `CI gate` needs separate settings approval.
+Merge queue remains unconfigured and unsupported. Historical local-only JSON and review
+records retain their original checkpoint meaning; this handoff records the later evidence.
 
 ## Scope and freshness interface
 
@@ -190,7 +207,77 @@ shell deployment-helper tests and offline synth do not grant production access. 
 nested workflows remain inert production-contract baselines. No root Amplify buildspec
 or production entry point was authored. Sources remain sole production owners.
 
-After local implementation review, publication/execution approvals must precede full
-hosted baseline, safe app-only/shared/docs-only PR cases, remote/fresh-clone ancestry,
-scoped history and frozen-install checks. Record actual run URLs then; local dry runs
-cannot satisfy external acceptance. Stop before phase3/AWS/cutover/archival.
+## Hosted inspection checkpoint — first main baseline passed
+
+Publication: user-attested verified; no repeat publication/fresh-clone verification was
+performed in this inspection. Local HEAD and the hosted tested SHA are both
+`4a947b3fd724ddfde7e633342095d41aefcbd6d6`. This is new hosted evidence at that SHA,
+not a relabeling of the earlier full local fixture run or targeted correction run.
+
+- Run: [CI 34005716802, attempt 1](https://github.com/soodoh/websites/actions/runs/34005716802).
+  Event `push`, branch `main`, workflow `.github/workflows/ci.yml`; repository and head
+  repository both `soodoh/websites` (repository ID `1358469291`). All four referenced
+  reusable workflows resolve to the same tested SHA. Completed successfully at
+  `2026-09-06T02:14:39Z`.
+- All seven jobs passed: detect `101412387867`, root `101412387806`, Sarabeth
+  `101412436164`, Carolyn `101412436302`, Paul `101412436226`, DiLoreto `101412436207`,
+  and `CI gate` `101413075585`. Sarabeth/Carolyn ran on `ubuntu-24.04-arm`; all others
+  on `ubuntu-24.04`. Tool setup, complete app verification, scans and upload steps passed.
+- Downloaded scope artifact `9980853504`: base original initial
+  `5b236ef3a519759c84ebd3504809d391baf085ea`, head the tested SHA, diffBase null,
+  reason `uninspectable-range-run-all`, all four selected true. This proves hosted
+  fail-safe selection on initial non-ancestral publication, not ordinary scoped selection.
+- All seven downloaded artifact archive hashes matched GitHub's SHA-256 digests.
+  Both static artifacts passed the trusted current local `scripts/ci/artifact.py`
+  verifier against independently selected repository/site/workflow/SHA/run/attempt/event/ref
+  fields: schema, checksum sidecar, ZIP root/routes, content scan and embedded marker.
+  Both retain `releaseAuthorized=false`; this is not permission to deploy.
+- All four downloaded diagnostics passed content scans and fixture/non-deployable
+  classification checks. Sarabeth artifact `9980889956` includes
+  `test-results/container-deployment.json` whose actual commit equals the full tested SHA.
+  No SSR hosting bundle was uploaded.
+
+| Site | Static artifact ID | `site.zip` SHA-256 | `metadata.json` SHA-256 | GitHub expiry |
+| --- | --- | --- | --- | --- |
+| paul | `9980901998` | `adc7c02f407fbdaf9afcc6036f3ff94bf5e51e7e6927bd379004404ef5a28c71` | `3c21cd9cbf7c927957c7a8b5b1a9ed61f226706bc04a5ac145a06bdfab1fb085` | `2026-12-05T02:08:48Z` |
+| diloreto | `9980910221` | `3f63a963ca6ad73e7c9e40138f6e29072e4386a3ea1bfa71f300f09003973e04` | `315ef64198c89961bbdece162e33137957089e7c327714f9376cf99c8d17812c` | `2026-09-07T02:13:21Z` |
+
+Private scratch downloads, inspection summary and run log are retained at
+`/private/tmp/websites-phase2-hosted-zpsfp_jh/`, outside Git with restrictive permissions.
+The downloaded `run.log` SHA-256 is
+`185f7d4711d6973932e1ea157335cb2bfa300f072131c468cfe72af26ef72c4a`.
+Scratch availability is not durable release retention. No downloaded code was executed;
+only the trusted local artifact verifier/scanner inspected downloaded bytes.
+
+### Approved hosted acceptance follow-up and next decision
+
+After explicit user approval, the manual main baseline and six temporary PR cases passed.
+Actual attempt-1 run/PR URLs, original source heads versus synthetic PR merge checkout SHAs,
+app selection/skips, artifact checksums and authority are recorded in
+`phase2-hosted-acceptance.md`. The earlier read-only inspection is a historical checkpoint,
+not a claim that only one run or no PRs still exist.
+
+The initial Sarabeth PR run was automatically canceled by its replacement, and its
+`CI gate` failed as required. The replacement passed. The overlapping main-ref manual
+baseline finished successfully, demonstrating isolation from PR cancellation. This is
+NOT evidence of behavior under two actual interleaved main pushes, which were not authorized.
+
+All 25 artifacts from these seven successful runs were downloaded and checked; all six
+static artifacts passed trusted local identity/checksum/marker verification and remain
+`releaseAuthorized=false`. No fixture or PR artifact is authorized for production.
+Main remained `4a947b3fd724ddfde7e633342095d41aefcbd6d6`. Draft PRs #1–#6 and exact
+`ci/acceptance/20260906-890d1b/{sarabeth,carolyn,paul,diloreto,shared,docs}` branches are
+retained, unmerged; cleanup needs approval and fresh state checks.
+
+Final disposition: the user explicitly stated "main push behavior is accepted" and asked
+for fresh-session phase-3 preparation. The parent accepts phase 2 as complete with that
+specific evidence exception. No multiple-main-push experiment was executed; do not label
+it as tested or repeat it merely to clear a stale historical pending statement. This does
+not waive phase-3 release ordering, serialization, recovery or interleaving tests.
+
+Required `CI gate` enforcement and exact temporary PR/ref cleanup remain separately
+approval-gated operational decisions, not missing phase-2 acceptance. Production security
+review must still address the unprotected shared repository before credentialed releases.
+Read `03-execution-plan.md`, `03-production-cutover-handoff.md` and
+`03-fresh-session.md` for the next stage. Current authority is documentation preparation
+only; no phase-3 code, source freeze/catch-up, AWS inventory, cutover or archival is authorized.

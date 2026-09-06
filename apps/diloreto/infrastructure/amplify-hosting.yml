@@ -2,6 +2,21 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Static AWS Amplify Hosting, CloudFront delivery, DNS, and GitHub OIDC access for diloreto.com
 
 Parameters:
+  MonorepoReleasePrefixArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/releases-v2/soodoh-websites/diloreto/\\*$"
+    Description: Explicit approved existing retained-release prefix, not a new bucket.
+  MonorepoSubject:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^[^*?\\s]+$"
+    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
+  MonorepoStateObjectArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
+    Description: Optional approved existing per-site state object only; no bucket creation.
   EnableCustomDomain:
     Type: String
     Default: "false"
@@ -79,6 +94,9 @@ Rules:
         AssertDescription: EnablePaulRedirect must be true when EnablePaulDnsCutover is true.
 
 Conditions:
+  HasMonorepoReleases: !Not [!Equals [!Ref MonorepoReleasePrefixArn, ""]]
+  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
+  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
   CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
   CreateDnsRecords: !And
@@ -446,8 +464,30 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub "repo:${GitHubRepository}:environment:${GitHubEnvironment}"
+                token.actions.githubusercontent.com:sub:
+                  - !Sub "repo:${GitHubRepository}:environment:${GitHubEnvironment}"
+                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
+        - !If
+          - HasMonorepoReleases
+          - PolicyName: MonorepoRetainedBytes
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: [s3:GetObject, s3:PutObject]
+                  Resource: !Ref MonorepoReleasePrefixArn
+          - !Ref AWS::NoValue
+        - !If
+          - HasMonorepoState
+          - PolicyName: MonorepoReleaseState
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: [s3:GetObject, s3:PutObject]
+                  Resource: !Ref MonorepoStateObjectArn
+          - !Ref AWS::NoValue
         - PolicyName: PublishAmplifyArtifacts
           PolicyDocument:
             Version: "2012-10-17"
@@ -458,7 +498,13 @@ Resources:
                   - amplify:StartDeployment
                 Resource: !Sub "${AmplifyBranch.Arn}/deployments/*"
               - Effect: Allow
-                Action: amplify:GetJob
+                Action: amplify:GetApp
+                Resource: !GetAtt AmplifyApp.Arn
+              - Effect: Allow
+                Action: [amplify:GetBranch, amplify:ListJobs]
+                Resource: !GetAtt AmplifyBranch.Arn
+              - Effect: Allow
+                Action: [amplify:GetJob, amplify:StopJob]
                 Resource: !Sub "${AmplifyBranch.Arn}/jobs/*"
       Tags:
         - Key: Project

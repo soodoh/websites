@@ -8,8 +8,49 @@ Independent security/parity review matched all 13 jobs and 133 steps below to th
 normalized-import originals. Its mixed-case ZIP scanning finding and the separate
 scope/test review findings were corrected in `35855a4e`; see the handoff's review
 dispositions and targeted evidence. Final post-fix review passed with no remaining
-findings (`phase2-final-review.md`); GitHub acceptance remains pending.
-The historical responsibility/retention ledger is unchanged.
+findings (`phase2-final-review.md`). Hosted acceptance subsequently passed, with the
+user's explicit acceptance of the unexecuted multiple-main-push evidence limitation;
+see `phase2-hosted-acceptance.md` and `02-scoped-ci-handoff.md` for actual run URLs.
+The historical responsibility/retention ledger is unchanged. This phase-2 exception
+does not waive phase-3 release ordering/recovery tests or grant production authority.
+
+## Milestone-2 offline production-port map (not production acceptance)
+
+The exhaustive 13-job/133-step historical ledger below is unchanged. Each historical
+job's phase-3 responsibilities now map as follows; detailed retained semantics and
+unimplemented/live gates are in `site-release-ports.md`. All production jobs/calls are
+literal-false; independent exact-SHA/hosted/parity acceptance remains pending.
+
+| Historical job | Current authored coverage (all its historical steps remain obligations) |
+| --- | --- |
+| Sarabeth infrastructure / cloudformation | Root `infrastructure-sarabeth.yml`, all historical operations retained; explicit disabled legacy/preparation/switch inputs, nested app cwd, 230-minute shared noncanceling lock; selected branch/source/domain attestation and unchanged domain/DNS/Netlify failure recovery |
+| Sarabeth CI / validate-infrastructure | Existing root fixture chain, unchanged; manual fresh recovery repeats it |
+| Sarabeth CI / test | Existing provider/fixture/Playwright chain, unchanged; recovery same full chain |
+| Sarabeth CI / deploy | `_sarabeth-release.yml`, `ssr.py`, root buildspec: exact source/job/serving bundle, non-sending smoke, SSM only after smoke, Lighthouse mobile/desktop and 30-day scanned reports; no automatic rollback for Lighthouse failure; 120-minute lock |
+| Paul rollback / rollback | `restore-static.yml` → `_paul-release.yml` → allowlisted original retained bytes and full candidate/production verification, 120-minute shared lock; original identity and watermark kept separate |
+| Paul deploy / quality | Existing complete fixture/static/browser/Lighthouse chain; fresh main recovery repeats it |
+| Paul deploy / deploy | `_paul-release.yml` + `static.py`: candidate acceptance, identical ZIP promotion, durable versioned S3 bytes, exact marker, terminal cleanup, known terminal automatic restore, explicit manual restore, 90-day scanned diagnostics, 120-minute lock |
+| Carolyn / validate | Existing complete fixture/unit/auth/infra chain; fresh recovery repeats it |
+| Carolyn / playwright | Existing production-shaped canonical visual chain and 14-day diagnostics; recovery repeats it |
+| Carolyn / release-production-ref | `_carolyn-release.yml` + `ssr.py`: trusted main order recheck, pre-existing ref CAS and durable prior-ref intent; now SAME noncanceling job as deploy, bounded 5-minute push |
+| Carolyn / deploy-production | Same locked job, exact repository build/job/serving bundle and trusted deployed Playwright; no guessed legacy rollback; combined 40-minute job budget replaces the old separate 5+35-minute jobs, 14-day scanned diagnostics |
+| DiLoreto / validate | Existing genealogy/static/Playwright chain; `redeploy-diloreto.yml` separately resolves authorized modern main-ancestral immutable selector, recovery main-only; new static v2 artifact 1 day, diagnostics 7 days |
+| DiLoreto / deploy | `_diloreto-release.yml` + `static.py`, root trusted harness install/nested cwd, origin/edge exact bytes/routes/404/cache/security/assets and browser assertions, 25-minute shared lock; selected-ref code never receives deployment credentials |
+
+Recovery review corrections add original-format DiLoreto capture/roundtrip readers, exact
+pre-assumption OIDC observations, terminal-state cleanup faults, explicit Sarabeth switch
+parameter/attestation fixtures, atomic lifecycle receipts and independent terminal queue
+notices. Full chains and independent acceptance remain pending; see the current handoff.
+
+Fixture tests cover actual CLI argv (including SSM boolean switches), ETag/owner/encryption
+CAS and claim/job/finish fault injection, ambiguous upload/start rollback suppression,
+post-candidate freshness rejection, legacy-prefix/restore/watermark contracts, SSR
+claim/ref/job/attestation/SSM order and wrong bundle/job/persistence failure, production
+shell build wrapper account/branch/fixture/Gitless denials, and conservative queue notices.
+Original Carolyn workflow/IaC and Sarabeth source/redirect/provider/domain assertions
+continue to pass unchanged. These are not static-only mocks relabeled as SSR proof:
+actual repository-connected builds, served smoke, known-good capture, CMS races and
+legacy restoration drills are still separate unexecuted production gates.
 
 ## Current validation coverage
 
@@ -57,7 +98,9 @@ Carolyn's `tests/unit/deployment-workflow.unit.ts` keeps legacy production owner
 account, SHA and OIDC assertions; its fixture CI assertion now reads the active root
 reusable workflow through import-meta repository-relative paths. Both Docker contexts
 include root `.github` for those tests, never `.git`. Root `scripts/ci/workflows.test.mjs`
-checks all active workflows, tools, privileges, paths, gate and cancellation contracts.
+checks all five CI workflows, tools, privileges, paths, gate and cancellation contracts.
+`release-workflows.test.mjs` separately enumerates every new gated production workflow,
+its publication lock, protected critical section, trusted harness and retained IaC seams.
 DiLoreto legacy SC2329 has a narrow documented trap-function suppression only; original
 trap bodies and all origin/edge assertions remain. Root actionlint now checks it too.
 

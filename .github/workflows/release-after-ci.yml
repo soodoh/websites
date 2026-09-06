@@ -1,0 +1,57 @@
+name: Releases after trusted CI
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  paul:
+    if: ${{ false }}
+    uses: ./.github/workflows/_paul-release.yml
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+  diloreto:
+    if: ${{ false }}
+    uses: ./.github/workflows/_diloreto-release.yml
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+  carolyn:
+    if: ${{ false }}
+    uses: ./.github/workflows/_carolyn-release.yml
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+  sarabeth:
+    if: ${{ false }}
+    uses: ./.github/workflows/_sarabeth-release.yml
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+  reconcile:
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+      - name: Inventory possibly stranded release work without attributing unknown site inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/release/reconcile.py "$(date -u -d '7 days ago' +%F)" > release-reconciliation.json
+      - name: Publish exact recovery actions even if inventory is incomplete
+        if: always()
+        run: |
+          test -f release-reconciliation.json
+          cat release-reconciliation.json >> "$GITHUB_STEP_SUMMARY"
