@@ -15,7 +15,7 @@ async function close(server: Server): Promise<void> {
 	);
 }
 
-for (const path of ["/control", "/direct", "/multihop"]) {
+for (const path of ["/control", "/direct", "/multihop", "/empty"]) {
 	test(`candidate policy confines real browser navigation ${path} to its first nonredirect response`, async ({
 		browser,
 	}) => {
@@ -34,9 +34,11 @@ for (const path of ["/control", "/direct", "/multihop"]) {
 			} else {
 				response.writeHead(request.url === "/multihop" ? 307 : 302, {
 					location:
-						request.url === "/multihop"
-							? "/hop"
-							: `${destinationOrigin}/escaped`,
+						request.url === "/empty"
+							? ""
+							: request.url === "/multihop"
+								? "/hop"
+								: `${destinationOrigin}/escaped`,
 				});
 				response.end();
 			}
