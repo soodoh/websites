@@ -1,6 +1,96 @@
-# Phase 3 handoff — SSR candidate correction; offline acceptance incomplete
+# Phase 3 handoff — Sarabeth correction reviewed/tested; Carolyn offline incomplete
 
-## Final-review recovery correction — current checkpoint
+## Bounded recovery disposition — 2026-09-06
+
+**Full tested code + reviewed correction SHA:**
+`534300664a683712f5c2cd73776fef3c6bb2fb54`
+(`fix(ci): separate SSR candidate and production acceptance`), a forward child of
+`db90a3f551939bb16b033fd01da22807be7fdba6`. The correction has 15 paths,
+690 insertions / 63 deletions. Normal Lefthook serial lint and scoped commitlint passed
+with approved environment-only identity; no hook/config bypass or history rewrite.
+This following **docs-only evidence commit is not a new full-tested SHA**; resolve its
+identity using `git log -1 --format=%H -- docs/migration/03-production-cutover-handoff.md`.
+The final runtime-authoritative `recovery/final-handoff.md` report records the final HEAD.
+
+Independent parent source review at that exact code SHA found no additional Sarabeth
+blocker and closed its candidate/production P1 subject to exact-SHA fixture validation,
+which has now passed. Review:
+`/private/tmp/websites-phase3-ports/report-recovery/parent-ssr-review-53430066.md`, SHA-256
+`bf1d5f2ef43f2e640a5b1d9e0f9448c88aff5c7b16f5e06105cff974578d1544`.
+It inspected the committed implementation, wiring, IAM and fixtures; it did NOT execute
+another test chain or any hosted/production request. Cross-step CLI ETag persistence is
+source-inspected, not claimed as hosted coverage. Historical `final-parity.md` **BLOCK**
+is preserved (SHA-256 `222a5a73177198fb995e230a7887b334e6f05846f4e32849ce2a47a2ff4e0f0a`);
+`final-security-order.md` remains its earlier bounded OK-with-notes review
+(SHA-256 `a774b935e347901ee543013e7b1877465fe81a09734ebbe52ff6d8c475b3bd88`).
+
+**All-four offline completion remains BLOCKED for Carolyn's unimplemented first-cutover
+candidate/ref/build/IaC/production-promotion seam. All four sites are NOT migrated.**
+This is a bounded reviewed/tested Sarabeth correction, not complete phase-3 acceptance,
+publication authority, a release candidate, or production readiness. Do not initialize
+`ssrProductionAccepted`, repurpose URLs, or invent resources to bypass Carolyn's denial.
+
+### Fresh independent TARGET validation
+
+New unique evidence directory under the recovery path recorded below:
+`candidate-full.izac7L/`; independent checkout is its `target/`. Commands ran with
+`env -i`, freshly empty scratch HOME and explicit safe pinned paths in
+`environment-v2.sh`. Install only at this independent TARGET root, cloned locally with
+`git clone --no-hardlinks --single-branch --branch main`; no alternates, copied ignored
+configuration/dependencies or source checkout access. `bun install --frozen-lockfile`
+installed 1,000 packages; authoritative isolated lock is unchanged.
+
+| Actual command / gate at the exact code SHA | Result |
+| --- | --- |
+| `bun run ci:verify` | PASS 4/4, zero cached, concurrency 1; 12m36.55s. Root: 30 workspace / 433 assertions; 56 CI Bun / 878 assertions; six CI Python and 40 release Python tests; actionlint, ShellCheck and syntax gates. |
+| `diloreto` full chain | PASS 13 genealogy, 37 browser, one unchanged viewport skip; types/static/output/cfn-lint. |
+| `paul` full chain | PASS 56 browser, four unchanged viewport skips; three local Lighthouse runs each 0.98 performance / 1.00 accessibility, best practices and SEO; types/static/workflow/shell/cfn-lint. |
+| `sarabeth` full chain | PASS 197 Playwright; seven provenance tests on host and container; provider/fixture/Amplify/waiter/types/workflow/cfn-lint. Actual successful Gitless container marker equals full tested SHA. |
+| `carolyn` full fixture chain (NOT candidate integration) | PASS 117 unit / 1,084 assertions; 12 infra / 50 assertions; three fixture + three hermetic production artifact tests; 92 visual; identical original 19-resource synth. |
+| `python3 history-checks-v2.py <target>`; `bun docs/migration/scripts/lint-history.mjs <target> <report>` | PASS both unchanged map hashes/bijections (1,109 and 152), all mapped normalized ancestors, four pristine imports and baseline ancestry; 1,125 commit messages, zero errors, six preserved footer warnings. |
+| `bun docs/migration/scripts/audit-installed-ranges.ts <target> <report> --full-graph` | PASS six roots, zero missing/range failures; exact accepted installed graph and unchanged lock/dependency/toolchain/snapshot identities. |
+| `python3 scripts/ci/artifact.py diagnostics <site>` for each site, serially | PASS four fixture/nondeployable scans; no hosted upload or static release packaging/provenance is claimed. |
+
+Resolved tools: Bun1.4.0 / Node24.20.0 / Turbo2.10.12 / Python3.14.6 at the actual
+`/opt/homebrew/Cellar/python@3.14/3.14.6/bin/python3`, Go1.27.1, ShellCheck0.11.0,
+uv0.12.9, actionlint1.7.7, cfn-lint1.42.0/1.53.0 and Chrome152.0.7977.77.
+All actual canonical images report linux/arm64, Playwright1.62.1/Bun1.4.0/Node24.20.0.
+No screenshot, threshold, skip, fixture-only IPv4 policy or deployed identity changed.
+Mocked SES failures remain injected tests; no email or live production smoke was sent.
+
+Colima's Docker data disk initially had 6,935,476 KiB available; final 6,940,360 KiB.
+Only one app/image ran at a time. Exactly 34 initially absent, non-FROM/non-cache,
+build-log-proven images were removed after fresh no-container-reference checks using
+`docker image rm --no-prune` without force. Existing exact-owned-container traps remain.
+Pre/post image ID/tag sets and container ID/image/name/state/other stable fields match.
+**Raw docker-ps JSON is NOT byte-identical:** mount-list order and one existing service's
+relative age/uptime/health text varied. No unrelated container operation appears in the
+recorder; this is not an assertion that independently running services never restarted.
+No old image/volume/daemon/source resource was modified.
+
+Retained failures: the initial targeted worktree test failed on a preexisting MagicMock
+rejecting the newly added `assert_owned` attribute; `spec=State` fixed the fixture setup,
+then all targeted gates passed (logs `candidate-checks.P087VM/`). The initial evidence
+collector overrequired raw Docker snapshot equality; its failed script/log are retained.
+The corrected collector sorts mount lists and excludes only dynamic Status/RunningFor,
+while comparing all other fields. The full canonical run had **no failed attempt**.
+No production adapter, credential read, live inventory, publication or production gate ran.
+
+| Completed evidence file | SHA-256 |
+| --- | --- |
+| `candidate-full.izac7L/validation-evidence.json` — 59 completed-file digests checked | `5241fa1f5d91dce6381c0d8683e54a7dc691ca120a2b620ab832bf320c6f1d22` |
+| `candidate-full.izac7L/root-ci-v2.log` | `bfdf6c9f5bed7847e217939ce9a614bb1071e493529a081e7a6778c650fd67b6` |
+| `candidate-full.izac7L/resolved-tools.log` | `a81c7154e2caf192fb13905b70fa8ddd0fdc35193e31e00c8b14232c523fbd16` |
+| `candidate-full.izac7L/history.log` | `57340b9fdf41bda20536ed9a3adf572a27dbf33b441aeee43e251be0aa1ac4f5` |
+| `candidate-full.izac7L/post-suite-checks.log` | `8ed788925c1043553333d7d2052dd529ad2bae7fe153ce978be25c721cf9454d` |
+
+Original rejected/corrected runner reports retain their exact recorded hashes; no older
+runner output was overwritten. The authority/remaining-work section below and per-site
+ledger distinguish approved offline follow-up from live access. Next safe step is the
+explicit Carolyn isolation/promotion architecture decision and bounded offline authoring,
+not inventory or activation. Phase-2 acceptance/exceptions remain accepted, not reopened.
+
+## Final-review recovery correction — authoring checkpoint (superseded validation status)
 
 Final independent reports at the recovery output directory below disagree only on
 complete offline parity: `final-security-order.md` is OK with notes, while

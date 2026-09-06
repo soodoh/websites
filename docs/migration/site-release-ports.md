@@ -1,4 +1,4 @@
-# Phase 3 offline site ports — candidate correction; acceptance incomplete
+# Phase 3 offline site ports — Sarabeth reviewed/tested; Carolyn incomplete
 
 ## Current final-review disposition and per-site ledger
 
@@ -6,15 +6,29 @@
 `55ea42958f897aebd442c28b9741360c0f456656` / docs-only
 `db90a3f551939bb16b033fd01da22807be7fdba6`. `final-parity.md` BLOCKED complete
 port acceptance because SSR candidate acceptance depended on production acceptance.
-The following approved correction is authoring evidence, NOT independent acceptance;
-see `03-production-cutover-handoff.md` for full report paths/commands/current SHAs.
+The forward correction at `534300664a683712f5c2cd73776fef3c6bb2fb54` now passed
+fresh independent-TARGET root frozen install and serial `bun run ci:verify`: 4/4,
+zero cached, 12m36.55s, root 30 workspace/433 assertions, 56 CI Bun/878 assertions,
+six CI Python and 40 release Python fixtures. Parent independent source review found
+no additional Sarabeth blocker and closed its P1 subject to this now-passing validation.
+This is NOT all-four offline acceptance or hosted/production evidence. See
+`03-production-cutover-handoff.md` for commands, tool identities, retained failures and
+source-review limits; the following docs-only HEAD is not a newly full-tested SHA.
+
+Parent source review: `/private/tmp/websites-phase3-ports/report-recovery/parent-ssr-review-53430066.md`,
+SHA-256 `bf1d5f2ef43f2e640a5b1d9e0f9448c88aff5c7b16f5e06105cff974578d1544`.
+Fresh evidence: `recovery/candidate-full.izac7L/validation-evidence.json`, SHA-256
+`5241fa1f5d91dce6381c0d8683e54a7dc691ca120a2b620ab832bf320c6f1d22` (full managed parent
+path in handoff). Actual successful Sarabeth Gitless fixture marker matches full code SHA;
+this is not hosted `__release.json` or actual candidate evidence. Historical review BLOCK
+and the malformed runner-report distinction are preserved.
 
 | Site | Offline state and concrete remaining work | Production state |
 | --- | --- | --- |
-| paul | Previously full-tested; final reviewers cleared prior parity/security findings. Shared-state correction still needs fresh validation/review. | NOT migrated; no live legacy capture/access/candidate/restore proof, source remains owner. |
-| diloreto | Previously full-tested; original-format capture/roundtrip and cleanup/receipt findings cleared. Shared-state correction still needs fresh validation/review. | NOT migrated; original IDs/manifest pin/retained bytes/origin-edge proof unknown, source remains owner. |
-| carolyn | Routine release authored but **first-cutover candidate seam INCOMPLETE**, now explicitly fail-closed. Need approved isolation architecture, then nullable config/optional owning-CDK branch/ref/build policy and integrated candidate/production fixtures. Do not describe this as merely unknown IDs. | NOT migrated; no candidate resource is selected/provisioned, connection/CMS/writer-drain/production gates remain closed. |
-| sarabeth | Candidate/switch separation correction authored; integrated real-state external-boundary fixtures added. Fresh exact-SHA validation and independent post-correction review required. | NOT migrated; candidateEnabled/switchEnabled false, all literal gates/runtime publication lock intact, no candidate/domain/LKG/webhook operation executed. |
+| paul | Full chain freshly passed at exact correction SHA: 56 browser/four unchanged skips, three local Lighthouse runs at 0.98/1/1/1. Prior reviewers cleared site findings; shared correction source reviewed. | NOT migrated; no live legacy capture/access/candidate/restore proof, source remains owner. |
+| diloreto | Full chain freshly passed: 13 genealogy, 37 browser/one unchanged skip. Prior original-format recovery/cleanup/receipt findings cleared; shared correction source reviewed. | NOT migrated; original IDs/manifest pin/retained bytes/origin-edge proof unknown, source remains owner. |
+| carolyn | Full fixture chain passed (117 unit, 12 infra, three+three artifact, 92 visual), but **first-cutover candidate seam INCOMPLETE**, explicitly fail-closed. Need approved isolation architecture, then nullable config/optional owning-CDK branch/ref/build policy and integrated candidate/production fixtures. Do not describe this as merely unknown IDs. | NOT migrated; no candidate resource is selected/provisioned, connection/CMS/writer-drain/production gates remain closed. |
+| sarabeth | Candidate/switch separation P1 closed by independent parent source review and exact-SHA fixture chain (197 Playwright plus seven host/container provenance). Integrated external-boundary tests pass; not hosted multi-step evidence. | NOT migrated; candidateEnabled/switchEnabled false, all literal gates/runtime publication lock intact, no candidate/domain/LKG/webhook operation executed. |
 
 ### Corrected candidate/switch protocol (supersedes historical implementation descriptions)
 
@@ -40,7 +54,9 @@ Ambiguous cloud/CAS errors leave intent; a failure after LKG but before final CA
 requires SSM/S3/serving reconciliation, not an assertion that old SSM remains. No monorepo
 failure runs unconditional Netlify rollback; legacy operation retains its original bodies.
 Optional bootstrap grants now include exact supplied-state CAS, branch-scoped ListJobs and
-exact legacy LKG write, not resource creation or wildcard new permissions. KMS/retention and
+exact legacy LKG write; candidate observation adds only conditionally enabled existing-app
+sarabethbelon.com GetDomainAssociation in role and boundary, not resource creation or
+wildcard/unconditional default permissions. KMS/retention and
 real identities remain uncollected. Candidate/switch fixture success never proves hosted
 jobs, actual production serving, real rollback readiness or complete offline Carolyn parity.
 
