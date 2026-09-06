@@ -3,9 +3,11 @@
 Status: full fresh-clone fixture validation passed at
 `304918f0e80fb16590fc510950769b7b9c5a1fdf`. Independent reviews found two edge-case
 defects and test gaps; approved fixes passed targeted validation at
-`35855a4eedec5fd015553fbe4a218a01e100eb48`. Final post-fix independent review remains
-pending. External GitHub acceptance is **pending and not authorized**. This is not
-phase-2 acceptance or phase-3 authority. See `02-execution-plan.md` for the full contract.
+`35855a4eedec5fd015553fbe4a218a01e100eb48`. Final independent review at
+`19c46286c071f832c8475fe914cd633370ff05e0` found no remaining issues; the parent accepts
+local implementation as complete. See `phase2-final-review.md` for final evidence.
+External GitHub acceptance is **pending and not authorized**. Local completion is not
+full phase-2 acceptance or phase-3 authority. See `02-execution-plan.md`.
 
 ## Baseline and authority
 
@@ -175,7 +177,9 @@ screenshot, deployment identity, source-repository or Docker resource changes oc
 in this follow-up. A following documentation-only scoped commit records the review
 dispositions; identify it with
 `git log -1 --format=%H -- docs/migration/phase2-local-validation.json`.
-Final review and parent acceptance of these fixes remain pending.
+Final review and parent local acceptance passed; see `phase2-final-review.md`.
+The final documentation-only commit records acceptance, not a new fixture run;
+resolve it with `git log -1 --format=%H -- docs/migration/phase2-final-review.md`.
 
 ## Production-disabled evidence and next gate
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "Full fixture validation passed at testedCommit; approved review fixes passed targeted validation at reviewFixes.testedCommit; final independent review and GitHub acceptance pending",
+  "status": "Local implementation accepted after full fixture validation, targeted review fixes and final independent review; GitHub acceptance pending",
   "testedCommit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
   "baseline": "b08ca2c3b4599653ff15be73baabb8815a6699fd",
   "checkout": "/tmp/websites-phase2/checkout",
@@ -274,7 +274,7 @@
   "residuals": [
     "First full run failed only on a scratch launcher CHROME_PATH typo; corrected complete rerun passed.",
     "Byte-path test first used a macOS-incompatible filename fixture; fixed forward with Git-index plumbing; final tests passed.",
-    "GitHub hosted runner acceptance and final post-fix independent review pending."
+    "GitHub hosted runner acceptance remains pending; final post-fix independent review passed."
   ],
   "reviewFixes": {
     "baseline": "281635d2f2cd7e31ff33cdbdb63972a38253dbfe",
@@ -376,7 +376,7 @@
     "dockerCommandsExecuted": false,
     "newInstallExecuted": false,
     "noStagedFilesAtTestedCommit": true,
-    "finalIndependentReview": "pending",
+    "finalIndependentReview": "Passed at 19c46286c071f832c8475fe914cd633370ff05e0; no remaining findings; phase2-final-review.md",
     "externalAcceptance": "pending; no publication/GitHub execution/settings/AWS/deployment/source mutation authorized or performed"
   }
 }
