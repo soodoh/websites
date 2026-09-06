@@ -1,4 +1,48 @@
-# Phase 3 offline site ports — full fixtures passed, not activated or accepted
+# Phase 3 offline site ports — candidate correction; acceptance incomplete
+
+## Current final-review disposition and per-site ledger
+
+`final-security-order.md` found no remaining blocker at tested
+`55ea42958f897aebd442c28b9741360c0f456656` / docs-only
+`db90a3f551939bb16b033fd01da22807be7fdba6`. `final-parity.md` BLOCKED complete
+port acceptance because SSR candidate acceptance depended on production acceptance.
+The following approved correction is authoring evidence, NOT independent acceptance;
+see `03-production-cutover-handoff.md` for full report paths/commands/current SHAs.
+
+| Site | Offline state and concrete remaining work | Production state |
+| --- | --- | --- |
+| paul | Previously full-tested; final reviewers cleared prior parity/security findings. Shared-state correction still needs fresh validation/review. | NOT migrated; no live legacy capture/access/candidate/restore proof, source remains owner. |
+| diloreto | Previously full-tested; original-format capture/roundtrip and cleanup/receipt findings cleared. Shared-state correction still needs fresh validation/review. | NOT migrated; original IDs/manifest pin/retained bytes/origin-edge proof unknown, source remains owner. |
+| carolyn | Routine release authored but **first-cutover candidate seam INCOMPLETE**, now explicitly fail-closed. Need approved isolation architecture, then nullable config/optional owning-CDK branch/ref/build policy and integrated candidate/production fixtures. Do not describe this as merely unknown IDs. | NOT migrated; no candidate resource is selected/provisioned, connection/CMS/writer-drain/production gates remain closed. |
+| sarabeth | Candidate/switch separation correction authored; integrated real-state external-boundary fixtures added. Fresh exact-SHA validation and independent post-correction review required. | NOT migrated; candidateEnabled/switchEnabled false, all literal gates/runtime publication lock intact, no candidate/domain/LKG/webhook operation executed. |
+
+### Corrected candidate/switch protocol (supersedes historical implementation descriptions)
+
+Candidate uses the prepared `sarabeth-production` default domain, not productionUrl.
+The separately authorized operation requires fresh selected-SHA validation and leaves
+production state/SSM unchanged. After exact source/job/bundle + non-sending smoke and
+mobile/desktop Lighthouse, `acceptedCandidate` is persisted via existing state-owner/ETag
+CAS, with invocation/jobs, hosting bindings, previous production/domain recovery and the
+acceptance generation. It is not a production currentRelease or production watermark.
+The existing RELEASE versus WEB_HOOK source verifier and CMS attestation remain unchanged.
+
+Switch requires separate confirmations and false-by-default switchEnabled, unchanged
+candidate generation/hosting/production baseline, re-observed provenance/scope/source/job
+and no active/intervening branch writer. It claims `switch` intent before mutation.
+Workflow steps carry an exact private ETag checkpoint; differing persisted state stops,
+never rebases. Each domain/DNS mutation rechecks ownership/freshness. Domain/source/marker,
+canonical redirects and production smoke precede SSM; explicitly opted-in CMS retarget
+runs only afterward. Final CAS records production and `ssrProductionAccepted`, retains
+`lastSsrCutover` with candidate/previous recovery, then clears intent. Routine SSR release
+cannot bootstrap either SSR site by setting productionUrl to a candidate URL.
+
+Ambiguous cloud/CAS errors leave intent; a failure after LKG but before final CAS explicitly
+requires SSM/S3/serving reconciliation, not an assertion that old SSM remains. No monorepo
+failure runs unconditional Netlify rollback; legacy operation retains its original bodies.
+Optional bootstrap grants now include exact supplied-state CAS, branch-scoped ListJobs and
+exact legacy LKG write, not resource creation or wildcard new permissions. KMS/retention and
+real identities remain uncollected. Candidate/switch fixture success never proves hosted
+jobs, actual production serving, real rollback readiness or complete offline Carolyn parity.
 
 ## Recovery full-fixture ledger — 2026-09-06
 

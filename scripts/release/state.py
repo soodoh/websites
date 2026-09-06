@@ -93,6 +93,34 @@ class State:
             raise StateOwnershipError('Ambiguous state write; reconcile before another mutation')
         self.value, self.etag = copy.deepcopy(proposed), result['ETag']
 
+    def assert_owned(self):
+        # Observe without adopting a newer ETag. A stale owner can never rebase.
+        observed = State(self.aws, self.config, self.site)
+        observed.read()
+        if observed.etag != self.etag or observed.value != self.value:
+            raise StateOwnershipError('State ownership changed; STOP and reconcile')
+
+    def checkpoint(self, phase):
+        self.assert_owned()
+        proposed = copy.deepcopy(self.value)
+        require(proposed['intent'] is not None, 'Missing owned intent')
+        proposed['generation'] += 1
+        proposed['intent']['phase'] = phase
+        self.write(proposed)
+
+    def finish_candidate(self, release, domain, hosting):
+        from receipt import lifecycle_receipt
+        self.assert_owned()
+        proposed = copy.deepcopy(self.value)
+        require(proposed['intent']['operation'] == 'candidate', 'Not candidate intent')
+        proposed['generation'] += 1
+        proposed['acceptedCandidate'] = dict(
+            release=release, domain=domain, hosting=hosting, generation=proposed['generation'],
+            previousProduction={key: copy.deepcopy(proposed.get(key)) for key in ('currentRelease', 'highWatermark', 'lastLifecycleReceipt', 'ssrProductionAccepted')},
+            receipt=lifecycle_receipt(self.site, proposed['intent'], release, 'accepted'))
+        proposed['intent'] = None
+        self.write(proposed)
+
     def claim(self, release, operation, invocation, baseline=None):
         require(self.value is not None and self.value['intent'] is None, 'Unresolved release intent; reconcile active jobs and serving bytes first')
         proposed = copy.deepcopy(self.value)
@@ -107,12 +135,16 @@ class State:
         proposed['intent']['jobs'].append(dict(branch=branch, jobId=job_id))
         self.write(proposed)
 
-    def finish(self, current, high_watermark, outcome='accepted'):
+    def finish(self, current, high_watermark, outcome='accepted', ssr_cutover=False):
         from receipt import lifecycle_receipt
         proposed = copy.deepcopy(self.value)
         require(proposed['intent'] is not None, 'Missing owned intent')
         # Receipt and serving state commit in the SAME CAS that clears intent. A lost
         # CAS never fabricates completion; unresolved jobs remain in the prior intent.
         proposed['lastLifecycleReceipt'] = lifecycle_receipt(self.site, proposed['intent'], current, outcome)
+        if ssr_cutover:
+            require(proposed['intent']['operation'] == 'switch' and proposed['intent'].get('phase') == 'lkg-written', 'Unverified SSR switch')
+            proposed['lastSsrCutover'] = proposed.pop('acceptedCandidate')
+            proposed['ssrProductionAccepted'] = True
         proposed.update(currentRelease=current, highWatermark=high_watermark, intent=None, generation=proposed['generation'] + 1)
         self.write(proposed)

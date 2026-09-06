@@ -4,14 +4,15 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 import ssr
-from state import StateOwnershipError
+from state import State, StateOwnershipError
 
 
 class SsrTests(unittest.TestCase):
     def run_release(self, site, bad_commit=False, bad_marker=False, fail_finish=False):
         selected = dict(site=site, repository='soodoh/websites', commit='b' * 40, runId='10', runAttempt='2', workflow='.github/workflows/ci.yml')
         config = dict(appId='dfixture', branch='sarabeth-production' if site == 'sarabeth' else 'amplify-production', productionUrl='https://fixture.invalid')
-        state = MagicMock()
+        state = MagicMock(spec=State)
+        state.value = dict(ssrProductionAccepted=True, currentRelease=dict(repository='soodoh/websites'))
         log = []
         state.claim.side_effect = lambda *a, **kw: log.append('claim')
         state.job.side_effect = lambda *a: log.append('job')

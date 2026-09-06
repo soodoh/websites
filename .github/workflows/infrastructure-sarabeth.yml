@@ -80,7 +80,20 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.workflow_sha }}
+          fetch-depth: 0
           persist-credentials: false
+
+      - name: Set up trusted Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - name: Set up trusted Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - name: Install trusted root smoke tools before credentials
+        working-directory: .
+        run: bun install --frozen-lockfile --ignore-scripts
 
       - name: Fail closed before infrastructure credentials
         env:
@@ -132,10 +145,10 @@ jobs:
 
       - name: Verify selected monorepo candidate before infrastructure mutation
         if: inputs.operation == 'switch-monorepo'
-        run: python3 ../../scripts/release/sarabeth_transition.py candidate
+        run: python3 ../../scripts/release/sarabeth_transition.py begin
 
       - name: Apply hosting stack
-        if: inputs.rollback_to_netlify == false
+        if: inputs.rollback_to_netlify == false && inputs.operation != 'switch-monorepo'
         timeout-minutes: 30
         run: |
           mapfile -t hosting_parameters < "$RUNNER_TEMP/sarabeth-hosting-parameters"
@@ -199,6 +212,7 @@ jobs:
           fi
 
       - name: Preserve core stacks from accidental deletion
+        if: inputs.operation != 'switch-monorepo'
         run: |
           for stack in sarabeth-amplify-hosting sarabeth-amplify-dns; do
             aws cloudformation update-termination-protection \
@@ -214,7 +228,7 @@ jobs:
         run: |
           mapfile -t domain_parameters < "$RUNNER_TEMP/sarabeth-domain-parameters"
           if [[ "$MONOREPO_OPERATION" == switch-monorepo ]]; then
-            python3 ../../scripts/release/sarabeth_transition.py candidate
+            python3 ../../scripts/release/sarabeth_transition.py guard
           fi
           aws cloudformation deploy \
             --stack-name sarabeth-amplify-domain \
@@ -253,6 +267,9 @@ jobs:
             exit 1
           fi
 
+          if [[ "$MONOREPO_OPERATION" == switch-monorepo ]]; then
+            python3 ../../scripts/release/sarabeth_transition.py guard
+          fi
           aws cloudformation deploy \
             --stack-name sarabeth-amplify-dns \
             --template-file infrastructure/cloudformation/dns.yaml \
@@ -297,8 +314,41 @@ jobs:
         timeout-minutes: 10
         run: scripts/validate-canonical-redirects.sh "$AMPLIFY_APP_ID" "$GITHUB_RUN_ID"
 
+      - name: Accept monorepo production before CMS retarget
+        if: inputs.operation == 'switch-monorepo' && steps.domain_association.outcome == 'success' && steps.canonical_redirects.outcome == 'success'
+        run: python3 ../../scripts/release/sarabeth_transition.py accept
+
+      - name: Apply separately approved webhook target after production acceptance
+        if: inputs.operation == 'switch-monorepo' && inputs.retarget_webhook && steps.domain_association.outcome == 'success' && steps.canonical_redirects.outcome == 'success'
+        timeout-minutes: 30
+        run: |
+          python3 ../../scripts/release/sarabeth_transition.py guard lkg-written
+          mapfile -t hosting_parameters < "$RUNNER_TEMP/sarabeth-hosting-parameters"
+          aws cloudformation deploy \
+            --stack-name sarabeth-amplify-hosting \
+            --template-file infrastructure/cloudformation/hosting.yaml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --role-arn "$CLOUDFORMATION_EXECUTION_ROLE_ARN" \
+            --parameter-overrides \
+              GitHubOidcProviderArn="$OIDC_PROVIDER_ARN" \
+              WorkloadPermissionsBoundaryArn="$WORKLOAD_PERMISSIONS_BOUNDARY_ARN" \
+              ContentfulSpaceId="$CONTENTFUL_SPACE_ID" \
+              "${hosting_parameters[@]}" \
+            --no-fail-on-empty-changeset \
+            --tags Project=sarabeth-studio Environment=production
+
+      - name: Finish accepted monorepo switch without discarding previous recovery
+        if: inputs.operation == 'switch-monorepo' && steps.domain_association.outcome == 'success' && steps.canonical_redirects.outcome == 'success'
+        run: python3 ../../scripts/release/sarabeth_transition.py finish
+
+      - name: Fail unresolved monorepo switch without blind rollback
+        if: inputs.operation == 'switch-monorepo' && (failure() || steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
+        run: |
+          echo 'Switch failed or ambiguous. Preserve intent, previous recovery and actual SSM/job/domain state; reconcile before any retry or rollback.' >&2
+          exit 1
+
       - name: Restore Netlify records after domain failure
-        if: inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
+        if: inputs.operation == 'legacy' && inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
         timeout-minutes: 15
         run: |
           source scripts/cloudformation-stack-state.sh
@@ -312,7 +362,7 @@ jobs:
             --tags Project=sarabeth-studio Environment=production
 
       - name: Remove failed domain association after DNS rollback
-        if: inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
+        if: inputs.operation == 'legacy' && inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
         id: domain_cleanup
         continue-on-error: true
         timeout-minutes: 20
@@ -339,7 +389,7 @@ jobs:
           fi
 
       - name: Preserve domain stack from accidental deletion
-        if: (inputs.apply_domain || inputs.rollback_to_netlify) && steps.domain_cleanup.outcome != 'failure'
+        if: inputs.operation != 'switch-monorepo' && (inputs.apply_domain || inputs.rollback_to_netlify) && steps.domain_cleanup.outcome != 'failure'
         run: |
           source scripts/cloudformation-stack-state.sh
           stack_status=$(get_stack_status sarabeth-amplify-domain)
@@ -350,7 +400,7 @@ jobs:
           fi
 
       - name: Fail after domain rollback
-        if: inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
+        if: inputs.operation == 'legacy' && inputs.apply_domain && (steps.domain_association.outcome == 'failure' || steps.canonical_redirects.outcome == 'failure')
         run: |
           echo "Domain activation validation failed; Netlify web records were restored" >&2
           exit 1

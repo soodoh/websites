@@ -29,16 +29,16 @@ class SarabethTransitionTests(unittest.TestCase):
         with self.assertRaises(ValueError): parameters('prepare-monorepo', 'domain')
 
     def test_candidate_and_domain_bind_repository_source_job_branch_and_serving_marker(self):
-        config = dict(appId='dfixture', candidateUrl='https://candidate.invalid', productionUrl='https://production.invalid')
+        config = dict(appId='dfixture', candidateUrl='https://sarabeth-production.dfixture.amplifyapp.com', productionUrl='https://production.invalid')
         marker = dict(schemaVersion=1, kind='website-ssr-production', site='sarabeth', commit='a' * 40, appId='dfixture', branch='sarabeth-production', jobId='12')
         def fixtures():
-            return {'get-caller-identity': {'Account': '015989770400'}, 'get-app': {'app': {'platform': 'WEB_COMPUTE', 'repository': 'https://github.com/soodoh/websites'}}, 'get-branch': {'branch': {'branchName': 'sarabeth-production', 'enableAutoBuild': False, 'enablePullRequestPreview': False, 'environmentVariables': {'AMPLIFY_MONOREPO_APP_ROOT': 'apps/sarabeth'}}}, 'get-job': {'job': {'summary': {'jobId': '12', 'status': 'SUCCEED', 'commitId': 'a' * 40}}}, 'get-domain-association': {'domainAssociation': {'domainStatus': 'AVAILABLE', 'subDomains': [{'subDomainSetting': {'prefix': prefix, 'branchName': 'sarabeth-production'}} for prefix in ('', 'www')]}}}
+            return {'get-caller-identity': {'Account': '015989770400'}, 'get-app': {'app': {'platform': 'WEB_COMPUTE', 'repository': 'https://github.com/soodoh/websites', 'defaultDomain': 'dfixture.amplifyapp.com'}}, 'get-branch': {'branch': {'branchName': 'sarabeth-production', 'enableAutoBuild': False, 'enablePullRequestPreview': False, 'environmentVariables': {'AMPLIFY_MONOREPO_APP_ROOT': 'apps/sarabeth'}}}, 'get-job': {'job': {'summary': {'jobId': '12', 'status': 'SUCCEED', 'commitId': 'a' * 40}}}, 'get-domain-association': {'domainAssociation': {'domainStatus': 'AVAILABLE', 'subDomains': [{'subDomainSetting': {'prefix': prefix, 'branchName': 'sarabeth-production'}} for prefix in ('', 'www')]}}}
         responses = fixtures()
         aws = MagicMock()
         aws.call.side_effect = lambda service, operation, **kwargs: responses[operation]
         read = MagicMock(return_value=(200, {}, json.dumps(marker).encode()))
         verify_switch(aws, config, 'a' * 40, '12', 'candidate', read)
-        self.assertIn('https://candidate.invalid/', read.call_args.args[0])
+        self.assertIn('https://sarabeth-production.dfixture.amplifyapp.com/', read.call_args.args[0])
         self.assertNotIn('get-domain-association', [call.args[1] for call in aws.call.call_args_list])
         verify_switch(aws, config, 'a' * 40, '12', 'domain', read)
         self.assertIn('https://production.invalid/', read.call_args.args[0])
