@@ -32,9 +32,24 @@ safe tools: `test:ci` 49 Bun tests / 529 assertions (nine new foundation tests /
 assertions) plus six Python artifact tests; `test:workspace` 30 tests / 433 assertions;
 Node syntax checks for both new modules. Scratch log:
 `/private/tmp/websites-phase3-foundation.dOqX7k/targeted-validation.log`.
-No install or real Docker invocation occurred. Find the foundation implementation commit
-with `git log -1 --format=%H -- scripts/ci/release-contract.mjs`; a commit is not a hosted
-run or full exact-SHA app-chain result. Independent review remains pending.
+No install or real Docker invocation occurred. Foundation implementation commit:
+`0d2aa7b73156b5e7a6d1b768d75883597a9d7dbb` (`chore(ci): establish offline release foundation`),
+a forward child of the accepted baseline. Its 12 reviewed paths are the eight carry-over
+preparation files plus policy, helper, tests and design. Pre-commit serial lint passed
+4/4 uncached; commitlint passed. The first empty-environment commit attempt failed before
+hooks because identity was unavailable; the parent approved explicit author/committer
+`Paul DiLoreto <soodohh@pm.me>` environment values only. No config/hook bypass or modification.
+Targeted-validation log SHA-256:
+`5a19b9253afef3815990b739c6658b48aca98fa5988a64a533dc40d61750f5bf`.
+All checks were targeted worktree checks, not a full exact-SHA independent app chain or
+hosted release result. Index/worktree were clean after the foundation commit. This later
+handoff update records evidence only; independent review remains pending.
+
+Next-stage state requirement: persist CURRENT served release separately from monotonic
+high-watermark. An intentional legacy rollback must not lower that watermark; explicitly
+approved restore-new cannot be skipped merely because its SHA equals the watermark.
+Routine retries remain blocked. DiLoreto manual immutable-ref redeploy/revalidation is
+separate from main-only `release-site` recovery and must not be erased by its constraints.
 
 ## Historical documentation-preparation checkpoint and authority
 
