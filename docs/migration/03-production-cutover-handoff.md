@@ -1,6 +1,124 @@
-# Phase 3 handoff — Carolyn candidate/promotion authored; independent acceptance pending
+# Phase 3 handoff — Carolyn redirect fix validated; candidate transport gap remains
 
-## Carolyn isolated first-cutover authoring — current offline checkpoint
+## Current review correction and exact-SHA fixture evidence — 2026-09-06
+
+**Full canonical-tested code:** `866dd65d36ad9db9b8764758a22caf45c8dd5dcc`
+(`fix(carolyn): reject empty candidate redirect locations`), following
+`fd580ecfd3b44fa380747e49e66478784261a6b0`
+(`fix(carolyn): block candidate browser redirect chains`). Both are forward children of
+starting documentation HEAD `d7e1ea7d40bcbc9a70a7188e2831b9b7b18f0f98`;
+the original isolated-cutover code remains `6ccc6d8062739e690b999d58d9a76835b4fcadf4`.
+Normal serial Lefthook lint (4/4 uncached) and scoped commitlint passed for both fixes,
+using the approved environment-only Paul DiLoreto identity, without bypass/config changes.
+This following **docs-only evidence commit is not a new full-tested SHA**; resolve it with
+`git log -1 --format=%H -- docs/migration/03-production-cutover-handoff.md`.
+
+Initial independent reviews are `carolyn-review/initial-0.md` and `initial-1.md` under
+managed output run `72894acd-0125-4963-a2c3-827b08d39482`. The latter's P1 is confirmed:
+Chromium can follow a fulfilled same-origin redirect without routing its later hops.
+The real pre-fix two-loopback regression contacted the second origin's `/escaped` route.
+The supervisor approved aborting **every 3xx carrying Location, including empty Location**.
+Current policy does so; unit fixtures distinguish absent/empty headers, and the canonical
+browser gate executes nonredirect control, direct, multihop and empty-header regressions.
+The original production smoke, API no-follow assertions, candidate/production lifecycle,
+Sarabeth flow, resource identities, locks, dependencies and snapshots are unchanged.
+Initial-0's broader redirect-isolation assertion is superseded; its other positive source
+observations stand. Finding closure and overall acceptance still require follow-up reviewers.
+
+### Final independent TARGET result (not independent reviewer acceptance)
+
+Fresh local no-hardlink, single-main TARGET:
+`/private/tmp/carolyn-review-final.ysn726/target`, exactly the full code SHA above.
+No alternates, copied ignored configuration/dependencies or source-repository access.
+Only this new TARGET root installed `bun install --frozen-lockfile` (1,000 packages).
+Validation used `env -i`, newly empty scratch HOME and explicit safe pins: Bun1.4.0,
+Node24.20.0, Turbo2.10.12, Python3.14.6 at
+`/opt/homebrew/Cellar/python@3.14/3.14.6/bin/python3`, Go1.27.1, ShellCheck0.11.0,
+uv0.12.9, actionlint1.7.7, cfn-lint1.42.0/1.53.0 and host Chrome152.0.7977.77.
+
+| Exact-SHA gate | Actual result |
+| --- | --- |
+| `bun run ci:verify` | PASS 4/4 uncached, concurrency 1, 12m46.193s; root 30 workspace/433 assertions, 60 CI Bun/939 assertions, six CI Python and 52 release Python tests; actionlint/ShellCheck/syntax gates |
+| Carolyn complete canonical fixture chain | PASS 120 unit/1,128 assertions; 15 infra/87 assertions; three fixture + three hermetic-production artifact tests; 100 browser invocations = 92 unchanged visual + eight isolation regression runs |
+| DiLoreto complete chain | PASS 13 genealogy, 37 browser, one unchanged viewport skip; types/static/output/cfn-lint |
+| Paul complete chain | PASS 56 browser, four unchanged viewport skips; three local Lighthouse runs each 0.98 performance and 1.00 accessibility/best-practices/SEO; remaining static/type/workflow/shell/cfn-lint gates |
+| Sarabeth complete chain | PASS 197 Playwright; seven host/container provenance tests; provider/fixture/waiter/Amplify/type/workflow/cfn-lint; actual Gitless container marker equals tested SHA |
+| History/maps/pristine imports/installed graph/synth | PASS 1,130 ancestral messages, zero errors, six preserved footer warnings; both unchanged maps/bijections, normalized ancestry and all four pristine imports; exact accepted six-root installed graph; byte-identical original 19-resource CLI synth |
+| Four diagnostic scans | PASS fixture/nondeployable; no hosted upload or production artifact provenance claimed |
+
+### Actual candidate harness execution — incomplete transport, not a pass
+
+The exact committed candidate spec/policy/config was additionally executed with a reviewed
+scratch-only browser/API loopback transport. Final attempt used pinned image Chromium
+**151.0.7922.34**, Playwright1.62.1, Bun1.4.0 and Node24.20.0, a Gitless exact-source
+hash preflight, fresh container HOME, `env -i`, explicitly verified preinstalled
+`PLAYWRIGHT_BROWSERS_PATH=/ms-playwright`, **network none, zero mounts, private IPC and
+no extra devices/privilege**. Only three reviewed scratch files were copied into a
+separate container directory; no app source/config/dependency edits or installs occurred.
+Scratch `chmod` read-only is only a permission convention (root could override), not an
+immutable bind. API `response.url()` is virtualized by the transport; it proves no real
+hosted origin identity. Every forwarded URL was loopback with redirects disabled.
+
+**Final candidate attempt: six passed, four transport-blocked, exit 1, zero skips/retries.**
+Public routes/assets, redirect/client-error assertions and exact root SHA ran on both
+viewports. Auth/photography browser POSTs stopped with
+`Missing actual same-origin browser metadata`: even `request.allHeaders()` lacks
+Sec-Fetch-Site at this interception boundary. No metadata was synthesized and CSRF was
+not bypassed. Final logs record 62 loopback transports (34 browser/28 API), 123 policy
+blocks and executed origin-escape denial probes. This is meaningful harness execution,
+**not all-ten acceptance**, production smoke or an identified application defect.
+The supervisor chose a bounded stop; a separately reviewed true same-origin fixture
+transport may be needed if follow-up reviewers require complete candidate-harness proof.
+No such new transport design is authorized or implemented here.
+
+Retained failures: pre-fix browser redirect/counter logs; the superseded `fd580ecf` full
+attempt stopped after Carolyn passed at a scratch cleanup guard overrestricting Docker's
+exact own-image RepoDigest (not an app failure); two candidate bind creates failed because
+neither chosen host prefix was shared by Colima; mount-free v1 had ten browser-launch setup
+failures after empty environment removed the browser path; v2 ran six passes/four 403-backed
+failures under loopback/virtual-Origin mismatch. The incomplete-header hypothesis was
+insufficient: v3's actual metadata absence is retained, not relabeled as an app regression.
+No test assertion, snapshot, threshold, CSRF check or production harness was weakened.
+
+### Evidence, bounded cleanup and remaining gates
+
+Final raw evidence: `/private/tmp/carolyn-review-final.ysn726/`.
+Superseded/failing regression evidence: `/private/tmp/carolyn-review-full.neNUaQ/`.
+`validation-evidence.json` verifies 171 completed-file digests plus initial reviews and
+superseded logs. It explicitly records candidate failure, not a green acceptance envelope.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| `validation-evidence.json` | `f524abe4cb2ec6887bb9f0b45c93a18a6c70ab637b001787926eb708320beb0e` |
+| `root-ci-v2.log` — final canonical PASS | `3ee4ba69fd49b9c3b41bc7c542cda111352bfba6da274d26fce8e6bf5071b6d0` |
+| `history.log` | `79ee3bf58c6c0a00871a4d7e4868987dd847a7a038ddba5d5dfaa844e9fbaa68` |
+| `post-suite-checks.log` | `46c0e3539f1e73a1b747d9b4aefdecb9eaf56909609122500bf6742c111f9356` |
+| `candidate-run-mountfree-v3.log` — six pass/four blocked | `d77989620daa6762ce0ba506e6045f9c4c490c9356efdf604968356c70c3cacd` |
+
+Final invocation Colima data-disk availability: 6,934,732 → 6,937,936 KiB.
+Exactly 39 initially absent, non-FROM/non-cache, build-log-proven images were removed
+with fresh zero-container/no-unrelated-tag-or-digest checks and `image rm --no-prune`,
+without force. The only permitted top-image digest was its exact invocation repository
+at its actual full image ID; intermediate images had no tags/digests. Terminal blocked
+candidate-image cleanup was separately approved and does not assert those tests passed.
+Pre/post 109 image-reference rows and 33 container rows match on stable fields.
+Raw container JSON differs: Mounts ordering and Status/RunningFor are not byte-equality
+or unrelated-service continuity guarantees. No old image, volume, daemon or unrelated
+container mutation occurred. The stopped prior invocation's separate bounded cleanup
+and initial/final reference proof are retained too.
+
+**Acceptance remains pending follow-up independent reviewers; all four sites are NOT
+migrated.** Source repositories remain production owners. No live inventory, credential
+read, production HTTP/CMS/email, hosted workflow, publication, resource/domain/ref/cloud
+mutation, deploy, enablement, writer disablement, trust removal, archival or rollback drill
+ran. All literal-false gates, nullable unknown identities and runtime/publication locks
+remain closed. Existing phase-2/publication/main-push acceptance is not reopened.
+Next safe action: review the final code and raw evidence, explicitly disposition the
+four candidate transport-blocked cases, and only then decide any additional offline
+fixture work. Every live preparation/candidate/production/retirement gate still requires
+its separate approval.
+
+## Historical Carolyn isolated first-cutover authoring checkpoint
 
 **Committed code:** `6ccc6d8062739e690b999d58d9a76835b4fcadf4`
 (`feat(carolyn): isolate first-cutover candidate and production rebuild`), forward from
