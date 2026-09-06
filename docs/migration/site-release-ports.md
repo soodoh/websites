@@ -1,6 +1,42 @@
-# Phase 3 offline site ports — Carolyn authored; independent acceptance pending
+# Phase 3 offline site ports — full canonical validation; candidate transport gap
 
-## Current Carolyn implementation decision — offline only
+## Current reviewed-fix validation ledger — 2026-09-06
+
+Code `866dd65d36ad9db9b8764758a22caf45c8dd5dcc` includes the approved forward
+Carolyn redirect-chain correction and strict empty-Location denial. Initial-1's P1 was
+reproduced with a real second-loopback request; current canonical regression covers
+control/direct/multihop/empty Location. Initial-0's redirect assertion is superseded;
+other positive source observations remain. Independent follow-up acceptance is **PENDING**.
+This following docs-only evidence commit is not a newly full-tested SHA.
+
+A new independent TARGET root frozen install and complete serial `bun run ci:verify`
+passed at that exact code SHA: 4/4 uncached, 12m46.193s. Root contracts, unchanged maps,
+1,130 ancestral messages (zero errors/six preserved warnings), pristine imports, exact
+six-root installed graph, original 19-resource synth and four fixture diagnostic scans
+passed. Detailed commands, tool paths, hashes, failures and bounded cleanup are in the
+current `03-production-cutover-handoff.md` section and
+`/private/tmp/carolyn-review-final.ysn726/validation-evidence.json` (SHA-256
+`f524abe4cb2ec6887bb9f0b45c93a18a6c70ab637b001787926eb708320beb0e`).
+
+| Site | Current exact-SHA offline result | Remaining acceptance / production |
+| --- | --- | --- |
+| carolyn | Canonical PASS: 120 unit, 15 infra, three+three artifact, 100 browser (92 unchanged visual + eight policy regressions). Actual additional candidate harness: six pass/four **transport-blocked**, exit 1. | Follow-up reviewers must disposition missing full candidate-harness proof. Missing real Sec-Fetch-Site at interception stops auth/SSR forwarding; no synthetic headers/CSRF bypass or app defect claim. All live IDs/connection/CMS/recovery/writer/candidate/production gates remain closed. |
+| paul | Complete PASS: 56 browser/four unchanged skips; three local Lighthouse runs 0.98/1/1/1. | NOT migrated; original legacy capture, candidate/restore and all production approvals remain absent. |
+| diloreto | Complete PASS: 13 genealogy, 37 browser/one unchanged skip. | NOT migrated; legacy retained bytes/manifest pin, origin/edge and production gates remain uncollected/unapproved. |
+| sarabeth | Complete PASS: 197 Playwright plus seven host/container provenance; actual Gitless marker equals tested SHA. Reviewed source flow unchanged. | NOT migrated; actual candidate/domain/LKG/webhook/writer/production approvals and evidence remain absent. |
+
+Candidate fixture attempts used only loopback under network-none/zero-mount/private-IPC
+containers, exact source/tool preflight and fresh environment/HOME. Six actual candidate
+cases per final attempt passed; four auth/photography cases remain blocked by the scratch
+transport, **not silently skipped or certified**. Both unshared-host bind failures,
+browser-path setup failures, v2 403 failures and v3 metadata stops are retained. The
+supervisor chose bounded stop and evidence review, not another fixture architecture.
+API URL virtualization and scratch chmod limitations are explicit in the handoff.
+All source owners, original production smoke, literal-false gates, unknown/null IDs and
+runtime/publication locks remain unchanged. No production/network/VM settings operation
+or live request occurred. This is not full phase-3 acceptance or publication authority.
+
+## Historical Carolyn implementation decision — offline only
 
 The approved architecture is an **explicit isolated candidate branch plus separate
 exact-SHA production rebuild**, not domain reassociation. The previous Carolyn
