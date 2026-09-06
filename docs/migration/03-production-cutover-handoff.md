@@ -1,4 +1,83 @@
-# Phase 3 handoff — offline site ports in progress; production not started
+# Phase 3 handoff — full offline fixtures passed; independent acceptance pending
+
+## Recovery full-validation checkpoint — 2026-09-06
+
+The complete canonical fixture chain passed in a **new independent local TARGET clone**
+at `55ea42958f897aebd442c28b9741360c0f456656` (code correction commit
+`183381d51e887669c6361248961efe44370ab71f`). This following evidence-only commit is
+**not** a new code-tested SHA. Independent final security/parity/order/history reviewer
+acceptance is still **PENDING**. No production readiness, publication verification,
+activation, live inventory or migration completion is claimed. The phase-2 acceptance
+and explicit publication/main-push evidence exceptions remain accepted, not reopened.
+
+The clone came only from `/Users/pauldiloreto/Projects/websites/main`, using
+`git clone --no-hardlinks --single-branch --branch main`; it has independent objects,
+no alternates and no copied ignored configuration or dependencies. Only its ROOT ran
+`bun install --frozen-lockfile`: 1,000 packages, unchanged isolated `bun.lock`.
+Fixture execution used `env -i`, a newly empty scratch HOME and explicit tool paths.
+Resolved tools: Bun1.4.0, Node24.20.0, Turbo2.10.12, Python3.14.6, Go1.27.1,
+ShellCheck0.11.0, uv0.12.9, actionlint1.7.7, cfn-lint1.42.0/1.53.0 and local
+Chrome152.0.7977.77. The actual Python executable is
+`/opt/homebrew/Cellar/python@3.14/3.14.6/bin/python3`, **not** `libexec/bin/python3`.
+
+| Gate / separately applicable site ledger | Fresh result at the exact SHA above |
+| --- | --- |
+| Root canonical `bun run ci:verify` | PASS: 4/4 tasks, zero cached, concurrency 1; Turbo duration 12m30.961s. Root contracts: 30 workspace / 433 assertions, 56 CI Bun / 846 assertions, six CI Python and 33 release Python tests; root/nested actionlint, ShellCheck and syntax passed. |
+| carolyn — prepared offline; production blocked | Complete chain PASS: 117 unit / 1,084 assertions; 12 infra / 50 assertions; three fixture + three hermetic-production artifact tests; 92 visual. Offline synth remains the identical 19-resource template. |
+| paul — prepared offline; production blocked | Complete chain PASS: 56 browser tests, four unchanged viewport skips; all three local Lighthouse runs scored performance 0.98 and accessibility/best-practices/SEO 1.00. Static, both type configs, workflow, shell and cfn-lint gates passed. |
+| diloreto — prepared offline; production blocked | Complete chain PASS: 13 genealogy tests, 37 browser tests and one unchanged viewport skip; static/output/types/cfn-lint gates passed. |
+| sarabeth — prepared offline; production blocked | Complete chain PASS: 197 Playwright tests, seven release-provenance tests on both host and container, mocked waiter, provider/fixture builds and Amplify prepare/validate/cfn-lint. Actual successful Gitless container marker equals the full tested SHA. |
+| History / dependencies / diagnostics | All 1,123 HEAD ancestors pass commitlint, zero errors and six preserved footer warnings. Both map hashes/bijections, all 1,109 mapped normalized ancestors and four pristine import trees pass. Six-root full installed graph exactly matches the accepted hash; no missing/range failures. Four post-suite diagnostic scans pass and remain fixture/nondeployable. |
+
+All four browser images actually report linux/arm64, Playwright1.62.1, Bun1.4.0 and
+Node24.20.0. Canonical architecture policies, screenshots, skips, thresholds and
+fixture-only Carolyn IPv4 routing are unchanged. No deployed-smoke/live adapter ran;
+Sarabeth's logged SES failures are injected contract-test failures, not email sending.
+This root invocation did not enable CI release metadata or package/upload static release
+artifacts; those local integrity contracts passed as fixtures, not hosted provenance.
+
+Colima's **Docker data disk**, not host/root disk, initially had 6,939,892 KiB available.
+One app/image at a time ran. Only 34 initially absent, non-FROM/non-cache build-log-proven
+images were removed, each after fresh zero-container-reference checks, using
+`docker image rm --no-prune` without force. Existing exact-owned-container traps remained.
+Final available capacity: 6,938,448 KiB. Exact pre/post image ID/tag reference sets and
+container ID/image/name/state sets match. No old image, volume, daemon or unrelated service
+was changed. The main worktree and tested clone/index were clean after validation.
+
+**Actual failed attempts retained:** the first full invocation exited 126 before any
+Docker build because the scratch recorder used nonexistent `libexec/bin/python3`.
+Its Python tests actually resolved to `/usr/bin/python3` 3.9.6. The earlier recovery
+report's Python3.14.6 claim was therefore not established by its supplied PATH; do not
+retroactively relabel those historical logs. The corrected recorder passed read-only
+`docker info`; resolved executable/version evidence and the entire unchanged-SHA rerun
+establish the current result. A scratch ancestry assertion initially over-required whole
+root package.json byte identity; its correction admits only the already-approved
+`test:ci` integration while proving every dependency field unchanged. A malformed scratch
+sed probe changed no files. The final evidence manifest excludes its own in-progress
+output log; all 70 recorded completed-file digests were checked. No repository code,
+dependency, snapshot, threshold, identity or production-gate correction was needed.
+
+Private evidence directory (new managed output; old runner artifacts retained):
+`/Users/pauldiloreto/.pi/agent/sessions/--Users-pauldiloreto-Projects-websites-main--/subagent-artifacts/outputs/22685b92-f7ef-4f32-9b24-7c35b8b72f0c/recovery/full-checks.e7VoTg/`.
+`validation-evidence-v2.json` contains exact commands, tool/image identities, manifest,
+Lighthouse results, cleanup IDs and 70 log/script digests. The original recovered rejected
+and corrected reports retain their previously recorded byte hashes.
+
+| Evidence file | SHA-256 |
+| --- | --- |
+| `validation-evidence-v2.json` | `468129bcfac3cf1aac2444c898b44c997e29846105b0cfb3800ac198cbd20699` |
+| `root-ci-v2.log` — full passing rerun | `6f88a86de9373fd115d0a677065fd47bca2306f5785307817408d04aa3647248` |
+| `root-ci.log` — actual exit 126 | `17ce748199fa1a38799d70d706207ed45d85337b445080cf04dced9791711f0b` |
+| `all-resolved-tools-v2.log` | `eb3b7f96069ffe8b2c6c6fa3605194fc6fdc100206f061a6db01821bc55e57a7` |
+| `ancestry-v2.log` | `960a7c9d2717d27a3578936d3ad4574d0b8afee4f25396203ead70ea74eb69c1` |
+| `post-suite-checks.log` | `bd3e023d29978141565059475fb7538b420e0e02eae00efa84554389fc9b8628` |
+
+Next safe action: independent final review of the accepted-baseline-to-tested-SHA code
+and forward evidence diff, with these raw results; apply only approved concrete findings
+and revalidate if code changes. Each site's source remains the sole production owner.
+Literal-false credential jobs, runtime publication lock, unknown live IDs and every
+inventory/settings/cloud/source/candidate/cutover/enablement/retirement gate remain intact.
+The historical checkpoint sections below retain their original acceptance meanings.
 
 ## Orchestration interruption — committed checkpoint, acceptance pending
 

@@ -1,4 +1,30 @@
-# Phase 3 offline site ports — authored, not activated or accepted
+# Phase 3 offline site ports — full fixtures passed, not activated or accepted
+
+## Recovery full-fixture ledger — 2026-09-06
+
+The independent local TARGET clone at `55ea42958f897aebd442c28b9741360c0f456656`
+passed root frozen install and the entire serial, uncached `bun run ci:verify`:
+4/4 complete chains. This supersedes only the full-fixture-pending status of the
+historical authoring checkpoints below; independent final reviewer acceptance remains
+**PENDING**, and every production gate remains closed. The following docs-only evidence
+commit is not a new code-tested SHA. Full commands/digests, failed scratch invocation,
+Python-path correction, actual container manifest and bounded cleanup are recorded in
+`03-production-cutover-handoff.md` and its linked `validation-evidence-v2.json`.
+
+| Site | Current offline validation | Production / next safe step |
+| --- | --- | --- |
+| paul | Full chain passed; 56 browser / four unchanged skips; three local Lighthouse runs passed unchanged thresholds | Blocked; independent final review, then separately approved legacy capture/candidate and all preparation/cutover gates |
+| diloreto | Full chain passed; 13 genealogy, 37 browser / one unchanged skip | Blocked; independent final review; original capture IDs/hash/state and real origin/edge restoration remain uncollected |
+| carolyn | Full chain passed; 117 unit, 12 infra, three + three artifact, 92 visual; original 19-resource synth unchanged | Blocked; independent final review; actual connection/ref/CMS/smoke and writer-drain evidence remain uncollected |
+| sarabeth | Full chain passed; 197 Playwright, seven host/container provenance tests; actual Gitless marker equals tested SHA | Blocked; independent final review; actual connection/candidate/domain/webhook/legacy recovery approvals and evidence remain absent |
+
+All new credential jobs remain literal-false, runtime publication remains locked, and
+live IDs remain unknown. No live adapter, production request, credential read, hosted
+execution, publication or source-repository operation occurred. No dependency, lock,
+snapshot, threshold or resource-identity changes were needed. No full-phase acceptance
+or production readiness is inferred from these fixture results.
+
+## Historical milestone-2 authoring checkpoint
 
 Milestone 2 continues foundation `ced5abc8850a2c53f8fe988807309b01e2b9741c` in
 Paul → DiLoreto → Carolyn → Sarabeth order. Authority is **Execute offline scope**:
