@@ -532,6 +532,16 @@ Resources:
                   Action: [s3:GetObject, s3:PutObject]
                   Resource: !Ref MonorepoStateObjectArn
           - !Ref AWS::NoValue
+        - !If
+          - CreateMonorepoBranch
+          - PolicyName: ObserveMonorepoCandidateDomain
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: amplify:GetDomainAssociation
+                  Resource: !Sub ${AmplifyApp.Arn}/domains/sarabethbelon.com
+          - !Ref AWS::NoValue
         - PolicyName: ReleaseSpecificAmplifyApp
           PolicyDocument:
             Version: "2012-10-17"

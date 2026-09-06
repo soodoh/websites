@@ -6,6 +6,11 @@ on:
         type: choice
         required: true
         options: [paul, diloreto, carolyn, sarabeth]
+      sarabeth_operation:
+        description: Candidate is separately authorized first-cutover preparation, never production acceptance
+        type: choice
+        options: [release, candidate]
+        default: release
       ref:
         type: string
         default: main
@@ -309,7 +314,7 @@ jobs:
     uses: ./.github/workflows/_sarabeth-release.yml
     with:
       target_sha: ${{ needs.resolve.outputs.commit }}
-      operation: release
+      operation: ${{ inputs.sarabeth_operation }}
     permissions:
       contents: write
       actions: read

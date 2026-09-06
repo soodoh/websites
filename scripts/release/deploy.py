@@ -27,7 +27,8 @@ def configured(site, operation):
     require(os.environ.get('RELEASE_ENVIRONMENT') == config['environment'], 'Wrong credential environment')
     flag = 'automaticEnabled' if event == 'workflow_run' else 'manualEnabled'
     require(event in ('workflow_run', 'workflow_dispatch') and config.get(flag) is True, 'Release disabled')
-    require(operation in ('release', 'restore', 'redeploy'), 'Unknown operation')
+    require(operation in ('release', 'restore', 'redeploy', 'candidate'), 'Unknown operation')
+    require(operation != 'candidate' or site == 'sarabeth' and event == 'workflow_dispatch' and workflow == '.github/workflows/release-site.yml' and config.get('candidateEnabled') is True, 'Explicit Sarabeth candidate operation disabled')
     require(operation != 'restore' or site in ('paul', 'diloreto') and config.get('restoreEnabled') is True, 'Explicit static restore not approved')
     require(operation != 'redeploy' or site == 'diloreto' and config.get('redeployEnabled') is True, 'Selected-ref redeploy not approved')
     require(config.get('sourceWriterDrained') is True, 'Source/CMS writers not approved frozen and drained')
@@ -36,6 +37,8 @@ def configured(site, operation):
         required += ['releaseBucket', 'releaseOwner']
     if site == 'paul':
         required += ['candidateBranch', 'candidateUrl']
+    if operation == 'candidate':
+        required += ['candidateUrl']
     if site == 'diloreto':
         required += ['originUrl']
     for key in required:
@@ -70,7 +73,7 @@ def execute(site, operation, selected, policy, config):
     observed_state = state.read()
     require(observed_state['intent'] is None, 'Unresolved intent: reconcile jobs, current release and ETag before retry')
     main = pinned_main()
-    if operation == 'release':
+    if operation in ('release', 'candidate'):
         decision = ordering(site, selected['commit'], main, observed_state)
         require(decision == 'eligible', f'{decision}; recovery action: release-site(site={site}, ref=main)')
     else:
@@ -78,20 +81,20 @@ def execute(site, operation, selected, policy, config):
         subprocess.run(['git', 'merge-base', '--is-ancestor', observed_state['highWatermark'], main], cwd=ROOT, check=True)
     def recheck():
         fresh_main = pinned_main()
-        if operation == 'release':
+        if operation in ('release', 'candidate'):
             require(ordering(site, selected['commit'], fresh_main, observed_state) == 'eligible', f'Relevant inputs superseded; release-site(site={site}, ref=main)')
     if site in ('paul', 'diloreto'):
         release_static(site, aws, config, state, selected, policy, operation, recheck)
     else:
         from ssr import release_ssr
-        release_ssr(site, aws, config, state, selected, policy, recheck)
+        release_ssr(site, aws, config, state, selected, policy, recheck, operation)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('command', choices=('check', 'deploy'))
     parser.add_argument('site', choices=('paul', 'diloreto', 'carolyn', 'sarabeth'))
-    parser.add_argument('--operation', choices=('release', 'restore', 'redeploy'), default='release')
+    parser.add_argument('--operation', choices=('release', 'restore', 'redeploy', 'candidate'), default='release')
     parser.add_argument('--selected')
     args = parser.parse_args()
     policy, config = configured(args.site, args.operation)

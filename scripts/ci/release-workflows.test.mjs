@@ -10,6 +10,8 @@ test('all production jobs/calls have literal false publication lock; no unexpect
   expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
   const runtime = JSON.parse(read('config/release-runtime.json'));
   expect(runtime.publicationLocked).toBe(true);
+  expect(runtime.sites.sarabeth.candidateEnabled).toBe(false);
+  expect(runtime.sites.sarabeth.switchEnabled).toBe(false);
   for (const filename of deployFiles) {
     const workflow = yaml('.github/workflows/' + filename);
     expect(workflow.permissions).toEqual({ contents: 'read' });
@@ -91,7 +93,15 @@ test('SSR monorepo buildspec uses exact short roots, frozen root ignored lifecyc
 test('Sarabeth infrastructure preserves legacy recovery and explicitly binds optional transition parameters', () => {
   const legacy = yaml('apps/sarabeth/.github/workflows/infrastructure.yaml').jobs.cloudformation;
   const active = yaml('.github/workflows/infrastructure-sarabeth.yml').jobs.cloudformation;
-  expect(active.steps.map(step => step.name).filter(name => !['Fail closed before infrastructure credentials', 'Verify selected monorepo candidate before infrastructure mutation'].includes(name))).toEqual(legacy.steps.map(step => step.name));
+  const additions = ['Set up trusted Node', 'Set up trusted Bun', 'Install trusted root smoke tools before credentials', 'Fail closed before infrastructure credentials', 'Verify selected monorepo candidate before infrastructure mutation', 'Accept monorepo production before CMS retarget', 'Apply separately approved webhook target after production acceptance', 'Finish accepted monorepo switch without discarding previous recovery', 'Fail unresolved monorepo switch without blind rollback'];
+  expect(active.steps.map(step => step.name).filter(name => !additions.includes(name))).toEqual(legacy.steps.map(step => step.name));
+  const named = name => active.steps.findIndex(step => step.name === name);
+  expect(named('Install trusted root smoke tools before credentials')).toBeLessThan(named('Configure protected infrastructure credentials'));
+  expect(active.steps[named('Apply hosting stack')].if).toContain("inputs.operation != 'switch-monorepo'");
+  expect(named('Validate canonical www redirects after activation')).toBeLessThan(named('Accept monorepo production before CMS retarget'));
+  expect(named('Accept monorepo production before CMS retarget')).toBeLessThan(named('Apply separately approved webhook target after production acceptance'));
+  expect(named('Apply separately approved webhook target after production acceptance')).toBeLessThan(named('Finish accepted monorepo switch without discarding previous recovery'));
+  for (const name of ['Restore Netlify records after domain failure', 'Remove failed domain association after DNS rollback', 'Fail after domain rollback']) expect(active.steps[named(name)].if).toContain("inputs.operation == 'legacy'");
   expect(active['timeout-minutes']).toBe(230);
   expect(active.environment).toBe('infrastructure-sarabeth');
   expect(active.defaults.run['working-directory']).toBe('apps/sarabeth');
@@ -109,10 +119,15 @@ test('Sarabeth infrastructure preserves legacy recovery and explicitly binds opt
   const domain = active.steps.find(step => step.name === changedOperations[1]);
   expect(domain['continue-on-error']).toBe(true);
   expect(domain.run).toContain('"${domain_parameters[@]}"');
-  expect(domain.run.indexOf('sarabeth_transition.py candidate')).toBeLessThan(domain.run.indexOf('aws cloudformation deploy'));
+  expect(domain.run.indexOf('sarabeth_transition.py guard')).toBeLessThan(domain.run.indexOf('aws cloudformation deploy'));
+  expect(domain.run.match(/sarabeth_transition.py guard/g)).toHaveLength(2);
   expect(domain.run).toContain('sarabeth_transition.py domain');
   const preflight = active.steps.findIndex(step => step.name === 'Verify selected monorepo candidate before infrastructure mutation');
   expect(preflight).toBeLessThan(active.steps.findIndex(step => step.name === changedOperations[0]));
+  expect(active.steps[preflight].run).toContain('sarabeth_transition.py begin');
+  const recovery = yaml('.github/workflows/release-site.yml');
+  expect(recovery.on.workflow_dispatch.inputs.sarabeth_operation).toMatchObject({ options: ['release', 'candidate'], default: 'release' });
+  expect(recovery.jobs['sarabeth-release'].with.operation).toBe('${{ inputs.sarabeth_operation }}');
 });
 
 test('terminal observer covers every release entry without credentials, redispatch or recursion', () => {
@@ -146,10 +161,28 @@ test('owning IaC keeps old subjects, exact optional new subjects, provider/DNS i
   expect(hosting).toContain('/sarabeth-studio/production/last-known-good-sha');
   const bootstrap = read('apps/sarabeth/infrastructure/cloudformation/bootstrap.yaml');
   const infra = bootstrap.split('  InfrastructureDeploymentRole:')[1];
-  expect(infra).toContain('Sid: ReadAcceptedMonorepoCandidate');
-  expect(infra).toContain('Action: s3:GetObject');
-  expect(infra).not.toContain('s3:PutObject');
-  expect(infra).toContain('Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob]');
+  expect(infra).toContain('Sid: OwnAcceptedMonorepoCandidateSwitch');
+  expect(infra).toContain('Action: [s3:GetObject, s3:PutObject]');
+  expect(infra).toContain('Resource: !Ref MonorepoStateObjectArn');
+  expect(infra).toContain('Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob, amplify:ListJobs]');
+  expect(infra).toContain('Sid: PersistVerifiedMonorepoProduction');
+  expect(infra).toContain('Action: ssm:PutParameter');
+  expect(infra).toContain('parameter/sarabeth-studio/production/last-known-good-sha');
   expect(infra).toContain('apps/${MonorepoAppId}/branches/sarabeth-production/jobs/*');
   expect(bootstrap).toContain('HasMonorepoApp: !Not [!Equals [!Ref MonorepoAppId, ""]]');
+  expect(bootstrap).toContain('MonorepoAppId:\n    Type: String\n    Default: ""\n    AllowedPattern: "^$|^d[a-z0-9]+$"');
+  expect(hosting).toContain('EnableMonorepoBranch:\n    Type: String\n    Default: "false"');
+  expect(hosting).toContain('CreateMonorepoBranch: !Equals [!Ref EnableMonorepoBranch, "true"]');
+  const candidatePolicy = hosting.split('        - !If\n          - CreateMonorepoBranch\n          - PolicyName: ObserveMonorepoCandidateDomain')[1].split('        - PolicyName: ReleaseSpecificAmplifyApp')[0];
+  expect(candidatePolicy).toContain('Action: amplify:GetDomainAssociation');
+  expect(candidatePolicy).toContain('Resource: !Sub ${AmplifyApp.Arn}/domains/sarabethbelon.com');
+  expect(candidatePolicy).toContain('- !Ref AWS::NoValue');
+  expect(candidatePolicy).not.toContain('*');
+  const candidateBoundary = bootstrap.split('          - !If\n            - HasMonorepoApp\n            - Sid: ObserveMonorepoCandidateDomain')[1].split('          - Sid: AmplifyJobsAndWebhooks')[0];
+  expect(candidateBoundary).toContain('Action: amplify:GetDomainAssociation');
+  expect(candidateBoundary).toContain('Resource: !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/domains/sarabethbelon.com');
+  expect(candidateBoundary).toContain('- !Ref AWS::NoValue');
+  expect(candidateBoundary).not.toContain('*');
+  expect(bootstrap.split('          - Sid: AmplifyJobsAndWebhooks')[1].split('          - Sid: ContentfulBuildParameter')[0]).not.toContain('amplify:GetDomainAssociation');
+  expect(hosting.split('        - PolicyName: ReleaseSpecificAmplifyApp')[1]).not.toContain('amplify:GetDomainAssociation');
 });

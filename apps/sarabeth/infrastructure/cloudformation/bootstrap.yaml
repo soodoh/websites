@@ -6,7 +6,7 @@ Parameters:
     Type: String
     Default: ""
     AllowedPattern: "^$|^d[a-z0-9]+$"
-    Description: Observed existing Amplify app for read-only candidate attestation; no app creation.
+    Description: Observed existing Amplify app for candidate/switch attestation; no app creation.
   MonorepoSubject:
     Type: String
     Default: ""
@@ -32,6 +32,7 @@ Parameters:
     Description: Existing token.actions.githubusercontent.com provider ARN, or blank to create it.
 
 Conditions:
+  HasMonorepoSwitch: !And [!Condition HasMonorepoApp, !Condition HasMonorepoState]
   HasMonorepoApp: !Not [!Equals [!Ref MonorepoAppId, ""]]
   HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
   HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
@@ -63,6 +64,13 @@ Resources:
               Effect: Allow
               Action: [s3:GetObject, s3:PutObject]
               Resource: !Ref MonorepoStateObjectArn
+            - !Ref AWS::NoValue
+          - !If
+            - HasMonorepoApp
+            - Sid: ObserveMonorepoCandidateDomain
+              Effect: Allow
+              Action: amplify:GetDomainAssociation
+              Resource: !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/domains/sarabethbelon.com
             - !Ref AWS::NoValue
           - Sid: AmplifyJobsAndWebhooks
             Effect: Allow
@@ -318,16 +326,16 @@ Resources:
             Statement:
               - !If
                 - HasMonorepoState
-                - Sid: ReadAcceptedMonorepoCandidate
+                - Sid: OwnAcceptedMonorepoCandidateSwitch
                   Effect: Allow
-                  Action: s3:GetObject
+                  Action: [s3:GetObject, s3:PutObject]
                   Resource: !Ref MonorepoStateObjectArn
                 - !Ref AWS::NoValue
               - !If
                 - HasMonorepoApp
                 - Sid: ReadMonorepoCandidateSource
                   Effect: Allow
-                  Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob]
+                  Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob, amplify:ListJobs]
                   Resource:
                     - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}
                     - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/branches/sarabeth-production
@@ -351,6 +359,13 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/sarabeth-amplify-*/*
                   - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:aws:transform/*
+              - !If
+                - HasMonorepoSwitch
+                - Sid: PersistVerifiedMonorepoProduction
+                  Effect: Allow
+                  Action: ssm:PutParameter
+                  Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/sarabeth-studio/production/last-known-good-sha
+                - !Ref AWS::NoValue
               - Sid: CancelTimedOutDomainOrDnsUpdate
                 Effect: Allow
                 Action: cloudformation:CancelUpdateStack

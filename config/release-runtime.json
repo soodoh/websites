@@ -47,6 +47,8 @@
       "stateOwner": null
     },
     "sarabeth": {
+      "candidateEnabled": false,
+      "switchEnabled": false,
       "sourceWriterDrained": false,
       "restoreEnabled": false,
       "redeployEnabled": false,

@@ -1,4 +1,71 @@
-# Phase 3 handoff — full offline fixtures passed; independent acceptance pending
+# Phase 3 handoff — SSR candidate correction; offline acceptance incomplete
+
+## Final-review recovery correction — current checkpoint
+
+Final independent reports at the recovery output directory below disagree only on
+complete offline parity: `final-security-order.md` is OK with notes, while
+`final-parity.md` **BLOCKS** complete offline acceptance. Both inspected code and raw
+full-chain evidence; neither reran tests. The parity P1 is concrete: the original SSR
+producer required production acceptance before the Sarabeth candidate/domain switch.
+Full fixture success at `55ea42958f897aebd442c28b9741360c0f456656` and following docs-only
+`db90a3f551939bb16b033fd01da22807be7fdba6` did not cover that missing lifecycle.
+
+The supervisor approved a narrow OFFLINE correction, not activation:
+
+- Sarabeth has separate literal-disabled candidate/switch operation flags. Fresh
+  `release-site` validation can select `sarabeth_operation=candidate`; existing release
+  calls/jobs remain literal-false and publicationLocked remains true. Candidate acceptance
+  checks the actual branch default domain, repository/root/ref/job/bundle, non-sending
+  smoke and both Lighthouse forms before a candidate-only owner/ETag CAS receipt.
+- Candidate leaves production currentRelease/highWatermark/lastLifecycleReceipt and
+  the exact legacy LKG untouched, retaining previous recovery and domain configuration.
+  The unchanged exact RELEASE source verifier needs no LKG update; WEB_HOOK guards
+  remain unchanged. Candidate preparation never retargets CMS or changes the domain.
+- Separately approved switch consumes matching candidate evidence; rechecks validation,
+  scope, ref, latest successful job/no active writer and state ownership; claims durable
+  intent before domain/DNS writes. Cross-step ETag is pinned, never silently rebased.
+  Domain/source/bundle, canonical redirects and production smoke precede LKG. Optional
+  explicitly approved webhook retarget follows production acceptance/LKG; final CAS
+  alone advances production provenance, preserving candidate/previous recovery evidence.
+- SSM and S3 are not atomic. Unknown mutation or CAS failure retains intent, including
+  `production-verified`/`lkg-written` checkpoints when applicable; reconcile actual
+  serving/LKG/job state before any retry or restoration. Legacy Netlify recovery bodies
+  remain unchanged; monorepo switch failures never enter unconditional Netlify rollback.
+  Lighthouse failure still never triggers automatic rollback.
+- Optional owning-bootstrap permissions cover only supplied existing state, app/branch
+  observations and exact existing LKG write; empty defaults/resource IDs/trust boundaries
+  remain. Candidate baseline observation additionally needs monorepo-only
+  GetDomainAssociation on the exact existing app/sarabethbelon.com in the owning hosting
+  role and matching explicitly supplied-app boundary; the supervisor separately approved
+  that proven permission seam. Empty/default configuration adds no permission.
+  Trusted workflow-SHA Node/Bun/root ignored-lifecycle tooling precedes credentials.
+- **Carolyn first-cutover candidate integration remains an INCOMPLETE offline requirement.**
+  Routine SSR release now explicitly denies first-cutover/legacy state. No candidate
+  branch/resource/name is invented. Next architecture decision: isolated candidate branch
+  with separate exact-SHA production rebuild/promotion, versus approved domain reassociation.
+  Nullable config/optional CDK/ref/build-policy integration is NOT implemented this pass.
+
+New real-state/SSR/switch external-boundary fixtures cover old production → accepted
+candidate → approved switch → production verification → provenance, plus candidate
+marker/smoke/Lighthouse/CAS failures, drift, lost ownership, switch failure and final CAS
+conflict. They replace AWS/GitHub/Git/HTTP/tool boundaries; they are not hosted execution.
+Targeted checks, a forward code commit and new exact-SHA full validation are being recorded
+in the following checkpoint. Independent review of this correction is still REQUIRED.
+
+Recovery reports and new unique raw evidence directories are under:
+`/Users/pauldiloreto/.pi/agent/sessions/--Users-pauldiloreto-Projects-websites-main--/subagent-artifacts/outputs/22685b92-f7ef-4f32-9b24-7c35b8b72f0c/recovery/`.
+All four sites are **NOT migrated**; source repositories remain sole production owners.
+No publication/live adapter/inventory/credential/production request or gate was executed.
+Phase-2 acceptance and its explicit publication/main-push exceptions remain accepted.
+
+Next safe scope: finish/review the offline correction, exact committed TARGET fixture
+validation and the explicit Carolyn architecture decision. Any later live work requires
+an approval naming repositories, site/account/region, exact read-only profile/role,
+allowed metadata actions/resources/non-sending URLs, artifact download scope, private
+retention location and expiry/stopping point (`production-inventory.md`). That approval
+must exclude secret values and writes; candidate, settings, cloud, writer drain, switch,
+enablement and retirement remain distinct later approvals, never implied by these tests.
+Historical sections below retain their original checkpoint meanings.
 
 ## Recovery full-validation checkpoint — 2026-09-06
 
