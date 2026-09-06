@@ -86,6 +86,11 @@ main and durable state, validate provenance, then call this planner:
    retry. Intentional site rollback restores retained bytes/source through its separate
    approval path but NEVER lowers the routine high-watermark. Retain original restored
    release identity independently. The planner does not perform persistence or rollback.
+   CURRENT serving release and monotonic high-watermark must be separate fields in the
+   adapter's durable state. After intentional legacy restoration, ordinary retries remain
+   blocked, but explicitly approved restore-new must not use the routine planner's
+   `already-released` result to skip restoring the highest commit's retained bytes.
+   Legacy -> new -> legacy -> restore-new requires its own provenance/approval path.
 
 `planRecovery` is the contract for explicit `release-site(site, ref=main)`: trusted main
 workflow_dispatch only, fixed four-site allowlist, resolve main ONCE, record immutable SHA
@@ -116,6 +121,8 @@ Deploy AND rollback groups: `portfolio-production`, `diloreto-production`,
 - DiLoreto: trusted workflow-SHA harness checkout at `verification-harness`, frozen install
   at its workspace ROOT, scripts under `apps/diloreto`, selected-ref code uncredentialed.
   Preserve exact ZIP, origin+edge body/assets/cache/security/404 and browser assertions.
+  DiLoreto's separately approved manual immutable-ref redeploy/revalidation path is distinct
+  from main-only `release-site` recovery; per-site ports must retain and test both paths.
 - Carolyn and Sarabeth: distinct WEB_COMPUTE repository builds, real dedicated monorepo
   refs, exact checkout/bundle/job SHA, SSM/auth cleanup and fixture-only IPv4 workaround.
   Carolyn ref promotion and deploy must be one lock. Sarabeth old main branch/domain/SSM
