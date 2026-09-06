@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const read = path => readFileSync(root + path, 'utf8');
 const yaml = path => Bun.YAML.parse(read(path));
-const deployFiles = ['_carolyn-release.yml', '_diloreto-release.yml', '_paul-release.yml', '_sarabeth-release.yml', 'infrastructure-sarabeth.yml', 'redeploy-diloreto.yml', 'release-after-ci.yml', 'release-site.yml', 'restore-static.yml'];
+const deployFiles = ['_carolyn-release.yml', '_diloreto-release.yml', '_paul-release.yml', '_sarabeth-release.yml', 'infrastructure-sarabeth.yml', 'redeploy-diloreto.yml', 'release-after-ci.yml', 'release-reconciliation.yml', 'release-site.yml', 'restore-static.yml'];
 
 test('all production jobs/calls have literal false publication lock; no unexpected workflow escapes', () => {
   expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
@@ -41,6 +41,7 @@ test('whole deployment and restoration share noncanceling app-specific critical 
     expect(job.steps[install].run).toBe('bun install --frozen-lockfile --ignore-scripts');
     expect(install).toBeLessThan(config); expect(config).toBeLessThan(credentials);
     expect(job.steps[credentials].with['unset-current-credentials']).toBe(true);
+    expect(job.steps[credentials].with.audience).toBe('sts.amazonaws.com');
     expect(job.steps[credentials].with['allowed-account-ids']).toMatch(/^\d{12}$/);
     expect(job.steps[credentials + 1].run).toContain(`scripts/release/deploy.py deploy ${site}`);
     expect(job.steps[credentials + 1]['working-directory']).toBe('verification-harness');
@@ -87,14 +88,47 @@ test('SSR monorepo buildspec uses exact short roots, frozen root ignored lifecyc
   expect(build).not.toContain('dns-result-order=ipv4first');
 });
 
-test('Sarabeth infrastructure preserves all 16 historical operational steps under root gated scope', () => {
+test('Sarabeth infrastructure preserves legacy recovery and explicitly binds optional transition parameters', () => {
   const legacy = yaml('apps/sarabeth/.github/workflows/infrastructure.yaml').jobs.cloudformation;
   const active = yaml('.github/workflows/infrastructure-sarabeth.yml').jobs.cloudformation;
-  expect(active.steps.map(step => step.name).filter(name => name !== 'Fail closed before infrastructure credentials')).toEqual(legacy.steps.map(step => step.name));
+  expect(active.steps.map(step => step.name).filter(name => !['Fail closed before infrastructure credentials', 'Verify selected monorepo candidate before infrastructure mutation'].includes(name))).toEqual(legacy.steps.map(step => step.name));
   expect(active['timeout-minutes']).toBe(230);
   expect(active.environment).toBe('infrastructure-sarabeth');
   expect(active.defaults.run['working-directory']).toBe('apps/sarabeth');
-  for (const step of legacy.steps.filter(step => step.run)) expect(active.steps.find(candidate => candidate.name === step.name).run).toBe(step.run);
+  const changedOperations = ['Apply hosting stack', 'Apply approval-gated domain association and DNS'];
+  for (const step of legacy.steps.filter(step => step.run && !changedOperations.includes(step.name))) expect(active.steps.find(candidate => candidate.name === step.name).run).toBe(step.run);
+  const workflow = yaml('.github/workflows/infrastructure-sarabeth.yml');
+  expect(workflow.on.workflow_dispatch.inputs.operation.default).toBe('legacy');
+  expect(workflow.on.workflow_dispatch.inputs.retarget_webhook.default).toBe(false);
+  const gate = active.steps.find(step => step.name === 'Fail closed before infrastructure credentials').run;
+  expect(gate).toContain('sarabeth_transition.py prepare');
+  expect(gate).toContain('scripts/release/oidc.py');
+  const hosting = active.steps.find(step => step.name === changedOperations[0]).run;
+  expect(hosting).toContain('"${hosting_parameters[@]}"');
+  expect(hosting).toContain('GitHubOidcProviderArn="$OIDC_PROVIDER_ARN"');
+  const domain = active.steps.find(step => step.name === changedOperations[1]);
+  expect(domain['continue-on-error']).toBe(true);
+  expect(domain.run).toContain('"${domain_parameters[@]}"');
+  expect(domain.run.indexOf('sarabeth_transition.py candidate')).toBeLessThan(domain.run.indexOf('aws cloudformation deploy'));
+  expect(domain.run).toContain('sarabeth_transition.py domain');
+  const preflight = active.steps.findIndex(step => step.name === 'Verify selected monorepo candidate before infrastructure mutation');
+  expect(preflight).toBeLessThan(active.steps.findIndex(step => step.name === changedOperations[0]));
+});
+
+test('terminal observer covers every release entry without credentials, redispatch or recursion', () => {
+  const observer = yaml('.github/workflows/release-reconciliation.yml');
+  const entries = Object.keys(JSON.parse(read('config/release-runtime.json')).entryWorkflowIds);
+  expect(observer.on.workflow_run.workflows.sort()).toEqual(entries.map(path => yaml(path).name).sort());
+  expect(observer.on.workflow_run.types).toEqual(['completed']);
+  expect(observer.on.workflow_run.branches).toEqual(['main']);
+  expect(observer.jobs.reconcile.if).toBe('${{ false }}');
+  expect(observer.jobs.reconcile.permissions).toEqual({ contents: 'read', actions: 'read' });
+  expect(observer.jobs.reconcile.steps.find(step => step.run?.includes('reconcile.py'))).toBeDefined();
+  expect(observer.jobs.reconcile.steps.at(-1).if).toBe('always()');
+  expect(observer.jobs.reconcile.steps.at(-1).run).toContain('GITHUB_STEP_SUMMARY');
+  expect(read('scripts/release/deploy.py')).toContain("observe_subject(config['oidcSubject'])");
+  const policy = JSON.parse(read('config/release-policy.json'));
+  for (const key of ['legacyDiloretoRepositoryId', 'legacyDiloretoWorkflowId', 'legacyDiloretoManifestSha256']) expect(policy[key]).toBeNull();
 });
 
 test('owning IaC keeps old subjects, exact optional new subjects, provider/DNS identities and retained Sarabeth main', () => {
@@ -110,4 +144,12 @@ test('owning IaC keeps old subjects, exact optional new subjects, provider/DNS i
   expect(hosting).toContain('BranchName: sarabeth-production'); expect(hosting).toContain('Condition: CreateMonorepoBranch');
   expect(hosting).toContain('DeletionPolicy: Retain');
   expect(hosting).toContain('/sarabeth-studio/production/last-known-good-sha');
+  const bootstrap = read('apps/sarabeth/infrastructure/cloudformation/bootstrap.yaml');
+  const infra = bootstrap.split('  InfrastructureDeploymentRole:')[1];
+  expect(infra).toContain('Sid: ReadAcceptedMonorepoCandidate');
+  expect(infra).toContain('Action: s3:GetObject');
+  expect(infra).not.toContain('s3:PutObject');
+  expect(infra).toContain('Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob]');
+  expect(infra).toContain('apps/${MonorepoAppId}/branches/sarabeth-production/jobs/*');
+  expect(bootstrap).toContain('HasMonorepoApp: !Not [!Equals [!Ref MonorepoAppId, ""]]');
 });

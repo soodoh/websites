@@ -2,6 +2,11 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: GitHub OIDC and protected CloudFormation deployment roles for sarabeth-studio.
 
 Parameters:
+  MonorepoAppId:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^d[a-z0-9]+$"
+    Description: Observed existing Amplify app for read-only candidate attestation; no app creation.
   MonorepoSubject:
     Type: String
     Default: ""
@@ -27,6 +32,7 @@ Parameters:
     Description: Existing token.actions.githubusercontent.com provider ARN, or blank to create it.
 
 Conditions:
+  HasMonorepoApp: !Not [!Equals [!Ref MonorepoAppId, ""]]
   HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
   HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
@@ -310,6 +316,23 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - !If
+                - HasMonorepoState
+                - Sid: ReadAcceptedMonorepoCandidate
+                  Effect: Allow
+                  Action: s3:GetObject
+                  Resource: !Ref MonorepoStateObjectArn
+                - !Ref AWS::NoValue
+              - !If
+                - HasMonorepoApp
+                - Sid: ReadMonorepoCandidateSource
+                  Effect: Allow
+                  Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob]
+                  Resource:
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/branches/sarabeth-production
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/branches/sarabeth-production/jobs/*
+                - !Ref AWS::NoValue
               - Effect: Allow
                 Action:
                   - cloudformation:ContinueUpdateRollback

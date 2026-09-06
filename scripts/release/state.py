@@ -107,8 +107,12 @@ class State:
         proposed['intent']['jobs'].append(dict(branch=branch, jobId=job_id))
         self.write(proposed)
 
-    def finish(self, current, high_watermark):
+    def finish(self, current, high_watermark, outcome='accepted'):
+        from receipt import lifecycle_receipt
         proposed = copy.deepcopy(self.value)
         require(proposed['intent'] is not None, 'Missing owned intent')
+        # Receipt and serving state commit in the SAME CAS that clears intent. A lost
+        # CAS never fabricates completion; unresolved jobs remain in the prior intent.
+        proposed['lastLifecycleReceipt'] = lifecycle_receipt(self.site, proposed['intent'], current, outcome)
         proposed.update(currentRelease=current, highWatermark=high_watermark, intent=None, generation=proposed['generation'] + 1)
         self.write(proposed)

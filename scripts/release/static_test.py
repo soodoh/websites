@@ -47,7 +47,7 @@ class StaticTests(unittest.TestCase):
             if failure == 'superseded' and log.count(('recheck',)) == 2:
                 raise ValueError('Relevant inputs advanced during candidate acceptance')
         state.claim.side_effect = lambda *a: log.append(('claim',))
-        def finish(current, high_watermark):
+        def finish(current, high_watermark, **kwargs):
             log.append(('finish',))
             state.value.update(currentRelease=current, highWatermark=high_watermark, intent=None)
         state.finish.side_effect = StateOwnershipError('finish conflict') if failure == 'finish' else finish
@@ -138,6 +138,61 @@ class StaticTests(unittest.TestCase):
                 self.assertEqual(ops.count('create-deployment'), 1)
                 if phase != 'start':
                     self.assertNotIn('start-deployment', ops)
+
+    def test_real_amplify_terminal_failure_never_calls_rejected_stop(self):
+        for terminal in ('FAILED', 'CANCELLED'):
+            with tempfile.TemporaryDirectory() as directory:
+                archive = Path(directory) / 'site.zip'
+                archive.write_bytes(b'fixture')
+                aws, state = MagicMock(), MagicMock()
+                def call(service, operation, **kwargs):
+                    if operation == 'list-jobs':
+                        return {'jobSummaries': []}
+                    if operation == 'create-deployment':
+                        return {'jobId': '42', 'zipUploadUrl': 'https://upload.invalid'}
+                    if operation == 'start-deployment':
+                        return {}
+                    if operation == 'get-job':
+                        return {'job': {'summary': {'status': terminal}}}
+                    if operation == 'stop-job':
+                        raise UnknownOutcome('stop rejected')
+                    raise AssertionError(operation)
+                aws.call.side_effect = call
+                response = MagicMock()
+                response.__enter__.return_value.status = 200
+                with patch.object(static.urllib.request, 'urlopen', return_value=response):
+                    with self.assertRaisesRegex(ValueError, 'Amplify job failed'):
+                        static.Amplify(aws, {'appId': 'dfixture'}, state).deploy_zip('main', archive, hashlib.sha256(b'fixture').hexdigest())
+                self.assertNotIn('stop-job', [c.args[1] for c in aws.call.call_args_list])
+
+    def test_real_cleanup_polls_after_rejected_active_stop_and_preserves_unknown(self):
+        aws = MagicMock()
+        statuses = iter(['RUNNING', 'CANCELLED'])
+        def call(service, operation, **kwargs):
+            if operation == 'get-job':
+                return {'job': {'summary': {'status': next(statuses)}}}
+            if operation == 'stop-job':
+                raise UnknownOutcome('stop rejected')
+            raise AssertionError(operation)
+        aws.call.side_effect = call
+        static.Amplify(aws, {'appId': 'dfixture'}, MagicMock()).stop('main', '42')
+        self.assertEqual([c.args[1] for c in aws.call.call_args_list], ['get-job', 'stop-job', 'get-job'])
+        # Original ambiguous start must stay ambiguous even when cleanup is terminal.
+        with tempfile.TemporaryDirectory() as directory:
+            archive = Path(directory) / 'site.zip'
+            archive.write_bytes(b'fixture')
+            def ambiguous(service, operation, **kwargs):
+                if operation == 'list-jobs': return {'jobSummaries': []}
+                if operation == 'create-deployment': return {'jobId': '42', 'zipUploadUrl': 'https://upload.invalid'}
+                if operation == 'start-deployment': raise UnknownOutcome('original ambiguous start')
+                if operation == 'get-job': return {'job': {'summary': {'status': 'CANCELLED'}}}
+                raise AssertionError(operation)
+            aws.call.side_effect = ambiguous
+            response = MagicMock()
+            response.__enter__.return_value.status = 200
+            with patch.object(static.urllib.request, 'urlopen', return_value=response):
+                with self.assertRaisesRegex(UnknownOutcome, 'original ambiguous start'):
+                    static.Amplify(aws, {'appId': 'dfixture'}, MagicMock()).deploy_zip('main', archive, hashlib.sha256(b'fixture').hexdigest())
 
     def test_browser_children_receive_allowlisted_environment_only(self):
         with patch.dict(os.environ, {'PATH': '/safe', 'HOME': '/empty', 'CI': '1', 'AWS_SECRET_ACCESS_KEY': 'secret', 'ACTIONS_ID_TOKEN_REQUEST_TOKEN': 'secret', 'ACTIONS_ID_TOKEN_REQUEST_URL': 'secret', 'REFERENCE_PROMOTION_TOKEN': 'secret', 'GH_TOKEN': 'secret'}, clear=True), patch.object(static, 'marker_check'), patch.object(static, 'command') as command:

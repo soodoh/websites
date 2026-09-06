@@ -52,6 +52,22 @@ class StateTests(unittest.TestCase):
             self.assertEqual(args['ssekms_key_id'], 'fixture-key')
             self.assertNotEqual(args['if_match'], 'not-an-etag')
 
+    def test_restoration_receipt_preserves_all_job_ids_hashes_and_outcome_before_intent_clear(self):
+        store, state = self.fixture()
+        selected = dict(repository='soodoh/websites', site='paul', commit='b' * 40, runId='10', runAttempt='2', sha256='f' * 64, uploadUrl='https://must-not-retain.invalid')
+        previous = dict(repository='soodoh/portfolio-website', site='paul', commit='a' * 40, runId='9', runAttempt='1', sha256='e' * 64)
+        state.claim(selected, 'release', '10/2')
+        for branch, job in [('candidate', '20'), ('main', '21'), ('main', '22')]: state.job(branch, job)
+        state.finish(previous, 'c' * 40, outcome='restored-previous')
+        receipt = store.value['lastLifecycleReceipt']
+        self.assertEqual([job['jobId'] for job in receipt['jobs']], ['20', '21', '22'])
+        self.assertEqual(receipt['requestedRelease']['sha256'], 'f' * 64)
+        self.assertEqual(receipt['servingRelease']['sha256'], 'e' * 64)
+        self.assertEqual(receipt['restoration'], 'passed')
+        self.assertEqual(receipt['outcome'], 'restored-previous')
+        self.assertNotIn('uploadUrl', receipt['requestedRelease'])
+        self.assertIsNone(store.value['intent'])
+
     def test_claim_job_finish_conflicts_stop_without_rebase_or_second_write(self):
         for phase in ('claim', 'job', 'finish'):
             store, state = self.fixture()
