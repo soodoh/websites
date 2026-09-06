@@ -37,16 +37,11 @@ export async function routeCandidateRequest(
 		await route.abort("blockedbyclient");
 		return;
 	}
-	// Interception alone is not a redirect policy: never let the network
-	// fetch follow a candidate response to a production/legacy origin.
+	// Chromium bypasses route interception after a fulfilled redirect, even to a
+	// same-origin first hop. Never give the browser any Location to follow.
 	const response = await route.fetch({ maxRedirects: 0 });
 	const location = response.headers().location;
-	if (
-		response.status() >= 300 &&
-		response.status() < 400 &&
-		location &&
-		!candidateRequestAllowed(new URL(location, url).href, origin)
-	) {
+	if (response.status() >= 300 && response.status() < 400 && location) {
 		await route.abort("blockedbyclient");
 		return;
 	}

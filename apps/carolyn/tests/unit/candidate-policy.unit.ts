@@ -68,11 +68,11 @@ test("candidate browser blocks every off-origin request, including redirect and 
 	}
 });
 
-test("actual candidate route policy fetches without redirects and blocks external Location before browser follow", async () => {
+test("actual candidate route policy fetches without redirects and blocks every Location before browser follow", async () => {
 	const origin = candidateOrigin(environment);
 	for (const [url, location, expected] of [
 		[`${origin}/`, undefined, ["fetch", "fulfill"]],
-		[`${origin}/`, "/about", ["fetch", "fulfill"]],
+		[`${origin}/`, "/about", ["fetch", "abort"]],
 		[`${origin}/`, "https://carolyndiloreto.com", ["fetch", "abort"]],
 		[`${origin}/`, "//carolyn.diloreto.com", ["fetch", "abort"]],
 		["https://carolyndiloreto.com", undefined, ["abort"]],

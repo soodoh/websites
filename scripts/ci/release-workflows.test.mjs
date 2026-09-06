@@ -203,7 +203,10 @@ test('Carolyn candidate and production rebuild remain independently disabled wit
   const candidatePolicy = read('apps/carolyn/tests/candidate-policy.ts');
   expect(candidatePolicy).toContain('route.abort("blockedbyclient")');
   expect(candidatePolicy).toContain('route.fetch({ maxRedirects: 0 })');
-  expect(candidatePolicy).toContain('new URL(location, url).href');
+  expect(candidatePolicy).not.toContain('new URL(location, url).href');
+  expect(candidatePolicy).toContain('response.status() >= 300');
+  expect(candidatePolicy).toContain('response.status() < 400');
+  expect(read('apps/carolyn/tests/candidate-policy.test.ts')).toContain('expect(destinationRequests).toEqual([])');
   expect(candidate).toContain('maxRedirects: 0');
   expect(candidate).toContain('private, no-store');
   expect(candidate).toContain('The password you entered is incorrect.');
