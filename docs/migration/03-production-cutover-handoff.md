@@ -1,6 +1,97 @@
-# Phase 3 handoff — Carolyn candidate TLS fixture passed; final review pending
+# Phase 3 handoff — all-four offline authoring accepted; no production migration
 
-## Final bounded offline evidence correction — 2026-09-06
+## Final independent offline acceptance — 2026-09-06
+
+**All-four bounded offline authoring/fixture acceptance is complete. Production migration:
+NONE (0/4).** Final independent standards/security and parity/order reviews both report
+`needsFixes=false`, no findings, and **OK with notes — bounded offline acceptance only**.
+This closes the Carolyn implementation/review/evidence blockers, not any hosted/live gate.
+Earlier pending/BLOCK statements below retain their historical checkpoint meaning and
+are superseded only for current offline acceptance by this section. Prior Paul/DiLoreto
+finding dispositions and reviewed Sarabeth flow at `53430066` remain intact; the fresh
+all-four chain below, not that historical run, supplies current regression evidence.
+
+### Exact source, tested checkout and later documentation
+
+- Original isolated-cutover implementation: `6ccc6d8062739e690b999d58d9a76835b4fcadf4`;
+  initial review started at docs HEAD `d7e1ea7d40bcbc9a70a7188e2831b9b7b18f0f98`.
+- Final source-code fix: `866dd65d36ad9db9b8764758a22caf45c8dd5dcc`, following
+  `fd580ecfd3b44fa380747e49e66478784261a6b0`. Both reject browser redirects before follow,
+  including empty Location; no lifecycle, production-smoke or Sarabeth rewrite.
+- **Latest independently full-tested checkout: `37dac114eaa41f487a893e9655b3b2d9a509be43`.**
+  Only two evidence docs separate it from the final source-code fix. Its fresh TARGET
+  root frozen install, complete serial canonical 4/4 and additional actual candidate
+  10/10 are the accepted offline execution evidence.
+- Reviewed evidence-only successor: `bedbc07cc50bdddcae75cfaaa6bc4fcef2812376`.
+  This final handoff is another **docs-only successor, not a newly full-tested SHA**.
+  Resolve its exact commit with `git log -1 --format=%H --
+  docs/migration/03-production-cutover-handoff.md`; the unique final report records it.
+  Operational docs remain release inputs: source equality does not authorize deploying
+  a later docs SHA using an earlier checkout's validation.
+
+### Independent axes and final finding dispositions
+
+Reports live under
+`/Users/pauldiloreto/.pi/agent/sessions/--Users-pauldiloreto-Projects-websites-main--/subagent-artifacts/outputs/72894acd-0125-4963-a2c3-827b08d39482/carolyn-review/`.
+
+| Axis / report | Findings and final disposition |
+| --- | --- |
+| Standards/security: `initial-0.md` → `followup-0.md` → `final-review-0.md` | Initial no-blocker result's redirect-isolation assertion was superseded by the reproduced P1. Final review closes redirect-chain/empty-Location defect and missing auth/SSR execution evidence; optional retained resources, unchanged domains, trusted harness, credential filtering and production-state separation remain correct. No unresolved finding. |
+| Parity/order: `initial-1.md` → `followup-1.md` → `final-review-1.md` | Initial P1 multi-hop browser escape fixed with real two-origin counter regressions; follow-up P1 four unexecuted auth/photography cases closed by unchanged ten-case TLS run and four actual CSRF denials. Exact candidate selection, durable intent before mutation, separate production rebuild/verification/CAS and Sarabeth ordering preserved. No unresolved finding. |
+
+Final reviewer SHA-256 values:
+`final-review-0.md` = `b7ff0dac9ea4f6f1a73adf3d6a75f04ad39f9cad35b9c8a70d5d17f0e259e099`;
+`final-review-1.md` = `82af4c9ee628bc28c99907fceeb4a5af078870095ef3b58c16dd7c49ba1e5e47`.
+Both are read-only source/evidence reviews, not second executions or independent digest
+recomputations. This docs pass separately recomputed all 147 completed-file hashes,
+six preserved prior/follow-up hashes and final review hashes; it ran no new test chain.
+`final-fixes-validation.md` supplies the independent TARGET execution report; its SHA-256
+is `cfe24dfc191fb6a6ba50b82dc6483f0dbd43848b595dfcde570ef1219b04d2ea`.
+
+### Accepted execution evidence and retained limits
+
+Exact commands, counts, tool paths, log digests and transport details follow in the
+bounded validation checkpoint. In `/private/tmp/carolyn-tls-final.L26kKr/`, root
+`bun install --frozen-lockfile` and `bun run ci:verify` passed (4/4 uncached, concurrency 1,
+12m48.831s). `run-post-suite.sh` ran `history-checks.py`, `lint-history.mjs`,
+`audit-installed-ranges.ts --full-graph` and four `artifact.py diagnostics` scans.
+`run-candidate-tls-v2.sh` separately passed ten unchanged candidate cases in 2.6s with
+zero failures/skips/retries and four real missing/cross-Origin 403/Forbidden probes.
+No fixture result is production job/bundle/serving proof. Synthetic local TLS/direct
+emitted-fetch dispatch, scratch-only certificate bypass and root-overridable chmod are
+explicit limitations. Hosted Amplify API shapes/routing/source/job attestation remain
+unverified; Docker stable-reference comparisons do not establish unrelated-service
+continuity or raw snapshot equality.
+
+All earlier failures remain retained: pre-fix escape, superseded cleanup guards, unshared
+binds, missing browser path, six-pass/four-blocked transport, TLS hash preflight/export,
+non-fail-fast recovery continuation and collector Size/self-sentinel corrections. No
+failure is relabeled as passing. The canceled worker's absent report remains cancellation,
+not failed testing or acceptance. User-approved restart from actual `fa06a3e6`, unknown
+cause of missing tracked partial edits and byte-exact surviving-draft preservation remain
+in the historical implementation checkpoint; neither history nor earlier artifacts changed.
+
+This docs-only pass uses unique `/private/tmp/carolyn-final-handoff.QqRaHX/` evidence,
+including `evidence-inspection.json`; previous convenience summary was preserved first as
+`results-before-final-handoff.md` (SHA-256
+`60a7e792dfdc99dfd9df7be2ea4e438ffd3fbdb38afa4773bd33d00b3b7519f9`).
+The unique managed `carolyn-review/final-handoff.md` records final HEAD/status/commit evidence;
+`/private/tmp/websites-plan-3-results.md` is refreshed convenience, not a recovery store.
+
+**Next safe action: stop at the live approval gate.** Request only a separately scoped
+read-only inventory under `production-inventory.md` if the user chooses to continue;
+do not execute it now. Unknown IDs/subjects/candidate names remain null, optional CDK
+candidate absent by default, candidate/promotion flags false and literal publication/runtime
+locks closed. Actual recovery capture/retention/KMS, GitHub protections/access/identity,
+in-place connection/change-set assessment, source/CMS freeze and writer drain, candidate,
+separate exact-SHA production rebuild/serving acceptance, enablement, rollback drill,
+trust removal and retirement each require their own later approval/evidence. No push,
+publication, live inventory/credential read, production HTTP/CMS/email, workflow dispatch,
+cloud/domain/release-ref/settings mutation or deployment occurred. Source repositories
+remain the sole permitted production owners. Phase-2/publication/main-push acceptance and
+its explicit exception remain accepted, not reopened.
+
+## Historical final bounded offline evidence correction — 2026-09-06
 
 **New full-tested checkout:** `37dac114eaa41f487a893e9655b3b2d9a509be43`.
 Its application/release/test source is unchanged from code commit
