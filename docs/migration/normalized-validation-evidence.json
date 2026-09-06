@@ -1,0 +1,410 @@
+{
+  "status": "Final normalized-history clean-checkout validation passed; no phase-1 acceptance inferred",
+  "candidate": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+  "commits": 1110,
+  "checkout": "/tmp/websites-normalized-validation/checkout",
+  "cloneFlags": [
+    "--no-local",
+    "--single-branch",
+    "--branch",
+    "main",
+    "--no-tags"
+  ],
+  "noAlternates": true,
+  "checkoutCleanBeforeAndAfter": true,
+  "targetUnchanged": true,
+  "targetBoundary": "HEAD/tree/refs/status plus .git pointer, index, HEAD file, config and hook file hashes identical before/after; no target or source writes performed",
+  "environment": {
+    "launcher": "/tmp/websites-normalized-validation/env.sh",
+    "emptyHome": "/tmp/websites-normalized-validation/home",
+    "envI": true,
+    "productionSecrets": false,
+    "canonicalFixtureOfflineChainsUnchanged": true
+  },
+  "tools": {
+    "bun": "1.4.0",
+    "node": "24.20.0",
+    "turbo": "2.10.12",
+    "playwright": "1.62.1",
+    "platform": "linux/arm64",
+    "chromium": "151.0.7922.34 revision 1234",
+    "chromeForLighthouse": "152.0.7977.77",
+    "go": "1.27.1",
+    "actionlint": "1.7.7",
+    "shellcheck": "0.11.0",
+    "uv": "0.12.9",
+    "cfnLint": [
+      "1.42.0",
+      "1.53.0"
+    ],
+    "dockerClient": "29.8.0",
+    "dockerServer": "28.4.0"
+  },
+  "historyLint": {
+    "checked": 1110,
+    "failures": 0,
+    "warnings": 6,
+    "defaultIgnores": false,
+    "report": "/tmp/websites-normalized-validation/history-lint.json"
+  },
+  "installedGraph": {
+    "roots": 6,
+    "exactByteParityWithPostRename": true,
+    "sha256": "b37116f28b3a6d586262ad128b1818fcd2c212de0545c6d1aba075f6991fa1b5",
+    "postRenameEvidence": "/tmp/websites-workspace/rename-validation/final-clean-graph.json",
+    "lockSha256": "14e1706c369f49ed3e0bd6764d06406326ad3222cde353e1d5056fc8297c42de",
+    "summary": {
+      ".": {
+        "packages": 73,
+        "edgesChecked": 108,
+        "missing": [],
+        "violations": []
+      },
+      "apps/sarabeth": {
+        "packages": 574,
+        "edgesChecked": 1554,
+        "missing": [],
+        "violations": []
+      },
+      "apps/paul": {
+        "packages": 686,
+        "edgesChecked": 1648,
+        "missing": [],
+        "violations": []
+      },
+      "apps/carolyn": {
+        "packages": 601,
+        "edgesChecked": 1549,
+        "missing": [],
+        "violations": []
+      },
+      "apps/diloreto": {
+        "packages": 619,
+        "edgesChecked": 1578,
+        "missing": [],
+        "violations": []
+      },
+      "apps/carolyn/infra": {
+        "packages": 32,
+        "edgesChecked": 39,
+        "missing": [],
+        "violations": []
+      }
+    }
+  },
+  "rootCi": {
+    "exit": 0,
+    "successful": 4,
+    "total": 4,
+    "cached": 0,
+    "concurrency": 1,
+    "strictEnv": true,
+    "remoteCache": false,
+    "duration": "11m54.458s",
+    "start": "2026-09-05T23:51:07Z",
+    "finish": "2026-09-06T00:03:04Z"
+  },
+  "tests": {
+    "contracts": {
+      "passed": 24,
+      "assertions": 391,
+      "files": 4,
+      "executions": 2
+    },
+    "carolyn": {
+      "unit": 117,
+      "unitAssertions": 1082,
+      "infra": 9,
+      "infraAssertions": 40,
+      "artifactFixture": 3,
+      "artifactProduction": 3,
+      "visual": 92
+    },
+    "paul": {
+      "canonicalPassed": 56,
+      "unchangedViewportSkips": 4,
+      "lighthouseRuns": 3
+    },
+    "diloreto": {
+      "genealogy": 13,
+      "canonicalPassed": 37,
+      "unchangedViewportSkips": 1
+    },
+    "sarabeth": {
+      "canonical": 196,
+      "provenance": 7,
+      "provenanceExecutions": "host and canonical Gitless container"
+    }
+  },
+  "sarabethGitlessManifest": {
+    "candidate": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+    "actual": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+    "equals": true,
+    "container": "5ce04b3dadd2800ca6b407ac8ff479a6be8f8288493aed74588c4d7fa459868d",
+    "image": "sha256:5e721c37ae8b325de23f6bfc2cd5b5961311d7798a3a16fa4711498943e76e75",
+    "path": "/work/apps/sarabeth/.amplify-hosting/static/__deployment.json",
+    "gitlessVerifiedIn": "/tmp/websites-normalized-validation/sarabeth-versions.log"
+  },
+  "cloudFormation": {
+    "templateSha256": "d3692bfbbe154221c8ab34133a712c54f97005025ded527437615fddec435002",
+    "resources": 19
+  },
+  "screenshotsAssertionsAndWorkflowsUnchanged": true,
+  "images": {
+    "carolyn": {
+      "Id": "sha256:4aa5960e38bb9b25c0ca2dc4f8210e57db580098b922dc0ca707b4a3d214495a",
+      "Parent": "sha256:72cb7a59338f9bb698e867c2889b7aaac929cb098b4b04cb1fa5835aea4efb0e",
+      "Created": "2026-09-05T16:54:50.702010098-07:00",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoTags": [
+        "websites-carolyn-playwright:1.62.1-bun1.4.0-14e1706c369f49ed"
+      ],
+      "RepoDigests": [
+        "websites-carolyn-playwright@sha256:4aa5960e38bb9b25c0ca2dc4f8210e57db580098b922dc0ca707b4a3d214495a"
+      ]
+    },
+    "portfolio": {
+      "Id": "sha256:81c58e64f159ade0869415816cabb44a26e84b3da62b8f2f5a533937223e7c15",
+      "Parent": "sha256:02454186b4dabdc39cd27bd71e3b1e83e779488a7eb5fdf631454795a1ea09e1",
+      "Created": "2026-09-05T16:58:44.15933334-07:00",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoTags": [
+        "websites-portfolio-playwright:1.62.1-bun1.4.0-14e1706c369f49ed"
+      ],
+      "RepoDigests": [
+        "websites-portfolio-playwright@sha256:81c58e64f159ade0869415816cabb44a26e84b3da62b8f2f5a533937223e7c15"
+      ]
+    },
+    "diloreto": {
+      "Id": "sha256:82979f95aa7264c04922d93a0a115bd509aaa31fceb9a71612912b8d2f760ccb",
+      "Parent": "sha256:0fc79bcfb864a5649a7ea2264ca71a20749c57059df85320ebb1225a3a7fb4f7",
+      "Created": "2026-09-05T17:01:16.834301859-07:00",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoTags": [
+        "websites-diloreto-playwright:1.62.1-bun1.4.0-14e1706c369f49ed"
+      ],
+      "RepoDigests": [
+        "websites-diloreto-playwright@sha256:82979f95aa7264c04922d93a0a115bd509aaa31fceb9a71612912b8d2f760ccb"
+      ]
+    },
+    "sarabeth": {
+      "Id": "sha256:5e721c37ae8b325de23f6bfc2cd5b5961311d7798a3a16fa4711498943e76e75",
+      "Parent": "sha256:12070d65731950472b8ead43c1a666e12097be65d65fd36af62d6e8b7ceb1af1",
+      "Created": "2026-09-05T17:02:30.821403086-07:00",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoTags": [
+        "websites-sarabeth-playwright:1.62.1-bun1.4.0-14e1706c369f49ed"
+      ],
+      "RepoDigests": [
+        "websites-sarabeth-playwright@sha256:5e721c37ae8b325de23f6bfc2cd5b5961311d7798a3a16fa4711498943e76e75"
+      ]
+    }
+  },
+  "baseImages": {
+    "oven/bun:1.4.0": {
+      "Id": "sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoDigests": [
+        "oven/bun@sha256:5ff609364c049b54eb0ff560ec96319729a972078ef2c755d758f0c6ef89c2d6"
+      ],
+      "Created": "2026-08-20T14:11:50.129747342Z"
+    },
+    "node:24.20.0-bookworm-slim": {
+      "Id": "sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoDigests": [
+        "node@sha256:ba849c60be29959425b8734d57b8b4b7d56f98edd9504c9af091d5281095a71e"
+      ],
+      "Created": "2026-08-27T17:03:19.405438408Z"
+    },
+    "mcr.microsoft.com/playwright:v1.62.1-noble": {
+      "Id": "sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoDigests": [
+        "mcr.microsoft.com/playwright@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e",
+        "mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e"
+      ],
+      "Created": "2026-07-30T17:06:24.476630938Z"
+    },
+    "mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e": {
+      "Id": "sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e",
+      "Architecture": "arm64",
+      "Os": "linux",
+      "RepoDigests": [
+        "mcr.microsoft.com/playwright@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e",
+        "mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e"
+      ],
+      "Created": "2026-07-30T17:06:24.476630938Z"
+    }
+  },
+  "dockerCleanup": {
+    "removedImages": 32,
+    "allRemovedIds": [
+      "sha256:02454186b4dabdc39cd27bd71e3b1e83e779488a7eb5fdf631454795a1ea09e1",
+      "sha256:0fc79bcfb864a5649a7ea2264ca71a20749c57059df85320ebb1225a3a7fb4f7",
+      "sha256:12070d65731950472b8ead43c1a666e12097be65d65fd36af62d6e8b7ceb1af1",
+      "sha256:2243dad885abb3a434391a425244acfe71d9a94e6c52f9a19c5701f94d2570ea",
+      "sha256:2386524e17e69bbf2e8827c7d42f6fadcd0a5fd14b7b16e8f4d912f98484979b",
+      "sha256:2de4c39410be8a14d54efa7e0e86fd1872c19e337df8c45b8e6c8858c3cabbdb",
+      "sha256:36f1d44b445aeebc59b0d5ec82470a83df805688228ffe738eea1d7a0ae98bdd",
+      "sha256:39e33c5105f04c116f4005599941bf31dbac0a46d3fca4a4a1efc8fd6b3b65c2",
+      "sha256:3fef5a81844534cb811fd5f12805cc2a6175c2853cf5c133fd94875e2af206c6",
+      "sha256:44831066d743084d8f1fd616720288a5dacd9ed5ba043ec8e3e44510b76c96ee",
+      "sha256:4aa5960e38bb9b25c0ca2dc4f8210e57db580098b922dc0ca707b4a3d214495a",
+      "sha256:50821b3228a7f2947953f4e1e14aa66c7ebdd33ac0d4df720fdd5d96ace153ac",
+      "sha256:5781e3cf4a007fcdd27e0ebb641deb1b7224ab5c6712ba8fbb1e8ca99863fee3",
+      "sha256:57ef1b0dbf158c5d6931a8c309bb5668aa2050800322f4ea2d7c0c3993184a69",
+      "sha256:5cf7d840ccc17a3a0e4b4584c425ae61f5c29b01e6f413c984a2a8101518df57",
+      "sha256:5deb97fb45508e15e4c08954987e28289f8e65e42f6f80e5908c10b43c129715",
+      "sha256:5e721c37ae8b325de23f6bfc2cd5b5961311d7798a3a16fa4711498943e76e75",
+      "sha256:65396bfeb74b3fab6efe50d7747350f075a535d71f70b5a2aa1f528a219888c9",
+      "sha256:72cb7a59338f9bb698e867c2889b7aaac929cb098b4b04cb1fa5835aea4efb0e",
+      "sha256:7f41a0f5fac1feea574086a21d1a307b7585738d438e9c4aeecf6708065598bd",
+      "sha256:81c58e64f159ade0869415816cabb44a26e84b3da62b8f2f5a533937223e7c15",
+      "sha256:82979f95aa7264c04922d93a0a115bd509aaa31fceb9a71612912b8d2f760ccb",
+      "sha256:9288c3b629cc3ea91da7d8bdf95e20e5682994acd8ef7665b6f4cfadbbe41108",
+      "sha256:9ae6acee61312e495c65764af84ad05d30493c9a3a7250d66634d2bd7e2facc6",
+      "sha256:a410d3fa79936803beec6207e68020b0b7c6def2cf35d81a4552a576b128cc99",
+      "sha256:b47e4b75b30a798d2cac25f0e153148d37f4480c9718ed59418060555442ba71",
+      "sha256:b803dfd7f72e58c8436f4d24ee219f3beb55aaaa04d6cf11277ecb89ede6c477",
+      "sha256:b9d306452805875c085f3a399580d679987ca3ccc845516ed2d3212f917641f4",
+      "sha256:c9e4c375a8f791eefec55ab713720c4b34a434403b59a1294db8e24c29b5a917",
+      "sha256:df5f1ced09871975d96c47d0272642d07e0d01fefa59c8d4afadfd54abc9691a",
+      "sha256:f41fd0c8b80d2df0db628264b13357ea046b1ee9b52d29176bc00d83136668f4",
+      "sha256:fb9dce98290cd53b198ba7f0f9e9fba4a4c09573399bb50b0cb3ec6d49ec3311"
+    ],
+    "onlyInvocationCreated": true,
+    "freshContainerReferenceChecks": true,
+    "flags": [
+      "--no-prune"
+    ],
+    "forceImageCleanup": false,
+    "pruneOrBuildCacheCleanup": false,
+    "oldImagesOrVolumesRemoved": false,
+    "preAndPostImageSetsExactlyEqual": true,
+    "preAndPostContainerSetsExactlyEqual": true,
+    "preAndPostVolumeSetsExactlyEqual": true,
+    "containers": 33,
+    "runningContainers": 19,
+    "volumes": 70,
+    "diskBefore": "Filesystem     1K-blocks     Used Available Use% Mounted on\n/dev/vdb1      102624184 90421136   6943888  93% /var/lib/docker",
+    "diskAfter": "Filesystem     1K-blocks     Used Available Use% Mounted on\n/dev/vdb1      102624184 90422628   6942396  93% /var/lib/docker",
+    "commandLog": "/tmp/websites-normalized-validation/docker-commands.jsonl"
+  },
+  "checks": [
+    {
+      "command": "git clone --no-local --single-branch --branch main --no-tags /Users/pauldiloreto/Projects/websites/main /tmp/websites-normalized-validation/checkout",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/clone.log",
+      "logSha256": "8b90904a758c59892a6b75e62e3fc940b895ae92f7211df7f36a69d0f08f2712"
+    },
+    {
+      "command": "bun --version",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "node --version",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun install --frozen-lockfile",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun x --no-install turbo --version",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun run test:workspace",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun docs/migration/scripts/lint-history.mjs . /tmp/websites-normalized-validation/history-lint.json",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun docs/migration/scripts/audit-installed-ranges.ts . /tmp/websites-normalized-validation/installed-graph.json --full-graph",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "cmp /tmp/websites-normalized-validation/installed-graph.json /tmp/websites-workspace/rename-validation/final-clean-graph.json",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/install-contracts-audit.log",
+      "exitEvidence": "set -ex sequential shell completed with exit 0",
+      "logSha256": "da52ee59fe3191e22e36d22fe2ab67ad7edf58075b819de895f9129b4011d7f2"
+    },
+    {
+      "command": "bun run ci:verify",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/root-ci.log",
+      "logSha256": "8d9887aa21deffbb48761e08545a4741b2fb1e2c39510e30cf82d445eb91e841"
+    },
+    {
+      "command": "final installed audit, cmp, Git status/diff, no-alternates check and git fsck --full",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/final-checkout.log",
+      "logSha256": "f476c4008cca827053ed4ee0f0d3e162539c7cf75e939129e669b068d606593a"
+    },
+    {
+      "command": "scratch docker normalized-cleanup (app layers)",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/final-cleanup.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "scratch docker normalized-cleanup (new shared layers after all gates)",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/shared-cleanup.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "python3 /tmp/websites-normalized-validation/final-evidence.py",
+      "exit": 0,
+      "log": "/tmp/websites-normalized-validation/final-evidence.log",
+      "logSha256": "476d371c3b935a8add96495081ed528caa4b7b2b1ca27a31835fda9b6cea7f98"
+    }
+  ],
+  "blockers": [],
+  "acceptance": "Parent/user decision only; no push, deployment, AWS lookup/mutation, source installation/testing, or phase-2 work performed",
+  "cloneIdentity": {
+    "head": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+    "commitCount": "1110",
+    "shallow": "false",
+    "refs": "cb7a15fb23b810285f51432de7efeec05e115a3f refs/heads/main\ncb7a15fb23b810285f51432de7efeec05e115a3f refs/remotes/origin/main",
+    "noAlternates": true,
+    "packFileLinkCounts": {
+      "pack-b3da14c3fa8f97668cb337c227db636dba7507c8.rev": 1,
+      "pack-b3da14c3fa8f97668cb337c227db636dba7507c8.pack": 1,
+      "pack-b3da14c3fa8f97668cb337c227db636dba7507c8.idx": 1
+    },
+    "status": ""
+  }
+}

@@ -103,7 +103,7 @@ an original source SHA, first apply `portfolio-commit-map.txt`, then this stage'
 Do not globally replace old SHAs inside checkpoint evidence or claim older artifact
 manifests were built at a normalized SHA.
 
-## Reproduction and remaining acceptance
+## Reproduction and final acceptance
 
 The read-only planner `scripts/plan-history-subjects.py --repo <original-bare-clone>
 --head main --output-directory <private-output>` regenerates the original plan byte-for-byte
@@ -113,8 +113,11 @@ filter-repo commit map. Original scratch evidence is at `/tmp/websites-history-n
 After a workspace install, `bun docs/migration/scripts/lint-history.mjs <checkout>
 <output-json>` lints every HEAD ancestor, including the initial commit, without ignores.
 
-The complete post-rename gates passed before normalization; tree equivalence preserves
-that code correspondence but does **not** substitute for a fresh normalized-SHA artifact
-check. Final independent review and clean normalized-checkout validation remain pending
-at this evidence checkpoint. The final phase-1 handoff records their disposition. Source
-repositories remain production deployment owners regardless of local phase-1 acceptance.
+The complete post-rename gates passed before normalization; tree equivalence alone was
+not treated as a fresh normalized-SHA artifact check. Both independent reviews subsequently
+found no actionable issues, and fresh full uncached CI passed at
+`cb7a15fb23b810285f51432de7efeec05e115a3f`, with the actual Gitless Sarabeth artifact's
+commit equal to that SHA. See `normalized-validation-evidence.json`, `final-runtime-review.md`,
+`final-history-review.md` and the final phase-1 handoff. Local implementation acceptance
+is complete; source repositories remain production deployment owners and publication/
+phase-2 work still requires separate authorization.

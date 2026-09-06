@@ -1,16 +1,67 @@
-# Phase 1 handoff — scoped history normalized; final validation/review pending
+# Phase 1 handoff — complete and locally validated
 
-**LOCAL ONLY. Nothing pushed. Phase 1 is not accepted; do not begin phase 2.**
+**LOCAL ONLY. Nothing pushed or deployed. Do not begin phase 2 without separate approval.**
 
-The four short app folders and required scopes passed complete clean-checkout gates.
-The parent then normalized all 1,109 local-main reachable commits, including the published
-initial commit, with exhaustive tree/metadata/topology verification. See
-`history-normalization-decision.md` and the complete SHA map. Final independent review and
-fresh normalized-SHA validation remain. Publication requires separate non-fast-forward approval.
+## Final acceptance checkpoint
 
-All checkpoint sections below retain their **original historical SHAs and stage-local
-statements**. Resolve old SHAs through `history-normalization-commit-map.txt` when navigating
-current main; do not reinterpret old artifact SHA evidence as a newly normalized run.
+The parent accepts the requested phase-1 implementation as locally complete after both
+independent reviews and fresh full normalized-history validation passed at
+**`cb7a15fb23b810285f51432de7efeec05e115a3f`**. The following acceptance/evidence commit
+changes only `docs/migration/` files; it is not represented as a new full-CI artifact run.
+`source-imports.json` records this reviewed/tested checkpoint as `finalMigrationSha`.
+
+Completed scope: four unsquashed histories; functioning Bun 1.4.0 / Node 24.20.0 /
+Turbo 2.10.12 workspace; folders `apps/{carolyn,paul,diloreto,sarabeth}` with package names
+unchanged; required approved commit scopes; authorized normalization of every prior
+local-main commit including the published initial commit. All 1,109 rewritten commits
+retain their trees, authors/dates, body/footer bytes and mapped parent topology. Exact
+maps, original backups and signature-removal accounting are retained.
+
+| Final gate | Result |
+| --- | --- |
+| Independent runtime/path/policy review | No actionable findings; `final-runtime-review.md` |
+| Independent history/provenance review | No actionable findings; `final-history-review.md` |
+| Independent clean clone, frozen install, contracts | Pass; 24 tests / 391 assertions |
+| Actual HEAD-ancestor commitlint, ignores disabled | 1,110 checked; zero errors; six preserved footer warnings |
+| Six-root installed dependency/peer graph | Exact byte parity with post-rename baseline; zero required edge failures |
+| Complete root `bun run ci:verify` | 4/4 successful; zero cached; concurrency 1; 11m54.458s |
+| Sarabeth actual canonical Gitless deployment manifest | Full commit equals tested `cb7a15fb23b810285f51432de7efeec05e115a3f` |
+| Screenshot, assertion and infrastructure preservation | Passed; unchanged 19-resource offline template |
+| Source/target boundaries and Docker cleanup | Passed; pre/post Docker identity sets equal; only invocation-owned images removed |
+
+Fresh canonical totals: Carolyn 117 unit / 9 infra / 3 fixture-artifact / 3 production-artifact /
+92 visual; Paul 56 browser passes plus four unchanged viewport skips and three Lighthouse
+runs; DiLoreto 13 genealogy / 37 browser passes plus one unchanged skip; Sarabeth 196
+browser tests plus seven provenance tests both on host and in its Gitless container.
+All fresh images used linux/arm64, Playwright 1.62.1, Bun 1.4.0 and Node 24.20.0.
+
+Detailed commands, exits, images, hashes and cleanup IDs: `normalized-validation-evidence.json`.
+The parent checked all referenced command-log hashes/exits, exact installed graphs/lock,
+actual extracted manifest SHA, clean tested checkout, imported ancestry/pristine trees,
+and unchanged clean source refs. Raw scratch evidence remains under
+`/tmp/websites-normalized-validation`; selected logs/harness/evidence are also copied to
+`/Users/pauldiloreto/Projects/websites-migration-backups/phase1-final-validation/`.
+
+Residual notes: six original footer-spacing warnings, previously documented benign build
+warnings, and approximately 6.7 GiB free on Colima's separate 100 GiB disk. No acceptance
+blocker remains. No further unrelated Docker cleanup is authorized.
+
+## Stopping boundary
+
+Source repositories remain production deployment owners. No root Actions activation,
+source CI change, AWS operation, deployment, push/force-push, or phase-2 implementation
+occurred. The next migration phase is **phase 2, only after separate authorization**.
+Because initial commit `5b236ef3a519759c84ebd3504809d391baf085ea` was normalized locally
+to `2e6fb629522ff1ced21533bd572aff874bd2db90`, ordinary fast-forward publication is
+impossible. Publication needs its own approved non-fast-forward strategy and fresh-clone
+checks; local acceptance does not grant that permission.
+
+## Historical checkpoints — superseded status, preserved evidence
+
+The remaining sections retain their **original historical SHAs and stage-local statements**,
+including earlier pending/blocker/acceptance text. Resolve old SHAs through
+`history-normalization-commit-map.txt` when navigating current main. See
+`history-normalization-decision.md`; never relabel old artifact SHA evidence as a new run.
 
 Earlier tested PRE-RENAME implementation: `2aecd5bbbec414f43ca50646ff64ed6347276d2c`.
 All four individual complete verification filters and root serial `ci:verify` passed.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "Renamed workspace/scopes verified; all-main history messages normalized locally; final review and normalized-SHA validation pending",
+  "status": "Phase 1 complete and locally validated: imported histories, Bun/Turbo workspace, short app paths, required scopes, all-main message normalization and independent reviews passed",
   "publicationStatus": "LOCAL ONLY; publication not authorized",
   "target": {
     "path": "/Users/pauldiloreto/Projects/websites/main",
@@ -12,11 +12,13 @@
     "preNormalizationHead": "c2c8f0ea4dcf924464fca66d37272e0a215e3421",
     "normalizedHistoryHead": "910584aff8472845ab5f85b0f466b8e50c161ec7",
     "historicalEvidenceShaConvention": "Existing checkpoint SHAs below remain original evidence identities; resolve them through history-normalization-commit-map.txt for current main navigation",
-    "finalMigrationSha": null,
+    "finalMigrationSha": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+    "finalMigrationShaMeaning": "Independently reviewed implementation checkpoint tested by fresh full CI; subsequent acceptance/evidence commit changes only docs/migration files",
     "workspaceImplementationCommit": "30a60b3c7783678bb6182ab394bea171f238cae5",
     "workspaceCandidateCommit": "0d7912745c02f1f30e2c36074fd275b7dff46dd6",
-    "reviewedCandidateCommit": "bb6eb584524d1efecd0f675214261fd8c8600017",
-    "targetedReview": "targeted-final-review.md; both P2 issues resolved; full phase-1 acceptance still blocked",
+    "priorReviewedCandidateCommit": "bb6eb584524d1efecd0f675214261fd8c8600017",
+    "reviewedCandidateCommit": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+    "targetedReview": "Original P2 fixes passed targeted-final-review.md; final runtime/path/policy and history reviews found no actionable issues; see final-runtime-review.md and final-history-review.md",
     "workspaceDockerContextFixCommit": "cd3f3301e1ff57cf0810c506d8deb8370675b373",
     "workspaceReviewFixCommits": [
       "143949cd9d849f2cbb5e73dc81929b6c28113908",
@@ -201,11 +203,11 @@
     "persistentOverrides": false,
     "dependencyDecisions": "workspace-dependency-decisions.md",
     "cleanFrozenInstallPassed": true,
-    "cleanWorkspaceTestsPassed": 8,
+    "cleanWorkspaceTestsPassed": 24,
     "cleanAllAppLintPassed": true,
     "cleanAllAppTypecheckPassed": true,
-    "fullVerificationAccepted": false,
-    "blocker": "No post-rename test failure; message normalization verified locally; final independent review and normalized-commit artifact validation remain. Publication requires separate non-fast-forward approval.",
+    "fullVerificationAccepted": true,
+    "blocker": null,
     "publication": "LOCAL ONLY; no push authorized",
     "reviewFixValidation": {
       "rangeRegressionTests": 5,
@@ -254,7 +256,7 @@
       "cleanupDeviation": "Four earlier untagged migration-cache ancestors automatically removed by default image rm parent pruning; disclosed and continuation approved with --no-prune; see evidence JSON",
       "futureRenameAndCommitScopePolicyApplied": false,
       "futureHistoricalMessageNormalizationApplied": false,
-      "newCompatibilityReview": "pending"
+      "newCompatibilityReview": "Pending at this historical checkpoint; subsequently passed at cb7a15fb, final-runtime-review.md"
     },
     "requiredCommitScopes": [
       "carolyn",
@@ -284,9 +286,32 @@
       "canonicalScreenshotsUnchanged": true,
       "historyNormalizationPerformed": false,
       "newCleanupScopeDeviations": 0,
-      "finalReview": "pending"
+      "finalReview": "Pending at this historical checkpoint; subsequently passed at cb7a15fb, final-runtime-review.md and final-history-review.md"
     },
-    "nextStage": "Final independent review and fresh normalized-history artifact validation; no publication or phase2 until separately authorized."
+    "normalizedVerification": {
+      "testedCommit": "cb7a15fb23b810285f51432de7efeec05e115a3f",
+      "evidence": "normalized-validation-evidence.json",
+      "rootCiExit": 0,
+      "tasksPassed": 4,
+      "tasksTotal": 4,
+      "cachedTasks": 0,
+      "concurrency": 1,
+      "duration": "11m54.458s",
+      "contractsPassed": 24,
+      "contractAssertions": 391,
+      "allHistoryMessagesChecked": 1110,
+      "commitlintErrors": 0,
+      "preservedFooterWarnings": 6,
+      "sixRootInstalledAndPeerGraphExactParity": true,
+      "artifactCommitMatchesTestedCommit": true,
+      "canonicalScreenshotsUnchanged": true,
+      "independentRuntimeAndHistoryReviews": "No actionable findings",
+      "parentVerifiedLogDigestsAndSourceBoundaries": true,
+      "dockerPreAndPostIdentitySetsEqual": true,
+      "cleanupScopeDeviations": 0,
+      "localImplementationAccepted": true
+    },
+    "nextStage": "STOP. Phase 2 and publication require separate authorization; publication also needs an approved non-fast-forward strategy. Sources remain production deployment owners."
   },
   "messageNormalization": {
     "authorization": "User requested Conventional Commit messages with correct scopes for every local-main reachable commit and explicitly selected rewriting the published initial commit too. All source repositories remain untouched.",
