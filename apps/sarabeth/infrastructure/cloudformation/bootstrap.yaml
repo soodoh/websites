@@ -2,6 +2,21 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: GitHub OIDC and protected CloudFormation deployment roles for sarabeth-studio.
 
 Parameters:
+  MonorepoAppId:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^d[a-z0-9]+$"
+    Description: Observed existing Amplify app for candidate/switch attestation; no app creation.
+  MonorepoSubject:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^[^*?\\s]+$"
+    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
+  MonorepoStateObjectArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
+    Description: Optional approved existing per-site state object only; no bucket creation.
   GitHubOwner:
     Type: String
     Default: soodoh
@@ -17,6 +32,10 @@ Parameters:
     Description: Existing token.actions.githubusercontent.com provider ARN, or blank to create it.
 
 Conditions:
+  HasMonorepoSwitch: !And [!Condition HasMonorepoApp, !Condition HasMonorepoState]
+  HasMonorepoApp: !Not [!Equals [!Ref MonorepoAppId, ""]]
+  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
+  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
 
 Resources:
@@ -39,6 +58,20 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
+          - !If
+            - HasMonorepoState
+            - Sid: MonorepoReleaseState
+              Effect: Allow
+              Action: [s3:GetObject, s3:PutObject]
+              Resource: !Ref MonorepoStateObjectArn
+            - !Ref AWS::NoValue
+          - !If
+            - HasMonorepoApp
+            - Sid: ObserveMonorepoCandidateDomain
+              Effect: Allow
+              Action: amplify:GetDomainAssociation
+              Resource: !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/domains/sarabethbelon.com
+            - !Ref AWS::NoValue
           - Sid: AmplifyJobsAndWebhooks
             Effect: Allow
             Action:
@@ -283,12 +316,31 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:environment:${InfrastructureEnvironment}
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubOwner}/${GitHubRepository}:environment:${InfrastructureEnvironment}
+                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
         - PolicyName: DeploySarabethCloudFormation
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
+              - !If
+                - HasMonorepoState
+                - Sid: OwnAcceptedMonorepoCandidateSwitch
+                  Effect: Allow
+                  Action: [s3:GetObject, s3:PutObject]
+                  Resource: !Ref MonorepoStateObjectArn
+                - !Ref AWS::NoValue
+              - !If
+                - HasMonorepoApp
+                - Sid: ReadMonorepoCandidateSource
+                  Effect: Allow
+                  Action: [amplify:GetApp, amplify:GetBranch, amplify:GetJob, amplify:ListJobs]
+                  Resource:
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/branches/sarabeth-production
+                    - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:apps/${MonorepoAppId}/branches/sarabeth-production/jobs/*
+                - !Ref AWS::NoValue
               - Effect: Allow
                 Action:
                   - cloudformation:ContinueUpdateRollback
@@ -307,6 +359,13 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/sarabeth-amplify-*/*
                   - !Sub arn:${AWS::Partition}:cloudformation:${AWS::Region}:aws:transform/*
+              - !If
+                - HasMonorepoSwitch
+                - Sid: PersistVerifiedMonorepoProduction
+                  Effect: Allow
+                  Action: ssm:PutParameter
+                  Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter/sarabeth-studio/production/last-known-good-sha
+                - !Ref AWS::NoValue
               - Sid: CancelTimedOutDomainOrDnsUpdate
                 Effect: Allow
                 Action: cloudformation:CancelUpdateStack

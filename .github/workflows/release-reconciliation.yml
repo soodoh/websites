@@ -1,0 +1,33 @@
+name: Release completion recovery notices (publication locked)
+on:
+  workflow_run:
+    workflows:
+      - Releases after trusted CI
+      - Release-site fresh main recovery
+      - DiLoreto immutable-ref revalidation
+      - Explicit retained static restoration
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+jobs:
+  reconcile:
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+      - name: Inventory possibly stranded release work without attributing unknown site inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/release/reconcile.py "$(date -u -d '7 days ago' +%F)" > release-reconciliation.json
+      - name: Publish exact recovery actions even if inventory is incomplete
+        if: always()
+        run: |
+          test -f release-reconciliation.json
+          cat release-reconciliation.json >> "$GITHUB_STEP_SUMMARY"
