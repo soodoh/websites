@@ -93,9 +93,13 @@ test('actual Git diff failure never reports empty scope', () => {
 
 test('non-UTF8 Git filename fails safely to all', () => {
   const cwd = repo(), base = commit(cwd, ['README.md']);
-  mkdirSync(join(cwd, 'apps/paul'), {recursive: true});
-  writeFileSync(Buffer.concat([Buffer.from(join(cwd, 'apps/paul/')), Buffer.from([255])]), 'fixture');
-  const head = commit(cwd, []);
+  // Git index plumbing avoids macOS filesystem UTF-8 restrictions.
+  const blob = Bun.spawnSync(['git', 'hash-object', '-w', '--stdin'], {cwd, stdin: Buffer.from('fixture')}).stdout.toString().trim();
+  const entry = Buffer.concat([Buffer.from(`100644 ${blob}\tapps/paul/`), Buffer.from([255, 0])]);
+  const update = Bun.spawnSync(['git', 'update-index', '-z', '--index-info'], {cwd, stdin: entry});
+  expect(update.exitCode).toBe(0);
+  const tree = git(cwd, 'write-tree');
+  const head = git(cwd, 'commit-tree', tree, '-p', base, '-m', 'test(ci): byte path');
   expect(detect(cwd, base, head).selected).toEqual(selected(...apps));
   expect(detect(cwd, base, head).reason).toBe('uninspectable-range-run-all');
 });
