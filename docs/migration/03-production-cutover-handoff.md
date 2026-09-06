@@ -2,6 +2,26 @@
 
 ## Carolyn isolated first-cutover authoring — current offline checkpoint
 
+**Committed code:** `6ccc6d8062739e690b999d58d9a76835b4fcadf4`
+(`feat(carolyn): isolate first-cutover candidate and production rebuild`), forward from
+`fa06a3e68fd2e0c759afe5448287b94084421d9a`; 22 paths, 1,471 insertions / 17 deletions.
+Normal Lefthook serial lint (4/4 uncached) and scoped commitlint passed with approved
+Paul DiLoreto environment-only author/committer identity, without hook/config bypass.
+This following evidence-only documentation commit does not change the tested code.
+
+A **second new independent TARGET** at exactly that code SHA, `target-committed/` under
+the unique evidence directory below, passed a fresh root frozen install and the entire
+same targeted sequence in the table below (including fixture-building typecheck).
+`committed-targeted.log` SHA-256:
+`716d7b71fc68cb03b61fa4b5c750c5bdddd1c043ee9123b3c5416ac10267744c`.
+It used `env -i`, the same explicit pinned tool paths, new initially empty
+`home-committed/`, no hardlinks/alternates/copied ignored configuration or dependencies,
+and finished with clean tracked worktree/index. Its default CLI template is byte-equal
+to the original 19-resource baseline too. This is **writer-run exact-SHA targeted
+validation**, not an independent review, full Docker chain or deployed-browser pass.
+The complete committed-targeted invocation had no failed attempt; earlier authoring
+failures remain separately preserved below.
+
 The user approved **an isolated explicitly configured candidate branch followed by a
 separate exact-SHA rebuild on existing `amplify-production`**, not domain reassociation.
 This supersedes only the earlier unimplemented Carolyn seam below. Source repositories

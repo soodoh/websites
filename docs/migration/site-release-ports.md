@@ -4,9 +4,13 @@
 
 The approved architecture is an **explicit isolated candidate branch plus separate
 exact-SHA production rebuild**, not domain reassociation. The previous Carolyn
-unimplemented-seam checkpoint below is historical. New implementation and targeted
-fixture results are detailed in `03-production-cutover-handoff.md`; independent review
-and full exact-committed-SHA validation remain pending. All four sites are NOT migrated.
+unimplemented-seam checkpoint below is historical. New code is committed at `6ccc6d8062739e690b999d58d9a76835b4fcadf4` with normal hooks.
+A new independent TARGET root install and writer-run exact-SHA targeted checks passed;
+`committed-targeted.log` SHA-256 is
+`716d7b71fc68cb03b61fa4b5c750c5bdddd1c043ee9123b3c5416ac10267744c`.
+Commands, tools and limits are detailed in `03-production-cutover-handoff.md`;
+independent review and full exact-committed-SHA validation remain pending. This following
+docs-only evidence commit is not a new code-tested SHA. All four sites are NOT migrated.
 
 | Seam | Concrete behavior / remaining gate |
 | --- | --- |
