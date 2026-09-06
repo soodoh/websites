@@ -1,0 +1,279 @@
+{
+  "schemaVersion": 1,
+  "status": "Local full fixture validation passed; independent review and external GitHub acceptance pending",
+  "testedCommit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+  "baseline": "b08ca2c3b4599653ff15be73baabb8815a6699fd",
+  "checkout": "/tmp/websites-phase2/checkout",
+  "environment": "env -i, empty scratch HOME, exact pinned PATH; no source installs, production secrets, cloud lookup or mutation",
+  "localArtifactRunIdentity": "GITHUB_RUN_ID=1, GITHUB_RUN_ATTEMPT=1 are LOCAL FIXTURE metadata only, not actual GitHub run provenance; releaseAuthorized=false",
+  "tools": {
+    "bun": "1.4.0",
+    "node": "24.20.0",
+    "turbo": "2.10.12",
+    "playwright": "1.62.1",
+    "dockerArchitecture": "linux/arm64",
+    "go": "1.27.1",
+    "shellcheck": "0.11.0",
+    "uv": "0.12.9",
+    "chrome": "152.0.7977.77"
+  },
+  "rootCi": {
+    "exit": 0,
+    "tasksPassed": 4,
+    "tasksTotal": 4,
+    "cached": 0,
+    "concurrency": 1,
+    "duration": "8m34.685s"
+  },
+  "tests": {
+    "workspace": 24,
+    "workspaceAssertions": 391,
+    "scopeGateWorkflow": 34,
+    "scopeGateWorkflowAssertions": 256,
+    "pythonArtifacts": 5,
+    "carolyn": {
+      "unit": 117,
+      "infra": 9,
+      "fixtureArtifact": 3,
+      "productionArtifact": 3,
+      "visual": 92
+    },
+    "sarabeth": {
+      "browser": 197,
+      "provenance": 7
+    },
+    "paul": {
+      "browser": 56,
+      "unchangedSkips": 4,
+      "lighthouseRuns": 3
+    },
+    "diloreto": {
+      "genealogy": 13,
+      "browser": 37,
+      "unchangedSkips": 1
+    }
+  },
+  "sarabethActualSuccessfulContainer": {
+    "candidate": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+    "actual": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+    "equals": true,
+    "container": "e095913a502fb93530e6a5b2ec98963cdba260bd0815d073bec6f0df13a71440",
+    "image": "sha256:fd39034cf7f87588c15b944115d903f1983e3da80d4ebd0281408495036298eb",
+    "path": "/work/apps/sarabeth/.amplify-hosting/static/__deployment.json",
+    "gitlessVerifiedIn": "/tmp/websites-phase2/sarabeth-versions.log"
+  },
+  "installedGraph": {
+    "byteEqualToPhase1": true,
+    "sha256": "b37116f28b3a6d586262ad128b1818fcd2c212de0545c6d1aba075f6991fa1b5",
+    "roots": 6
+  },
+  "lockSha256": "14e1706c369f49ed3e0bd6764d06406326ad3222cde353e1d5056fc8297c42de",
+  "artifactProofs": {
+    "paul": {
+      "metadata": {
+        "schemaVersion": 1,
+        "repository": "soodoh/websites",
+        "site": "paul",
+        "commit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+        "workflow": ".github/workflows/ci.yml",
+        "runId": "1",
+        "runAttempt": "1",
+        "artifactName": "paul-1-1-static",
+        "releaseId": "paul-1-1",
+        "event": "push",
+        "ref": "refs/heads/main",
+        "releaseAuthorized": false,
+        "sha256": "ea6645486e714efcdfa9db612c7b795eed27fc28213a744a41453d3b2b11bec7",
+        "deploymentRoot": "dist/client"
+      },
+      "metadataSha256": "052f9daef39c174e4cbba298964285732409fcc305670a77e9c5040ed53afb23",
+      "markerWasPresentBeforeBrowserTests": true,
+      "zipContainsExactValidatedOutput": true
+    },
+    "diloreto": {
+      "metadata": {
+        "schemaVersion": 1,
+        "repository": "soodoh/websites",
+        "site": "diloreto",
+        "commit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+        "workflow": ".github/workflows/ci.yml",
+        "runId": "1",
+        "runAttempt": "1",
+        "artifactName": "diloreto-1-1-static",
+        "releaseId": "diloreto-1-1",
+        "event": "push",
+        "ref": "refs/heads/main",
+        "releaseAuthorized": false,
+        "sha256": "dd3eaa8a870146af9f5eeacf3ff6f6c57a092ff23c83563d236bee09a0e94a16",
+        "deploymentRoot": "dist/client"
+      },
+      "metadataSha256": "1f6163c8ae1556df65fa60d9b803b55afcba13785eeb88c962e00297d369c362",
+      "markerWasPresentBeforeBrowserTests": true,
+      "zipContainsExactValidatedOutput": true
+    }
+  },
+  "diagnostics": {
+    "apps": [
+      "sarabeth",
+      "carolyn",
+      "paul",
+      "diloreto"
+    ],
+    "actualScansPassed": true,
+    "ssrBundlesUploaded": false,
+    "uploadsExecuted": false
+  },
+  "docker": {
+    "allBeforeAfterIdentitySetsEqual": true,
+    "onlyInvocationCreatedRemoved": true,
+    "freshReferenceChecks": true,
+    "cleanupFlags": [
+      "--no-prune"
+    ],
+    "forceImageRemoval": false,
+    "removedIds": [
+      "sha256:018523738768e9135a02f510ee7011507204aa757d57dc004989266afd270e62",
+      "sha256:056b832ab9d2618c6119abf40ac6e23671673b48d8ddd2c57dca9a2ea536623f",
+      "sha256:05fcd3f4718022473f544059b91792b1f465c17a54cc100d950ece200f4ed673",
+      "sha256:0792c1d5a01db304755d075f475109e45f8d3230d80b4e8014a68bf45a81d81e",
+      "sha256:093154ccc724eebc1691fc533f730eecaaaccddf217acd0f06905fc8612721bb",
+      "sha256:1064043ab752c4986c85a1752acf2b6d42555edf4ae4c70b41ab7cfc31e2afd8",
+      "sha256:10c7509d98268cf50cf681b2250e6455381bd6728f8689129c5a99aae92b2e54",
+      "sha256:15b78d54bd154b3600da6067503c7084c87d7303bcbf678d14971f73bef2d41e",
+      "sha256:1a6dd4c5e3e2f7dfffbbe0f502cd6d08da11d387b20a7bb02525fb158f4bccbd",
+      "sha256:1c28febab597bd6681861d87b1491f09055e61a4f93df7ce4c0bcd9029b7b755",
+      "sha256:2644f53230560ba5de5d3c5867295db4973672c83a26f67e706518b9b55d5203",
+      "sha256:29fb68a47c53ce7d68ac1e7d7325fcccab815ef70b4717c3bfb41e6bac9a2939",
+      "sha256:2b13943378ee8a8be465e03084190dda405dcb06e1dfd92b98bd42d73f234887",
+      "sha256:31d2f850f3b5c24d507cac5c490f2c14d9b5d9f0b9c9c38825eaed235d7c527f",
+      "sha256:3714b45514080ff8ba8eba0144d3b194e593049334ba5eacf50247a9bb19c9fd",
+      "sha256:38773e80a15e5fd4ad7de7d96c46f653d02474feef9d8d06d009ff0c1f0da40a",
+      "sha256:38c6a3d13a6c8eb7ecd67661268f10e56e31119a920b8d9e202c7d31f10e26a7",
+      "sha256:3a1b0b770549ef98e6a5b3aa37060bf3ae8b4b4678cab299942e0128701e223e",
+      "sha256:3f9ea043a5f7cd101864c14550ffe6e501b9e68acf947490a256474945e8a086",
+      "sha256:48765f9dab1425f76a066b9756282ff5f67592dc128cf0a2fc83aa86757dc6cc",
+      "sha256:4e88c9fe8b5c0ca26137089f238da1cff608a309df40ebd4db1ae8c491f13d2f",
+      "sha256:590271058b8257436bc7c28d83ca3a40e62bfb699bb6da705b2426bf4d3ca709",
+      "sha256:5f7c0fdcd89f4eca3526d9aec4294e3dde40e2ba281d6ea42167a036c84eedae",
+      "sha256:603e8df30a6d46250e2bd7f1773e85c4f1ba092c913ffe1230e832a65d0013e1",
+      "sha256:67cc48a9bde1761e989a557f39899a5e3ed2d62ffa76bdcbd5a63cc62c2e414b",
+      "sha256:733d5fe614500de305707e06487c3accf9f41362977956ae004276052a9c195d",
+      "sha256:73dad24bc7423e47fc8e7bb6621993033db9f008b2ffb24606718397577a9834",
+      "sha256:74708b307c81e5713f977119e82f489e6bf44bc5f9f6b3b3de369469dfe1b9f3",
+      "sha256:7637cec429a8f7c891bead71364bd6c83308a96c391a9d0468ab51c58854fd9d",
+      "sha256:763bdf20b33de0446c15a1cf6602db72bf84e8a64e10595989648622b7aa7ef2",
+      "sha256:77c8a3f441b8ce5a4dc5673f25f27ad467fa633e982c526527cea896e4614c55",
+      "sha256:79866d136ef7e3d95d690aee429e45fd24a4b2244954a7832db9b1f658602c60",
+      "sha256:7a8268d0745f26a5c41431ff888b2534029eb23d60b1be85e02f777e14db91e4",
+      "sha256:7b13c8680bb49227d1196971cd7eb2d477430ca0a80702102004df01f15ded50",
+      "sha256:7c74684472099213a0243d6db93b81c626037b4aa3b06ea6743a11b5e025d539",
+      "sha256:841c398b8a32127270325c2b3731be15a5e84941c940553b2fae8596b2d73145",
+      "sha256:921b7a220c14b45a3eabaf01d603c36cfd8afa1c16a4dd48e6a77a783ca1c775",
+      "sha256:92d193ad2182614d4277a22fda8893224919052c4605c533960a1b410d5757c0",
+      "sha256:9d301b331bdc8ae9d22ebd042866aff57a6a44b426738d3ffec5e8ddab0040fe",
+      "sha256:a0022eed2f6dce7ccd4dda9bfd8d33c596d6bd7f186e407ac6a73be14e98c751",
+      "sha256:c0ac4abd8bffa9cbb286a89646c1f9ed3797cf01b6bb70903577d6d6b28187d5",
+      "sha256:c0f1c9b5f43debee9473c9285938d22393cc3e661200e0e91521daab43bf8945",
+      "sha256:c190b27c2e977760a44a9bbc868269c966423b3ecbba9b7acf9ee11a1e476137",
+      "sha256:c27363ed0765bcfce3aa0ef2daf42e4808936ff4484929cb11729182ea817ebf",
+      "sha256:c41fdba7fe3d7575ef70b7b86aea0298bd646924bd6bc6805cc555561b0ea7d6",
+      "sha256:c5003f70855a2e4ee40395cc14f8fa5223193396bb6a42cc3db20bae28fcc852",
+      "sha256:c72a8ba2cbb6eccb205172330aa4c54c6f26a7bee620e83907e31ce20a186e86",
+      "sha256:c78d3937dd0d8ee6712dd11ecff4eda99e6925fa4046b081b518ad2ff37b84f1",
+      "sha256:d4ce7a41399597e55ab4c5d81f35c87d88e3fd8895377864432eee216aaf307e",
+      "sha256:d58031746c6a904ee173f61010ec4d2c374e485c51ce4597a96ff191ae2aa72d",
+      "sha256:d6e3ecfec38dd4927c8b47cb5cd0dd1759d21c80194a08c04cfece21025411f4",
+      "sha256:db8cf3a919b25b9f1459aac850586bc3d28796dd1126992cd3497ff7444c3335",
+      "sha256:e31cc82ad6d1eac490a49ba56b51421a47e1ae4edc635c6e1360690e4deebc77",
+      "sha256:e82a575fba019e37cd1252f1a973dcc8aa26f47dd7bbdb9fb6571625f8fd438a",
+      "sha256:ea15245651d9fb5713580fd0d80446524e6c090370e8216461191c8e201cdf6c",
+      "sha256:fd39034cf7f87588c15b944115d903f1983e3da80d4ebd0281408495036298eb",
+      "sha256:fee431917137a75b0cbbde2145dcb2badf5d3460fe2b239ffff94dd57cad494d",
+      "sha256:fef3b911a4b970ae5bc493f489376c028c5489215c8ae73920264d4e61372478"
+    ],
+    "diskBefore": "Filesystem     1K-blocks     Used Available Use% Mounted on\n/dev/vdb1      102624184 90428164   6936860  93% /var/lib/docker\n",
+    "diskAfter": "Filesystem     1K-blocks     Used Available Use% Mounted on\n/dev/vdb1      102624184 90427032   6937992  93% /var/lib/docker\n",
+    "log": "/tmp/websites-phase2/docker-commands.jsonl",
+    "logSha256": "7e3d90cfc3d47e32433b3d4b2720ddc025f8af47dbb14b7a15242312c1e63b8b"
+  },
+  "checks": [
+    {
+      "command": "root frozen install",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/install.log",
+      "logSha256": "87f2458e7b4d3f29cd7897fb125c48044751ae49463139a20651cced557fefb5"
+    },
+    {
+      "command": "clean frozen install",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/clean-install.log",
+      "logSha256": "f88f722cf19441737dc31ffbd16f250dfd66663b623ecd81d0df4730c0ac22e3"
+    },
+    {
+      "command": "bun run test:workspace",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/workspace.log",
+      "logSha256": "8601bec500578240aafeb6b8681f2337fb597e340abc4c1f2afe2ab3e9172df4"
+    },
+    {
+      "command": "bun run test:ci",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/test-ci.log",
+      "logSha256": "e211940c9bf093c1f4091e5dc304b84bd5167eecc1c76ee132e7dc3c0e9d7369"
+    },
+    {
+      "command": "bash scripts/ci/lint.sh",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "bun run lint",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/app-lint.log",
+      "logSha256": "7d12a62a1881afa6d0b659361bb923349a7d10b87faa1ee5e1209e7f27531d2b"
+    },
+    {
+      "command": "first bun run ci:verify (scratch CHROME_PATH typo)",
+      "exit": 1,
+      "log": "/tmp/websites-phase2/root-ci.log",
+      "logSha256": "ed5850ab92a760a10324ad992bc0ac1e346c367c069f8b99fa950d76f56e2d17"
+    },
+    {
+      "command": "corrected exact-SHA bun run ci:verify",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/root-ci-corrected.log",
+      "logSha256": "e992611c06248431f601f51b4b756b41d7f5e68e46d00d229c0630fde774639b"
+    },
+    {
+      "command": "actual static packaging and four diagnostics scans",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/artifacts.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "six-root full installed graph audit and baseline cmp",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/graph.log",
+      "logSha256": "8ed788925c1043553333d7d2052dd529ad2bae7fe153ce978be25c721cf9454d"
+    },
+    {
+      "command": "all HEAD ancestor messages commitlint",
+      "exit": 0,
+      "log": "/tmp/websites-phase2/history-lint.log",
+      "logSha256": "240e8d58ac7676404ffbd6d25fc76b316f9a10a2956656e2f6ad79ce2ad672f3"
+    }
+  ],
+  "external": {
+    "published": false,
+    "githubExecuted": false,
+    "settingsChanged": false,
+    "runUrls": [],
+    "productionEnabled": false
+  },
+  "residuals": [
+    "First full run failed only on a scratch launcher CHROME_PATH typo; corrected complete rerun passed.",
+    "Byte-path test first used a macOS-incompatible filename fixture; fixed forward with Git-index plumbing; final tests passed.",
+    "GitHub hosted runner acceptance and independent review pending."
+  ]
+}
