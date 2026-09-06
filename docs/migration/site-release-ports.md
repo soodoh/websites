@@ -24,8 +24,8 @@ asserts a live account/resource/subject, successful deployment or rollback drill
 | Sarabeth SSR | Same ref/job/bundle chain plus existing source verifier, exact SecureString Contentful namespace, auth-manifest cleanup, non-sending real smoke, legacy SSM last-known-good only after smoke, mobile/desktop Lighthouse afterward | CMS webhook/ref race inventory and attested legacy state; no guessed last-known-good. Lighthouse failure intentionally does not auto-rollback |
 | SSR root buildspec | `amplify.yml`: app roots `apps/carolyn`, `apps/sarabeth`, root buildPath and artifacts, Node24.20.0/Bun1.4.0, root frozen isolated install ignoring scripts; `amplify-build.sh` creates marker only after verified production build | Real Amplify checkout/job environment. New wrapper requires actual Git metadata and rejects absent/unknown metadata; legacy Gitless verifier tests remain unchanged. IPv4 workaround remains fixture-only |
 | Owning IaC transition | Optional exact subject and existing state-object inputs in original Paul/DiLoreto/Sarabeth templates; Carolyn explicit context; preserve old trust/provider/logical identities. Sarabeth retains main plus optional retained `sarabeth-production` branch and explicit webhook retarget | Actual immutable subject format, bucket/object/owner/KMS selection and narrow encryption permissions; app connection/change-set review. No resources selected or deployed |
-| Sarabeth infrastructure | Gated root `infrastructure-sarabeth.yml`, all 16 old operational run bodies retained with root-aware app cwd, account/environment and 230-minute shared lock | Hosting/domain/DNS/Netlify operations remain separately approved; optional transition parameters need a reviewed operation-specific invocation, not automatic default adoption |
-| Queue observations | `reconcile.py`: reviewed workflow IDs, repository/owner, main/event, attempt-specific run and job status; last seven days in caller, 1000 runs/workflow, 10 attempts/run, 1000 jobs/attempt; failures mean inventory incomplete | Shared manual run API does not expose selected-site dispatch inputs before execution. Precise attribution is an API/design limitation, not promised by live inventory |
+| Sarabeth infrastructure | Gated root `infrastructure-sarabeth.yml`, all historical operations retained with explicit legacy/preparation/switch parameter paths, root-aware app cwd, account/environment and 230-minute shared lock | Actual candidate/state/connection/subject values and every hosting/domain/DNS/Netlify operation remain separately approved |
+| Queue observations | `reconcile.py` plus independent `release-reconciliation.yml` terminal observer: complete exact reviewed workflow-ID set, repository/owner, main/event, attempt-specific run and job status; last seven days in caller, 1000 runs/workflow, 10 attempts/run, 1000 jobs/attempt; failures mean inventory incomplete | Shared manual run API does not expose selected-site dispatch inputs before execution. Precise attribution is an API/design limitation, not promised by live inventory |
 
 Queue notices use `affectedSite=unknown` and `possibleSites`, with each exact
 `release-site(site=<site>, ref=main)` action. An overall successful run does not hide
@@ -72,7 +72,10 @@ requires an inventory-specific runbook and approval, not the static restore disp
 
 Pinned AWS credentials action retains expected account allowlist, isolated credentials
 and explicit STS equality. Exact supplied IAM subject conditions preserve legacy trust;
-actual OIDC subject/ruleset restrictions must be verified separately before activation.
+the pre-assumption adapter now observes exact subject/audience/issuer/time claims from
+the trusted GitHub TLS endpoint without printing or retaining the JWT. The AWS action
+requests the same explicit audience; IAM/STS verifies its token signature/trust. Actual
+subject values and ruleset restrictions still require approved inventory before activation.
 No guessed OWNER@ID/REPO@ID/environment subject is checked in. A named GitHub environment
 alone is not protection and can be implicitly created by GitHub.
 
@@ -94,3 +97,78 @@ Targeted worktree checks are not independent exact-SHA builds, hosted acceptance
 production rollback evidence, or authorization. See current handoff for counts and
 private evidence paths. Independent security/order/parity review follows exact-commit
 fixture validation; its findings must be fixed/revalidated before offline completion.
+
+## Recovery-review additions (offline, independently unaccepted)
+
+### Original DiLoreto capture contract
+
+Only `soodoh/diloreto-website` + `.github/workflows/deploy.yml` is admitted for the
+markerless format. `legacyDiloretoRepositoryId`, `legacyDiloretoWorkflowId` and
+`legacyDiloretoManifestSha256` are **null**. Under separately approved capture scope,
+retain the original `amplify-deployment.zip` bytes as `site.zip` (filename only; do not
+repack or embed a marker), its new checksum sidecar, and a reviewed `metadata.json` at
+`legacy-captures/soodoh-diloreto-website/<run>/<build-attempt>/` in the explicitly approved
+existing release store. No capture/upload/initialization operation has been executed.
+
+The capture manifest is schemaVersion 1, kind `legacy-diloreto-capture`, with repository,
+site, original workflow/runId/runAttempt/commit/sha256, event, workflowSha,
+sourceArchiveName `amplify-deployment.zip`, sourceArtifactName `amplify-static-<run>`, and
+`captureEvidenceSha256` identifying independently reviewed capture evidence. The policy
+pins the **exact manifest bytes' SHA-256**, not a digest supplied by downloaded metadata.
+That approved evidence must prove the current served bytes, original artifact/run/build
+attempt and selected original commit; an import/normalization map is never such proof.
+Review actual capture access, retained-object ownership/encryption and retention first.
+
+The reader independently checks original successful attempt-specific `Validate static
+site` and `Deploy production` jobs. Main push must match original target/head SHA;
+main manual dispatch may select another original SHA only through the pinned capture
+manifest's independent target evidence (workflow head is NOT assumed to be target).
+The unchanged ZIP is scanned/hash-checked; all retained file bytes are checked against
+both origin and edge without a fictional release marker. Restoration uses the same
+current trusted origin/edge/browser harness. Missing/changed manifest, unavailable old
+API evidence or differing served bytes blocks bootstrap, never resets the baseline.
+
+### Explicit Sarabeth infrastructure operations
+
+All operations remain in the literal-false protected job and shared noncanceling lock.
+`legacy` is the unchanged default. `prepare-monorepo` requires
+`APPROVE_MONOREPO_PREPARATION`, disallows apply_domain/rollback/webhook retarget, and passes
+EnableMonorepoConnection=true, EnableMonorepoBranch=true, MonorepoWebhookTarget=false,
+exact supplied MonorepoSubject and existing MonorepoStateObjectArn. Old main remains.
+No default adopts a connection, subject, state resource, domain or webhook change.
+
+`switch-monorepo` requires `APPROVE_MONOREPO_SWITCH` **and** apply_domain plus the existing
+`APPROVAL_GATE_1_CONFIRMED`. It requires exact selected_commit/selected_job, approved
+runtime app/state/candidate/production URLs and drained source writers. Before mutation,
+accepted state must have no intent and match the candidate commit/job; originating
+validation is independently re-observed, as are Amplify repository/platform/branch,
+successful exact-SHA job and candidate bundle marker. Domain deploy explicitly passes
+GitHubBranch=sarabeth-production; AVAILABLE alone is insufficient: apex/www association
+and served release marker must match. Failures after domain mutation retain the existing
+Netlify/DNS/domain cleanup handling and failing result. CMS retarget is a separate
+explicit `retarget_webhook` Boolean; default false never opts in. Branch/domain switch,
+webhook and connection writes still require their actual operation approvals.
+
+Bootstrap's optional MonorepoAppId grants infrastructure only GetApp/GetBranch/GetJob
+on the supplied existing app and sarabeth-production branch, plus GetObject on the
+existing supplied state object. It creates no app/state resource and grants no state
+write. Actual KMS decrypt grants, GitHub Actions read access, in-place connection
+capability and change-set assessment remain inventory/approval gates, not guessed policy.
+
+### Completion evidence and recovery observation
+
+`lastLifecycleReceipt` is scanned and written atomically with currentRelease before
+intent is cleared. It contains invocation, operation, allowlisted requested/serving
+provenance and checksums, every job ID/branch and acceptance/restoration outcome; upload
+URLs and credentials are excluded. A CAS failure leaves prior intent/receipt unchanged.
+State-object version/retention policy must be reviewed for the required evidence window.
+Unknown failures keep unresolved intent; a successful previous-byte restoration still
+fails the release run, with outcome `restored-previous` rather than success relabeling.
+
+The separate disabled terminal observer covers after-CI, release-site, DiLoreto redeploy
+and static restore, even when their own pending job never executes. It rescans after
+completion and publishes incomplete inventory/recovery actions via always-running
+summary handling. Existing initial CI notices remain; neither snapshot guarantees a
+FIFO queue, automatic retry or precise unknown-site attribution. Hosted acceptance is
+still unperformed. Exact entry keys/IDs are required before any API, so an empty map
+cannot claim that the inventory is complete.

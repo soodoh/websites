@@ -86,3 +86,20 @@ objects, change-set creation, identity workflow dispatch, mutations or productio
 Present the per-site old/new configuration diff, exact resources/account, owning-IaC trust
 proposal, replacement risk and proven recovery requirements before asking for preparation
 writes. Creating/executing change sets and candidate deployments are separate gated actions.
+
+## Recovery-review inventory gates (still uncollected)
+
+- DiLoreto original repo/workflow IDs, original selected SHA versus workflow head SHA,
+  successful original run/build-attempt, unchanged markerless ZIP checksum, capture
+  evidence digest and independently approved migration-manifest SHA-256 pin. Confirm
+  artifact/API access and exact retained existing-store prefix/owner/encryption/retention;
+  no supplied metadata may self-authorize or substitute normalized import identities.
+- Sarabeth exact existing app ID for optional infrastructure read permissions, accepted
+  candidate state/source/job and candidate/production URLs, existing state-object read
+  and any KMS decrypt grants. Separate connection/retained-branch preparation approval,
+  domain switch approval and explicit webhook-retarget approval. Inventory must establish
+  that reconnection is in-place; the authored helper does not waive change-set review.
+- Exact observed OIDC subject values for all routine jobs and Sarabeth infrastructure;
+  pre-assumption observation is now authored, but no token was requested locally.
+- State-object version/retention for lifecycle receipts and independently observed hosted
+  completion/replacement notifications. Fixture snapshots are not live queue acceptance.
