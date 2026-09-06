@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "Local full fixture validation passed; independent review and external GitHub acceptance pending",
+  "status": "Full fixture validation passed at testedCommit; approved review fixes passed targeted validation at reviewFixes.testedCommit; final independent review and GitHub acceptance pending",
   "testedCommit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
   "baseline": "b08ca2c3b4599653ff15be73baabb8815a6699fd",
   "checkout": "/tmp/websites-phase2/checkout",
@@ -274,6 +274,109 @@
   "residuals": [
     "First full run failed only on a scratch launcher CHROME_PATH typo; corrected complete rerun passed.",
     "Byte-path test first used a macOS-incompatible filename fixture; fixed forward with Git-index plumbing; final tests passed.",
-    "GitHub hosted runner acceptance and independent review pending."
-  ]
+    "GitHub hosted runner acceptance and final post-fix independent review pending."
+  ],
+  "reviewFixes": {
+    "baseline": "281635d2f2cd7e31ff33cdbdb63972a38253dbfe",
+    "testedCommit": "35855a4eedec5fd015553fbe4a218a01e100eb48",
+    "validationScope": "Targeted parser/scanner/test-only fixes, explicit parent approval; no full Docker/app rerun because app/browser runtime unchanged",
+    "environment": "Target checkout, clean before/after; env -i, new empty scratch HOME, Bun1.4.0/Node24.20.0 and existing pinned offline tools; no Docker socket passed",
+    "findings": [
+      {
+        "severity": "P1",
+        "finding": "Leading BOM pathname stripped by TextDecoder",
+        "disposition": "ignoreBOM:true; real Git push/PR/release comparator regressions for BOM-prefixed README and app-shaped paths"
+      },
+      {
+        "severity": "P2",
+        "finding": "Mixed-case ZIP bypassed recursive member and nested archive scanning",
+        "disposition": "Normalized suffix used consistently; compressed outer/inner case-variant regressions"
+      },
+      {
+        "severity": "P2",
+        "finding": "Marker spoof test rejected checksum before marker comparison",
+        "disposition": "Single spoofed marker with recomputed metadata/sidecar checksums; exact marker comparison error asserted for site/repo/SHA/attempt"
+      },
+      {
+        "finding": "Successful-container manifest behavior coverage gap",
+        "disposition": "Six executable scratch-only mocks for matching/missing/malformed/mismatched manifest and exact container cleanup; unchanged app wrapper"
+      },
+      {
+        "finding": "CLI event/output adapter coverage gap",
+        "disposition": "Node CLI push/PR/dispatch/malformed event/missing refs coverage"
+      },
+      {
+        "finding": "Hosted cancellation/bootstrap acceptance",
+        "disposition": "External approval gate remains pending; not replaced with local assertions"
+      }
+    ],
+    "tests": {
+      "scopeGateWorkflow": 40,
+      "scopeGateWorkflowAssertions": 323,
+      "pythonArtifacts": 6,
+      "workspace": 30,
+      "workspaceAssertions": 433,
+      "appLintTasks": 4,
+      "actionlintWorkflows": 11,
+      "historyMessages": 1116,
+      "historyErrors": 0,
+      "preservedHistoryWarnings": 6
+    },
+    "checks": [
+      {
+        "command": "pre-fix bun test scripts/ci/affected.test.mjs",
+        "exit": 1,
+        "log": "/private/tmp/websites-phase2/review-fixes/bom-red.log",
+        "logSha256": "faf735284286df0c3f7326604e2fc57e4aaa536dbfff55646af0cf7dea42ac4e",
+        "note": "Expected regression failure: both BOM path tests failed; other detector/CLI cases passed"
+      },
+      {
+        "command": "pre-fix python3 -m unittest discover -s scripts/ci -p artifact_test.py",
+        "exit": 1,
+        "log": "/private/tmp/websites-phase2/review-fixes/zip-red.log",
+        "logSha256": "0709e5c661861d23a333b58d9f2668ce4715c0b1ba67e7e628073051930b8950",
+        "note": "Expected regression failure: four uppercase/mixed-case outer/nested archive subcases failed"
+      },
+      {
+        "command": "bun test scripts/docker-wrapper-contract.test.ts",
+        "exit": 0,
+        "log": "/private/tmp/websites-phase2/review-fixes/manifest-tests.log",
+        "logSha256": "66d0a8c7ca58e3a3fd9e13fe8657822cc6c1d7465d719adaf177b98f94bae976",
+        "note": "Six new successful-container mocks plus four existing failure contracts passed"
+      },
+      {
+        "command": "post-fix test:ci, test:workspace and scripts/ci/lint.sh before commit",
+        "exit": 0,
+        "log": "/private/tmp/websites-phase2/review-fixes/targeted-precommit.log",
+        "logSha256": "5c322d5fecdb3410fa5f5e1ebab4802cdf7e8673a599836bc77d9bcc9fbe714f",
+        "note": "Targeted precommit validation passed"
+      },
+      {
+        "command": "exact clean-SHA test:ci, test:workspace, scripts/ci/lint.sh, serial app lint, all-history commitlint and diff/status checks",
+        "exit": 0,
+        "log": "/private/tmp/websites-phase2/review-fixes/targeted-final.log",
+        "logSha256": "2e7b319a82b2b1d0428a6df87ce18ca2b1ab85ab5c9d42b6984cd618d21597a4",
+        "note": "set -ex sequential shell; exact tested SHA recorded; clean before/after"
+      }
+    ],
+    "parentVerifiedOriginalEvidence": [
+      "All 13 recorded log digests",
+      "Clean exact full-run checkout",
+      "Root lock hash",
+      "Both static zip/metadata hashes and complete zip-to-dist/client byte equality",
+      "Actual extracted Sarabeth manifest exact tested SHA"
+    ],
+    "historicalParityIndependentReview": {
+      "jobs": 13,
+      "steps": 133,
+      "originalWorkflows": 6
+    },
+    "preservedFullFixtureTestedCommit": "304918f0e80fb16590fc510950769b7b9c5a1fdf",
+    "appRuntimeLockScreenshotsUnchanged": true,
+    "dockerCommandsExecuted": false,
+    "newInstallExecuted": false,
+    "noStagedFilesAtTestedCommit": true,
+    "finalIndependentReview": "pending",
+    "externalAcceptance": "pending; no publication/GitHub execution/settings/AWS/deployment/source mutation authorized or performed"
+  }
 }

@@ -4,6 +4,11 @@ Every historical job and step is enumerated below. Sources were read with normal
 `importCommit:targetPrefix/.github/workflows/<file>`; current nested files are inert,
 not root workflows and not safe monorepo deployment entry points. No old source was edited.
 Phase 3 responsibilities below are **not executed or authorized** by phase 2.
+Independent security/parity review matched all 13 jobs and 133 steps below to the six
+normalized-import originals. Its mixed-case ZIP scanning finding and the separate
+scope/test review findings were corrected in `35855a4e`; see the handoff's review
+dispositions and targeted evidence. Final post-fix review and GitHub acceptance remain
+pending; the historical responsibility/retention ledger is unchanged.
 
 ## Current validation coverage
 
