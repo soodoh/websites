@@ -13,7 +13,7 @@
     "dev": "turbo run dev:workspace --concurrency=4",
     "lint": "turbo run lint --concurrency=1",
     "typecheck": "turbo run typecheck --concurrency=1",
-    "ci:verify": "bun run test:workspace && turbo run ci:verify --concurrency=1",
+    "ci:verify": "bun run test:workspace && bun run test:ci && bash scripts/ci/lint.sh && turbo run ci:verify --concurrency=1",
     "prepare": "test ! -e .git || lefthook install",
     "verify:sarabeth": "turbo run ci:verify --filter=sarabeth-studio --concurrency=1",
     "verify:paul": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
