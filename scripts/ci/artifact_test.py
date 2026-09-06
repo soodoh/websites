@@ -61,10 +61,19 @@ class ArtifactTests(unittest.TestCase):
         (directory / "metadata.json").write_text(json.dumps(metadata))
         with self.assertRaises(ValueError):
             artifact.verify(directory, {**expected, "sha256": "0" * 64})
-        with zipfile.ZipFile(directory / "site.zip", "a") as archive:
-            archive.writestr("release.json", json.dumps({**expected, "site": "diloreto"}))
-        with self.assertRaises(ValueError):
-            artifact.verify(directory, expected)
+        with zipfile.ZipFile(directory / "site.zip") as archive:
+            content = {name: archive.read(name) for name in archive.namelist()}
+        for field, value in [("site", "diloreto"), ("repository", "evil/websites"), ("commit", "b" * 40), ("runAttempt", "3")]:
+            with self.subTest(marker_field=field):
+                content["release.json"] = json.dumps({**expected, field: value}).encode()
+                with zipfile.ZipFile(directory / "site.zip", "w") as archive:
+                    for name, data in content.items():
+                        archive.writestr(name, data)
+                checksum = artifact.digest((directory / "site.zip").read_bytes())
+                (directory / "metadata.json").write_text(json.dumps({**metadata, "sha256": checksum}))
+                (directory / "site.zip.sha256").write_text(f"{checksum}  site.zip\n")
+                with self.assertRaisesRegex(ValueError, "^Release marker mismatch$"):
+                    artifact.verify(directory, expected)
 
     def test_pr_and_manual_dispatch_never_authorize_release(self):
         for event in ["push", "pull_request", "workflow_dispatch"]:
@@ -93,6 +102,25 @@ class ArtifactTests(unittest.TestCase):
         (self.root / "link.html").symlink_to("/etc/passwd")
         with self.assertRaises(ValueError):
             artifact.files(self.root)
+
+    def test_archive_scanning_normalizes_outer_and_nested_zip_suffixes(self):
+        def archive_bytes(name, data):
+            output = io.BytesIO()
+            with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+                archive.writestr(name, data)
+            return output.getvalue()
+
+        harmless = archive_bytes("report.txt", b"harmless fixture")
+        forbidden = archive_bytes("project-auth-manifest.json", b"harmless fixture")
+        for outer in ["trace.zip", "trace.ZIP", "trace.ZiP"]:
+            with self.subTest(outer=outer):
+                artifact.scan(outer, harmless)
+                with self.assertRaisesRegex(ValueError, "^Forbidden artifact path$"):
+                    artifact.scan(outer, forbidden)
+                for nested in ["nested.zip", "nested.ZIP", "nested.zIp"]:
+                    with self.subTest(nested=nested):
+                        with self.assertRaisesRegex(ValueError, "^Nested diagnostic archive$"):
+                            artifact.scan(outer, archive_bytes(nested, harmless))
 
     def test_diagnostics_exclude_ssr_bundles_and_reject_auth_manifest(self):
         source = self.root / "apps/sarabeth/test-results"

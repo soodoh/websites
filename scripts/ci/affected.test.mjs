@@ -1,7 +1,8 @@
 import { afterEach, expect, test } from 'bun:test';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, renameSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync, renameSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { affected, apps, git, releaseInputsDiffer, selectPaths, validateSelection } from './affected.mjs';
 
 const scratch = [];
@@ -102,4 +103,70 @@ test('non-UTF8 Git filename fails safely to all', () => {
   const head = git(cwd, 'commit-tree', tree, '-p', base, '-m', 'test(ci): byte path');
   expect(detect(cwd, base, head).selected).toEqual(selected(...apps));
   expect(detect(cwd, base, head).reason).toBe('uninspectable-range-run-all');
+});
+
+for (const path of ['\uFEFFREADME.md', '\uFEFFapps/paul/input.ts']) test(`preserves leading BOM in Git pathname ${JSON.stringify(path)}`, () => {
+  const cwd = repo(), base = commit(cwd, ['README.md']), head = commit(cwd, [path]);
+  for (const event of ['push', 'pull_request']) {
+    const result = detect(cwd, base, head, event);
+    expect(result.reason).toBe('complete-git-diff');
+    expect(result.paths).toEqual([path]);
+    expect(result.selected).toEqual(selected(...apps));
+  }
+  for (const app of apps) expect(releaseInputsDiffer(cwd, app, base, head)).toBe(true);
+});
+
+function cli(cwd, event, payload) {
+  const eventPath = join(cwd, 'event.json'), outputPath = join(cwd, 'github-output');
+  writeFileSync(eventPath, payload);
+  writeFileSync(outputPath, '');
+  const run = Bun.spawnSync(['node', fileURLToPath(new URL('./affected.mjs', import.meta.url))], {
+    cwd, env: { PATH: process.env.PATH, HOME: cwd, GITHUB_EVENT_NAME: event, GITHUB_EVENT_PATH: eventPath, GITHUB_OUTPUT: outputPath },
+  });
+  const output = Object.fromEntries(readFileSync(outputPath, 'utf8').trimEnd().split('\n').filter(Boolean).map(line => {
+    const index = line.indexOf('='); return [line.slice(0, index), line.slice(index + 1)];
+  }));
+  return { run, output };
+}
+function expectCliSelection(result, expected) {
+  expect(result.run.exitCode).toBe(0);
+  expect(JSON.parse(result.run.stdout.toString()).selected).toEqual(expected);
+  expect(JSON.parse(result.output.selection)).toEqual(expected);
+  expect(Object.keys(result.output).sort()).toEqual([...apps, 'selection', 'base', 'head'].sort());
+  for (const app of apps) expect(result.output[app]).toBe(String(expected[app]));
+}
+test('CLI push event writes entire pinned range and four Boolean outputs', () => {
+  const cwd = repo(), base = commit(cwd, ['README.md']);
+  commit(cwd, ['apps/sarabeth/one']); const head = commit(cwd, ['apps/carolyn/two']);
+  const result = cli(cwd, 'push', JSON.stringify({ before: base, after: head }));
+  expectCliSelection(result, selected('sarabeth', 'carolyn'));
+  expect(result.output.base).toBe(base); expect(result.output.head).toBe(head);
+});
+test('CLI PR event uses pinned base/head rather than current checkout or moving tip', () => {
+  const cwd = repo(), ancestor = commit(cwd, ['README.md']);
+  git(cwd, 'checkout', '-b', 'pr'); const head = commit(cwd, ['apps/paul/one']);
+  git(cwd, 'checkout', 'main'); const base = commit(cwd, ['apps/sarabeth/two']);
+  commit(cwd, ['apps/diloreto/three']);
+  const result = cli(cwd, 'pull_request', JSON.stringify({ pull_request: { base: { sha: base }, head: { sha: head } } }));
+  expectCliSelection(result, selected('paul'));
+  expect(result.output.base).toBe(base); expect(result.output.head).toBe(head);
+  expect(JSON.parse(result.run.stdout.toString()).diffBase).toBe(ancestor);
+});
+test('CLI validation-only dispatch runs all even without diff refs', () => {
+  const cwd = repo(); commit(cwd, ['README.md']);
+  const result = cli(cwd, 'workflow_dispatch', JSON.stringify({ inputs: { force_all: false } }));
+  expectCliSelection(result, selected(...apps));
+  expect(JSON.parse(result.run.stdout.toString()).reason).toBe('forced-baseline');
+  expect(result.output.base).toBe(''); expect(result.output.head).toBe('');
+});
+test('CLI malformed event fails without outputs; missing event refs explicitly run all', () => {
+  const cwd = repo(); commit(cwd, ['README.md']);
+  for (const payload of ['{broken', 'null']) {
+    const result = cli(cwd, 'push', payload);
+    expect(result.run.exitCode).not.toBe(0); expect(result.output).toEqual({});
+    expect(result.run.stdout.toString()).toBe('');
+  }
+  const result = cli(cwd, 'push', '{}');
+  expectCliSelection(result, selected(...apps));
+  expect(JSON.parse(result.run.stdout.toString()).reason).toBe('uninspectable-range-run-all');
 });
