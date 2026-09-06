@@ -1,7 +1,7 @@
 # Phase 2 — local scope-aware CI handoff
 
-Status: implementation in progress; independent review and full local fixture validation
-pending. External GitHub acceptance is **pending and not authorized**. This is not phase-2
+Status: local implementation and full fresh-clone fixture validation passed at
+`304918f0e80fb16590fc510950769b7b9c5a1fdf`; independent review remains pending. External GitHub acceptance is **pending and not authorized**. This is not phase-2
 acceptance or phase-3 authority. See `02-execution-plan.md` for the full approved contract.
 
 ## Baseline and authority
@@ -100,11 +100,35 @@ scratch under `/tmp/websites-phase2`, not release artifacts or GitHub acceptance
 
 - Root frozen install: passed; bun.lock unchanged.
 - `bun run test:workspace`:24 tests/391 assertions passed.
-- `bun run test:ci`:33 scope/gate/workflow tests/253 assertions and5 Python artifact tests passed.
+- `bun run test:ci`:34 scope/gate/workflow tests/256 assertions and5 Python artifact tests passed.
 - `bash scripts/ci/lint.sh`: all five active plus six nested workflows pass actionlint1.7.7;
   selected shell scripts pass ShellCheck0.11.0/bash syntax; Node module syntax passes.
 - `bun run lint`:4/4 passed after formatting only the two changed test files.
-- Full exact-SHA canonical fixture validation: pending below.
+- Full exact-SHA `bun run ci:verify`: passed4/4 uncached, concurrency1,8m34.685s.
+  Includes root contracts/scope/gate/workflow/Python/actionlint/shell gates and all chains.
+  Carolyn117unit/9infra/3fixture+3hermeticartifact/92visual; Sarabeth197browser/7provenance;
+  Paul56browser+4unchangedskips/3Lighthouse; DiLoreto13genealogy/37browser+1unchangedskip.
+- Actual post-suite static packaging/checksum/metadata and four diagnostics scans: passed.
+  Local fixture runId=1/build-attempt=1 are NOT actual GitHub run provenance.
+- Actual successful Sarabeth Gitless container manifest equals the full tested SHA.
+- Fresh six-root installed dependency/peer graph byte-equal to phase1; zero version/lock
+  or screenshot changes. Full history messages pass commitlint with legacy warnings.
+- First full attempt reached3/4 complete chains but Paul Lighthouse failed because a
+  scratch launcher PATH replacement also altered CHROME_PATH. Corrected scratch launcher
+  and reran the ENTIRE uncached root CI successfully; no app workaround or assertion change.
+- Newly added raw-byte-path fixture initially failed on macOS filesystem EILSEQ. The
+  forward fix constructs a Git index blob/commit without materializing the filename;
+  final regression now exercises actual invalid-UTF8 Git diff fail-safe behavior.
+- Docker cleanup left exact before/after image/container/volume identity sets equal.
+  Only fresh non-FROM/non-cache build-log-proven image IDs were removed; fresh container
+  reference checks and --no-prune/no-force retained. Final available6,937,992KiB (~6.6GiB).
+- Durable command/log digests, container proof, static metadata/checksums and cleanup IDs:
+  `phase2-local-validation.json`; scratch logs remain under `/tmp/websites-phase2`.
+- Code commits: `d9309ef4` (implementation), `82854366` (root gate integration),
+  `304918f0` (portable byte-path fixture, exact fully tested implementation). A following
+  scoped documentation commit records these results only; identify it with
+  `git log -1 --format=%H -- docs/migration/phase2-local-validation.json`.
+  It is not relabelled as a new fixture artifact run.
 - Docker capacity before builds: Colima `/dev/vdb1` available6,941,180KiB (~6.6GiB),93% used.
   One app/image at a time; no old-image/volume prune, daemon restart/resize or unrelated
   container stop. Only proven invocation-created images may be removed with fresh
