@@ -10,7 +10,9 @@ const transition = {
 	stateObjectArn: "arn:aws:s3:::fixture-only/state/carolyn.json",
 	repositoryConnection: true,
 };
-function synth(value?: typeof transition) {
+function synth(
+	value?: typeof transition & { candidateBranch?: string | null },
+) {
 	const app = new App({ context: value ? { monorepoTransition: value } : {} });
 	return Template.fromStack(
 		new HostingStack(app, "TransitionFixture", { env: environment }),
@@ -64,5 +66,118 @@ test("missing or wildcard subjects/resources fail closed before synth", () => {
 	}
 	expect(() =>
 		synth({ ...transition, stateObjectArn: "arn:aws:s3:::fixture-only/*" }),
+	).toThrow();
+});
+
+test("candidate is absent by default and null preserves every application resource", () => {
+	const baseline = synth();
+	// The CLI adds AWS::CDK::Metadata as the nineteenth synthesized resource.
+	expect(Object.keys(baseline.Resources)).toHaveLength(18);
+	expect(synth({ ...transition, candidateBranch: null })).toEqual(
+		synth(transition),
+	);
+	expect(baseline.Resources.MonorepoCandidateBranch).toBeUndefined();
+});
+
+test("explicit candidate adds only retained isolated branch with exact build and job policy", () => {
+	const before = synth(transition);
+	const after = synth({ ...transition, candidateBranch: "fixture-candidate" });
+	expect(Object.keys(after.Resources).sort()).toEqual(
+		[...Object.keys(before.Resources), "MonorepoCandidateBranch"].sort(),
+	);
+	const candidate = after.Resources.MonorepoCandidateBranch;
+	expect(candidate).toMatchObject({
+		Type: "AWS::Amplify::Branch",
+		DeletionPolicy: "Retain",
+		UpdateReplacePolicy: "Retain",
+		Properties: {
+			BranchName: "fixture-candidate",
+			EnableAutoBuild: false,
+			EnablePullRequestPreview: false,
+			Stage: "BETA",
+			EnvironmentVariables: [
+				{ Name: "CONTENTFUL_SPACE_ID", Value: { Ref: "ContentfulSpaceId" } },
+				{ Name: "AMPLIFY_MONOREPO_APP_ROOT", Value: "apps/carolyn" },
+				{ Name: "CAROLYN_CANDIDATE_BRANCH", Value: "fixture-candidate" },
+			],
+		},
+	});
+	for (const [id, resource] of Object.entries(before.Resources)) {
+		if ((resource as Resource).Type !== "AWS::IAM::Policy")
+			expect(after.Resources[id]).toEqual(resource);
+	}
+	const policies = Object.values(after.Resources).filter(
+		(resource) => (resource as Resource).Type === "AWS::IAM::Policy",
+	) as Resource[];
+	const deployment = policies.find((resource) =>
+		JSON.stringify(resource).includes("amplify:StartJob"),
+	);
+	if (!deployment) throw new Error("Missing deployment policy");
+	const statements = (
+		deployment.Properties.PolicyDocument as {
+			Statement: {
+				Action: string | string[];
+				Effect: string;
+				Resource: unknown;
+			}[];
+		}
+	).Statement;
+	expect(statements).toContainEqual({
+		Action: ["amplify:GetJob", "amplify:StartJob", "amplify:StopJob"],
+		Effect: "Allow",
+		Resource: {
+			"Fn::Join": [
+				"",
+				[{ "Fn::GetAtt": ["MonorepoCandidateBranch", "Arn"] }, "/jobs/*"],
+			],
+		},
+	});
+	expect(statements).toContainEqual({
+		Action: ["amplify:GetBranch", "amplify:ListJobs"],
+		Effect: "Allow",
+		Resource: { "Fn::GetAtt": ["MonorepoCandidateBranch", "Arn"] },
+	});
+	const domain = statements.find(
+		(statement) => statement.Action === "amplify:GetDomainAssociation",
+	);
+	expect(domain?.Resource).toEqual(
+		["carolyndiloreto.com", "diloreto.com"].map((name) => ({
+			"Fn::Join": [
+				"",
+				[{ "Fn::GetAtt": ["AmplifyApp", "Arn"] }, `/domains/${name}`],
+			],
+		})),
+	);
+	const service = policies.find((resource) =>
+		JSON.stringify(resource).includes("logs:CreateLogGroup"),
+	);
+	expect(JSON.stringify(service)).toContain("MonorepoCandidateBranch");
+	expect(JSON.stringify(service)).toContain("amplify:GetJob");
+	expect(JSON.stringify(after)).not.toContain("amplify:CreateBranch");
+	expect(JSON.stringify(after)).not.toContain(
+		"amplify:UpdateDomainAssociation",
+	);
+});
+
+test("unsafe or disconnected candidate configuration fails before synthesis", () => {
+	for (const candidateBranch of [
+		"",
+		"*",
+		"main",
+		"amplify-production",
+		"sarabeth-production",
+		"bad/ref",
+		"Upper",
+		"-bad",
+		"a".repeat(64),
+	]) {
+		expect(() => synth({ ...transition, candidateBranch })).toThrow();
+	}
+	expect(() =>
+		synth({
+			...transition,
+			candidateBranch: "fixture-candidate",
+			repositoryConnection: false,
+		}),
 	).toThrow();
 });

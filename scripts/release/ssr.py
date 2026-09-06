@@ -15,8 +15,12 @@ def ref_sha(branch):
     return commit
 
 
-def promote(branch, previous, commit):
-    require(branch in ('amplify-production', 'sarabeth-production'), 'Unknown SSR ref')
+def promote(branch, previous, commit, candidate_branch=None):
+    allowed = ['amplify-production', 'sarabeth-production']
+    if candidate_branch is not None:
+        from carolyn_transition import candidate_branch as validate_candidate_branch
+        allowed.append(validate_candidate_branch(candidate_branch))
+    require(branch in allowed, 'Unknown SSR ref')
     # Ref must already exist via separately approved preparation; no implicit create.
     require(ref_sha(branch) == previous, 'Release ref drift before promotion')
     credential = base64.b64encode(('x-access-token:' + os.environ['GH_TOKEN']).encode()).decode()
@@ -26,10 +30,14 @@ def promote(branch, previous, commit):
     require(ref_sha(branch) == commit, 'Release ref CAS not confirmed')
 
 
-def smoke(site, config, commit, url, default_domain=None):
+def smoke(site, config, commit, url, default_domain=None, candidate=False):
     environment = {k: os.environ[k] for k in ('PATH', 'HOME', 'CI', 'CHROME_PATH', 'RUNNER_TEMP') if k in os.environ}
     app_root = ROOT / 'apps' / site
-    if site == 'carolyn':
+    if site == 'carolyn' and candidate:
+        command(['bash', 'scripts/playwright-docker.sh', '--config=playwright.candidate.config.ts'], app_root,
+                {**environment, 'AMPLIFY_BASE_URL': url, 'CAROLYN_CANDIDATE_BRANCH': config['candidateBranch'],
+                 'CAROLYN_CANDIDATE_APP_ID': config['appId'], 'AMPLIFY_EXPECTED_RELEASE_COMMIT': commit})
+    elif site == 'carolyn':
         command(['bash', 'scripts/playwright-docker.sh', '--config=playwright.amplify.config.ts'], app_root, {**environment, 'AMPLIFY_BASE_URL': url, 'AMPLIFY_DEFAULT_ORIGIN': f"https://{config['branch']}.{default_domain}", 'AMPLIFY_EXPECTED_RELEASE_COMMIT': commit})
     else:
         command(['bun', 'scripts/smoke-deployment.ts', url, commit], app_root, environment)

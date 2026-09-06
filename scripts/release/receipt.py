@@ -15,5 +15,11 @@ def lifecycle_receipt(site, intent, current, outcome):
         require(all(isinstance(job.get(k), str) and re.fullmatch(r'[A-Za-z0-9_-]+', job[k]) for k in ('branch', 'jobId')), 'Invalid job receipt identity')
         jobs.append({key: job[key] for key in ('branch', 'jobId')})
     receipt = dict(schemaVersion=1, site=site, invocation=intent['invocation'], operation=intent['operation'], requestedRelease=identity(intent['release']), servingRelease=identity(current), jobs=jobs, outcome=outcome, servingAcceptance='passed', candidateAcceptance='passed' if site == 'paul' else 'not-applicable', restoration='passed' if outcome == 'restored-previous' else 'not-required')
+    if site == 'carolyn' and intent['operation'] in ('candidate', 'promote'):
+        receipt['buildAttestation'] = 'separate-ssr-rebuild'
+        receipt['candidateAcceptance'] = 'passed'
+        if intent['operation'] == 'candidate':
+            receipt['candidateRelease'] = receipt.pop('servingRelease')
+            receipt['servingAcceptance'] = 'not-applicable'
     artifact.ci.scan('lifecycle-receipt.json', json.dumps(receipt).encode())
     return receipt

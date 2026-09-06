@@ -81,6 +81,7 @@ export class HostingStack extends Stack {
 					subject: string;
 					stateObjectArn: string;
 					repositoryConnection: boolean;
+					candidateBranch?: string | null;
 			  }
 			| undefined;
 		if (transition) {
@@ -94,6 +95,21 @@ export class HostingStack extends Stack {
 					"Exact observed monorepo subject/state object and connection decision required",
 				);
 			}
+		}
+
+		const candidateName = transition?.candidateBranch;
+		if (
+			candidateName != null &&
+			(typeof candidateName !== "string" ||
+				!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(candidateName) ||
+				["main", PRODUCTION_BRANCH, "sarabeth-production"].includes(
+					candidateName,
+				) ||
+				transition?.repositoryConnection !== true)
+		) {
+			throw new Error(
+				"Exact isolated candidate branch and explicit monorepo connection required",
+			);
 		}
 
 		const contentfulSpaceId = new CfnParameter(this, "ContentfulSpaceId", {
@@ -323,6 +339,32 @@ export class HostingStack extends Stack {
 		});
 		branch.addDependency(amplifyApp);
 
+		// Absent by default; never associated with either existing production domain.
+		const candidateBranch =
+			candidateName != null
+				? new CfnBranch(this, "MonorepoCandidateBranch", {
+						appId: amplifyApp.attrAppId,
+						branchName: candidateName,
+						computeRoleArn: amplifyComputeRole.roleArn,
+						description: "Explicit isolated monorepo first-cutover validation",
+						enableAutoBuild: false,
+						enablePerformanceMode: false,
+						enablePullRequestPreview: false,
+						environmentVariables: [
+							{
+								name: "CONTENTFUL_SPACE_ID",
+								value: contentfulSpaceId.valueAsString,
+							},
+							{ name: "AMPLIFY_MONOREPO_APP_ROOT", value: "apps/carolyn" },
+							{ name: "CAROLYN_CANDIDATE_BRANCH", value: candidateName },
+						],
+						framework: "Nitro",
+						stage: "BETA",
+					})
+				: undefined;
+		candidateBranch?.addDependency(amplifyApp);
+		candidateBranch?.applyRemovalPolicy(RemovalPolicy.RETAIN);
+
 		const domain = new CfnDomain(this, "ProductionDomain", {
 			appId: amplifyApp.attrAppId,
 			domainName: hostedZone.zoneName,
@@ -481,6 +523,36 @@ export class HostingStack extends Stack {
 				resources: [`${branch.attrArn}/jobs/*`],
 			}),
 		);
+
+		if (candidateBranch) {
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:GetBranch", "amplify:ListJobs"],
+					resources: [candidateBranch.attrArn],
+				}),
+			);
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:GetJob", "amplify:StartJob", "amplify:StopJob"],
+					resources: [`${candidateBranch.attrArn}/jobs/*`],
+				}),
+			);
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:GetDomainAssociation"],
+					resources: [
+						`${amplifyApp.attrArn}/domains/${DOMAIN_NAME}`,
+						`${amplifyApp.attrArn}/domains/${LEGACY_DOMAIN_NAME}`,
+					],
+				}),
+			);
+			amplifyServiceRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:GetJob"],
+					resources: [`${candidateBranch.attrArn}/jobs/*`],
+				}),
+			);
+		}
 
 		if (transition) {
 			deploymentRole.addToPolicy(

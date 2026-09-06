@@ -108,7 +108,7 @@ class State:
         proposed['intent']['phase'] = phase
         self.write(proposed)
 
-    def finish_candidate(self, release, domain, hosting):
+    def finish_candidate(self, release, domain, hosting, production_ref=None):
         from receipt import lifecycle_receipt
         self.assert_owned()
         proposed = copy.deepcopy(self.value)
@@ -118,7 +118,25 @@ class State:
             release=release, domain=domain, hosting=hosting, generation=proposed['generation'],
             previousProduction={key: copy.deepcopy(proposed.get(key)) for key in ('currentRelease', 'highWatermark', 'lastLifecycleReceipt', 'ssrProductionAccepted')},
             receipt=lifecycle_receipt(self.site, proposed['intent'], release, 'accepted'))
+        if self.site == 'carolyn':
+            require(re.fullmatch(r'[0-9a-f]{40}', production_ref or ''), 'Missing previous production ref')
+            proposed['acceptedCandidate']['productionRef'] = production_ref
         proposed['intent'] = None
+        self.write(proposed)
+
+    def finish_carolyn_promotion(self, release):
+        from receipt import lifecycle_receipt
+        self.assert_owned()
+        proposed = copy.deepcopy(self.value)
+        intent = proposed['intent']
+        require(self.site == 'carolyn' and intent['operation'] == 'promote'
+                and intent.get('phase') == 'production-verified', 'Unverified Carolyn promotion')
+        candidate = proposed['acceptedCandidate']
+        require(candidate['release']['commit'] == release['commit'], 'Candidate/promotion SHA mismatch')
+        proposed['lastLifecycleReceipt'] = lifecycle_receipt(self.site, intent, release, 'accepted')
+        proposed['lastSsrCutover'] = proposed.pop('acceptedCandidate')
+        proposed.update(currentRelease=release, highWatermark=release['commit'], ssrProductionAccepted=True,
+                        intent=None, generation=proposed['generation'] + 1)
         self.write(proposed)
 
     def claim(self, release, operation, invocation, baseline=None):

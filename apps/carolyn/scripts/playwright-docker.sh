@@ -29,6 +29,8 @@ container=$(docker create --init --ipc=host \
 	--env AMPLIFY_BASE_URL \
 	--env AMPLIFY_DEFAULT_ORIGIN \
 	--env AMPLIFY_EXPECTED_RELEASE_COMMIT \
+	--env CAROLYN_CANDIDATE_BRANCH \
+	--env CAROLYN_CANDIDATE_APP_ID \
 	--env EXPECTED_ARTIFACT_MODE \
 	--env HERMETIC_ARTIFACT_TEST \
 	"${IMAGE_NAME}" bash -c '
