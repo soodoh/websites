@@ -31,7 +31,7 @@ describe("phase 1 workspace contract", () => {
 			expect(existsSync(resolve(root, `apps/${app}/bun.lock`))).toBe(false);
 		}
 		expect(existsSync(resolve(root, "apps/carolyn/infra/package.json"))).toBe(false);
-		expect(existsSync(resolve(root, ".github/workflows"))).toBe(false);
+		expect(existsSync(resolve(root, ".github/workflows/ci.yml"))).toBe(true);
 	});
 
 	test("retains original direct resolutions including folded infra tools", () => {

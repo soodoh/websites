@@ -13,6 +13,7 @@ COPY apps/diloreto/package.json apps/diloreto/package.json
 COPY apps/paul/package.json apps/paul/package.json
 COPY apps/sarabeth/package.json apps/sarabeth/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
+COPY .github .github
 COPY apps/carolyn apps/carolyn
 WORKDIR /work/apps/carolyn
 ENV CI=1

@@ -1,0 +1,88 @@
+name: CI
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force_all:
+        description: Validation-only full baseline (manual CI always selects all apps)
+        type: boolean
+        default: true
+permissions:
+  contents: read
+# Only PR replacement cancels. Unique main-run groups preserve interleaved app work.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  detect:
+    runs-on: ubuntu-24.04
+    outputs:
+      sarabeth: ${{ steps.scope.outputs.sarabeth }}
+      carolyn: ${{ steps.scope.outputs.carolyn }}
+      paul: ${{ steps.scope.outputs.paul }}
+      diloreto: ${{ steps.scope.outputs.diloreto }}
+      selection: ${{ steps.scope.outputs.selection }}
+      base: ${{ steps.scope.outputs.base }}
+      head: ${{ steps.scope.outputs.head }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - name: Complete pinned-event Git diff
+        id: scope
+        env:
+          CI_FORCE_ALL: ${{ inputs.force_all }}
+        run: node scripts/ci/affected.mjs > scope-evidence.json
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: repo-${{ github.run_id }}-${{ github.run_attempt }}-scope
+          path: scope-evidence.json
+          retention-days: 14
+          if-no-files-found: error
+  root:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ci-tools
+      - run: bun run test:workspace && bun run test:ci && bash scripts/ci/lint.sh
+  sarabeth:
+    needs: detect
+    if: needs.detect.outputs.sarabeth == 'true'
+    uses: ./.github/workflows/_sarabeth-ci.yml
+  carolyn:
+    needs: detect
+    if: needs.detect.outputs.carolyn == 'true'
+    uses: ./.github/workflows/_carolyn-ci.yml
+  paul:
+    needs: detect
+    if: needs.detect.outputs.paul == 'true'
+    uses: ./.github/workflows/_paul-ci.yml
+  diloreto:
+    needs: detect
+    if: needs.detect.outputs.diloreto == 'true'
+    uses: ./.github/workflows/_diloreto-ci.yml
+  gate:
+    name: CI gate
+    if: always()
+    needs: [detect, root, sarabeth, carolyn, paul, diloreto]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - name: Require exactly the selected app successes
+        env:
+          CI_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/ci/gate.mjs

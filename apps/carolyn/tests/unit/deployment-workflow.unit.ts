@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFile } from "node:fs/promises";
 
+// Legacy-only deployment security contracts are retained for phase 3.
 const workflowPath = new URL(
 	"../../.github/workflows/visual-tests.yml",
 	import.meta.url,
@@ -96,18 +97,24 @@ describe("production deployment workflow", () => {
 
 	test("uses a production-shaped fixture suite without production passwords", async () => {
 		const [workflow, packageJson, amplifySmoke] = await Promise.all([
-			readFile(workflowPath, "utf8"),
+			readFile(
+				new URL(
+					"../../../../.github/workflows/_carolyn-ci.yml",
+					import.meta.url,
+				),
+				"utf8",
+			),
 			readFile(packagePath, "utf8"),
 			readFile(amplifySmokePath, "utf8"),
 		]);
 
-		const playwrightJob = workflow.slice(
-			workflow.indexOf("  playwright:"),
-			workflow.indexOf("  release-production-ref:"),
+		expect(workflow).toContain("uses: ./.github/actions/ci-tools");
+		expect(workflow).toContain("run: bun run verify:carolyn");
+		expect(workflow).toContain("runs-on: ubuntu-24.04-arm");
+		expect(workflow).not.toContain("id-token: write");
+		expect(JSON.parse(packageJson).scripts["ci:verify"]).toContain(
+			"bun run test:visual",
 		);
-		expect(playwrightJob).toContain("oven-sh/setup-bun@");
-		expect(playwrightJob).toContain("run: bun install --frozen-lockfile");
-		expect(playwrightJob).toContain("run: bun run test:visual");
 		expect(packageJson).toContain("HERMETIC_ARTIFACT_TEST=true");
 		expect(packageJson).toContain("build:production:test");
 		expect(workflow).not.toContain("AMPLIFY_PROTECTED_PROJECT_PASSWORD");
