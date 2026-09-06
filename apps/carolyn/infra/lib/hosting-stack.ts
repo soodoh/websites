@@ -74,6 +74,28 @@ export class HostingStack extends Stack {
 			);
 		}
 
+		// Optional offline-authored transition: supplied explicitly after inventory/review.
+		// Omission preserves every deployed identity and the source repository connection.
+		const transition = this.node.tryGetContext("monorepoTransition") as
+			| {
+					subject: string;
+					stateObjectArn: string;
+					repositoryConnection: boolean;
+			  }
+			| undefined;
+		if (transition) {
+			if (
+				typeof transition.subject !== "string" ||
+				!/^[^*?\s]+$/.test(transition.subject) ||
+				!/^arn:aws:s3:::[a-z0-9.-]+\/[^*?]+$/.test(transition.stateObjectArn) ||
+				typeof transition.repositoryConnection !== "boolean"
+			) {
+				throw new Error(
+					"Exact observed monorepo subject/state object and connection decision required",
+				);
+			}
+		}
+
 		const contentfulSpaceId = new CfnParameter(this, "ContentfulSpaceId", {
 			description: "Non-secret Contentful space identifier",
 			type: "String",
@@ -246,7 +268,9 @@ export class HostingStack extends Stack {
 			iamServiceRole: amplifyServiceRole.roleArn,
 			name: "carolyn-portfolio",
 			platform: "WEB_COMPUTE",
-			repository: REPOSITORY_URL,
+			repository: transition?.repositoryConnection
+				? "https://github.com/soodoh/websites"
+				: REPOSITORY_URL,
 		});
 		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
 			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
@@ -290,6 +314,9 @@ export class HostingStack extends Stack {
 					name: "CONTENTFUL_SPACE_ID",
 					value: contentfulSpaceId.valueAsString,
 				},
+				...(transition?.repositoryConnection
+					? [{ name: "AMPLIFY_MONOREPO_APP_ROOT", value: "apps/carolyn" }]
+					: []),
 			],
 			framework: "Nitro",
 			stage: "PRODUCTION",
@@ -421,6 +448,7 @@ export class HostingStack extends Stack {
 				"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
 				"token.actions.githubusercontent.com:sub": [
 					"repo:soodoh/carolyn-portfolio:environment:production",
+					...(transition ? [transition.subject] : []),
 				],
 			},
 		};
@@ -453,6 +481,33 @@ export class HostingStack extends Stack {
 				resources: [`${branch.attrArn}/jobs/*`],
 			}),
 		);
+
+		if (transition) {
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["s3:GetObject", "s3:PutObject"],
+					resources: [transition.stateObjectArn],
+				}),
+			);
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:StopJob"],
+					resources: [`${branch.attrArn}/jobs/*`],
+				}),
+			);
+			deploymentRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:ListJobs"],
+					resources: [branch.attrArn],
+				}),
+			);
+			amplifyServiceRole.addToPolicy(
+				new PolicyStatement({
+					actions: ["amplify:GetJob"],
+					resources: [`${branch.attrArn}/jobs/*`],
+				}),
+			);
+		}
 
 		new CfnOutput(this, "AmplifyAppId", { value: amplifyApp.attrAppId });
 		new CfnOutput(this, "AmplifyDefaultDomain", {

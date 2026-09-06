@@ -1,0 +1,316 @@
+name: Release-site fresh main recovery
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        type: choice
+        required: true
+        options: [paul, diloreto, carolyn, sarabeth]
+      ref:
+        type: string
+        default: main
+        required: true
+permissions:
+  contents: read
+jobs:
+  resolve:
+    name: Resolve immutable trusted main-history selection
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    outputs:
+      commit: ${{ steps.select.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - id: select
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SITE: ${{ inputs.site }}
+          SELECTED_REF: ${{ inputs.ref }}
+        run: node scripts/release/select.mjs
+  root:
+    name: release root validation
+    needs: resolve
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          persist-credentials: false
+      - uses: ./.github/actions/ci-tools
+      - run: bun run test:workspace && bun run test:ci && bash scripts/ci/lint.sh
+  paul-validate:
+    name: paul release validation
+    needs: resolve
+    if: inputs.site == 'paul'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CI: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          path: selected-source
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.27.1
+          cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.14.6'
+      - name: Install fixture tools without credentials
+        working-directory: selected-source
+        run: |
+          python -m pip install uv==0.12.9 shellcheck-py==0.11.0.1
+          bun install --frozen-lockfile --ignore-scripts
+      - name: Pinned local Lighthouse Chrome
+        run: |
+          curl --fail --silent --show-error --location https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.77/linux64/chrome-linux64.zip -o "$RUNNER_TEMP/chrome.zip"
+          unzip -q "$RUNNER_TEMP/chrome.zip" -d "$RUNNER_TEMP/chrome"
+          echo "CHROME_PATH=$RUNNER_TEMP/chrome/chrome-linux64/chrome" >> "$GITHUB_ENV"
+      - name: Fresh immutable selected-source fixture validation
+        run: bash verification-harness/scripts/release/validate.sh paul "$GITHUB_WORKSPACE/selected-source"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: paul-${{ github.run_id }}-${{ github.run_attempt }}-static-v2
+          path: verification-harness/release-output/paul/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Scan fixture diagnostics
+        if: always()
+        id: diagnostics
+        run: python3 verification-harness/scripts/release/reports.py paul selected-source release-reports fixture
+      - name: Retain scanned fixture diagnostics
+        if: always() && steps.diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: paul-${{ github.run_id }}-${{ github.run_attempt }}-recovery-diagnostics
+          path: release-reports/
+          retention-days: 90
+          if-no-files-found: error
+  paul-release:
+    needs: [resolve, root, paul-validate]
+    if: ${{ false }}
+    uses: ./.github/workflows/_paul-release.yml
+    with:
+      target_sha: ${{ needs.resolve.outputs.commit }}
+      operation: release
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+  diloreto-validate:
+    name: diloreto release validation
+    needs: resolve
+    if: inputs.site == 'diloreto'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      CI: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          path: selected-source
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.27.1
+          cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.14.6'
+      - name: Install fixture tools without credentials
+        working-directory: selected-source
+        run: |
+          python -m pip install uv==0.12.9 shellcheck-py==0.11.0.1
+          bun install --frozen-lockfile --ignore-scripts
+      - name: Fresh immutable selected-source fixture validation
+        run: bash verification-harness/scripts/release/validate.sh diloreto "$GITHUB_WORKSPACE/selected-source"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: diloreto-${{ github.run_id }}-${{ github.run_attempt }}-static-v2
+          path: verification-harness/release-output/diloreto/
+          retention-days: 1
+          if-no-files-found: error
+      - name: Scan fixture diagnostics
+        if: always()
+        id: diagnostics
+        run: python3 verification-harness/scripts/release/reports.py diloreto selected-source release-reports fixture
+      - name: Retain scanned fixture diagnostics
+        if: always() && steps.diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: diloreto-${{ github.run_id }}-${{ github.run_attempt }}-recovery-diagnostics
+          path: release-reports/
+          retention-days: 7
+          if-no-files-found: error
+  diloreto-release:
+    needs: [resolve, root, diloreto-validate]
+    if: ${{ false }}
+    uses: ./.github/workflows/_diloreto-release.yml
+    with:
+      target_sha: ${{ needs.resolve.outputs.commit }}
+      operation: release
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+  carolyn-validate:
+    name: carolyn release validation
+    needs: resolve
+    if: inputs.site == 'carolyn'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    env:
+      CI: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          path: selected-source
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.27.1
+          cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.14.6'
+      - name: Install fixture tools without credentials
+        working-directory: selected-source
+        run: |
+          python -m pip install uv==0.12.9 shellcheck-py==0.11.0.1
+          bun install --frozen-lockfile --ignore-scripts
+      - name: Fresh immutable selected-source fixture validation
+        run: bash verification-harness/scripts/release/validate.sh carolyn "$GITHUB_WORKSPACE/selected-source"
+      - name: Scan fixture diagnostics
+        if: always()
+        id: diagnostics
+        run: python3 verification-harness/scripts/release/reports.py carolyn selected-source release-reports fixture
+      - name: Retain scanned fixture diagnostics
+        if: always() && steps.diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: carolyn-${{ github.run_id }}-${{ github.run_attempt }}-recovery-diagnostics
+          path: release-reports/
+          retention-days: 14
+          if-no-files-found: error
+  carolyn-release:
+    needs: [resolve, root, carolyn-validate]
+    if: ${{ false }}
+    uses: ./.github/workflows/_carolyn-release.yml
+    with:
+      target_sha: ${{ needs.resolve.outputs.commit }}
+      operation: release
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+  sarabeth-validate:
+    name: sarabeth release validation
+    needs: resolve
+    if: inputs.site == 'sarabeth'
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 60
+    env:
+      CI: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ needs.resolve.outputs.commit }}
+          path: selected-source
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: 1.27.1
+          cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.14.6'
+      - name: Install fixture tools without credentials
+        working-directory: selected-source
+        run: |
+          python -m pip install uv==0.12.9 shellcheck-py==0.11.0.1
+          bun install --frozen-lockfile --ignore-scripts
+      - name: Fresh immutable selected-source fixture validation
+        run: bash verification-harness/scripts/release/validate.sh sarabeth "$GITHUB_WORKSPACE/selected-source"
+      - name: Scan fixture diagnostics
+        if: always()
+        id: diagnostics
+        run: python3 verification-harness/scripts/release/reports.py sarabeth selected-source release-reports fixture
+      - name: Retain scanned fixture diagnostics
+        if: always() && steps.diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: sarabeth-${{ github.run_id }}-${{ github.run_attempt }}-recovery-diagnostics
+          path: release-reports/
+          retention-days: 14
+          if-no-files-found: error
+  sarabeth-release:
+    needs: [resolve, root, sarabeth-validate]
+    if: ${{ false }}
+    uses: ./.github/workflows/_sarabeth-release.yml
+    with:
+      target_sha: ${{ needs.resolve.outputs.commit }}
+      operation: release
+    permissions:
+      contents: write
+      actions: read
+      id-token: write

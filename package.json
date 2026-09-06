@@ -20,7 +20,7 @@
     "verify:carolyn": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
     "verify:diloreto": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
     "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts scripts/commit-policy.test.ts docs/migration/scripts/audit-installed-ranges.test.ts",
-    "test:ci": "bun test scripts/ci/*.test.mjs && python3 -m unittest discover -s scripts/ci -p \"*_test.py\""
+    "test:ci": "bun test scripts/ci/*.test.mjs && python3 -m unittest discover -s scripts/ci -p \"*_test.py\" && python3 -m unittest discover -s scripts/release -p \"*_test.py\""
   },
   "devDependencies": {
     "turbo": "2.10.12",

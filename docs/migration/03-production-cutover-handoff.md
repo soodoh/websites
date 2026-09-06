@@ -1,6 +1,49 @@
-# Phase 3 handoff — offline foundation in progress; production not started
+# Phase 3 handoff — offline site ports in progress; production not started
 
-## Current offline execution checkpoint
+## Current milestone-2 offline checkpoint
+
+Concrete offline ports are authored in Paul → DiLoreto → Carolyn → Sarabeth order:
+root after-CI/recovery/DiLoreto-redeploy/static-restore and reusable release workflows,
+trusted attempt-specific observations, static candidate/promotion/restore, conditional
+S3 state, SSR ref/job/bundle attestation, root Amplify buildspec, optional owning-IaC
+transitions, and gated Sarabeth infrastructure. `site-release-ports.md` is the detailed
+implemented/unimplemented ledger and recovery runbook; `ci-parity.md` adds a milestone-2
+map without changing its exhaustive historical 13-job/133-step ledger.
+
+Every credential job and production reusable call is literal-false. Runtime publication
+lock/enable flags/writer-drain flags remain locked; actual IDs/subjects/resources/URLs
+remain uncollected, not guessed. Optional IaC inputs retain legacy subjects, resources
+and defaults. Current release identity is separate from monotonic watermark; historical
+restoration/redeploy never lowers it. Unknown CAS/upload/start outcomes block all further
+promotion/rollback. Shared manual queue inputs cannot be attributed precisely before
+execution; conservative notices say unknown site and never authorize/redispatch.
+
+All four sites remain **blocked before production preparation; offline ports authored,
+independent acceptance PENDING**. Sources remain sole production owners. No live inventory,
+credentials, production HTTP, workflow execution, ref promotion, settings/cloud/source
+writes or push occurred. Exact-SHA full fixture validation is the next milestone after
+a forward local checkpoint commit, then independent security/order/parity review,
+findings/fixes/revalidation/final acceptance. This checkpoint is not offline completion.
+
+Targeted evidence: `test:ci` 55 Bun tests / 809 assertions, six original Python
+artifact tests and 23 new Python adapter fixtures; workspace 30 tests / 433 assertions;
+root/nested actionlint, ShellCheck, shell/Node/Python syntax and whitespace checks passed.
+Carolyn infra types and 12 tests / 50 assertions plus original deployment 5 / 27 passed.
+Sarabeth's four original source/redirect/provider/domain contract specs passed 41 tests
+with a scratch no-webserver config. Pinned cfn-lint1.42.0 (Paul) and 1.53.0
+(DiLoreto/Sarabeth) passed all changed templates. Existing CDK deprecation/NoEcho-name
+warnings remain; no new lint warning remains. All checks used empty HOME/environment,
+explicit safe tools, Bun1.4.0/Node24.20.0 and no credentials. Early fixture assertion/path
+typos failed, were corrected, and passed on rerun; logs retain failures honestly.
+
+Commit identity and full private baseline/new-file diff manifest are recorded in the
+private `site-ports.md` report; logs are under `/private/tmp/websites-phase3-ports/`.
+No install/full app chain/Docker launch occurred in this milestone. Existing accepted phase-2/publication evidence and
+normalized graph are unchanged. Local commit hooks remain required; independent TARGET
+root install and serial exact-SHA fixture chains still require empty HOME/environment,
+exact pins and prior Colima capacity check.
+
+## Historical milestone-1 offline execution checkpoint
 
 The user explicitly answered **Execute offline scope**, adopting the entire execution
 block in `03-fresh-session.md`: local authoring, fixture validation and forward scoped

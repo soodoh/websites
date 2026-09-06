@@ -2,6 +2,28 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Production AWS Amplify Hosting, IAM, deployment role, and monitoring for sarabeth-studio.
 
 Parameters:
+  EnableMonorepoConnection:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+  EnableMonorepoBranch:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+  MonorepoWebhookTarget:
+    Type: String
+    Default: "false"
+    AllowedValues: ["true", "false"]
+  MonorepoSubject:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^[^*?\\s]+$"
+    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
+  MonorepoStateObjectArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
+    Description: Optional approved existing per-site state object only; no bucket creation.
   GitHubOwner:
     Type: String
     Default: soodoh
@@ -34,7 +56,18 @@ Parameters:
     Default: "2"
     Description: Increment only to rotate the CMS build webhook URL.
 
+Rules:
+  MonorepoWebhookRequiresBranch:
+    RuleCondition: !Equals [!Ref MonorepoWebhookTarget, "true"]
+    Assertions:
+      - Assert: !Equals [!Ref EnableMonorepoBranch, "true"]
+        AssertDescription: Create the retained monorepo branch before retargeting the CMS webhook.
 Conditions:
+  UseMonorepoConnection: !Equals [!Ref EnableMonorepoConnection, "true"]
+  CreateMonorepoBranch: !Equals [!Ref EnableMonorepoBranch, "true"]
+  UseMonorepoWebhook: !Equals [!Ref MonorepoWebhookTarget, "true"]
+  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
+  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   HasGitHubAccessToken: !Not [!Equals [!Ref GitHubAccessToken, ""]]
 
 Resources:
@@ -123,7 +156,9 @@ Resources:
             Action: sts:AssumeRole
             Condition:
               ArnLike:
-                aws:SourceArn: !Sub ${AmplifyApp.Arn}/branches/${GitHubBranch}
+                aws:SourceArn:
+                  - !Sub ${AmplifyApp.Arn}/branches/${GitHubBranch}
+                  - !If [CreateMonorepoBranch, !Sub '${AmplifyApp.Arn}/branches/sarabeth-production', !Ref AWS::NoValue]
               StringEquals:
                 aws:SourceAccount: !Ref AWS::AccountId
       Policies:
@@ -154,7 +189,10 @@ Resources:
     Properties:
       Name: sarabeth-studio-production
       Description: Production TanStack Start application for sarabethbelon.com.
-      Repository: !Sub https://github.com/${GitHubOwner}/${GitHubRepository}
+      Repository: !If
+        - UseMonorepoConnection
+        - https://github.com/soodoh/websites
+        - !Sub https://github.com/${GitHubOwner}/${GitHubRepository}
       AccessToken: !If
         - HasGitHubAccessToken
         - !Ref GitHubAccessToken
@@ -214,6 +252,39 @@ Resources:
       Framework: TanStack Start
       Stage: PRODUCTION
       EnvironmentVariables:
+        - Name: CONTENTFUL_SPACE_ID
+          Value: !Ref ContentfulSpaceId
+        - Name: CONTENTFUL_ACCESS_TOKEN_PARAMETER
+          Value: /sarabeth-studio/production/contentful/access-token
+        - Name: YOUTUBE_API_KEY_PARAMETER
+          Value: /sarabeth-studio/production/youtube/api-key
+        - Name: EMAIL_RATE_LIMIT_TABLE
+          Value: !Ref EmailRateLimitTable
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
+
+  MonorepoBranch:
+    Type: AWS::Amplify::Branch
+    Condition: CreateMonorepoBranch
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
+      BranchName: sarabeth-production
+      Description: Production branch; releases are started only after GitHub Actions CI succeeds.
+      ComputeRoleArn: !GetAtt AmplifyComputeRole.Arn
+      EnableAutoBuild: false
+      EnablePerformanceMode: false
+      EnablePullRequestPreview: false
+      EnableSkewProtection: false
+      Framework: TanStack Start
+      Stage: PRODUCTION
+      EnvironmentVariables:
+        - Name: AMPLIFY_MONOREPO_APP_ROOT
+          Value: apps/sarabeth
         - Name: CONTENTFUL_SPACE_ID
           Value: !Ref ContentfulSpaceId
         - Name: CONTENTFUL_ACCESS_TOKEN_PARAMETER
@@ -352,7 +423,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt WebhookCustomResourceFunction.Arn
       AppId: !GetAtt AmplifyApp.AppId
-      BranchName: !GetAtt MainBranch.BranchName
+      BranchName: !If [UseMonorepoWebhook, !GetAtt MonorepoBranch.BranchName, !GetAtt MainBranch.BranchName]
       Description: Contentful publish and unpublish production rebuilds.
       RotationVersion: !Ref WebhookRotationVersion
 
@@ -447,8 +518,20 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:ref:refs/heads/${GitHubBranch}
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubOwner}/${GitHubRepository}:ref:refs/heads/${GitHubBranch}
+                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
+        - !If
+          - HasMonorepoState
+          - PolicyName: MonorepoReleaseState
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: [s3:GetObject, s3:PutObject]
+                  Resource: !Ref MonorepoStateObjectArn
+          - !Ref AWS::NoValue
         - PolicyName: ReleaseSpecificAmplifyApp
           PolicyDocument:
             Version: "2012-10-17"

@@ -1,4 +1,16 @@
-# Phase 3 release foundation — offline, not a production authority
+# Phase 3 release contracts — offline, not a production authority
+
+## Current milestone-2 checkpoint
+
+Concrete gated workflow/API/state/buildspec/IaC ports are now authored, unlike the
+historical foundation snapshot below. Read `site-release-ports.md` for implemented
+adapters, per-site remaining gates, conservative queue attribution, CAS/crash semantics,
+legacy continuity and targeted evidence limitations. Production remains disabled and
+unmigrated. Exact-commit full validation and independent acceptance are **PENDING**.
+The five phase-2 CI workflows and their privilege assertions remain intact; new gated
+production workflows have separate exhaustive publication-lock tests.
+
+## Historical milestone-1 foundation snapshot
 
 The user adopted the complete offline block in `03-fresh-session.md` by answering
 **Execute offline scope**. Foundation authoring and forward scoped local commits are

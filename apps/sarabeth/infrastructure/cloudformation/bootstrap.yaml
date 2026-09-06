@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: GitHub OIDC and protected CloudFormation deployment roles for sarabeth-studio.
 
 Parameters:
+  MonorepoSubject:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^[^*?\\s]+$"
+    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
+  MonorepoStateObjectArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
+    Description: Optional approved existing per-site state object only; no bucket creation.
   GitHubOwner:
     Type: String
     Default: soodoh
@@ -17,6 +27,8 @@ Parameters:
     Description: Existing token.actions.githubusercontent.com provider ARN, or blank to create it.
 
 Conditions:
+  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
+  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
 
 Resources:
@@ -39,6 +51,13 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
+          - !If
+            - HasMonorepoState
+            - Sid: MonorepoReleaseState
+              Effect: Allow
+              Action: [s3:GetObject, s3:PutObject]
+              Resource: !Ref MonorepoStateObjectArn
+            - !Ref AWS::NoValue
           - Sid: AmplifyJobsAndWebhooks
             Effect: Allow
             Action:
@@ -283,7 +302,9 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub: !Sub repo:${GitHubOwner}/${GitHubRepository}:environment:${InfrastructureEnvironment}
+                token.actions.githubusercontent.com:sub:
+                  - !Sub repo:${GitHubOwner}/${GitHubRepository}:environment:${InfrastructureEnvironment}
+                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
         - PolicyName: DeploySarabethCloudFormation
           PolicyDocument:

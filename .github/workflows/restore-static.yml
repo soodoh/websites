@@ -1,0 +1,35 @@
+name: Explicit retained static restoration
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        type: choice
+        required: true
+        options: [paul, diloreto]
+      release:
+        description: Independently reviewed immutable release identity JSON including original repository/run/build-attempt/SHA/checksum
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  paul:
+    if: ${{ false }}
+    uses: ./.github/workflows/_paul-release.yml
+    with:
+      operation: restore
+      restore_release: ${{ inputs.release }}
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+  diloreto:
+    if: ${{ false }}
+    uses: ./.github/workflows/_diloreto-release.yml
+    with:
+      operation: restore
+      restore_release: ${{ inputs.release }}
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
