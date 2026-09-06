@@ -80,7 +80,7 @@ test('full history after unrelated-history import; release freshness is site sco
 test('allowlist rejects absent/string/extra app selection values', () => {
   for (const value of [null, {}, { ...selected(), paul: 'false' }, { ...selected(), other: false }]) expect(() => validateSelection(value)).toThrow();
 });
-test('actual Git diff failure and invalid UTF-8 path never report empty scope', () => {
+test('actual Git diff failure never reports empty scope', () => {
   const cwd = repo(), base = commit(cwd, ['README.md']), head = commit(cwd, ['apps/paul/a']);
   const bin = join(cwd, 'bin'); mkdirSync(bin);
   const realGit = Bun.spawnSync(['which', 'git']).stdout.toString().trim();
@@ -89,4 +89,13 @@ test('actual Git diff failure and invalid UTF-8 path never report empty scope', 
   const run = Bun.spawnSync(['node', '--input-type=module', '-e', `import {affected} from ${JSON.stringify(module)};console.log(JSON.stringify(affected({cwd:process.cwd(),event:'push',base:'${base}',head:'${head}'})))`], { cwd, env: { PATH: `${bin}:${process.env.PATH}` } });
   expect(run.exitCode).toBe(0); expect(JSON.parse(run.stdout.toString()).selected).toEqual(selected(...apps));
   expect(JSON.parse(run.stdout.toString()).reason).toBe('uninspectable-range-run-all');
+});
+
+test('non-UTF8 Git filename fails safely to all', () => {
+  const cwd = repo(), base = commit(cwd, ['README.md']);
+  mkdirSync(join(cwd, 'apps/paul'), {recursive: true});
+  writeFileSync(Buffer.concat([Buffer.from(join(cwd, 'apps/paul/')), Buffer.from([255])]), 'fixture');
+  const head = commit(cwd, []);
+  expect(detect(cwd, base, head).selected).toEqual(selected(...apps));
+  expect(detect(cwd, base, head).reason).toBe('uninspectable-range-run-all');
 });
