@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion":  1,
   "apps": {
     "sarabeth": { "prefix": "apps/sarabeth/", "package": "sarabeth-studio", "task": "verify:sarabeth", "workflow": ".github/workflows/_sarabeth-ci.yml" },
     "carolyn": { "prefix": "apps/carolyn/", "package": "carolyn-portfolio", "task": "verify:carolyn", "workflow": ".github/workflows/_carolyn-ci.yml" },
