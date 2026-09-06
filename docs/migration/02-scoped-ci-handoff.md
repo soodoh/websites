@@ -1,8 +1,11 @@
 # Phase 2 — local scope-aware CI handoff
 
-Status: local implementation and full fresh-clone fixture validation passed at
-`304918f0e80fb16590fc510950769b7b9c5a1fdf`; independent review remains pending. External GitHub acceptance is **pending and not authorized**. This is not phase-2
-acceptance or phase-3 authority. See `02-execution-plan.md` for the full approved contract.
+Status: full fresh-clone fixture validation passed at
+`304918f0e80fb16590fc510950769b7b9c5a1fdf`. Independent reviews found two edge-case
+defects and test gaps; approved fixes passed targeted validation at
+`35855a4eedec5fd015553fbe4a218a01e100eb48`. Final post-fix independent review remains
+pending. External GitHub acceptance is **pending and not authorized**. This is not
+phase-2 acceptance or phase-3 authority. See `02-execution-plan.md` for the full contract.
 
 ## Baseline and authority
 
@@ -133,6 +136,46 @@ scratch under `/tmp/websites-phase2`, not release artifacts or GitHub acceptance
   One app/image at a time; no old-image/volume prune, daemon restart/resize or unrelated
   container stop. Only proven invocation-created images may be removed with fresh
   reference checks and `image rm --no-prune` without force.
+
+## Independent review dispositions and targeted follow-up
+
+Both independent reviews inspected the complete baseline diff. The security/parity
+review independently matched all 13 jobs and 133 steps to normalized-import originals.
+Parent approved the following bounded corrections; no app/browser runtime changed:
+
+| Finding | Disposition / regression |
+| --- | --- |
+| P1: UTF-8 decoder stripped a BOM belonging to the first Git filename | `ignoreBOM: true` preserves the path. Real Git push/PR/release-input tests cover BOM-prefixed README and app-shaped paths; both tests failed before the correction. |
+| P2: uppercase/mixed-case ZIP bypassed recursive scanning | One normalized suffix drives allowlist and archive handling. Compressed forbidden-member and nested-archive tests cover lowercase/uppercase/mixed-case outer and inner names; four subcases failed before the correction. |
+| P2: spoofed-marker test stopped at checksum verification | Rebuild a single-marker archive and update metadata/sidecar checksums. Site/repository/commit/attempt spoof cases now require the exact `Release marker mismatch` error. |
+| Successful-container manifest behavior lacked executable coverage | Six scratch-only mocked wrapper tests cover matching, copy failure, missing file, malformed JSON, absent commit and mismatched commit. They execute the unchanged wrapper, require exact container identity/cleanup, and retain failure-status contracts. |
+| Event/output CLI adapter lacked coverage | Actual Node CLI tests cover entire push ranges, pinned PR refs versus moving checkout, validation-only dispatch, malformed JSON/null event failure without outputs, and missing refs selecting all. |
+| Hosted cancellation/bootstrap behavior | Still pending external acceptance; YAML/group assertions are not GitHub scheduler execution. |
+
+The parent independently reproduced both code defects before correction. It also
+verified all 13 original recorded log digests, the clean exact tested clone, lock hash,
+both static zip/metadata hashes and full byte equality with validated dist/client,
+and the extracted Sarabeth manifest. These checks refer to the original full run,
+not a new build at the correction SHA.
+
+Forward code/test commit: `35855a4eedec5fd015553fbe4a218a01e100eb48`.
+At that exact clean SHA, an empty HOME/env with pinned Bun1.4.0/Node24.20.0 passed:
+`test:ci` (40 Bun tests/323 assertions plus 6 Python tests), `test:workspace`
+(30 tests/433 assertions), all 11 active/nested actionlint checks, shell/syntax gates,
+and serial app lint (4/4 uncached). All 1,116 HEAD-ancestor messages passed scoped
+commitlint with the same six preserved legacy warnings. `git diff --check` passed;
+status was clean before and after validation. Logs/digests are in the
+`reviewFixes` section of `phase2-local-validation.json` and
+`/private/tmp/websites-phase2/review-fixes/`.
+
+No Docker/full app rerun was requested for these parser/scanner/test-only changes,
+per explicit parent approval. Full browser/build acceptance remains attached to
+`304918f0`; it is not relabelled as a run at `35855a4e`. No install, dependency,
+screenshot, deployment identity, source-repository or Docker resource changes occurred
+in this follow-up. A following documentation-only scoped commit records the review
+dispositions; identify it with
+`git log -1 --format=%H -- docs/migration/phase2-local-validation.json`.
+Final review and parent acceptance of these fixes remain pending.
 
 ## Production-disabled evidence and next gate
 
