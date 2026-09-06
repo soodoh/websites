@@ -1,0 +1,36 @@
+version: 1
+applications:
+  - appRoot: apps/carolyn
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - nvm install 24.20.0
+            - nvm use 24.20.0
+            - npm install --global bun@1.4.0
+            - test "$(node --version)" = v24.20.0 && test "$(bun --version)" = 1.4.0
+            - bun install --frozen-lockfile --ignore-scripts
+        build:
+          commands:
+            - bash scripts/release/amplify-build.sh carolyn
+      artifacts:
+        baseDirectory: apps/carolyn/.amplify-hosting
+        files: ['**/*']
+  - appRoot: apps/sarabeth
+    frontend:
+      buildPath: /
+      phases:
+        preBuild:
+          commands:
+            - nvm install 24.20.0
+            - nvm use 24.20.0
+            - npm install --global bun@1.4.0
+            - test "$(node --version)" = v24.20.0 && test "$(bun --version)" = 1.4.0
+            - bun install --frozen-lockfile --ignore-scripts
+        build:
+          commands:
+            - bash scripts/release/amplify-build.sh sarabeth
+      artifacts:
+        baseDirectory: apps/sarabeth/.amplify-hosting
+        files: ['**/*']

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "publicationLocked": true,
+  "entryWorkflowIds": {
+    ".github/workflows/release-after-ci.yml": null,
+    ".github/workflows/release-site.yml": null,
+    ".github/workflows/redeploy-diloreto.yml": null,
+    ".github/workflows/restore-static.yml": null
+  },
+  "sites": {
+    "paul": {
+      "sourceWriterDrained": false,
+      "restoreEnabled": false,
+      "redeployEnabled": false,
+      "branch": "main",
+      "productionUrl": null,
+      "stateBucket": null,
+      "stateKey": null,
+      "stateOwner": null,
+      "releaseBucket": null,
+      "releaseOwner": null,
+      "candidateBranch": "candidate",
+      "candidateUrl": null,
+      "domainRedirects": false
+    },
+    "diloreto": {
+      "sourceWriterDrained": false,
+      "restoreEnabled": false,
+      "redeployEnabled": false,
+      "branch": "main",
+      "productionUrl": null,
+      "stateBucket": null,
+      "stateKey": null,
+      "stateOwner": null,
+      "releaseBucket": null,
+      "releaseOwner": null,
+      "originUrl": null
+    },
+    "carolyn": {
+      "sourceWriterDrained": false,
+      "restoreEnabled": false,
+      "redeployEnabled": false,
+      "branch": "amplify-production",
+      "productionUrl": null,
+      "stateBucket": null,
+      "stateKey": null,
+      "stateOwner": null
+    },
+    "sarabeth": {
+      "sourceWriterDrained": false,
+      "restoreEnabled": false,
+      "redeployEnabled": false,
+      "branch": "sarabeth-production",
+      "productionUrl": null,
+      "stateBucket": null,
+      "stateKey": null,
+      "stateOwner": null
+    }
+  }
+}

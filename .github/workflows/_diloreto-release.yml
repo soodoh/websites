@@ -1,0 +1,82 @@
+name: diloreto protected release
+on:
+  workflow_call:
+    inputs:
+      target_sha:
+        type: string
+        default: ''
+      operation:
+        type: string
+        default: release
+      restore_release:
+        type: string
+        default: ''
+permissions:
+  contents: read
+jobs:
+  release:
+    # Publication lock. Removal requires separately reviewed activation, NOT a variable toggle.
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    environment: production-diloreto
+    concurrency:
+      group: diloreto-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_ENVIRONMENT: production-diloreto
+      TARGET_SHA: ${{ inputs.target_sha }}
+      RESTORE_RELEASE: ${{ inputs.restore_release }}
+      OPERATION: ${{ inputs.operation }}
+    steps:
+      - name: Check out trusted current verification harness
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+        with:
+          bun-version: 1.4.0
+      - name: Root-only tools without sibling lifecycle execution
+        working-directory: verification-harness
+        run: bun install --frozen-lockfile --ignore-scripts
+      - name: Select immutable release from trusted workflow context
+        working-directory: verification-harness
+        run: python3 scripts/release/request.py diloreto "$OPERATION" "$RUNNER_TEMP/selected.json"
+      - name: Validate configuration before credentials
+        id: config
+        working-directory: verification-harness
+        run: python3 scripts/release/deploy.py check diloreto --operation "$OPERATION" --selected "$RUNNER_TEMP/selected.json"
+      - name: Configure isolated expected-account credentials
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c
+        with:
+          role-to-assume: ${{ steps.config.outputs.roleArn }}
+          aws-region: us-east-1
+          allowed-account-ids: '658271954302'
+          unset-current-credentials: true
+          role-duration-seconds: 3600
+      - name: Serialized source or byte promotion, smoke, recovery and CAS persistence
+        working-directory: verification-harness
+        run: python3 scripts/release/deploy.py deploy diloreto --operation "$OPERATION" --selected "$RUNNER_TEMP/selected.json"
+      - name: Scan production diagnostics
+        if: always()
+        id: reports
+        run: python3 verification-harness/scripts/release/reports.py diloreto verification-harness release-reports production
+      - name: Retain scanned production diagnostics
+        if: always() && steps.reports.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: diloreto-${{ github.run_id }}-${{ github.run_attempt }}-production-diagnostics
+          path: release-reports/
+          retention-days: 7
+          if-no-files-found: error

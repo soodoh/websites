@@ -25,9 +25,10 @@ test('main has per-run concurrency; PR cancellation cannot cancel main', () => {
   expect(group('pull_request', 1, 3)).not.toBe(group('push', null, 1));
   expect(group('pull_request', 1, 3)).toBe(group('pull_request', 1, 4));
 });
-test('all active workflows unprivileged, no deployment paths, actions immutable, safe uses paths', () => {
-  expect(readdirSync(resolve(root, '.github/workflows')).sort()).toEqual(['_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml', 'ci.yml']);
-  for (const filename of readdirSync(resolve(root, '.github/workflows'))) {
+test('all five CI workflows remain unprivileged, no deployment paths, actions immutable, safe uses paths', () => {
+  const ciFiles = ['_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml', 'ci.yml'];
+  expect(readdirSync(resolve(root, '.github/workflows')).filter(name => name === 'ci.yml' || (name.startsWith('_') && name.endsWith('-ci.yml'))).sort()).toEqual(ciFiles);
+  for (const filename of ciFiles) {
     const text = read(`.github/workflows/${filename}`), workflow = yaml(`.github/workflows/${filename}`);
     expect(workflow.permissions).toEqual({ contents: 'read' });
     expect(text).not.toMatch(/pull_request_target|id-token|secrets:|environment:|configure-aws|aws (amplify|ssm|sts)|git push|cdk deploy|amplify-production/);

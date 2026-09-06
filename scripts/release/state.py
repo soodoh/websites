@@ -1,0 +1,114 @@
+"""Conditional existing S3 state only. Importing this module makes no AWS requests."""
+import copy
+import json
+from pathlib import Path
+import re
+import subprocess
+import tempfile
+
+
+def require(value, message):
+    if not value:
+        raise ValueError(message)
+
+
+class UnknownOutcome(RuntimeError):
+    """No further release/rollback mutation until explicit reconciliation."""
+
+
+class StateOwnershipError(UnknownOutcome):
+    """CAS conflict or ambiguous persistence; never rebase onto another ETag."""
+
+
+class Aws:
+    def __init__(self, region):
+        self.region = region
+
+    def call(self, service, operation, **values):
+        args = ['aws', '--region', self.region, '--no-cli-pager', service, operation]
+        for key, value in values.items():
+            if value is False:
+                continue
+            flag = '--' + key.replace('_', '-')
+            args.extend([flag] if value is True else [flag, str(value)])
+        # Never emit raw service errors: upload URLs and response metadata can be sensitive.
+        result = subprocess.run(args + ['--output', 'json'], capture_output=True, check=False)
+        if result.returncode:
+            raise UnknownOutcome(f'{service} {operation} failed; STOP and reconcile, no unconditional retry')
+        return json.loads(result.stdout or '{}')
+
+    def get_object(self, bucket, key, owner, destination):
+        result = subprocess.run(['aws', '--region', self.region, '--no-cli-pager', 's3api', 'get-object', '--bucket', bucket, '--key', key, '--expected-bucket-owner', owner, str(destination), '--output', 'json'], capture_output=True)
+        require(result.returncode == 0, 'State/recovery object unavailable; approved bootstrap or reconciliation required')
+        return json.loads(result.stdout)
+
+    def check_conditional_support(self):
+        # Local service-model introspection; no network or credentials are used by skeleton generation.
+        result = subprocess.run(['aws', 's3api', 'put-object', '--generate-cli-skeleton', 'input'], capture_output=True, check=True)
+        skeleton = json.loads(result.stdout)
+        require({'IfMatch', 'IfNoneMatch', 'ExpectedBucketOwner'}.issubset(skeleton), 'Installed CLI lacks required conditional S3 support')
+
+
+class State:
+    def __init__(self, aws, config, site):
+        self.aws, self.config, self.site = aws, config, site
+        for key in ('stateBucket', 'stateKey', 'stateOwner'):
+            require(isinstance(config.get(key), str) and config[key], f'Missing {key}')
+        require(re.fullmatch(r'\d{12}', config['stateOwner']), 'Invalid bucket owner')
+        self.etag = None
+        self.value = None
+
+    def read(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'state.json'
+            meta = self.aws.get_object(self.config['stateBucket'], self.config['stateKey'], self.config['stateOwner'], path)
+            state = json.loads(path.read_text())
+        require(state.get('schemaVersion') == 1 and state.get('repository') == 'soodoh/websites' and state.get('site') == self.site, 'Wrong state identity')
+        require(re.fullmatch(r'[0-9a-f]{40}', state.get('highWatermark', '')), 'Missing monorepo high-watermark')
+        require(isinstance(state.get('currentRelease'), dict) and state['currentRelease'], 'Missing retained current release')
+        require('intent' in state and isinstance(state.get('generation'), int) and state['generation'] >= 0, 'Malformed state generation/intent')
+        require(isinstance(meta.get('ETag'), str) and meta['ETag'], 'Missing observed ETag')
+        require(meta.get('ServerSideEncryption') in ('AES256', 'aws:kms'), 'Unencrypted state is not accepted')
+        self.encryption = meta['ServerSideEncryption']
+        self.kms_key = meta.get('SSEKMSKeyId')
+        require(self.encryption != 'aws:kms' or self.kms_key, 'Missing state encryption key')
+        self.value, self.etag = state, meta['ETag']
+        return copy.deepcopy(state)
+
+    def write(self, proposed):
+        require(self.etag and self.value, 'State must be read before CAS')
+        require(proposed['generation'] == self.value['generation'] + 1, 'Invalid state generation')
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'state.json'
+            path.write_text(json.dumps(proposed))
+            options = dict(bucket=self.config['stateBucket'], key=self.config['stateKey'], expected_bucket_owner=self.config['stateOwner'], if_match=self.etag, body=str(path), server_side_encryption=self.encryption)
+            if self.kms_key:
+                options['ssekms_key_id'] = self.kms_key
+            # 409, 412, denied or ambiguous writes all STOP. Never reread and rebase this proposal.
+            try:
+                result = self.aws.call('s3api', 'put-object', **options)
+            except Exception as error:
+                raise StateOwnershipError('State CAS failed; reread and reconcile, never retry stale proposal') from error
+        if not result.get('ETag'):
+            raise StateOwnershipError('Ambiguous state write; reconcile before another mutation')
+        self.value, self.etag = copy.deepcopy(proposed), result['ETag']
+
+    def claim(self, release, operation, invocation, baseline=None):
+        require(self.value is not None and self.value['intent'] is None, 'Unresolved release intent; reconcile active jobs and serving bytes first')
+        proposed = copy.deepcopy(self.value)
+        proposed['generation'] += 1
+        proposed['intent'] = dict(release=release, operation=operation, invocation=invocation, jobs=[], baseline=baseline)
+        self.write(proposed)
+
+    def job(self, branch, job_id):
+        proposed = copy.deepcopy(self.value)
+        require(proposed['intent'] is not None, 'Missing owned intent')
+        proposed['generation'] += 1
+        proposed['intent']['jobs'].append(dict(branch=branch, jobId=job_id))
+        self.write(proposed)
+
+    def finish(self, current, high_watermark):
+        proposed = copy.deepcopy(self.value)
+        require(proposed['intent'] is not None, 'Missing owned intent')
+        proposed.update(currentRelease=current, highWatermark=high_watermark, intent=None, generation=proposed['generation'] + 1)
+        self.write(proposed)

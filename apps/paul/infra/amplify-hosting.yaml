@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Static AWS Amplify Hosting, Route 53 DNS, and GitHub OIDC deployment access for pauldiloreto.com.
 
 Parameters:
+  MonorepoSubject:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^[^*?\\s]+$"
+    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
+  MonorepoStateObjectArn:
+    Type: String
+    Default: ""
+    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
+    Description: Optional approved existing per-site state object only; no bucket creation.
   AmplifyAppName:
     Type: String
     Default: pauldiloreto-portfolio
@@ -37,6 +47,8 @@ Parameters:
     Description: Create the native Amplify domain association after the initial infrastructure bootstrap.
 
 Conditions:
+  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
+  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
 
 Resources:
@@ -172,8 +184,20 @@ Resources:
             Condition:
               StringEquals:
                 "token.actions.githubusercontent.com:aud": sts.amazonaws.com
-                "token.actions.githubusercontent.com:sub": !Sub repo:${GitHubRepository}:environment:production
+                "token.actions.githubusercontent.com:sub":
+                  - !Sub repo:${GitHubRepository}:environment:production
+                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
+        - !If
+          - HasMonorepoState
+          - PolicyName: MonorepoReleaseState
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: [s3:GetObject, s3:PutObject]
+                  Resource: !Ref MonorepoStateObjectArn
+          - !Ref AWS::NoValue
         - PolicyName: DeployVerifiedStaticArtifacts
           PolicyDocument:
             Version: "2012-10-17"
@@ -217,7 +241,9 @@ Resources:
                 Action:
                   - s3:GetObject
                   - s3:PutObject
-                Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/*
+                Resource:
+                  - !Sub ${VerifiedReleaseBucket.Arn}/releases/*
+                  - !Sub ${VerifiedReleaseBucket.Arn}/releases-v2/soodoh-websites/paul/*
 
 Outputs:
   AmplifyAppId:

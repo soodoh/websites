@@ -5,12 +5,55 @@
   "ownerId": null,
   "validationWorkflowIds": {
     ".github/workflows/ci.yml": null,
-    ".github/workflows/release-site.yml": null
+    ".github/workflows/release-site.yml": null,
+    ".github/workflows/redeploy-diloreto.yml": null
   },
   "sites": {
-    "sarabeth": { "account": "015989770400", "region": "us-west-2", "environment": "production-sarabeth", "concurrency": "sarabeth-production", "automaticEnabled": false, "manualEnabled": false, "roleArn": null, "oidcSubject": null, "appId": null },
-    "carolyn": { "account": "725669362139", "region": "us-west-2", "environment": "production-carolyn", "concurrency": "carolyn-production", "automaticEnabled": false, "manualEnabled": false, "roleArn": null, "oidcSubject": null, "appId": null },
-    "paul": { "account": "658271954302", "region": "us-east-1", "environment": "production-portfolio", "concurrency": "portfolio-production", "automaticEnabled": false, "manualEnabled": false, "roleArn": null, "oidcSubject": null, "appId": null },
-    "diloreto": { "account": "658271954302", "region": "us-east-1", "environment": "production-diloreto", "concurrency": "diloreto-production", "automaticEnabled": false, "manualEnabled": false, "roleArn": null, "oidcSubject": null, "appId": null }
-  }
+    "sarabeth": {
+      "account": "015989770400",
+      "region": "us-west-2",
+      "environment": "production-sarabeth",
+      "concurrency": "sarabeth-production",
+      "automaticEnabled": false,
+      "manualEnabled": false,
+      "roleArn": null,
+      "oidcSubject": null,
+      "appId": null
+    },
+    "carolyn": {
+      "account": "725669362139",
+      "region": "us-west-2",
+      "environment": "production-carolyn",
+      "concurrency": "carolyn-production",
+      "automaticEnabled": false,
+      "manualEnabled": false,
+      "roleArn": null,
+      "oidcSubject": null,
+      "appId": null
+    },
+    "paul": {
+      "account": "658271954302",
+      "region": "us-east-1",
+      "environment": "production-portfolio",
+      "concurrency": "portfolio-production",
+      "automaticEnabled": false,
+      "manualEnabled": false,
+      "roleArn": null,
+      "oidcSubject": null,
+      "appId": null
+    },
+    "diloreto": {
+      "account": "658271954302",
+      "region": "us-east-1",
+      "environment": "production-diloreto",
+      "concurrency": "diloreto-production",
+      "automaticEnabled": false,
+      "manualEnabled": false,
+      "roleArn": null,
+      "oidcSubject": null,
+      "appId": null
+    }
+  },
+  "legacyPortfolioRepositoryId": null,
+  "legacyPortfolioWorkflowId": null
 }
