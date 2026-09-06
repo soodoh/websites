@@ -8,8 +8,11 @@ Independent security/parity review matched all 13 jobs and 133 steps below to th
 normalized-import originals. Its mixed-case ZIP scanning finding and the separate
 scope/test review findings were corrected in `35855a4e`; see the handoff's review
 dispositions and targeted evidence. Final post-fix review passed with no remaining
-findings (`phase2-final-review.md`); GitHub acceptance remains pending.
-The historical responsibility/retention ledger is unchanged.
+findings (`phase2-final-review.md`). Hosted acceptance subsequently passed, with the
+user's explicit acceptance of the unexecuted multiple-main-push evidence limitation;
+see `phase2-hosted-acceptance.md` and `02-scoped-ci-handoff.md` for actual run URLs.
+The historical responsibility/retention ledger is unchanged. This phase-2 exception
+does not waive phase-3 release ordering/recovery tests or grant production authority.
 
 ## Current validation coverage
 
