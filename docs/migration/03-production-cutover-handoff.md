@@ -1,6 +1,53 @@
 # Phase 3 handoff — all-four offline authoring accepted; no production migration
 
-## Final independent offline acceptance — 2026-09-06
+## Current publication gate — PR only; user migrated main to ruleset22398923
+
+User explicitly approved “commit, push, and continue,” then disclosed their migration from
+classic protection to rulesets. Read-only reconciliation confirms active exact-main
+ruleset22398923, no bypass actors, PR/strict CI gate15368/deletion/non-fast-forward rules.
+**Conversation resolution is off; only squash merges are permitted.** User selected
+**“Publish PR only”** after these differences were presented: leave settings unchanged,
+publish accepted history plus documentation to `migration/phase3-offline-preparation-20260906`
+for PR CI, but do not merge, rewrite history or execute production operations. Main remains
+at observed4a947b3f. No new full-tested SHA is claimed;37dac114 remains the full-tested checkout.
+See [github-browser-settings.md](github-browser-settings.md) for current approval/readback,
+including the superseded classic-rule observations. Source/AWS inventory still needs exact
+scopes. All four sites remain NOT migrated; runtime/publication code locks stay closed.
+
+## Historical browser checkpoint — main and four production environments saved
+
+The user accepted routine solo risk, excluded infrastructure, then requested browser setup
+and personally completed GitHub Confirm access. [github-browser-settings.md](github-browser-settings.md)
+records the separately authorized browser continuation and final reopened UI checks on
+2026-09-06 at18:56Z. These are configuration readbacks, not executed enforcement tests.
+
+- Exact-main classic rule **82810912** is saved: PR required, approvals/code-owner/latest-push
+  approval off for the solo model; only `CI gate` from GitHub Actions required, strict
+  freshness/conversation resolution/admin enforcement on; force pushes/deletion off.
+- Four environments saved: `production-portfolio`21361791310,
+  `production-diloreto`21361907728, `production-carolyn`21361962764,
+  `production-sarabeth`21361988297. Each has only reviewer `soodoh`, self-review allowed,
+  administrator bypass disabled in the UI, wait timer off, one Branch/main rule and no
+  tags, secrets or variables. Final environment list matches exactly these four.
+- **`infrastructure-sarabeth` remains absent and excluded.** No credentials, cloud grants,
+  App access, source refs, runtime flags, workflows or deployments were changed/executed.
+
+The earlier [REST422 attempt](github-settings-attempt.md), missing detailed error and
+unknown cause remain preserved. Browser success does not relabel it. The CLI request and
+human shell wizard were not rerun; do not run the old creation wizard now. Browser readback
+selector ambiguity was reconciled read-only, without repeating writes. Multi-step environment
+creation briefly had default/unrestricted settings; no credentials or execution were
+introduced, and every final policy was verified after reload. No atomic-setup claim.
+
+Next is separately scoped publication planning, source/AWS inventory or enforcement-test
+planning—not deployment or further settings writes by default. No push/merge/canary/identity
+job was performed. Local HEAD remains `cf33c900`; latest full-tested checkout remains
+`37dac114`. Local documentation is uncommitted; no new fixture validation or tested-SHA
+claim. The last observed published main was `4a947b3f`, not reread in the browser pass.
+Phase-2/offline acceptance stands; all publication/runtime locks remain closed and **all
+four sites remain NOT migrated**. Prior checkpoints retain their historical meaning.
+
+## Historical final independent offline acceptance — 2026-09-06
 
 **All-four bounded offline authoring/fixture acceptance is complete. Production migration:
 NONE (0/4).** Final independent standards/security and parity/order reviews both report

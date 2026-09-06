@@ -1,6 +1,44 @@
 # Phase 3 offline site ports — all-four offline accepted; production 0/4
 
-## Final independent acceptance ledger — 2026-09-06
+## Current shared gate — PR publication approved; no merge or deployment
+
+User migrated main to active exact-main ruleset22398923. It retains no bypass actors,
+PR plus strict CI gate15368, deletion/non-fast-forward prevention; conversation resolution
+is off and only squash merges are allowed. User selected **Publish PR only** after those
+differences were presented. Commit/push the accepted history and pending evidence to
+`migration/phase3-offline-preparation-20260906`, observe unprivileged PR CI, and stop before
+merge, settings changes or production operations. Details and historical settings evidence:
+[github-browser-settings.md](github-browser-settings.md). All four offline acceptances
+stand;37dac114 remains the exact full-tested checkout; all four sites remain NOT migrated.
+
+## Historical browser checkpoint — main and four environments configured
+
+After separate user browser approval and human Confirm access, exact-main rule82810912
+and the four production environments were saved and reopened for verification at18:56Z
+on2026-09-06. [github-browser-settings.md](github-browser-settings.md) is the current record;
+[production-inventory.md](production-inventory.md) retains the earlier dated reads.
+
+| Site | Offline state | Shared target settings / production state |
+| --- | --- | --- |
+| Paul | ACCEPTED | `production-portfolio`21361791310 configured; NOT migrated |
+| DiLoreto | ACCEPTED | `production-diloreto`21361907728 configured; NOT migrated |
+| Carolyn | ACCEPTED | `production-carolyn`21361962764 configured; candidate/cloud gates closed; NOT migrated |
+| Sarabeth | ACCEPTED | `production-sarabeth`21361988297 configured; infrastructure environment absent/excluded; NOT migrated |
+
+Main requires PR plus strict `CI gate` from GitHub Actions, conversation resolution and
+administrator enforcement; no force pushes/deletion. Solo review count remains zero.
+Every environment has only reviewer `soodoh`, self-approval allowed, admin bypass off,
+wait timer off, only Branch/main, no tag rules/secrets/variables. Final list has exactly
+four environments. UI reload is not an enforcement canary or actual OIDC/cloud proof.
+
+Earlier REST422/unknown detailed cause and browser selector/navigation limitations remain
+preserved. No CLI retry, wizard execution, source/AWS/production/recovery inventory,
+publication, workflow dispatch or deployment occurred. Current local HEADcf33c900 and
+full-tested37dac114 are unchanged; docs are uncommitted. Next: separately scoped planning/
+inventory or enforcement testing, not automatic production execution. Earlier ledgers retain
+checkpoint meaning; routine solo risk is accepted, infrastructure risk is not.
+
+## Historical final independent acceptance ledger — 2026-09-06
 
 **All-four bounded offline authoring/fixture acceptance complete; NONE migrated.**
 Final `carolyn-review/final-review-0.md` (standards/security) and `final-review-1.md`
