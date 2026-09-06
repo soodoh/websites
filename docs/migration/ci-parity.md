@@ -23,7 +23,7 @@ literal-false; independent exact-SHA/hosted/parity acceptance remains pending.
 
 | Historical job | Current authored coverage (all its historical steps remain obligations) |
 | --- | --- |
-| Sarabeth infrastructure / cloudformation | Root `infrastructure-sarabeth.yml`, all 16 operational run bodies unchanged; nested app cwd, 230-minute shared noncanceling lock; retained domain/DNS/Netlify failure recovery and optional hosting transition |
+| Sarabeth infrastructure / cloudformation | Root `infrastructure-sarabeth.yml`, all historical operations retained; explicit disabled legacy/preparation/switch inputs, nested app cwd, 230-minute shared noncanceling lock; selected branch/source/domain attestation and unchanged domain/DNS/Netlify failure recovery |
 | Sarabeth CI / validate-infrastructure | Existing root fixture chain, unchanged; manual fresh recovery repeats it |
 | Sarabeth CI / test | Existing provider/fixture/Playwright chain, unchanged; recovery same full chain |
 | Sarabeth CI / deploy | `_sarabeth-release.yml`, `ssr.py`, root buildspec: exact source/job/serving bundle, non-sending smoke, SSM only after smoke, Lighthouse mobile/desktop and 30-day scanned reports; no automatic rollback for Lighthouse failure; 120-minute lock |
@@ -36,6 +36,11 @@ literal-false; independent exact-SHA/hosted/parity acceptance remains pending.
 | Carolyn / deploy-production | Same locked job, exact repository build/job/serving bundle and trusted deployed Playwright; no guessed legacy rollback; combined 40-minute job budget replaces the old separate 5+35-minute jobs, 14-day scanned diagnostics |
 | DiLoreto / validate | Existing genealogy/static/Playwright chain; `redeploy-diloreto.yml` separately resolves authorized modern main-ancestral immutable selector, recovery main-only; new static v2 artifact 1 day, diagnostics 7 days |
 | DiLoreto / deploy | `_diloreto-release.yml` + `static.py`, root trusted harness install/nested cwd, origin/edge exact bytes/routes/404/cache/security/assets and browser assertions, 25-minute shared lock; selected-ref code never receives deployment credentials |
+
+Recovery review corrections add original-format DiLoreto capture/roundtrip readers, exact
+pre-assumption OIDC observations, terminal-state cleanup faults, explicit Sarabeth switch
+parameter/attestation fixtures, atomic lifecycle receipts and independent terminal queue
+notices. Full chains and independent acceptance remain pending; see the current handoff.
 
 Fixture tests cover actual CLI argv (including SSM boolean switches), ETag/owner/encryption
 CAS and claim/job/finish fault injection, ambiguous upload/start rollback suppression,

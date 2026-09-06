@@ -1,5 +1,83 @@
 # Phase 3 handoff — offline site ports in progress; production not started
 
+## Orchestration interruption — committed checkpoint, acceptance pending
+
+The local site-port commit is `6d5834712a5cd611200b10dda81c24442a3061fc`
+(`chore(ci): port offline protected site release lifecycles`), following
+`ced5abc8850a2c53f8fe988807309b01e2b9741c`. The parent confirmed a clean
+worktree/index at that checkpoint. No dependency or lock changes were included.
+
+The delegated workflow stopped before its full fixture-validation and independent
+review stages: milestone 2's structured acceptance report used unsupported fields
+and an object where `changedFiles` required a string array. This is an evidence-envelope
+rejection, not a reported test failure, and is not an independent acceptance pass.
+A report-only correction completed without code edits or new checks. The runner
+reused and overwrote the original report path, despite the preservation instruction.
+The parent recovered its exact bytes from the persisted transcript into
+`/private/tmp/websites-phase3-ports/report-recovery/site-ports-original-rejected.md`;
+SHA-256 `c91c05a431522c33b7d6988f27d61332d60a433a913a6ef7c2a277ba73ee7be0`
+matches the original rejection record. The corrected response is separately retained
+as `site-ports-corrected-response.md` in that directory, SHA-256
+`cf949bc1bf91598d93f8b45826a7ff11e372965f027121f2153d1b663c17a6a0`.
+This correction does not restart the failed workflow or satisfy independent review;
+prior targeted checks are not fresh exact-SHA/full-chain evidence.
+
+For Paul, DiLoreto, Carolyn and Sarabeth separately: offline code is authored and
+locally committed; full independent-target fixture validation and independent
+security/parity/order/history acceptance are **pending**. No production gate changed.
+Next safe work is to recover the evidence handoff, recheck Colima capacity, validate
+the committed code in an independent target checkout with the approved isolated
+pins/environment and serial chains, then perform independent reviews and forward
+fixes. No new publication, live inventory, credentials or production authority is
+implied. The milestone descriptions below retain their original checkpoint meaning.
+
+## Recovery review corrections — targeted checks, independent acceptance still pending
+
+The new recovery workflow accepted the concrete findings in `security-order-review.md`
+and `parity-review.md` at checkpoint `6d5834712a5cd611200b10dda81c24442a3061fc`.
+The parent approved the minimal offline capture/transition contracts and corrections.
+The interruption section above is preserved, including the rejected-report distinction.
+This is a forward correction checkpoint, NOT a review pass, full validation, or activation.
+Code commit: `183381d51e887669c6361248961efe44370ab71f`
+(`fix(ci): close offline release recovery review gaps`), 24 paths, 770 insertions /
+33 deletions. This following docs-only commit preserves interruption/recovery evidence;
+use the final documentation-inclusive HEAD for the next isolated validation.
+
+| Review finding | Author's disposition / concrete regression evidence |
+| --- | --- |
+| Both P1: authentic DiLoreto legacy ZIP cannot bootstrap | Added original-repository/workflow allowlist, independently pinned migration manifest and unchanged markerless ZIP reader. Real readers/Amplify/state/acceptance run legacy → new → legacy → new with fake external APIs/HTTP; manifest/hash/identity/event/serving-byte denials. No live bytes captured or pin invented. |
+| Both P1: terminal failure loses rollback eligibility on unnecessary StopJob | Remember observed terminal jobs; query before stopping unknown jobs; poll after rejected active stop. FAILED/CANCELLED fixtures never stop terminal jobs; original ambiguous start/CAS remains ambiguous after successful cleanup. |
+| Security P1: exact observed OIDC comparison unused | Release pre-credential check and infrastructure gate now observe GitHub TLS-issued JWT claims, deny wrong/missing subject/audience/issuer/expiry, reject redirects/untrusted endpoints, and never print/store tokens. AWS action explicitly requests sts.amazonaws.com too; IAM/STS remains signature/trust authority. |
+| Security P1: no terminal/manual recovery notice | Added literal-disabled, unprivileged workflow_run completion observer for every release entry, independent of canceled work's own jobs. Snapshot fixtures find replacement/failure after initial CI inventory. No redispatch; unknown-site notices remain conservative. |
+| Security P2: empty workflow map reports complete inventory | Require exactly four expected entry keys and distinct positive numeric IDs before any API. Empty/partial/null/extra/duplicate mappings deny. |
+| Parity P1: Sarabeth transition invocation missing | Disabled legacy / prepare-monorepo / switch-monorepo operations, separate confirmations, exact hosting/domain parameters and explicit webhook opt-in. Switch preflight verifies accepted state + originating validation + candidate branch/source/job/marker before mutation; domain association and serving marker checks remain inside existing Netlify recovery handling. Optional bootstrap permissions read only exact supplied app/branch and existing state; old main/resources/defaults retained. |
+| Parity P2: job evidence cleared on static completion | Scanned allowlisted lifecycle receipt is persisted in the same state CAS that clears intent: invocation, original requested/serving identity and hashes, all candidate/production/restore job IDs, acceptance/restoration outcomes. Conflict fixtures retain intent and never fabricate completion. |
+
+Targeted checks in the existing target worktree used a fresh empty HOME/environment and
+explicit Bun1.4.0 / Node24.20.0 / Python3.14.6 / Go1.27.1 / ShellCheck0.11.0 paths.
+No install was performed. Results: 56 root CI Bun tests / 846 assertions, six original
+CI Python tests, 33 release-adapter fixtures; 30 workspace tests / 433 assertions;
+root/nested actionlint1.7.7, ShellCheck and syntax; cfn-lint1.53.0 on changed bootstrap;
+41 unchanged Sarabeth source/redirect/provider/domain contracts with no webserver.
+Normal code-commit hooks passed serial app lint 4/4 uncached and scoped commitlint;
+only existing Biome schema-version informational diagnostics remain. Approved author /
+committer environment identity was used, without config changes, bypass or date override.
+Target-only checks preserved both map hashes/bijections (1,109 and 152 pairs), normalized
+import/initial/baseline ancestry and all four pristine import tree IDs. No source or remote
+was queried, and no dependency/lock/screenshot/history-identity files changed.
+Logs are in the unique managed recovery `checks.xQbVMp/` directory alongside the
+`review-fixes.md` acceptance artifact. No old runner output was overwritten.
+
+For **each** of Paul, DiLoreto, Carolyn and Sarabeth: authoring corrected, targeted
+fixture checks passed, independent exact-SHA full chains and reviewer acceptance
+**PENDING**; all production gates remain closed, source owners unchanged. New live IDs,
+DiLoreto manifest hash and Sarabeth candidate URL remain null. Capture evidence/retention,
+KMS read grants, actual OIDC/configuration, source/CMS drain, hosted scheduler behavior,
+real candidate/domain/restore smoke and all preparation/cutover operations remain gated.
+The independent validation stage must use the final committed SHA, independent TARGET
+root install, empty HOME/env, exact pins, prior Docker capacity check and serial chains.
+Do not reuse prior writer assertions as independent full-validation evidence.
+
 ## Current milestone-2 offline checkpoint
 
 Concrete offline ports are authored in Paul → DiLoreto → Carolyn → Sarabeth order:
