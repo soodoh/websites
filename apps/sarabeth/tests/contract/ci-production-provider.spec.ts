@@ -6,6 +6,7 @@ const renovateConfiguration = JSON.parse(
 	readFileSync(new URL("../../../../renovate.json", import.meta.url), "utf8"),
 );
 
+// Inert legacy production contracts remain until phase 3 ports deployment.
 const ciWorkflow = readFileSync(
 	new URL("../../.github/workflows/ci.yaml", import.meta.url),
 	"utf8",
@@ -240,4 +241,29 @@ test("builds the production provider graph with only external boundaries replace
 	expect(productionProviderConfig).not.toContain(
 		'"@/utils/data-provider.server"',
 	);
+});
+
+test("active root CI retains the complete unprivileged provider chain", () => {
+	const workflow = readFileSync(
+		new URL("../../../../.github/workflows/_sarabeth-ci.yml", import.meta.url),
+		"utf8",
+	);
+	const manifest = JSON.parse(
+		readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
+	);
+	expect(workflow).toContain("run: bun run verify:sarabeth");
+	expect(workflow).toContain("runs-on: ubuntu-24.04-arm");
+	expect(workflow).not.toContain("id-token: write");
+	for (const task of [
+		"build:production-provider",
+		"build:amplify:fixture",
+		"prepare:amplify",
+		"validate:amplify",
+		"build:playwright:unchecked",
+		"test:deployment-scripts",
+		"test:container",
+		"infra:lint",
+	]) {
+		expect(manifest.scripts["ci:verify"]).toContain(`bun run ${task}`);
+	}
 });

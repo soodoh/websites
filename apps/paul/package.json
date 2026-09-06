@@ -40,7 +40,7 @@
 		"test:e2e:static:prebuilt": "PLAYWRIGHT_STATIC=1 PLAYWRIGHT_EXPECT_STATIC_404=1 ./scripts/playwright-docker.sh",
 		"lighthouse": "lhci autorun",
 		"dev:workspace": "vite dev --port 3101",
-		"ci:verify": "bun run lint && bun run lint:workflows && bun run typecheck && bun run lint:shell && bun run infra:lint && bun run build && bun run test:static && bun run test:e2e:static:prebuilt && bun run lighthouse",
+		"ci:verify": "bun run lint && bun run lint:workflows && bun run typecheck && bun run lint:shell && bun run infra:lint && bun run build && python3 ../../scripts/ci/artifact.py marker paul && bun run test:static && bun run test:e2e:static:prebuilt && bun run lighthouse",
 		"lint:shell": "bash -c 'for script in scripts/*.sh; do bash -n \"$script\" || exit; done' && shellcheck scripts/*.sh",
 		"infra:lint": "uv tool run --from cfn-lint==1.42.0 cfn-lint infra/amplify-hosting.yaml",
 		"lint:workflows": "go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*"

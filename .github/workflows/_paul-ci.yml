@@ -1,0 +1,48 @@
+name: paul CI
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: paul fixture verification
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CI: '1'
+      AWS_EC2_METADATA_DISABLED: 'true'
+      CI_RELEASE_METADATA: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ci-tools
+      - name: Pinned local Lighthouse Chrome
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.77/linux64/chrome-linux64.zip -o "$RUNNER_TEMP/chrome.zip"
+          unzip -q "$RUNNER_TEMP/chrome.zip" -d "$RUNNER_TEMP/chrome"
+          echo "CHROME_PATH=$RUNNER_TEMP/chrome/chrome-linux64/chrome" >> "$GITHUB_ENV"
+      - name: Sequential canonical paul verification
+        working-directory: ${{ github.workspace }}
+        run: bun run verify:paul
+      - name: Package exact validated static output
+        run: python3 scripts/ci/artifact.py package paul
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: paul-${{ github.run_id }}-${{ github.run_attempt }}-static
+          path: ci-artifacts/paul/static/
+          retention-days: 90
+          if-no-files-found: error
+      - name: Scan allowlisted fixture diagnostics
+        if: always()
+        id: diagnostics
+        run: python3 scripts/ci/artifact.py diagnostics paul
+      - name: Upload scanned diagnostics only
+        if: always() && steps.diagnostics.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: paul-${{ github.run_id }}-${{ github.run_attempt }}-fixture-diagnostics
+          path: ci-artifacts/paul/diagnostics/
+          retention-days: 90
+          if-no-files-found: error

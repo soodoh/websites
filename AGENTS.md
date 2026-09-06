@@ -27,8 +27,8 @@ Do not add overlapping/nested workspaces; Carolyn infra tools belong to its app.
 
 ## Boundaries
 
-This is phase 1, LOCAL ONLY. Do not push, enable root GitHub Actions, deploy, mutate
-AWS, or modify source repository worktrees/config/refs/hooks. The source repositories
+Phase 2 LOCAL CI authoring and fixture validation are authorized. Do not push,
+execute GitHub workflows, change GitHub settings, deploy, mutate AWS, or modify source repository worktrees/config/refs/hooks. The source repositories
 remain production deployment owners. Nested app workflows are inert baselines,
 not runnable monorepo deployment configurations. Existing infra/deploy-shaped scripts
 remain for continuity but are NOT authorized to execute. Never use production CMS,
@@ -51,5 +51,5 @@ Root Lefthook/commitlint own target hooks; Conventional Commits require a scope:
 fixtures, screenshot baselines, and deployed CDK/CloudFormation identities intact.
 All Turbo tasks are uncached, strict-env mode remains enabled, and remote cache is
 explicitly disabled. Keep dependencies, secrets, auth manifests, bundles, reports,
-and generated output out of Git. Phase 2 is separate and starts only after phase-1
-acceptance; phase 3 production cutover requires its own approvals.
+and generated output out of Git. Phase 2 external acceptance remains approval-gated;
+phase 3 production cutover requires its own approvals.

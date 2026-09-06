@@ -21,3 +21,6 @@ test-results/
 *.key
 .DS_Store
 .pi/
+ci-artifacts/
+scope-evidence.json
+__pycache__/

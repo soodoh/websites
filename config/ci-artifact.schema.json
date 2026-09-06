@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/soodoh/websites/blob/main/config/ci-artifact.schema.json",
+  "title": "Version 1 validation-only static artifact metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repository",
+    "site",
+    "commit",
+    "workflow",
+    "runId",
+    "runAttempt",
+    "artifactName",
+    "releaseId",
+    "event",
+    "ref",
+    "sha256",
+    "deploymentRoot",
+    "schemaVersion",
+    "releaseAuthorized"
+  ],
+  "properties": {
+    "repository": {
+      "type": "string"
+    },
+    "site": {
+      "enum": [
+        "paul",
+        "diloreto"
+      ]
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "workflow": {
+      "const": ".github/workflows/ci.yml"
+    },
+    "runId": {
+      "type": "string"
+    },
+    "runAttempt": {
+      "type": "string"
+    },
+    "artifactName": {
+      "type": "string"
+    },
+    "releaseId": {
+      "type": "string"
+    },
+    "event": {
+      "type": "string"
+    },
+    "ref": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "deploymentRoot": {
+      "const": "dist/client"
+    },
+    "schemaVersion": {
+      "const": 1
+    },
+    "releaseAuthorized": {
+      "const": false
+    }
+  }
+}

@@ -191,6 +191,8 @@ jobs:
           set -euo pipefail
           echo "Deploying validated commit ${TARGET_SHA}"
           umask 077
+          # ShellCheck cannot follow EXIT traps in actionlint snippets.
+          # shellcheck disable=SC2329
           cleanup() {
             unset upload_url || true
             rm -f "${DEPLOYMENT_FILE}"
@@ -257,6 +259,8 @@ jobs:
           origin_body=$(mktemp)
           body=$(mktemp)
 
+          # ShellCheck cannot follow EXIT traps in actionlint snippets.
+          # shellcheck disable=SC2329
           cleanup() {
             rm -f "${headers}" "${origin_body}" "${body}"
           }

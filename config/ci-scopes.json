@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "apps": {
+    "sarabeth": { "prefix": "apps/sarabeth/", "package": "sarabeth-studio", "task": "verify:sarabeth", "workflow": ".github/workflows/_sarabeth-ci.yml" },
+    "carolyn": { "prefix": "apps/carolyn/", "package": "carolyn-portfolio", "task": "verify:carolyn", "workflow": ".github/workflows/_carolyn-ci.yml" },
+    "paul": { "prefix": "apps/paul/", "package": "portfolio-website", "task": "verify:paul", "workflow": ".github/workflows/_paul-ci.yml" },
+    "diloreto": { "prefix": "apps/diloreto/", "package": "diloreto-website", "task": "verify:diloreto", "workflow": ".github/workflows/_diloreto-ci.yml" }
+  },
+  "ciOnlySafeDocs": ["README.md", "docs/migration/02-execution-plan.md", "docs/migration/02-scoped-ci-handoff.md", "docs/migration/ci-parity.md"],
+  "unknownPath": "all",
+  "sharedPackages": "all",
+  "releaseDocsExclusions": []
+}

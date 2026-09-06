@@ -26,6 +26,15 @@ status=$?
 set -e
 rm -rf "${app_root:?}/test-results"
 docker cp "${container}:/work/apps/sarabeth/test-results" "${app_root}/test-results" >/dev/null 2>&1 || true
+if [[ "${status}" -eq 0 ]]; then
+	mkdir -p "${app_root}/test-results"
+	# Read the actual successful container, not a second build or cached image.
+	if ! docker cp "${container}:/work/apps/sarabeth/.amplify-hosting/static/__deployment.json" "${app_root}/test-results/container-deployment.json"; then
+		status=1
+	elif ! node -e 'const fs = require("node:fs"); if (JSON.parse(fs.readFileSync(process.argv[1])).commit !== process.argv[2]) process.exit(1)' "${app_root}/test-results/container-deployment.json" "${release_commit}"; then
+		status=1
+	fi
+fi
 trap - EXIT
 cleanup
 exit "${status}"
