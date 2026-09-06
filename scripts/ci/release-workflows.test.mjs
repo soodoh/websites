@@ -206,6 +206,7 @@ test('Carolyn candidate and production rebuild remain independently disabled wit
   expect(candidatePolicy).not.toContain('new URL(location, url).href');
   expect(candidatePolicy).toContain('response.status() >= 300');
   expect(candidatePolicy).toContain('response.status() < 400');
+  expect(candidatePolicy).toContain('location !== undefined');
   expect(read('apps/carolyn/tests/candidate-policy.test.ts')).toContain('expect(destinationRequests).toEqual([])');
   expect(candidate).toContain('maxRedirects: 0');
   expect(candidate).toContain('private, no-store');

@@ -41,7 +41,11 @@ export async function routeCandidateRequest(
 	// same-origin first hop. Never give the browser any Location to follow.
 	const response = await route.fetch({ maxRedirects: 0 });
 	const location = response.headers().location;
-	if (response.status() >= 300 && response.status() < 400 && location) {
+	if (
+		response.status() >= 300 &&
+		response.status() < 400 &&
+		location !== undefined
+	) {
 		await route.abort("blockedbyclient");
 		return;
 	}

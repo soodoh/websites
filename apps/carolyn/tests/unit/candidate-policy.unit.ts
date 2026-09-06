@@ -72,6 +72,7 @@ test("actual candidate route policy fetches without redirects and blocks every L
 	const origin = candidateOrigin(environment);
 	for (const [url, location, expected] of [
 		[`${origin}/`, undefined, ["fetch", "fulfill"]],
+		[`${origin}/`, "", ["fetch", "abort"]],
 		[`${origin}/`, "/about", ["fetch", "abort"]],
 		[`${origin}/`, "https://carolyndiloreto.com", ["fetch", "abort"]],
 		[`${origin}/`, "//carolyn.diloreto.com", ["fetch", "abort"]],
@@ -79,7 +80,7 @@ test("actual candidate route policy fetches without redirects and blocks every L
 	] as const) {
 		const calls: string[] = [];
 		const response = {
-			status: () => (location ? 302 : 200),
+			status: () => (location !== undefined ? 302 : 200),
 			headers: () => ({ location }),
 		};
 		const route = {
