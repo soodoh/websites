@@ -1,6 +1,45 @@
-# Phase 3 offline site ports — full canonical validation; candidate transport gap
+# Phase 3 offline site ports — candidate TLS fixture passed; final review pending
 
-## Current reviewed-fix validation ledger — 2026-09-06
+## Final bounded validation ledger — 2026-09-06
+
+Fresh independent TARGET at **37dac114eaa41f487a893e9655b3b2d9a509be43** passed root
+frozen install,complete serial uncached `bun run ci:verify`4/4 (12m48.831s),history/maps/
+pristine imports/installed graph/original19-resource synth and four diagnostic scans.
+Source is identical to866dd65d except the two prior evidence docs; no new source fix was
+needed. This following docs-only evidence commit is not another full-tested SHA.
+
+Followup-0/1 both closed redirect P1 and identified only four missing candidate browser
+cases. The approved scratch-only true-HTTPS fixture now runs **all10 unchanged candidate
+cases successfully**, including auth/photography on both viewports,plus four actual
+missing/cross-Origin CSRF403 probes. Network-none/zero mounts/privateIPC/container-only
+loopback hostname,actual emitted Node24 Nitro middleware,unaltered HTTPS Request semantics;
+no Route/API monkeypatch,URL virtualization,synthetic security metadata or CSRF bypass.
+All72 TLS requests were local;163 off-origin browser requests were policy-blocked.
+No hosted Amplify/TLS/domain/source/job proof is inferred. **Final reviewer acceptance
+remains PENDING**; detailed scripts,limits,failures and hashes are in the current handoff.
+
+| Site | Exact37dac114 offline evidence | Production state |
+| --- | --- | --- |
+| carolyn | PASS120 unit,15 infra,three+three artifact,100 canonical browser;additional unchanged10 candidate cases+four actual CSRF denials now pass | NOT migrated;source remains owner;all candidate/production/connection/CMS/recovery/writer gates closed |
+| paul | PASS56 browser/four unchanged skips,three Lighthouse0.98/1/1/1;complete chain | NOT migrated;legacy capture/restore and live approvals absent |
+| diloreto | PASS13 genealogy,37 browser/one unchanged skip;complete chain | NOT migrated;legacy bytes/manifest/origin-edge/live approvals absent |
+| sarabeth | PASS197 Playwright,seven host/container provenance;actual Gitless marker37dac114;reviewed flow unchanged | NOT migrated;candidate/domain/LKG/webhook/writer/production approvals absent |
+
+Raw evidence `/private/tmp/carolyn-tls-final.L26kKr/validation-evidence.json`,SHA-256
+`9220ac338858d06c189adfb6fc8f5c37c0843361943a8b66a665f66c999c5872` verifies147 completed
+files and preserved prior reports. Failed image hash preflight/export,recovery raw-equality
+proof/outer-shell continuation,and collector Size/self-sentinel checks remain explicit;
+none changes the separately successful v2 test/export/removal receipts. Only39 owned,
+initially absent build-proven images were removed with fresh refs/no-prune/no force.
+109 reported image refs/33 container identities and approved stable fields match;raw
+snapshots differ,including observed12.9MB→13MB writable-size reporting of an untouched
+container (cause not established). No service continuity/immutability claim is made.
+
+Next safe action:independent final finding disposition. All false gates,null identities,
+publication/runtime locks,source/history/dependency/snapshot boundaries and separate live
+approvals remain intact;phase2/publication/main-push acceptance is not reopened.
+
+## Historical reviewed-fix validation ledger — 2026-09-06
 
 Code `866dd65d36ad9db9b8764758a22caf45c8dd5dcc` includes the approved forward
 Carolyn redirect-chain correction and strict empty-Location denial. Initial-1's P1 was

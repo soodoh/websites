@@ -1,6 +1,119 @@
-# Phase 3 handoff — Carolyn redirect fix validated; candidate transport gap remains
+# Phase 3 handoff — Carolyn candidate TLS fixture passed; final review pending
 
-## Current review correction and exact-SHA fixture evidence — 2026-09-06
+## Final bounded offline evidence correction — 2026-09-06
+
+**New full-tested checkout:** `37dac114eaa41f487a893e9655b3b2d9a509be43`.
+Its application/release/test source is unchanged from code commit
+`866dd65d36ad9db9b8764758a22caf45c8dd5dcc`; only the two identified evidence documents
+separate those SHAs. Independent follow-up reviews `carolyn-review/followup-0.md` and
+`followup-1.md` both close the redirect-chain P1 and identify only missing candidate
+invalid-password/photography browser evidence. They find no further proven source defect.
+The supervisor approved a bounded scratch-only true-HTTPS fixture transport, **not a
+source change**. No gratuitous code commit, test assertion edit or production-smoke change
+was made. This following docs-only evidence commit is **not a newly full-tested SHA**;
+resolve it with `git log -1 --format=%H -- docs/migration/03-production-cutover-handoff.md`.
+Final independent acceptance remains **PENDING**, not granted by this writer's report.
+
+### Fresh exact-checkout validation
+
+Independent TARGET: `/private/tmp/carolyn-tls-final.L26kKr/target`, local no-hardlink
+single-main clone without alternates, copied ignored configuration/dependencies or source
+repository access. Only its root installed `bun install --frozen-lockfile` (1,000 packages).
+All validation used `env -i`, a freshly empty HOME and explicit pinned tool paths. Bun1.4.0,
+Node24.20.0, Turbo2.10.12, Playwright1.62.1, Go1.27.1, ShellCheck0.11.0, uv0.12.9,
+actionlint1.7.7 and cfn-lint1.42.0/1.53.0 remain unchanged. Actual Python3.14.6 is
+`/opt/homebrew/Cellar/python@3.14/3.14.6/bin/python3`; local Chrome152.0.7977.77.
+
+| Exact37dac114 gate | Actual result |
+| --- | --- |
+| Root `bun run ci:verify` | PASS 4/4 uncached, concurrency1; Turbo12m48.831s. Root30 workspace/433 assertions,60 CI Bun/939 assertions,six CI Python,52 release Python; workflow/shell/syntax gates |
+| Carolyn full canonical chain | PASS120 unit/1,128 assertions;15 infra/87 assertions;three fixture+three hermetic-production artifact;100 browser=92 unchanged visual+eight redirect-policy regressions |
+| Paul | PASS56 browser/four unchanged skips;three local Lighthouse runs each0.98 performance and1.00 accessibility/best-practices/SEO;complete static/type/workflow/shell/infra chain |
+| DiLoreto | PASS13 genealogy,37 browser/one unchanged skip;complete static/type/output/infra chain |
+| Sarabeth | PASS197 Playwright;seven host/container provenance tests;complete provider/fixture/waiter/Amplify/type/infra chain;actual Gitless marker equals37dac114 |
+| History/maps/imports/graph/synth/diagnostics | PASS1,131 ancestral messages,zero errors/six preserved warnings;unchanged maps,normalized ancestry,four pristine imports,six-root installed graph;byte-identical original19-resource synth;four fixture/nondeployable diagnostic scans |
+
+### Actual unchanged candidate harness: all ten pass
+
+After the full serial chain and postchecks finished, a separately reviewed scratch TLS
+edge ran on owned container loopback443. Container-only `/etc/hosts` maps exactly
+`fixture-candidate.dfixture.amplifyapp.com` to127.0.0.1; **network none,zero mounts,no
+published ports,private IPC,no privilege/devices/socket/credentials**. No host/VM DNS or
+settings changed. All actually copied tracked Carolyn/.github source and scratch hashes,
+Gitless checkout, exact tool versions and pinned preinstalled Chromium151.0.7922.34 were
+checked before execution. The root Docker ignore deliberately excludes `.env.example`;
+the corrected preflight excludes only that tracked file and explicitly asserts its absence.
+
+The unchanged committed candidate spec/config/policy is imported, not rewritten. The
+Node24 TLS dispatcher uses existing artifact manifest/clean-route/proxy helpers and the
+**actual emitted Nitro fetch handler**, preserving the real HTTPS Request URL,Host,method,
+body,auth/cookies and security headers through real TanStack middleware. It does not
+monkeypatch Route/API, virtualize response URLs, synthesize Origin/Sec-Fetch metadata,
+bypass CSRF or forge application responses. Its fresh one-day fixture key stayed only in
+container `/fixture-cert` (0700,key0600); no key was exported. `ignoreHTTPSErrors` exists
+only in scratch config for the fixture certificate, not any repository configuration.
+
+**Actual result:10 passed in2.6s,exit0,zero failures/skips/retries**, including invalid
+password and photography server-function behavior on both viewports. All72 TLS requests
+reached only owned loopback;four successful browser server-function POSTs had the real
+candidate Origin. Four additional missing-Origin/cross-Origin probes, without Sec-Fetch
+bypass metadata, reached actual compute middleware and returned403/`Forbidden` across both
+real function endpoints. The unchanged browser policy blocked163 off-origin requests.
+Test, evidence-export and exact-owned-container removal each have distinct exit0 receipts.
+
+This closes the **execution evidence gap for reviewer assessment**, not hosted Amplify
+acceptance. The synthetic hostname,self-signed TLS,local static dispatcher and direct
+emitted fetch entry are fixture transport, not cloud routing/domain/TLS/build-job/source
+attestation. The original emitted HTTP listener starts but is unused by the candidate and
+confined to network-none. Scratch chmod read-only remains root-overridable, not an immutable
+bind. Production smoke and every Sarabeth lifecycle/source identity remain unchanged.
+
+### Retained failures, cleanup and independent review handoff
+
+Attempt1 failed solely because its hash manifest overincluded Docker-excluded `.env.example`,
+before app build/cert/server/browser execution. Absent `/evidence` caused export1 and outer
+launcher92 after preflight1; the exact stopped container was retained. The approved v2
+preflight correction and all outputs have new paths; originals and prior six-pass/four-blocked
+transport evidence remain intact. A recovery proof then overrequired raw HostConfig equality:
+Docker changed only `OomKillDisable` null→false. Its outer shell lacked fail-fast and continued
+the already approved v2 while the old container remained stopped; this **procedural failure
+is retained**, not relabeled as successful recovery. A separately approved fail-fast fresh
+proof admitted only null/false for that field, compared every other config field, and normally
+removed the exact old stopped container. No concurrent running app chains occurred.
+
+The first collector failed on an existing container's reported Size12.9MB→13MB (virtual3.71GB).
+The supervisor approved treating Size,Status,RunningFor as dynamic and normalizing only mount
+ordering; all other fields must match. Growth cause is not established. A second collector
+self-matched its own quoted PEM sentinel; the final collector checks actual PEM header lines,
+retaining both failures. No repository security/test assertion was weakened.
+
+Exactly39 initially absent,non-FROM/non-cache build-log-proven images were removed after fresh
+no-container/no-unrelated-tag-or-digest checks with `image rm --no-prune`,without force.
+Initial/final109 reported image-reference rows and33 container identities/remaining stable
+fields match. Raw snapshots are **not equal**; no unrelated-service continuity or filesystem
+immutability is claimed, only absence of unrelated operations in the recorder. Colima data-disk
+available capacity was6,936,096→6,935,112KiB. No old image,volume,service or daemon mutation ran.
+
+Raw evidence: `/private/tmp/carolyn-tls-final.L26kKr/`.
+`validation-evidence.json` verifies147 completed-file digests plus preserved follow-up/prior
+reports. Its successful candidate result is separate from every retained failed attempt.
+
+| Completed file | SHA-256 |
+| --- | --- |
+| `validation-evidence.json` | `9220ac338858d06c189adfb6fc8f5c37c0843361943a8b66a665f66c999c5872` |
+| `root-ci-v2.log` | `dda043bbc9024f8241787cb441c413089060007347884c8b0720e05128c100b2` |
+| `candidate-tls-v2.log` | `c40f7e0632dedfd08d7b35b9bc0a09c59a568aef0a2774ada8c896adee70e5ce` |
+| `candidate-v2-tls-evidence/csrf-probes.json` | `42c6c7ddf2b4df9dbd188d2285d9752fa7ba237563fd4e6c3ab44f8dc9c4ad8c` |
+
+**Next safe action:final independent source/evidence review and finding disposition.**
+All four sites remain **NOT migrated**. Source owners,history/maps,pins,lock,screenshots,
+thresholds,unknown/null live identities,literal-false gates and publication/runtime locks
+remain unchanged. No publication,live inventory,credential read,production HTTP/CMS/email,
+workflow dispatch,cloud/domain/ref/deploy/settings mutation,enablement,writer disablement,
+trust removal,archival or rollback drill occurred. Each live gate still requires its separate
+approval; accepted phase2/publication/main-push exceptions are not reopened.
+
+## Historical redirect correction and exact-SHA fixture evidence — 2026-09-06
 
 **Full canonical-tested code:** `866dd65d36ad9db9b8764758a22caf45c8dd5dcc`
 (`fix(carolyn): reject empty candidate redirect locations`), following
