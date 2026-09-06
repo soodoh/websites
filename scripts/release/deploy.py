@@ -100,6 +100,8 @@ if __name__ == '__main__':
         selected = json.loads(Path(args.selected).read_text())
         require(selected.get('site') == args.site, 'Cross-site request')
         observe(policy, args.site, selected)
+        from oidc import observe_subject
+        observe_subject(config['oidcSubject'])
         output = os.environ.get('GITHUB_OUTPUT')
         if output:
             with open(output, 'a') as stream:

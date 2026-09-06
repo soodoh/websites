@@ -68,6 +68,7 @@ jobs:
           role-to-assume: ${{ steps.config.outputs.roleArn }}
           aws-region: us-east-1
           allowed-account-ids: '658271954302'
+          audience: sts.amazonaws.com
           unset-current-credentials: true
           role-duration-seconds: 10800
       - name: Serialized source or byte promotion, smoke, recovery and CAS persistence

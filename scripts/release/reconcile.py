@@ -1,11 +1,14 @@
 """Conservative queued-work inventory; never dispatches, authorizes or advances state."""
 from datetime import date
 import json
+import re
 from pathlib import Path
 import sys
 from urllib.parse import quote
 
 from static import gh, require
+
+ENTRY_WORKFLOWS = {f'.github/workflows/{name}.yml' for name in ('release-after-ci', 'release-site', 'redeploy-diloreto', 'restore-static')}
 
 
 def collect(policy, runtime, since, api=gh):
@@ -13,7 +16,9 @@ def collect(policy, runtime, since, api=gh):
     result = dict(schemaVersion=1, since=since, complete=False, scope='At most 1000 runs/workflow and 10 attempts/run, created since supplied date', affectedSite='unknown', possibleSites=['paul', 'diloreto', 'carolyn', 'sarabeth'], work=[], automaticRetry=False,
                   recoveryActions=[f'release-site(site={site}, ref=main)' for site in ('paul', 'diloreto', 'carolyn', 'sarabeth')])
     try:
-        require(policy['repositoryId'] and policy['ownerId'] and all(runtime['entryWorkflowIds'].values()), 'Unconfigured inventory')
+        workflows = runtime.get('entryWorkflowIds', {})
+        require(set(workflows) == ENTRY_WORKFLOWS, 'Incomplete workflow inventory configuration')
+        require(all(isinstance(value, str) and re.fullmatch(r'[1-9][0-9]*', value) for value in (policy.get('repositoryId'), policy.get('ownerId'), *workflows.values())) and len(set(workflows.values())) == len(ENTRY_WORKFLOWS), 'Unconfigured inventory')
         repository = api('repos/soodoh/websites')
         require(str(repository['id']) == policy['repositoryId'] and str(repository['owner']['id']) == policy['ownerId'], 'Untrusted repository')
         for workflow, workflow_id in runtime['entryWorkflowIds'].items():

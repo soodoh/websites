@@ -55,5 +55,8 @@
     }
   },
   "legacyPortfolioRepositoryId": null,
-  "legacyPortfolioWorkflowId": null
+  "legacyPortfolioWorkflowId": null,
+  "legacyDiloretoRepositoryId": null,
+  "legacyDiloretoWorkflowId": null,
+  "legacyDiloretoManifestSha256": null
 }

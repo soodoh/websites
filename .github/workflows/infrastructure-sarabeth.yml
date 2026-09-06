@@ -3,6 +3,25 @@ name: Sarabeth protected infrastructure (publication locked)
 on:
   workflow_dispatch:
     inputs:
+      operation:
+        description: Separately approved operation; preparation never switches domain or webhook
+        type: choice
+        options: [legacy, prepare-monorepo, switch-monorepo]
+        default: legacy
+        required: true
+      transition_confirmation:
+        description: APPROVE_MONOREPO_PREPARATION or APPROVE_MONOREPO_SWITCH (separate from domain approval)
+        type: string
+      selected_commit:
+        description: Exact independently verified monorepo candidate commit for switch
+        type: string
+      selected_job:
+        description: Exact successful sarabeth-production candidate job for switch
+        type: string
+      retarget_webhook:
+        description: Explicitly approved CMS webhook switch (never implied by domain switch)
+        type: boolean
+        default: false
       apply_domain:
         description: Apply the approval-gated Amplify domain association
         required: true
@@ -26,6 +45,7 @@ jobs:
     if: ${{ false }}
     permissions:
       contents: read
+      actions: read
       id-token: write
     defaults:
       run:
@@ -37,6 +57,17 @@ jobs:
       group: sarabeth-production
       cancel-in-progress: false
     env:
+      GH_TOKEN: ${{ github.token }}
+      MONOREPO_OPERATION: ${{ inputs.operation }}
+      TRANSITION_CONFIRMATION: ${{ inputs.transition_confirmation }}
+      APPLY_DOMAIN: ${{ inputs.apply_domain }}
+      ROLLBACK_TO_NETLIFY: ${{ inputs.rollback_to_netlify }}
+      RETARGET_WEBHOOK: ${{ inputs.retarget_webhook }}
+      CUTOVER_CONFIRMATION: ${{ inputs.cutover_confirmation }}
+      SELECTED_COMMIT: ${{ inputs.selected_commit }}
+      SELECTED_JOB: ${{ inputs.selected_job }}
+      MONOREPO_SUBJECT: ${{ vars.SARABETH_ROUTINE_OIDC_SUBJECT }}
+      MONOREPO_STATE_OBJECT: ${{ vars.SARABETH_STATE_OBJECT_ARN }}
       AWS_REGION: us-west-2
       EXPECTED_AWS_ACCOUNT: "015989770400"
       CLOUDFORMATION_EXECUTION_ROLE_ARN: ${{ vars.CLOUDFORMATION_EXECUTION_ROLE_ARN }}
@@ -59,7 +90,8 @@ jobs:
           test "$GITHUB_REPOSITORY" = soodoh/websites
           test "$GITHUB_REF" = refs/heads/main
           test "$PUBLICATION_UNLOCKED" = true
-          test -n "$EXPECTED_SUBJECT"
+          python3 ../../scripts/release/sarabeth_transition.py prepare
+          python3 ../../scripts/release/oidc.py
       - name: Configure protected infrastructure credentials
         uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
         with:
@@ -68,6 +100,7 @@ jobs:
           role-session-name: sarabeth-amplify-infrastructure
           role-duration-seconds: 14400
           allowed-account-ids: "015989770400"
+          audience: sts.amazonaws.com
           unset-current-credentials: true
 
       - name: Verify production account
@@ -97,10 +130,15 @@ jobs:
             exit 1
           fi
 
+      - name: Verify selected monorepo candidate before infrastructure mutation
+        if: inputs.operation == 'switch-monorepo'
+        run: python3 ../../scripts/release/sarabeth_transition.py candidate
+
       - name: Apply hosting stack
         if: inputs.rollback_to_netlify == false
         timeout-minutes: 30
         run: |
+          mapfile -t hosting_parameters < "$RUNNER_TEMP/sarabeth-hosting-parameters"
           aws cloudformation deploy \
             --stack-name sarabeth-amplify-hosting \
             --template-file infrastructure/cloudformation/hosting.yaml \
@@ -110,6 +148,7 @@ jobs:
               GitHubOidcProviderArn="$OIDC_PROVIDER_ARN" \
               WorkloadPermissionsBoundaryArn="$WORKLOAD_PERMISSIONS_BOUNDARY_ARN" \
               ContentfulSpaceId="$CONTENTFUL_SPACE_ID" \
+              "${hosting_parameters[@]}" \
             --no-fail-on-empty-changeset \
             --tags Project=sarabeth-studio Environment=production
 
@@ -173,6 +212,10 @@ jobs:
         continue-on-error: true
         timeout-minutes: 120
         run: |
+          mapfile -t domain_parameters < "$RUNNER_TEMP/sarabeth-domain-parameters"
+          if [[ "$MONOREPO_OPERATION" == switch-monorepo ]]; then
+            python3 ../../scripts/release/sarabeth_transition.py candidate
+          fi
           aws cloudformation deploy \
             --stack-name sarabeth-amplify-domain \
             --template-file infrastructure/cloudformation/domain.yaml \
@@ -180,6 +223,7 @@ jobs:
             --parameter-overrides \
               AmplifyAppId="$AMPLIFY_APP_ID" \
               AssociateDomain=true \
+              "${domain_parameters[@]}" \
             --no-fail-on-empty-changeset \
             --tags Project=sarabeth-studio Environment=production
 
@@ -227,7 +271,12 @@ jobs:
               --domain-name sarabethbelon.com \
               --query 'domainAssociation.domainStatus' \
               --output text)
-            [[ "$domain_status" == "AVAILABLE" ]] && exit 0
+            if [[ "$domain_status" == "AVAILABLE" ]]; then
+              if [[ "$MONOREPO_OPERATION" == switch-monorepo ]]; then
+                python3 ../../scripts/release/sarabeth_transition.py domain
+              fi
+              exit 0
+            fi
             if [[ "$domain_status" == "FAILED" ]]; then
               aws amplify get-domain-association \
                 --app-id "$AMPLIFY_APP_ID" \

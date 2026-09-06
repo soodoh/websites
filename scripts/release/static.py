@@ -17,6 +17,7 @@ from state import require, UnknownOutcome
 
 ROOT = Path(__file__).resolve().parents[2]
 LEGACY = 'soodoh/portfolio-website'
+LEGACY_DILORETO = 'soodoh/diloreto-website'
 TERMINAL = {'SUCCEED', 'FAILED', 'CANCELLED'}
 
 
@@ -32,19 +33,28 @@ def gh(path):
 
 def observe(policy, site, release):
     repo = release['repository']
-    require(repo == 'soodoh/websites' or (site == 'paul' and repo == LEGACY), 'Unallowlisted repository')
+    require(repo == 'soodoh/websites' or (site == 'paul' and repo == LEGACY) or (site == 'diloreto' and repo == LEGACY_DILORETO), 'Unallowlisted repository')
     run, attempt = release['runId'], release['runAttempt']
     require(all(re.fullmatch(r'[1-9][0-9]*', x) for x in (run, attempt)), 'Invalid run/attempt')
-    expected_repo_id = policy['repositoryId'] if repo == 'soodoh/websites' else policy['legacyPortfolioRepositoryId']
+    legacy_key = 'legacyDiloreto' if repo == LEGACY_DILORETO else 'legacyPortfolio'
+    expected_repo_id = policy['repositoryId'] if repo == 'soodoh/websites' else policy.get(legacy_key + 'RepositoryId')
     repository = gh(f'repos/{repo}')
     require(expected_repo_id and str(repository['id']) == expected_repo_id and str(repository['owner']['id']) == policy['ownerId'], 'Repository/owner ID mismatch')
     observed = gh(f'repos/{repo}/actions/runs/{run}/attempts/{attempt}')
     require(str(observed['id']) == run and str(observed['run_attempt']) == attempt and observed['head_repository']['full_name'] == repo and str(observed['head_repository']['id']) == expected_repo_id, 'Run source/attempt mismatch')
     workflow = release['workflow']
-    expected_workflow_id = policy['legacyPortfolioWorkflowId'] if repo == LEGACY else policy['validationWorkflowIds'].get(workflow)
+    expected_workflow_id = policy.get(legacy_key + 'WorkflowId') if repo != 'soodoh/websites' else policy['validationWorkflowIds'].get(workflow)
     require(expected_workflow_id and str(observed['workflow_id']) == expected_workflow_id and observed['path'] == workflow, 'Workflow mismatch')
     require(observed['head_branch'] == 'main', 'Non-main workflow event')
-    if workflow == '.github/workflows/ci.yml' or repo == LEGACY:
+    if repo == LEGACY_DILORETO:
+        require(workflow == '.github/workflows/deploy.yml' and observed['event'] in ('push', 'workflow_dispatch') and observed['event'] == release.get('event'), 'Untrusted legacy DiLoreto event')
+        require(observed['status'] == 'completed' and observed['conclusion'] == 'success', 'Legacy deployment incomplete')
+        require(observed['head_sha'] == release.get('workflowSha'), 'Legacy invocation SHA mismatch')
+        if observed['event'] == 'push':
+            require(observed['head_sha'] == release['commit'], 'Legacy push target mismatch')
+        # A manual target need not be head_sha: the independently pinned capture
+        # manifest binds the actual validated/deployed original target SHA.
+    elif workflow == '.github/workflows/ci.yml' or repo == LEGACY:
         require(workflow == ('.github/workflows/deploy.yml' if repo == LEGACY else '.github/workflows/ci.yml') and observed['event'] == 'push' and observed['head_sha'] == release['commit'], 'Not trusted push provenance')
         require(observed['status'] == 'completed', 'Originating run incomplete')
     else:
@@ -59,6 +69,8 @@ def observe(policy, site, release):
             break
         page += 1
     names = ['Build and verify artifact'] if repo == LEGACY else (['root', f'{site} / {site} fixture verification'] if workflow == '.github/workflows/ci.yml' else ['release root validation', f'{site} release validation'])
+    if repo == LEGACY_DILORETO:
+        names = ['Validate static site', 'Deploy production']
     for name in names:
         matching = [j for j in jobs if j['name'] == name]
         require(len(matching) == 1 and matching[0]['status'] == 'completed' and matching[0]['conclusion'] == 'success', f'Required trusted job not successful: {name}')
@@ -69,7 +81,10 @@ def verify_release(directory, release, policy, site):
     require(release['site'] == site and re.fullmatch(r'[0-9a-f]{40}', release['commit']) and re.fullmatch(r'[0-9a-f]{64}', release['sha256']), 'Invalid release identity')
     observe(policy, site, release)
     metadata = json.loads((directory / 'metadata.json').read_text())
-    if release['repository'] == LEGACY:
+    if release['repository'] == LEGACY_DILORETO:
+        from legacy_diloreto import verify_capture
+        verify_capture(directory, release, metadata, policy)
+    elif release['repository'] == LEGACY:
         require(site == 'paul' and release['workflow'] == '.github/workflows/deploy.yml', 'Legacy identity not allowlisted')
         for key in ('commit', 'runId', 'runAttempt', 'sha256'):
             require(metadata.get(key) == release[key], f'Legacy metadata mismatch: {key}')
@@ -107,7 +122,11 @@ def read_url(url):
         return error.code, dict((k.lower(), v) for k, v in error.headers.items()), error.read()
 
 
-def marker_check(url, release, metadata):
+def marker_check(url, release, metadata, directory=None):
+    if release['repository'] == LEGACY_DILORETO:
+        from legacy_diloreto import verify_serving_bytes
+        verify_serving_bytes(url, directory, read_url)
+        return
     status, _, body = read_url(url.rstrip('/') + '/release.json?release=' + release['runId'] + '-' + release['runAttempt'])
     require(status == 200, 'Current release marker unavailable; never reset baseline')
     marker = json.loads(body)
@@ -116,6 +135,10 @@ def marker_check(url, release, metadata):
 
 
 def artifact_prefix(release):
+    if release['repository'] == LEGACY_DILORETO:
+        require(release['site'] == 'diloreto' and release['workflow'] == '.github/workflows/deploy.yml', 'Unallowlisted legacy store')
+        require(all(re.fullmatch(r'[1-9][0-9]*', release[k]) for k in ('runId', 'runAttempt')), 'Invalid legacy store identity')
+        return f"legacy-captures/soodoh-diloreto-website/{release['runId']}/{release['runAttempt']}"
     if release['repository'] == LEGACY:
         require(release['site'] == 'paul' and release['workflow'] == '.github/workflows/deploy.yml', 'Unallowlisted legacy store')
         return f"releases/{release['runId']}/{release['runAttempt']}"
@@ -165,6 +188,7 @@ def download_ci(release, directory):
 class Amplify:
     def __init__(self, aws, config, state):
         self.aws, self.config, self.state = aws, config, state
+        self.terminal_jobs = set()
 
     def no_active_jobs(self, branch):
         jobs = self.aws.call('amplify', 'list-jobs', app_id=self.config['appId'], branch_name=branch)['jobSummaries']
@@ -174,6 +198,8 @@ class Amplify:
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             job = self.aws.call('amplify', 'get-job', app_id=self.config['appId'], branch_name=branch, job_id=job_id)['job']['summary']
+            if job['status'] in TERMINAL:
+                self.terminal_jobs.add((branch, job_id))
             require(commit is None or job['commitId'] == commit, 'Amplify selected another source commit')
             if job['status'] in TERMINAL:
                 require(job['status'] == 'SUCCEED', 'Amplify job failed')
@@ -183,14 +209,26 @@ class Amplify:
         raise TimeoutError('Amplify release timeout')
 
     def stop(self, branch, job_id):
-        self.aws.call('amplify', 'stop-job', app_id=self.config['appId'], branch_name=branch, job_id=job_id)
+        if (branch, job_id) in self.terminal_jobs:
+            return
+        status = self.aws.call('amplify', 'get-job', app_id=self.config['appId'], branch_name=branch, job_id=job_id)['job']['summary']['status']
+        if status in TERMINAL:
+            self.terminal_jobs.add((branch, job_id))
+            return
+        try:
+            self.aws.call('amplify', 'stop-job', app_id=self.config['appId'], branch_name=branch, job_id=job_id)
+        except Exception:
+            # A rejected stop is not terminal evidence. Reconcile the exact owned job,
+            # even after a stop error; callers retain any original UnknownOutcome.
+            pass
         deadline = time.monotonic() + 1200
         while time.monotonic() < deadline:
             status = self.aws.call('amplify', 'get-job', app_id=self.config['appId'], branch_name=branch, job_id=job_id)['job']['summary']['status']
             if status in TERMINAL:
+                self.terminal_jobs.add((branch, job_id))
                 return
             time.sleep(10)
-        raise TimeoutError('Cannot certify terminal cleanup; leave intent unresolved')
+        raise UnknownOutcome('Cannot certify terminal cleanup; leave intent unresolved')
 
     def deploy_zip(self, branch, archive, checksum):
         self.no_active_jobs(branch)
@@ -222,7 +260,7 @@ class Amplify:
 
 
 def acceptance(site, url, release, metadata, config, directory):
-    marker_check(url, release, metadata)
+    marker_check(url, release, metadata, directory)
     # No selected-ref lifecycle executes here. This cwd is the trusted workflow-SHA harness.
     environment = {k: os.environ[k] for k in ('PATH', 'HOME', 'CI', 'CHROME_PATH', 'RUNNER_TEMP') if k in os.environ}
     app = ROOT / 'apps' / site
@@ -232,6 +270,8 @@ def acceptance(site, url, release, metadata, config, directory):
         command(['bun', 'run', 'lighthouse'], app, {**environment, 'LHCI_URL': url})
     else:
         origin = config['originUrl'].rstrip('/')
+        if release['repository'] == LEGACY_DILORETO:
+            marker_check(origin, release, metadata, directory)
         status, _, origin_body = read_url(origin + '/')
         edge_status, headers, edge_body = read_url(url.rstrip('/') + '/')
         require(status == edge_status == 200 and origin_body == edge_body and b'The DiLoreto Family' in origin_body and b'google-site-verification' in origin_body, 'Origin/edge body mismatch')
@@ -251,7 +291,7 @@ def acceptance(site, url, release, metadata, config, directory):
                 code, _, body = read_url(base + '/not-a-real-route')
                 require(code == 404 and b'404: Page Not Found' in body, 'Incorrect static 404')
         command(['bash', 'scripts/test-playwright-docker.sh', 'tests/deployment-smoke.spec.ts', '--project=chromium'], app, {**environment, 'PLAYWRIGHT_BASE_URL': url, 'PLAYWRIGHT_SKIP_BUILD': '1'})
-    marker_check(url, release, metadata)
+    marker_check(url, release, metadata, directory)
 
 
 def release_static(site, aws, config, state, selected, policy, operation, recheck):
@@ -262,7 +302,9 @@ def release_static(site, aws, config, state, selected, policy, operation, rechec
         old, new = root / 'previous', root / 'selected'
         download_retained(aws, config, previous, old)
         old_metadata = verify_release(old, previous, policy, site)
-        marker_check(config['productionUrl'], previous, old_metadata)
+        marker_check(config['productionUrl'], previous, old_metadata, old)
+        if site == 'diloreto' and previous['repository'] == LEGACY_DILORETO:
+            marker_check(config['originUrl'], previous, old_metadata, old)
         if operation == 'restore':
             download_retained(aws, config, selected, new)
         else:
@@ -287,6 +329,6 @@ def release_static(site, aws, config, state, selected, policy, operation, rechec
             amplify.no_active_jobs(config['branch'])
             amplify.deploy_zip(config['branch'], old / 'site.zip', previous['sha256'])
             acceptance(site, config['productionUrl'], previous, old_metadata, config, old)
-            state.finish(previous, before['highWatermark'])
+            state.finish(previous, before['highWatermark'], outcome='restored-previous')
             raise RuntimeError('Release failed; previous verified bytes restored, this run must fail')
         state.finish(selected, selected['commit'] if operation == 'release' else before['highWatermark'])
