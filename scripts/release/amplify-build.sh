@@ -10,6 +10,15 @@ esac
 root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$root"
 test "${AMPLIFY_MONOREPO_APP_ROOT:?}" = "apps/$site"
+if [[ "$site" = carolyn && "${AWS_BRANCH:?}" != "$branch" ]]; then
+  # Two independent explicit bindings: reviewed checkout policy and owning-CDK branch
+  # configuration. An arbitrary AWS_BRANCH/environment cannot enlarge the allowlist.
+  candidate=$(jq -er '.sites.carolyn.candidateBranch | select(type == "string")' config/release-runtime.json)
+  [[ "$candidate" =~ ^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$ ]]
+  [[ "$candidate" != main && "$candidate" != amplify-production && "$candidate" != sarabeth-production ]]
+  test "${CAROLYN_CANDIDATE_BRANCH:?}" = "$candidate"
+  branch=$candidate
+fi
 test "${AWS_BRANCH:?}" = "$branch"
 test "$(aws sts get-caller-identity --query Account --output text)" = "$account"
 test "$(node --version)" = v24.20.0
@@ -40,6 +49,8 @@ else
   # Carolyn CMS trigger behavior is uncollected. Deny every non-exact RELEASE until reviewed.
   test "$AMPLIFY_JOB_COMMIT" = "$actual"
   test "$AMPLIFY_JOB_MESSAGE" = "GitHub Actions release $actual"
+  test "$(jq -er '.job.summary.jobType' <<< "$job")" = RELEASE
+  test "$(jq -er '.job.summary.jobId' <<< "$job")" = "$AWS_JOB_ID"
 fi
 export RELEASE_COMMIT="$actual" AWS_COMMIT_ID="$actual" NODE_ENV=production
 unset AMPLIFY_JOB_COMMIT AMPLIFY_JOB_MESSAGE

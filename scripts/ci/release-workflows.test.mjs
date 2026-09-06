@@ -186,3 +186,32 @@ test('owning IaC keeps old subjects, exact optional new subjects, provider/DNS i
   expect(bootstrap.split('          - Sid: AmplifyJobsAndWebhooks')[1].split('          - Sid: ContentfulBuildParameter')[0]).not.toContain('amplify:GetDomainAssociation');
   expect(hosting.split('        - PolicyName: ReleaseSpecificAmplifyApp')[1]).not.toContain('amplify:GetDomainAssociation');
 });
+
+test('Carolyn candidate and production rebuild remain independently disabled with trusted isolated smoke', () => {
+  const runtime = JSON.parse(read('config/release-runtime.json')).sites.carolyn;
+  expect(runtime.candidateEnabled).toBe(false);
+  expect(runtime.promotionEnabled).toBe(false);
+  expect(runtime.candidateBranch).toBeNull();
+  expect(runtime.candidateUrl).toBeNull();
+  const recovery = yaml('.github/workflows/release-site.yml');
+  expect(recovery.on.workflow_dispatch.inputs.carolyn_operation).toMatchObject({ options: ['release', 'candidate', 'promote'], default: 'release' });
+  expect(recovery.jobs['carolyn-release'].with.operation).toBe('${{ inputs.carolyn_operation }}');
+  const candidate = read('apps/carolyn/tests/amplify.candidate.smoke.ts');
+  expect(candidate).not.toContain('carolyndiloreto.com');
+  expect(candidate).not.toContain('carolyn.diloreto.com');
+  expect(candidate).toContain('routeCandidateRequest');
+  const candidatePolicy = read('apps/carolyn/tests/candidate-policy.ts');
+  expect(candidatePolicy).toContain('route.abort("blockedbyclient")');
+  expect(candidatePolicy).toContain('route.fetch({ maxRedirects: 0 })');
+  expect(candidatePolicy).toContain('new URL(location, url).href');
+  expect(candidate).toContain('maxRedirects: 0');
+  expect(candidate).toContain('private, no-store');
+  expect(candidate).toContain('The password you entered is incorrect.');
+  expect(candidate).toContain('/_serverFn/');
+  expect(candidate).toContain('toBe(404)');
+  expect(read('apps/carolyn/playwright.candidate.config.ts')).toContain('serviceWorkers: "block"');
+  const production = read('apps/carolyn/tests/amplify.smoke.ts');
+  expect(production).toContain('https://carolyndiloreto.com');
+  expect(production).toContain('https://carolyn.diloreto.com');
+  expect(production).toContain('expect(defaultCommit).toBe(canonicalCommit)');
+});

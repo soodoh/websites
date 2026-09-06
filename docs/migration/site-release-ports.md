@@ -1,4 +1,37 @@
-# Phase 3 offline site ports — Sarabeth reviewed/tested; Carolyn incomplete
+# Phase 3 offline site ports — Carolyn authored; independent acceptance pending
+
+## Current Carolyn implementation decision — offline only
+
+The approved architecture is an **explicit isolated candidate branch plus separate
+exact-SHA production rebuild**, not domain reassociation. The previous Carolyn
+unimplemented-seam checkpoint below is historical. New implementation and targeted
+fixture results are detailed in `03-production-cutover-handoff.md`; independent review
+and full exact-committed-SHA validation remain pending. All four sites are NOT migrated.
+
+| Seam | Concrete behavior / remaining gate |
+| --- | --- |
+| Owning CDK | Optional/null `monorepoTransition.candidateBranch`; exact DNS-safe supplied name + explicit repositoryConnection required. Adds retained `MonorepoCandidateBranch` and exact candidate branch/job/GetDomainAssociation observation permissions only. Default CLI synth remains byte-identical, 19 resources. Existing domains still point to `amplify-production`; no branch is selected or provisioned. |
+| Build policy | Nullable runtime candidateBranch must equal branch-specific `CAROLYN_CANDIDATE_BRANCH`; exact appRoot/account/Git/job ID/type/message/SHA required. Production branch stays fixed. Fixture/CMS rebuild denial and auth/secret cleanup unchanged. |
+| Isolated acceptance | New trusted candidate Playwright config/spec, strict approved default-domain origin, redirect-disabled marker/API requests and browser off-origin blocking/service-worker denial. Public assets, invalid-password auth/no-store, SSR photography, redirect location/404/406 and exact root SHA; no production/legacy/CDN HTTP. Original production smoke remains unchanged, including image decode and canonical/default/alias acceptance. |
+| Candidate state | `carolyn_operation=candidate` has its own false flag; existing initialized recovery state, both refs/branches/jobs/domains and scope checked. Durable owner/ETag intent before candidate ref CAS/build; actual new job/bundle/smoke before candidate-only receipt. `acceptedCandidate` keeps production snapshot/ref, generation, hosting/domain and job evidence; production currentRelease/highWatermark/LKG untouched. |
+| Exact selection | Separately disabled `carolyn_operation=promote` requires nonempty full-SHA `carolyn_candidate_commit`, rejected elsewhere. Selector preserves real observed main, checks ancestry/modern layout and freshly validates exact candidate checkout. Candidate A remains eligible after unrelated main B; relevant/shared input C denies it. This supervisor-approved extension avoids reintroducing global latest-main equality. |
+| Production rebuild | Matching candidate receipt, origin validation, hosting/domain/ref/latest job/generation/ETag and fresh scope checked before durable promote intent and production mutation. New exact-SHA RELEASE on existing `amplify-production`; actual new production job/marker and unchanged canonical/default/redirect smoke precede final production CAS. Candidate and production receipts attest separate SSR rebuilds, never identical ZIP bytes. `lastSsrCutover` preserves candidate/previous recovery; routine first-cutover release stays denied. |
+| Recovery | Unknown ref/start/CAS/serving outcomes stop. Paginated active-job inventory and exact latest-job identity are checked. Lost ownership permits no cleanup mutation or rollback; failed final persistence is not success even if the external write reached S3. Reconcile actual refs/jobs/state/serving under separate approval; never clear intent merely to retry. |
+
+The canceled previous worker's missing report was not failure/success evidence. User
+approved restarting at actual `fa06a3e68fd2e0c759afe5448287b94084421d9a` after parent
+confirmed only its untracked draft remained; that draft was preserved byte-exact before
+replacement. New targeted checks: 30 workspace, 60 CI Bun, six CI Python, 52 release
+Python, 120 Carolyn unit and 15 infra tests; lint/type/fixture build/offline synth pass.
+Ten new candidate browser cases were collected only, **not executed against hosting**.
+Retained authoring failures, tool identities and unique logs are in the handoff.
+
+Actual app/candidate/ref/CMS/credential resources and hosted inventory remain unknown.
+`candidateBranch`/`candidateUrl` stay null; `candidateEnabled`/`promotionEnabled` false;
+all literal gates and publication locks remain. In-place connection/change-set review,
+GitHub protections/access/identity, existing recovery/retention capture, source/CMS drain,
+candidate and production execution/acceptance, enablement and retirement are separate
+unapproved gates. No cloud/ref/domain/provisioning operation or production request ran.
 
 ## Current final-review disposition and per-site ledger
 

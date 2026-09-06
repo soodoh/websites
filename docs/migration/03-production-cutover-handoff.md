@@ -1,4 +1,127 @@
-# Phase 3 handoff — Sarabeth correction reviewed/tested; Carolyn offline incomplete
+# Phase 3 handoff — Carolyn candidate/promotion authored; independent acceptance pending
+
+## Carolyn isolated first-cutover authoring — current offline checkpoint
+
+The user approved **an isolated explicitly configured candidate branch followed by a
+separate exact-SHA rebuild on existing `amplify-production`**, not domain reassociation.
+This supersedes only the earlier unimplemented Carolyn seam below. Source repositories
+remain sole production owners; all four sites are **NOT migrated**. Independent review
+and full exact-committed-SHA fixture validation of this change remain REQUIRED; the prior
+all-four result at `534300664a683712f5c2cd73776fef3c6bb2fb54` does not validate this code.
+
+Starting HEAD was `fa06a3e68fd2e0c759afe5448287b94084421d9a`. The canceled
+`96ee1c0b-4903-417a-a056-216da35659bc` worker's absent report is cancellation, not a test
+failure or acceptance. Initial inspection found **only** untracked
+`scripts/release/carolyn_transition.py`, not the expected tracked partial edits. The
+parent independently confirmed this and the user explicitly chose **Restart from current
+base**; the cause of the missing tracked edits was not established. The remaining draft
+was copied byte-exact before replacement to
+`/private/tmp/carolyn-astra-00636229-evidence/carolyn_transition.original.py`, SHA-256
+`c5a82a0b3b1e4ffb8c4d13f070c094a90028b9c84f2b148cdeb91cb4fd8ac5dd`.
+Critical inspection found missing integration, the coupled promotion enable predicate,
+production-directed candidate smoke, and insufficient ownership/job/baseline rechecks.
+The replacement is newly authored and tested, not an accepted continuation of that draft.
+
+### Concrete implemented protocol
+
+- `monorepoTransition.candidateBranch` in the owning Carolyn CDK context is optional/null.
+  A supplied DNS-safe exact name requires the explicit monorepo connection decision and
+  excludes existing reserved production/main refs. Only then is retained
+  `MonorepoCandidateBranch` synthesized. Existing domain mappings, production branch,
+  compute/secret/account/logical identities and old trust remain. Exact candidate branch/
+  job policies and read-only observations of the two existing domain associations are
+  conditional; no domain mutation or branch-creation API is in the release adapter.
+- Checked-in `candidateBranch`/`candidateUrl` remain **null**; `candidateEnabled` and
+  `promotionEnabled` remain independently **false**. Build admission requires BOTH the
+  reviewed checkout's exact candidate name and CDK's `CAROLYN_CANDIDATE_BRANCH`, exact
+  app root/account/Git SHA/RELEASE job ID/message/type, with fixture and uncollected CMS
+  rebuild denials unchanged. Auth manifest and secret cleanup remain unchanged.
+- Candidate verifies the repository/app/default domain, both branch roots/disabled
+  writers, paginated terminal-job inventory, original domain bindings and production
+  ref. Owner/ETag CAS claims intent before ref CAS/start-job. The actual new candidate
+  job, source and bundle marker precede isolated public/auth/SSR/404/root-release smoke.
+  `acceptedCandidate` separately stores hosting/domain/production-ref bindings, previous
+  production snapshot, generation and candidate receipt. Production currentRelease,
+  highWatermark, lastLifecycleReceipt and LKG are not advanced.
+- The new trusted `playwright.candidate.config.ts`/`amplify.candidate.smoke.ts` requires
+  exactly `https://<explicit-branch>.<explicit-app-id>.amplifyapp.com`. Marker and API
+  requests do not follow redirects; browser routes block **every off-origin request**,
+  with service workers disabled. No canonical/legacy production or CDN HTTP is needed
+  for candidate acceptance. Photography checks the SSR function/content/image URL but
+  intentionally does not decode the blocked external image. The original production
+  harness is byte-unchanged and retains canonical/default equality, aliases, redirects,
+  public/auth/status checks and external-image decode acceptance.
+- Separate `carolyn_operation=promote` requires an exact nonempty 40-hex
+  `carolyn_candidate_commit`. The supervisor approved this narrow selector extension
+  because pinning only latest main would strand accepted candidate A after unrelated B.
+  Selection preserves actual observed main separately, verifies candidate ancestry and
+  modern root layout, and freshly validates the exact candidate checkout with the trusted
+  workflow-SHA harness. Nonempty candidate SHA on any other operation/site is rejected;
+  normal main recovery and DiLoreto selected-ref semantics remain intact.
+- Promotion consumes matching accepted-candidate evidence, re-observes validation,
+  scope against actual current main, hosting/domain/ref/latest jobs and exact state
+  generation/ETag, and claims durable intent BEFORE production ref/job mutation. It
+  rebuilds the same SHA on existing `amplify-production`; the actual new production job,
+  marker and original production smoke must pass before `production-verified` and final
+  CAS advance production state. `lastSsrCutover` retains candidate/previous recovery.
+  Receipts explicitly attest **separate SSR rebuilds**, never static same-byte ZIPs.
+  Routine SSR release still denies first-cutover state without this protocol.
+- Unknown start/ref/serving/CAS outcomes retain reconciliation obligations. An ambiguous
+  successful external write may already have changed S3 despite a failed invocation;
+  do not assert persistence failed unchanged. Lost ownership prevents cleanup mutations;
+  no unconditional retry, stale-ETag rebase, legacy-SHA push, domain reassociation or
+  blind rollback is implemented. Existing S3 encryption/owner/CAS and Sarabeth correction
+  semantics are preserved.
+
+### Targeted fixture evidence and remaining approvals
+
+Unique evidence directory: `/private/tmp/carolyn-astra-00636229-evidence/`.
+Only its new independent local TARGET checkout ROOT ran `bun install --frozen-lockfile`
+(1,000 packages); no existing-worktree/source install. All checks used `env -i`, freshly
+empty scratch HOME and explicit safe paths in `environment.sh`: Bun1.4.0, Node24.20.0,
+Python3.14.6 at `/opt/homebrew/Cellar/python@3.14/3.14.6/bin/python3`, Go1.27.1,
+ShellCheck0.11.0 and jq1.8.2. Dependencies/lock/Turbo2.10.12/Playwright1.62.1 unchanged.
+Initial targeted runs used an explicitly overlaid authoring snapshot, not an asserted
+committed-SHA/full-chain build. `targeted-complete-v2.log` records the passing final snapshot:
+
+| Command | Actual result |
+| --- | --- |
+| `bun run test:workspace` | 30 tests / 433 assertions pass |
+| `bun run test:ci` | 60 Bun / 935 assertions; six CI Python; 52 release Python pass |
+| `bash scripts/ci/lint.sh` | Root/nested actionlint, ShellCheck, shell/Node/Python syntax pass |
+| Carolyn `bun run lint`, `infra:typecheck`, `infra:test`, `infra:synth` | Pass; 15 infra / 87 assertions; default CLI synth 19 resources |
+| Carolyn `bun run test:unit`, `bun run typecheck` | 120 unit / 1,125 assertions; fixture build and app types pass (same complete targeted log) |
+| Candidate Playwright `--list` with explicit fixture-only identity | 10 tests collected; **no browser or deployed smoke executed** |
+| Baseline-versus-current default CLI synth | Byte-identical 19-resource templates, SHA-256 `d3692bfbbe154221c8ab34133a712c54f97005025ded527437615fddec435002` |
+
+Integrated fixtures exercise actual deploy routing, trusted observation, ref CAS argv,
+state/CAS/receipt/job and smoke selection, with only external APIs/Git/HTTP/tools replaced.
+They cover wrong repository/branch/job/SHA, independent flags, absent/unsafe config,
+production preservation, candidate→production rebuild, stale scope/ref/generation/ETag,
+active paginated jobs, unknown start/persistence, serving failures and first-cutover
+routine denial. Real fixture Git histories exercise A/unrelated B eligibility versus
+relevant/shared-lock C denial, old-layout/nonancestral/malformed selection rejection,
+and selected-SHA validation-wrapper/request provenance wiring. The actual browser route
+policy is unit-executed with external response fixtures: fetch never follows redirects,
+and absolute/protocol-relative production Location headers abort before browser follow.
+
+Retained failed authoring checks: an unsafe optional-chain lint diagnostic, then a test
+fixture type missing `Effect`, an erroneous direct-App resource-count assertion (18
+application resources versus CLI's additional CDK metadata = 19), and formatting of the
+corrected type, a direct Bun filter missing its required `./` prefix, and a readonly
+fixture tuple passed to a mutable-array assertion overload. Each was corrected and rerun; logs are retained, not relabeled. Existing
+Biome schema-version information and CDK deprecation/NoEcho-name warnings remain. No
+Docker/full-chain invocation or image/container cleanup occurred in this worker.
+
+Next safe gate: independent security/parity/order review and committed TARGET full
+fixture validation. Live IDs, repository connection capability/replacement assessment,
+GitHub App access/subjects/protection, candidate name/CMS/credentials, recovery capture,
+S3/KMS retention and real writer/job inventory remain unknown. All literal-false workflow
+calls/jobs, publicationLocked and runtime flags remain closed. Publication, read-only
+inventory, resource/connection preparation, identity-only checks, source/CMS freeze/drain,
+candidate execution, production rebuild, enablement and retirement each still require
+separate approval. No live access, production HTTP/CMS/email, ref promotion, provisioning,
+push or other production operation was executed.
 
 ## Bounded recovery disposition — 2026-09-06
 

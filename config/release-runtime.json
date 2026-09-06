@@ -37,6 +37,10 @@
       "originUrl": null
     },
     "carolyn": {
+      "candidateEnabled": false,
+      "promotionEnabled": false,
+      "candidateBranch": null,
+      "candidateUrl": null,
       "sourceWriterDrained": false,
       "restoreEnabled": false,
       "redeployEnabled": false,

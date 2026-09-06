@@ -6,6 +6,15 @@ on:
         type: choice
         required: true
         options: [paul, diloreto, carolyn, sarabeth]
+      carolyn_operation:
+        description: Separate isolated candidate build or exact-SHA production rebuild; both disabled pending approval
+        type: choice
+        options: [release, candidate, promote]
+        default: release
+      carolyn_candidate_commit:
+        description: Exact accepted candidate SHA required only for Carolyn promote; never defaults to latest main
+        type: string
+        default: ''
       sarabeth_operation:
         description: Candidate is separately authorized first-cutover preparation, never production acceptance
         type: choice
@@ -38,6 +47,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_SITE: ${{ inputs.site }}
           SELECTED_REF: ${{ inputs.ref }}
+          CAROLYN_OPERATION: ${{ inputs.carolyn_operation }}
+          CAROLYN_CANDIDATE_COMMIT: ${{ inputs.carolyn_candidate_commit }}
         run: node scripts/release/select.mjs
   root:
     name: release root validation
@@ -251,7 +262,7 @@ jobs:
     uses: ./.github/workflows/_carolyn-release.yml
     with:
       target_sha: ${{ needs.resolve.outputs.commit }}
-      operation: release
+      operation: ${{ inputs.carolyn_operation }}
     permissions:
       contents: write
       actions: read
