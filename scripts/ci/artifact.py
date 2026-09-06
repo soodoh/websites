@@ -25,7 +25,8 @@ def scan(name, data, nested=False):
     parts = name.split("/")
     if name.startswith("/") or ".." in parts or "\\" in name or FORBIDDEN.search(name):
         raise ValueError("Forbidden artifact path")
-    if Path(name).suffix.lower() not in EXTENSIONS:
+    suffix = Path(name).suffix.lower()
+    if suffix not in EXTENSIONS:
         raise ValueError("Unapproved artifact file type")
     if re.search(rb"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|(?:AKIA|ASIA)[A-Z0-9]{16}", data):
         raise ValueError("Credential-shaped artifact content")
@@ -33,7 +34,7 @@ def scan(name, data, nested=False):
     for key, value in os.environ.items():
         if re.search(r"TOKEN|SECRET|PASSWORD|ACCESS_KEY", key) and len(value) >= 12 and value.encode() in data:
             raise ValueError("Sensitive environment value in artifact")
-    if name.endswith(".zip"):
+    if suffix == ".zip":
         if nested:
             raise ValueError("Nested diagnostic archive")
         with zipfile.ZipFile(io.BytesIO(data)) as archive:

@@ -35,7 +35,8 @@ function pathsBetween(cwd, base, head) {
   // Do not trim: whitespace is legal in Git paths; the final NUL is mandatory.
   const buffer = execFileSync('git', ['diff', '--no-ext-diff', '--no-textconv', '--no-renames', '--name-only', '-z', base, head, '--'], { cwd, maxBuffer: 128 * 1024 * 1024 });
   if (buffer.length && buffer.at(-1) !== 0) throw Error('Truncated diff');
-  const text = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+  // A leading BOM belongs to the first Git pathname, not an encoding signature.
+  const text = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(buffer);
   return text ? text.slice(0, -1).split('\0') : [];
 }
 export function affected({ cwd = process.cwd(), event, base, head, forceAll = false }) {
