@@ -1,6 +1,54 @@
-# Phase 3 offline site ports — candidate TLS fixture passed; final review pending
+# Phase 3 offline site ports — all-four offline accepted; production 0/4
 
-## Final bounded validation ledger — 2026-09-06
+## Final independent acceptance ledger — 2026-09-06
+
+**All-four bounded offline authoring/fixture acceptance complete; NONE migrated.**
+Final `carolyn-review/final-review-0.md` (standards/security) and `final-review-1.md`
+(parity/order) both return no findings, `needsFixes=false`, OK with notes for offline
+acceptance only. Initial redirect-chain P1, its empty-Location edge case and follow-up
+four-case auth/SSR execution-evidence P1 are closed. Initial-0's redirect assertion is
+superseded, not used to erase initial-1's finding. Earlier pending/BLOCK sections retain
+checkpoint meaning; this section is the current offline disposition.
+
+Latest exact full-tested checkout **`37dac114eaa41f487a893e9655b3b2d9a509be43`** has
+source code `866dd65d36ad9db9b8764758a22caf45c8dd5dcc`. Reviewed successor
+`bedbc07cc50bdddcae75cfaaa6bc4fcef2812376` and this final handoff commit change only
+two evidence docs; neither is a new full-tested SHA. Resolve the latest docs commit with
+`git log -1 --format=%H -- docs/migration/site-release-ports.md`; final managed report
+records exact HEAD. Docs remain release inputs; no SHA substitution or release authority.
+
+| Site | Current offline acceptance / exact37dac114 evidence | Production migration |
+| --- | --- | --- |
+| carolyn | ACCEPTED: optional explicit/null retained candidate, candidate-only receipt preserving production state/watermark/LKG, separate exact-SHA production rebuild and actual job/bundle/serving checks. 120 unit/1,128 assertions;15 infra/87;three+three artifact;100 canonical browser (92 unchanged+eight policy);additional unchanged10 candidate cases and four actual CSRF403 probes pass. | NOT migrated; candidate absent by default, flags false, all resource/connection/CMS/recovery/writer/candidate/production gates closed. |
+| paul | ACCEPTED offline: prior static/legacy finding dispositions retained; fresh complete chain,56 browser/four unchanged skips and three Lighthouse0.98/1/1/1. | NOT migrated; current legacy capture/access/retention/candidate/restore and production gates unperformed. |
+| diloreto | ACCEPTED offline: original-format recovery/cleanup/receipt dispositions retained; fresh complete chain,13 genealogy/37 browser/one unchanged skip. | NOT migrated; original capture IDs/manifest/bytes and actual origin-edge/recovery/live gates uncollected. |
+| sarabeth | ACCEPTED offline: independently reviewed53430066 candidate/switch flow intact; fresh complete chain,197 Playwright/seven host-container provenance; actual Gitless marker37dac114. | NOT migrated; candidate/domain/LKG/webhook/writer/production approvals and evidence absent. |
+
+Root frozen install and serial uncached `bun run ci:verify` passed4/4,12m48.831s;
+30workspace/433 assertions,60CI Bun/939,six CI Python,52release Python. Post-suite
+history/maps/imports/graph/synth/four diagnostic scans pass (1,131 messages,zero errors,
+six preserved warnings). `run-candidate-tls-v2.sh` passes10/10 in2.6s,zero failures/skips/
+retries;72 loopback TLS requests,four successful real-origin POSTs,163 off-origin blocks.
+Manifest SHA-256 `9220ac338858d06c189adfb6fc8f5c37c0843361943a8b66a665f66c999c5872`
+at `/private/tmp/carolyn-tls-final.L26kKr/validation-evidence.json`:147 completed-file
+hashes and six prior/follow-up hashes rechecked in this docs pass, not a new test run.
+Detailed command/log/review digests and final report paths are in the current handoff.
+
+Synthetic TLS/direct emitted-fetch transport is not hosted Amplify/domain/job attestation.
+Scratch certificate bypass/chmod and raw Docker comparison limits remain explicit.
+Failed attempts, procedural recovery continuation and collector corrections remain
+preserved separately from passing v2. Canceled worker report and user-approved actual-base
+restart/unknown-origin missing partial edits/byte-exact draft preservation remain below.
+No earlier runner artifact is overwritten; previous convenience copy is retained under
+`/private/tmp/carolyn-final-handoff.QqRaHX/` before refreshing the plan3 summary.
+
+Next safe action: stop; only request separately scoped read-only inventory if the user
+chooses live preparation. No live operation is authorized here. Every literal-false gate,
+null identity, runtime/publication lock and separate settings/cloud/identity/writer/candidate/
+production/enablement/recovery/retirement approval remains closed. Sources remain sole
+permitted production owners. Phase2/publication/main-push acceptance is not reopened.
+
+## Historical final bounded validation ledger — 2026-09-06
 
 Fresh independent TARGET at **37dac114eaa41f487a893e9655b3b2d9a509be43** passed root
 frozen install,complete serial uncached `bun run ci:verify`4/4 (12m48.831s),history/maps/
