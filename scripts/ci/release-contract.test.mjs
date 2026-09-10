@@ -37,15 +37,47 @@ function fixture(site = 'sarabeth') {
 const state = (site, highWatermark) => ({ schemaVersion: 1, repository: 'soodoh/websites', site, highWatermark });
 
 test('checked-in policy cannot activate automatic OR manual credentials on publication', () => {
-  expect(releasePolicy.repositoryId).toBeNull(); expect(releasePolicy.ownerId).toBeNull();
+  expect(releasePolicy.repositoryId).toBe('1358469291'); expect(releasePolicy.ownerId).toBe('18269267');
+  expect(releasePolicy.validationWorkflowIds).toEqual({ [CI_WORKFLOW]: '351279106', [RECOVERY_WORKFLOW]: '351776220', '.github/workflows/redeploy-diloreto.yml': null });
+  expect(releasePolicy.legacyPortfolioRepositoryId).toBe('81884767'); expect(releasePolicy.legacyPortfolioWorkflowId).toBe('315997019');
+  for (const key of ['legacyDiloretoRepositoryId', 'legacyDiloretoWorkflowId', 'legacyDiloretoManifestSha256']) expect(releasePolicy[key]).toBeNull();
   for (const site of apps) {
     const context = observation(policy(), site, 'a'.repeat(40));
     for (const mode of ['automatic', 'manual']) expect(() => checkReleaseAuthorization(releasePolicy, site, mode, context)).toThrow();
     expect(releasePolicy.sites[site].automaticEnabled).toBe(false); expect(releasePolicy.sites[site].manualEnabled).toBe(false);
-    for (const key of ['roleArn', 'oidcSubject', 'appId']) expect(releasePolicy.sites[site][key]).toBeNull();
+    expect(releasePolicy.sites[site].oidcSubject).toBeNull();
+    if (site === 'paul') {
+      expect(releasePolicy.sites[site].roleArn).toBe('arn:aws:iam::658271954302:role/pauldiloreto-amplify-hosting-GitHubDeploymentRole-JPjJmwTE3kcw');
+      expect(releasePolicy.sites[site].appId).toBe('d121ux7va6hz6j');
+    } else {
+      for (const key of ['roleArn', 'appId']) expect(releasePolicy.sites[site][key]).toBeNull();
+    }
   }
   expect(releasePolicy.sites.paul.environment).toBe('production-portfolio');
   expect(new Set(apps.map(s => releasePolicy.sites[s].concurrency)).size).toBe(4);
+});
+
+test('checked-in runtime binds only reviewed metadata and retains publication and unknown-field locks', () => {
+  const runtime = JSON.parse(readFileSync(new URL('../../config/release-runtime.json', import.meta.url)));
+  expect(runtime.publicationLocked).toBe(true);
+  expect(runtime.entryWorkflowIds).toEqual({
+    '.github/workflows/release-after-ci.yml': null,
+    '.github/workflows/release-site.yml': '351776220',
+    '.github/workflows/redeploy-diloreto.yml': null,
+    '.github/workflows/restore-static.yml': '351776221',
+  });
+  expect(runtime.sites.paul.productionUrl).toBe('https://pauldiloreto.com');
+  expect(runtime.sites.paul.releaseBucket).toBe('pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s');
+  expect(runtime.sites.paul.releaseOwner).toBe('658271954302');
+  expect(runtime.sites.paul.domainRedirects).toBe(false);
+  for (const site of apps) {
+    const config = runtime.sites[site];
+    for (const key of ['sourceWriterDrained', 'restoreEnabled', 'redeployEnabled']) expect(config[key]).toBe(false);
+    for (const key of ['stateBucket', 'stateKey', 'stateOwner']) expect(config[key]).toBeNull();
+    if ('candidateUrl' in config) expect(config.candidateUrl).toBeNull();
+    if (site !== 'paul') expect(config.productionUrl).toBeNull();
+  }
+  for (const key of ['releaseBucket', 'releaseOwner', 'originUrl']) expect(runtime.sites.diloreto[key]).toBeNull();
 });
 
 test('authorization checks exact configured site/account/environment/repo/workflow/event/run identities', () => {

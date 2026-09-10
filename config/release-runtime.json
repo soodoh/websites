@@ -3,9 +3,9 @@
   "publicationLocked": true,
   "entryWorkflowIds": {
     ".github/workflows/release-after-ci.yml": null,
-    ".github/workflows/release-site.yml": null,
+    ".github/workflows/release-site.yml": "351776220",
     ".github/workflows/redeploy-diloreto.yml": null,
-    ".github/workflows/restore-static.yml": null
+    ".github/workflows/restore-static.yml": "351776221"
   },
   "sites": {
     "paul": {
@@ -13,12 +13,12 @@
       "restoreEnabled": false,
       "redeployEnabled": false,
       "branch": "main",
-      "productionUrl": null,
+      "productionUrl": "https://pauldiloreto.com",
       "stateBucket": null,
       "stateKey": null,
       "stateOwner": null,
-      "releaseBucket": null,
-      "releaseOwner": null,
+      "releaseBucket": "pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s",
+      "releaseOwner": "658271954302",
       "candidateBranch": "candidate",
       "candidateUrl": null,
       "domainRedirects": false

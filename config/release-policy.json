@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "repository": "soodoh/websites",
-  "repositoryId": null,
-  "ownerId": null,
+  "repositoryId": "1358469291",
+  "ownerId": "18269267",
   "validationWorkflowIds": {
-    ".github/workflows/ci.yml": null,
-    ".github/workflows/release-site.yml": null,
+    ".github/workflows/ci.yml": "351279106",
+    ".github/workflows/release-site.yml": "351776220",
     ".github/workflows/redeploy-diloreto.yml": null
   },
   "sites": {
@@ -38,9 +38,9 @@
       "concurrency": "portfolio-production",
       "automaticEnabled": false,
       "manualEnabled": false,
-      "roleArn": null,
+      "roleArn": "arn:aws:iam::658271954302:role/pauldiloreto-amplify-hosting-GitHubDeploymentRole-JPjJmwTE3kcw",
       "oidcSubject": null,
-      "appId": null
+      "appId": "d121ux7va6hz6j"
     },
     "diloreto": {
       "account": "658271954302",
@@ -54,8 +54,8 @@
       "appId": null
     }
   },
-  "legacyPortfolioRepositoryId": null,
-  "legacyPortfolioWorkflowId": null,
+  "legacyPortfolioRepositoryId": "81884767",
+  "legacyPortfolioWorkflowId": "315997019",
   "legacyDiloretoRepositoryId": null,
   "legacyDiloretoWorkflowId": null,
   "legacyDiloretoManifestSha256": null
