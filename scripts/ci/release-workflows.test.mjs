@@ -32,7 +32,7 @@ test('all production jobs/calls have literal false publication lock; no unexpect
   }
 });
 
-test('Paul identity observation is exactly inert protected manual observation, not release authority', () => {
+test('Paul identity observation is exactly main-only protected manual observation, not release authority', () => {
   expect(observationFiles).toEqual(['paul-identity-observation.yml']);
   const path = '.github/workflows/paul-identity-observation.yml';
   // Whole-object equality closes event/job/step/input additions, not just known bad operations.
@@ -42,7 +42,7 @@ test('Paul identity observation is exactly inert protected manual observation, n
     permissions: {},
     jobs: {
       observe: {
-        if: '${{ false }}',
+        if: "${{ github.repository == 'soodoh/websites' && github.repository_id == '1358469291' && github.repository_owner == 'soodoh' && github.repository_owner_id == '18269267' && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.run_attempt == '1' && github.workflow_ref == 'soodoh/websites/.github/workflows/paul-identity-observation.yml@refs/heads/main' }}",
         'runs-on': 'ubuntu-24.04',
         environment: 'production-portfolio',
         'timeout-minutes': 5,
