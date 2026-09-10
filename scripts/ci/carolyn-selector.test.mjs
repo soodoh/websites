@@ -75,7 +75,7 @@ test('selected candidate checkout flows through real validation wrapper and requ
   const f = fixture();
   try {
     expect(f.select().status).toBe(0);
-    execFileSync('git', ['checkout', '--detach', f.candidate], { cwd: f.target });
+    execFileSync('git', ['checkout', '--detach', f.candidate], { cwd: f.target, env: { ...process.env, GIT_COMMITTER_NAME: 'Fixture', GIT_COMMITTER_EMAIL: 'fixture@example.invalid' } });
     const log = join(f.directory, 'validation-log');
     const bun = join(f.bin, 'bun');
     writeFileSync(bun, '#!/bin/sh\nif [ "$1" = --version ]; then echo 1.4.0; else printf "%s %s\\n" "$(git rev-parse HEAD)" "$*" >> "$VALIDATION_LOG"; fi\n'); chmodSync(bun, 0o755);
