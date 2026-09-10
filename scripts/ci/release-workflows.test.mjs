@@ -6,8 +6,10 @@ const read = path => readFileSync(root + path, 'utf8');
 const yaml = path => Bun.YAML.parse(read(path));
 const deployFiles = ['_carolyn-release.yml', '_diloreto-release.yml', '_paul-release.yml', '_sarabeth-release.yml', 'infrastructure-sarabeth.yml', 'redeploy-diloreto.yml', 'release-after-ci.yml', 'release-reconciliation.yml', 'release-site.yml', 'restore-static.yml'];
 
+const observationFiles = ['paul-identity-observation.yml'];
+
 test('all production jobs/calls have literal false publication lock; no unexpected workflow escapes', () => {
-  expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
+  expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, ...observationFiles, 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
   const runtime = JSON.parse(read('config/release-runtime.json'));
   expect(runtime.publicationLocked).toBe(true);
   expect(runtime.sites.sarabeth.candidateEnabled).toBe(false);
@@ -28,6 +30,59 @@ test('all production jobs/calls have literal false publication lock; no unexpect
       }
     }
   }
+});
+
+test('Paul identity observation is exactly inert protected manual observation, not release authority', () => {
+  expect(observationFiles).toEqual(['paul-identity-observation.yml']);
+  const path = '.github/workflows/paul-identity-observation.yml';
+  // Whole-object equality closes event/job/step/input additions, not just known bad operations.
+  expect(yaml(path)).toEqual({
+    name: 'Paul protected identity observation',
+    on: { workflow_dispatch: null },
+    permissions: {},
+    jobs: {
+      observe: {
+        if: '${{ false }}',
+        'runs-on': 'ubuntu-24.04',
+        environment: 'production-portfolio',
+        'timeout-minutes': 5,
+        concurrency: { group: 'paul-identity-observation', 'cancel-in-progress': false },
+        permissions: { contents: 'read', 'id-token': 'write' },
+        steps: [
+          {
+            uses: 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1',
+            with: { ref: '${{ github.workflow_sha }}', 'fetch-depth': 1, 'persist-credentials': false },
+          },
+          {
+            uses: 'actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97',
+            with: { 'python-version': '3.14.6' },
+          },
+          {
+            name: 'Validate checkout and context before decoded platform observation',
+            shell: 'bash',
+            env: {
+              OBS_REPOSITORY: '${{ github.repository }}',
+              OBS_REPOSITORY_ID: '${{ github.repository_id }}',
+              OBS_REPOSITORY_OWNER: '${{ github.repository_owner }}',
+              OBS_REPOSITORY_OWNER_ID: '${{ github.repository_owner_id }}',
+              OBS_ENVIRONMENT: 'production-portfolio',
+              OBS_EVENT_NAME: '${{ github.event_name }}',
+              OBS_REF: '${{ github.ref }}',
+              OBS_WORKFLOW_REF: '${{ github.workflow_ref }}',
+              OBS_WORKFLOW_SHA: '${{ github.workflow_sha }}',
+              OBS_SHA: '${{ github.sha }}',
+              OBS_RUN_ID: '${{ github.run_id }}',
+              OBS_RUN_ATTEMPT: '${{ github.run_attempt }}',
+            },
+            run: 'set +x\npython3 -I -B scripts/release/paul_identity_observation.py\n',
+          },
+        ],
+      },
+    },
+  });
+  expect(read(path)).not.toMatch(/secrets[.:]|GH_TOKEN|github\.token|aws-actions|actions\/(?:cache|upload-artifact|download-artifact)|(?:bun|pip|npm) install|GITHUB_(?:OUTPUT|ENV|STEP_SUMMARY)|deploy\.py|oidc\.py|workflow_call|inputs[.:]/);
+  expect(JSON.parse(read('config/release-runtime.json')).entryWorkflowIds[path]).toBeUndefined();
+  expect(JSON.parse(read('config/release-policy.json')).validationWorkflowIds[path]).toBeUndefined();
 });
 
 test('whole deployment and restoration share noncanceling app-specific critical section and trusted harness', () => {
