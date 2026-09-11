@@ -1,20 +1,31 @@
-# Paul native fixture diagnostic — held local preparation
+# Paul native fixture diagnostic — manual fixture-only contract
 
-**Not published, enabled, executed or accepted.** The separate manual-only workflow's
-only job has literal `${{ false }}`. Changing that condition, publishing the cumulative
-preparation, and authorizing one native measurement each need separate owner approval.
-No future reviewed/publication SHA or native result exists in this preparation.
+**This contract establishes neither a native result nor production acceptance.** The
+sole fixture job admits manual main dispatches only for soodoh/websites (repository
+1358469291, owner soodoh18269267), attempt1 and the exact main workflow path. Existing
+helper admission and all protected input pins remain intact. Release, observer and
+recovery jobs remain literal-false; publication/runtime/release/drain flags are unchanged.
+
+The owner approved a bounded diagnostic sequence: local refresh and independent review,
+normal-hook commits/PR/CI publication, ONE native diagnostic, then the independently
+reviewed forward three-path re-lock through normal commits/PR/CI. Local preparation does
+not execute those later stages. Actual source, PR, main CI, workflow, run and closure
+identities belong in operational receipts; no future SHA, outcome or publication is
+asserted here. The predicate is NOT a one-shot controller: distinct fresh dispatches
+remain technically callable until the re-lock reaches main, but no additional dispatch,
+retry or settings-level disable is authorized. The main-ref dispatch race is non-atomic;
+unexpected source/run identity or ambiguous outcome stops for parent reconciliation.
 Production locks and source deployment ownership remain unchanged.
 
 The preceding guarded CDP-on/off diagnostic pair failed the unchanged performance 0.90
 median gate: scores 0.71/0.76/0.78 versus 0.71/0.77/0.77, TBT medians 948.69/939.29ms.
 Disabling the additional CDP guard did not materially recover performance. Emulation,
 proxy and page cost remain unresolved; this is **not evidence that emulation caused it**.
-This held native configuration tests that hypothesis without changing the full harness.
+This native configuration tests that hypothesis without changing the full harness.
 
 ## Deliberately narrow implementation
 
-- `.github/workflows/paul-native-fixture.yml`: one literal-disabled manual job, fixed
+- `.github/workflows/paul-native-fixture.yml`: one main/intended-repository manual job, fixed
   GitHub-hosted `ubuntu-24.04`, contents:read, no production environment, OIDC, secrets,
   release triggers, input-selected platform, cache, retry or continue-on-error.
   Existing immutable checkout/upload action pins and root `ci-tools` are reused.
@@ -81,21 +92,35 @@ Every result is diagnostic, not deployment, authentic legacy/candidate or produc
 
 ## Local validation and review boundary
 
-Local validation is restricted to the new pure/fake-boundary tests and sequential root
+Local preparation validation is restricted to pure/fake-boundary tests and sequential root
 `test:ci`, `test:workspace`, `lint`, and workflow/shell/syntax lint with existing pinned tools,
 existing TARGET dependencies and new empty HOME/environment/cache. No local install,
 Docker/Colima command, app build, browser/Lighthouse, cleanup or live account call is allowed.
 The Python tests deny real subprocess boundaries and fabricate their own public fixture
 output; they are not native measurements. Root `test:ci` discovers both new test patterns.
 
-There are five new files (workflow, Python helper, Python/Bun tests, this plan). The supervisor
-explicitly approved one additional edit: add this workflow's exact name to the existing
-`release-workflows.test.mjs` inventory, preserving all existing inventory/safety assertions.
-That is the sole authorized change among the original32 dirty paths; the other31 remain
-byte/mode-identical. No app/dependency/guard/Dockerfile/threshold changes belong to this lane.
+The complete37-path held cumulative preparation received independent review. Its sole
+native evidence finding F1 was separately repaired, validated and independently closed:
+the actual exporter-to-consumer regression preserves observed reduced UA152.0.0.0 (or
+supported full UA152.0.7977.77), independently of the unchanged full executable pin.
+Synthetic UA tests are not a fresh executable observation or a native score result.
+Prior failed scores and historical setup/test failures remain retained, not waived.
 
-Next: fresh read-only incremental preparation review, with actual file hashes, baseline
-and final refs/status/empty-index proof, exact six-path incremental patch, cumulative HEAD
-patch/new-file copies and offline test logs in the worker evidence manifest. Review does
-not accept the cumulative protected recovery changes or the failing performance gate.
-Publication, enabling a single diagnostic and all production work remain separately locked.
+This enablement changes only the native workflow's predicate/display labels, matching
+Bun contract and this plan; the other34 cumulative paths, F1 regression, helper, guards,
+settings and dependencies are preserved. Independent review must bind the actual37-path
+enabled manifest, incremental/cumulative patches and offline logs, plus the exact
+prospective three-path re-lock patch and complete before/after bytes BEFORE live action.
+The prospective closure is unapplied/untested until its actual later validation; it
+returns the job to literal-false and retains F1 without asserting any diagnostic outcome.
+A correctly bound terminal diagnostic, including a failed performance result, proceeds
+only to the approved reviewed closure, not repair or rerun. Ambiguous identity/outcome
+stops; report remaining callability if closure cannot proceed. Reviewer readiness is code
+evidence, not a substitute for owner authority and the required parent live handoffs.
+
+The runner rebuilds a fresh fixture and image; it does not transfer the retained local
+image. Compare exported per-file hashes with retained fixture evidence. HTML hash
+differences alone cannot establish timestamp-only equivalence; full LHRs, HTML bodies,
+main-thread breakdowns and profiles are not exported. Report gaps without task-level
+causal attribution, canonical payload equality or an app-optimization claim.
+All AWS, production, source-owner and deployment operations remain outside this sequence.
