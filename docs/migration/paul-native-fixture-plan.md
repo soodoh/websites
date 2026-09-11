@@ -1,31 +1,27 @@
-# Paul native fixture diagnostic — manual fixture-only contract
+# Paul native fixture diagnostic — disabled after bounded diagnostic window
 
-**This contract establishes neither a native result nor production acceptance.** The
-sole fixture job admits manual main dispatches only for soodoh/websites (repository
-1358469291, owner soodoh18269267), attempt1 and the exact main workflow path. Existing
-helper admission and all protected input pins remain intact. Release, observer and
-recovery jobs remain literal-false; publication/runtime/release/drain flags are unchanged.
+**The native fixture job is disabled in this source: literal `${{ false }}`.**
+This forward re-lock closes the manual diagnostic window in code, not through a GitHub
+workflow-settings disable. It retains the full harness, protected executable/input pins
+and real exporter-to-consumer F1 regression. Release, observer and recovery jobs remain
+literal-false; all publication/runtime/release/drain flags and source owners are unchanged.
 
-The owner approved a bounded diagnostic sequence: local refresh and independent review,
-normal-hook commits/PR/CI publication, ONE native diagnostic, then the independently
-reviewed forward three-path re-lock through normal commits/PR/CI. Local preparation does
-not execute those later stages. Actual source, PR, main CI, workflow, run and closure
-identities belong in operational receipts; no future SHA, outcome or publication is
-asserted here. The predicate is NOT a one-shot controller: distinct fresh dispatches
-remain technically callable until the re-lock reaches main, but no additional dispatch,
-retry or settings-level disable is authorized. The main-ref dispatch race is non-atomic;
-unexpected source/run identity or ambiguous outcome stops for parent reconciliation.
-Production locks and source deployment ownership remain unchanged.
+This disabled-state contract does not assert a diagnostic result, publication SHA, run
+identity or successful closure validation. The bounded sequence's actual operational
+receipts carry those facts, including any failed scores, missing reports or partial
+execution. Source code alone is not proof that this re-lock reached main. Further native
+enablement or dispatch requires new owner approval and review; no repair, rerun, settings
+fallback, AWS operation or production acceptance is implied.
 
 The preceding guarded CDP-on/off diagnostic pair failed the unchanged performance 0.90
 median gate: scores 0.71/0.76/0.78 versus 0.71/0.77/0.77, TBT medians 948.69/939.29ms.
 Disabling the additional CDP guard did not materially recover performance. Emulation,
 proxy and page cost remain unresolved; this is **not evidence that emulation caused it**.
-This native configuration tests that hypothesis without changing the full harness.
+The retained native configuration supports that diagnostic without changing the full harness.
 
 ## Deliberately narrow implementation
 
-- `.github/workflows/paul-native-fixture.yml`: one main/intended-repository manual job, fixed
+- `.github/workflows/paul-native-fixture.yml`: one literal-disabled manual job, fixed
   GitHub-hosted `ubuntu-24.04`, contents:read, no production environment, OIDC, secrets,
   release triggers, input-selected platform, cache, retry or continue-on-error.
   Existing immutable checkout/upload action pins and root `ci-tools` are reused.
@@ -106,17 +102,15 @@ supported full UA152.0.7977.77), independently of the unchanged full executable 
 Synthetic UA tests are not a fresh executable observation or a native score result.
 Prior failed scores and historical setup/test failures remain retained, not waived.
 
-This enablement changes only the native workflow's predicate/display labels, matching
-Bun contract and this plan; the other34 cumulative paths, F1 regression, helper, guards,
-settings and dependencies are preserved. Independent review must bind the actual37-path
-enabled manifest, incremental/cumulative patches and offline logs, plus the exact
-prospective three-path re-lock patch and complete before/after bytes BEFORE live action.
-The prospective closure is unapplied/untested until its actual later validation; it
-returns the job to literal-false and retains F1 without asserting any diagnostic outcome.
-A correctly bound terminal diagnostic, including a failed performance result, proceeds
-only to the approved reviewed closure, not repair or rerun. Ambiguous identity/outcome
-stops; report remaining callability if closure cannot proceed. Reviewer readiness is code
-evidence, not a substitute for owner authority and the required parent live handoffs.
+The reviewed forward re-lock changes only the native workflow's predicate/display labels,
+matching Bun contract and this plan. The other34 cumulative paths, F1 regression, helper,
+guards, settings and dependencies remain unchanged. Its exact before/after bytes and
+patch require independent review BEFORE publication or diagnostic dispatch. Operational
+receipts must distinguish prospective unapplied/untested closure from actual applied,
+validated, committed and main-published closure; this document fabricates none of them.
+A correctly bound terminal diagnostic, including a failed performance result, permits
+only the approved closure, not repair or rerun. Ambiguous identity/outcome stops for parent
+reconciliation. If closure cannot reach main, report remaining callability explicitly.
 
 The runner rebuilds a fresh fixture and image; it does not transfer the retained local
 image. Compare exported per-file hashes with retained fixture evidence. HTML hash
