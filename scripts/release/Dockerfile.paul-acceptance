@@ -1,0 +1,31 @@
+FROM oven/bun:1.4.0 AS bun
+FROM node:24.20.0-bookworm-slim AS node
+FROM mcr.microsoft.com/playwright:v1.62.1-noble
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+COPY --from=node /usr/local/bin/node /usr/local/bin/node
+RUN ln -s bun /usr/local/bin/bunx
+WORKDIR /work
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/carolyn/package.json apps/carolyn/package.json
+COPY apps/diloreto/package.json apps/diloreto/package.json
+COPY apps/paul/package.json apps/paul/package.json
+COPY apps/sarabeth/package.json apps/sarabeth/package.json
+RUN bun install --frozen-lockfile --ignore-scripts
+# Trusted tools are prepared before credentials; no selected-ref/legacy lifecycle code.
+RUN apt-get update && apt-get install --no-install-recommends -y unzip \
+    && rm -rf /var/lib/apt/lists/* && unzip -v
+RUN curl --fail --silent --show-error --location https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.77/linux64/chrome-linux64.zip -o /tmp/chrome.zip \
+    && unzip -q /tmp/chrome.zip -d /opt/chrome && rm /tmp/chrome.zip \
+    && /opt/chrome/chrome-linux64/chrome --version | grep -E '^Google Chrome for Testing 152\.0\.7977\.77 *$'
+COPY apps/paul apps/paul
+COPY scripts/release/paul_* scripts/release/
+RUN mkdir -p apps/paul/dist/client apps/paul/test-results apps/paul/playwright-report apps/paul/.lighthouseci \
+    && chmod -R a+rX /work/apps/paul /work/scripts/release
+# Do not recursively chmod installed dependencies: overlay copy-up duplicates the install layer.
+WORKDIR /work/apps/paul
+ENV CI=1 HOME=/tmp/home PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+USER 1000:1000
+RUN test -x /usr/local/bin/bun && test -x /usr/local/bin/node \
+    && test -r /work/apps/paul/node_modules/@playwright/test/package.json \
+    && test -r /work/apps/paul/node_modules/@lhci/cli/package.json
+CMD ["node", "/work/scripts/release/paul_acceptance_runner.mjs"]

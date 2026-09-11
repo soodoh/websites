@@ -14,14 +14,16 @@
       "redeployEnabled": false,
       "branch": "main",
       "productionUrl": "https://pauldiloreto.com",
-      "stateBucket": null,
-      "stateKey": null,
-      "stateOwner": null,
+      "stateBucket": "pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s",
+      "stateKey": "release-state/soodoh-websites/paul.json",
+      "stateOwner": "658271954302",
       "releaseBucket": "pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s",
       "releaseOwner": "658271954302",
       "candidateBranch": "candidate",
-      "candidateUrl": null,
-      "domainRedirects": false
+      "candidateUrl": "https://candidate.d121ux7va6hz6j.amplifyapp.com",
+      "domainRedirects": false,
+      "bootstrapEnabled": false,
+      "rehearsalEnabled": false
     },
     "diloreto": {
       "sourceWriterDrained": false,

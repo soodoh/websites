@@ -147,6 +147,11 @@ def artifact_prefix(release):
 
 
 def download_retained(aws, config, release, directory):
+    if release.get('site') == 'paul' and release.get('repository') == LEGACY:
+        from paul_recovery import recovery_pins, download_recovery
+        if release.get('runId') == recovery_pins()['runId']:
+            download_recovery(aws, config, release, directory)
+            return
     prefix = artifact_prefix(release)
     directory.mkdir()
     for name in ('site.zip', 'site.zip.sha256', 'metadata.json'):

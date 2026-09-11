@@ -1,9 +1,9 @@
-import { expect, test } from "@playwright/test";
 import {
 	expectExternalNavigation,
 	loadHome,
 	waitForVisibleImages,
 } from "./home.helpers";
+import { expect, test } from "./recovery.fixture";
 
 const sectionLinks = [
 	{ label: "Work", hash: "projects" },

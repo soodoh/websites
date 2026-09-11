@@ -1,4 +1,4 @@
-"""Conditional existing S3 state only. Importing this module makes no AWS requests."""
+"""Conditional S3 state storage. Importing this module makes no AWS requests."""
 import copy
 import json
 from pathlib import Path
@@ -37,8 +37,12 @@ class Aws:
             raise UnknownOutcome(f'{service} {operation} failed; STOP and reconcile, no unconditional retry')
         return json.loads(result.stdout or '{}')
 
-    def get_object(self, bucket, key, owner, destination):
-        result = subprocess.run(['aws', '--region', self.region, '--no-cli-pager', 's3api', 'get-object', '--bucket', bucket, '--key', key, '--expected-bucket-owner', owner, str(destination), '--output', 'json'], capture_output=True)
+    def get_object(self, bucket, key, owner, destination, version_id=None):
+        versions = []
+        if version_id is not None:
+            require(isinstance(version_id, str) and version_id and version_id != 'null', 'Missing immutable object version')
+            versions = ['--version-id', version_id]
+        result = subprocess.run(['aws', '--region', self.region, '--no-cli-pager', 's3api', 'get-object', '--bucket', bucket, '--key', key, '--expected-bucket-owner', owner, *versions, str(destination), '--output', 'json'], capture_output=True)
         require(result.returncode == 0, 'State/recovery object unavailable; approved bootstrap or reconciliation required')
         return json.loads(result.stdout)
 
@@ -57,6 +61,33 @@ class State:
         require(re.fullmatch(r'\d{12}', config['stateOwner']), 'Invalid bucket owner')
         self.etag = None
         self.value = None
+
+    def bootstrap(self, proposed):
+        """Create only; caller validates approved source/baseline before this storage boundary."""
+        require(self.value is None and self.etag is None, 'Bootstrap cannot reset read state')
+        require(proposed.get('schemaVersion') == 1 and proposed.get('repository') == 'soodoh/websites'
+                and proposed.get('site') == self.site, 'Wrong bootstrap identity')
+        require(type(proposed.get('generation')) is int and proposed['generation'] == 0
+                and 'intent' in proposed and proposed['intent'] is None, 'Wrong bootstrap generation/intent')
+        require(re.fullmatch(r'[0-9a-f]{40}', proposed.get('highWatermark', ''))
+                and isinstance(proposed.get('currentRelease'), dict) and proposed['currentRelease'], 'Missing bootstrap baseline')
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'state.json'
+            body = json.dumps(proposed, sort_keys=True).encode()
+            path.write_bytes(body)
+            try:
+                result = self.aws.call('s3api', 'put-object', bucket=self.config['stateBucket'],
+                                       key=self.config['stateKey'], expected_bucket_owner=self.config['stateOwner'],
+                                       if_none_match='*', server_side_encryption='AES256', body=str(path))
+                require(isinstance(result.get('ETag'), str) and result['ETag'], 'Missing create ETag')
+                metadata = self.aws.get_object(self.config['stateBucket'], self.config['stateKey'], self.config['stateOwner'], path)
+                require(metadata.get('ETag') == result['ETag'] and metadata.get('ServerSideEncryption') == 'AES256'
+                        and path.read_bytes() == body, 'Bootstrap readback mismatch')
+            except Exception as error:
+                raise StateOwnershipError('Bootstrap conflict/unknown outcome; STOP, never reset or retry') from error
+        self.value, self.etag = copy.deepcopy(proposed), result['ETag']
+        self.encryption, self.kms_key = 'AES256', None
+        return copy.deepcopy(proposed)
 
     def read(self):
         with tempfile.TemporaryDirectory() as directory:
