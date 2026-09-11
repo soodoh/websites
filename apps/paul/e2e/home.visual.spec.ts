@@ -1,9 +1,10 @@
-import { expect, type Page, test } from "@playwright/test";
+import type { Page } from "@playwright/test";
 import {
 	loadHome,
 	scrollToPercentage,
 	waitForVisibleImages,
 } from "./home.helpers";
+import { expect, test } from "./recovery.fixture";
 
 const scrollPercentages = Array.from({ length: 11 }, (_, index) => index * 10);
 

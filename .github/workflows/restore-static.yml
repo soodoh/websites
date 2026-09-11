@@ -6,10 +6,19 @@ on:
         type: choice
         required: true
         options: [paul, diloreto]
+      operation:
+        description: restore retains production meaning; bootstrap/rehearsal are Paul-only, separately approved operations
+        type: choice
+        default: restore
+        options: [restore, bootstrap, rehearsal]
       release:
         description: Independently reviewed immutable release identity JSON including original repository/run/build-attempt/SHA/checksum
         type: string
         required: true
+      baseline:
+        description: Paul bootstrap/rehearsal only; immutable monorepo CI JSON with commit, runId, runAttempt
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -33,3 +42,70 @@ jobs:
       contents: read
       actions: read
       id-token: write
+  recovery:
+    # Separate Paul-only critical section; future predicates/activation require review.
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    environment: production-portfolio
+    concurrency:
+      group: portfolio-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      actions: read
+      checks: read
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_ENVIRONMENT: production-portfolio
+      OPERATION: ${{ inputs.operation }}
+      RESTORE_RELEASE: ${{ inputs.release }}
+      PAUL_BASELINE: ${{ inputs.baseline }}
+      AWS_EC2_METADATA_DISABLED: 'true'
+      AWS_IGNORE_CONFIGURED_ENDPOINT_URLS: 'true'
+      AWS_RETRY_MODE: standard
+      AWS_MAX_ATTEMPTS: '1'
+      AWS_PAGER: ''
+      AWS_CONFIG_FILE: /dev/null
+      AWS_SHARED_CREDENTIALS_FILE: /dev/null
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_USE_FIPS_ENDPOINT: 'false'
+      AWS_USE_DUALSTACK_ENDPOINT: 'false'
+    steps:
+      - name: Check out only trusted workflow SHA
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: verification-harness
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24.20.0
+      - name: Prepare isolated acceptance tools before cloud credentials
+        working-directory: verification-harness
+        run: |
+          mkdir "$RUNNER_TEMP/paul-docker"
+          export DOCKER_CONFIG="$RUNNER_TEMP/paul-docker"
+          echo "DOCKER_CONFIG=$DOCKER_CONFIG" >> "$GITHUB_ENV"
+          docker build --platform linux/amd64 --file scripts/release/Dockerfile.paul-acceptance --iidfile "$RUNNER_TEMP/paul-image" .
+          echo "PAUL_ACCEPTANCE_IMAGE=$(cat "$RUNNER_TEMP/paul-image")" >> "$GITHUB_ENV"
+      - name: Admit exact protected invocation and bound monorepo CI before OIDC
+        id: config
+        working-directory: verification-harness
+        run: python3 scripts/release/paul_recovery_entry.py check
+      - name: Configure only the exact reviewed deployment role
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c
+        with:
+          role-to-assume: arn:aws:iam::658271954302:role/pauldiloreto-amplify-hosting-GitHubDeploymentRole-JPjJmwTE3kcw
+          aws-region: us-east-1
+          allowed-account-ids: '658271954302'
+          audience: sts.amazonaws.com
+          unset-current-credentials: true
+          role-session-name: paul-recovery-${{ github.run_id }}-${{ github.run_attempt }}
+          role-duration-seconds: 10800
+      - name: Recheck actual identity, domains, freshness and owned state; candidate only
+        working-directory: verification-harness
+        run: python3 scripts/release/paul_recovery_entry.py execute

@@ -9,6 +9,10 @@ site, operation = sys.argv[1:3]
 if site not in ('paul', 'diloreto', 'carolyn', 'sarabeth'):
     raise ValueError('Unknown site')
 if operation == 'restore':
+    event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+    dispatch = event.get('inputs', {})
+    if dispatch.get('site') != site or dispatch.get('operation', 'restore') != 'restore' or dispatch.get('baseline', ''):
+        raise ValueError('Production restore cannot consume Paul bootstrap/rehearsal inputs')
     selected = json.loads(os.environ['RESTORE_RELEASE'])
     if selected.get('site') != site:
         raise ValueError('Cross-site restoration')
