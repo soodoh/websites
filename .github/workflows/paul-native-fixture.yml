@@ -1,20 +1,12 @@
-name: Paul native fixture diagnostic
+name: Paul native fixture diagnostic (HELD)
 on:
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   diagnostic:
-    if: >-
-      ${{ github.event_name == 'workflow_dispatch' &&
-      github.ref == 'refs/heads/main' &&
-      github.repository == 'soodoh/websites' &&
-      github.repository_id == '1358469291' &&
-      github.repository_owner == 'soodoh' &&
-      github.repository_owner_id == '18269267' &&
-      github.run_attempt == '1' &&
-      github.workflow_ref == 'soodoh/websites/.github/workflows/paul-native-fixture.yml@refs/heads/main' }}
-    name: Linux amd64 full guarded fixture
+    if: ${{ false }}
+    name: Held Linux amd64 full guarded fixture
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
