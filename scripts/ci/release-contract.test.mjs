@@ -45,7 +45,8 @@ test('checked-in policy cannot activate automatic OR manual credentials on publi
     const context = observation(policy(), site, 'a'.repeat(40));
     for (const mode of ['automatic', 'manual']) expect(() => checkReleaseAuthorization(releasePolicy, site, mode, context)).toThrow();
     expect(releasePolicy.sites[site].automaticEnabled).toBe(false); expect(releasePolicy.sites[site].manualEnabled).toBe(false);
-    expect(releasePolicy.sites[site].oidcSubject).toBeNull();
+    if (site === 'paul') expect(releasePolicy.sites[site].oidcSubject).toBe('repo:soodoh@18269267/websites@1358469291:environment:production-portfolio');
+    else expect(releasePolicy.sites[site].oidcSubject).toBeNull();
     if (site === 'paul') {
       expect(releasePolicy.sites[site].roleArn).toBe('arn:aws:iam::658271954302:role/pauldiloreto-amplify-hosting-GitHubDeploymentRole-JPjJmwTE3kcw');
       expect(releasePolicy.sites[site].appId).toBe('d121ux7va6hz6j');
@@ -73,8 +74,17 @@ test('checked-in runtime binds only reviewed metadata and retains publication an
   for (const site of apps) {
     const config = runtime.sites[site];
     for (const key of ['sourceWriterDrained', 'restoreEnabled', 'redeployEnabled']) expect(config[key]).toBe(false);
-    for (const key of ['stateBucket', 'stateKey', 'stateOwner']) expect(config[key]).toBeNull();
-    if ('candidateUrl' in config) expect(config.candidateUrl).toBeNull();
+    if (site === 'paul') {
+      expect(config.stateBucket).toBe(config.releaseBucket);
+      expect(config.stateOwner).toBe('658271954302');
+      expect(config.stateKey).toBe('release-state/soodoh-websites/paul.json');
+      expect(config.candidateUrl).toBe('https://candidate.d121ux7va6hz6j.amplifyapp.com');
+      expect(config.bootstrapEnabled).toBe(false);
+      expect(config.rehearsalEnabled).toBe(false);
+    } else {
+      for (const key of ['stateBucket', 'stateKey', 'stateOwner']) expect(config[key]).toBeNull();
+      if ('candidateUrl' in config) expect(config.candidateUrl).toBeNull();
+    }
     if (site !== 'paul') expect(config.productionUrl).toBeNull();
   }
   for (const key of ['releaseBucket', 'releaseOwner', 'originUrl']) expect(runtime.sites.diloreto[key]).toBeNull();

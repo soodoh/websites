@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "site": "paul",
+  "repository": "soodoh/portfolio-website",
+  "repositoryId": "81884767",
+  "ownerId": "18269267",
+  "workflow": ".github/workflows/deploy.yml",
+  "workflowId": "315997019",
+  "event": "push",
+  "ref": "refs/heads/main",
+  "runId": "29767712137",
+  "runAttempt": "1",
+  "commit": "d351ff5fa1fca7795eac611b1e3c086277414fbb",
+  "sha256": "1c0c54b889ff620eefb60f50990cfa221e0036623f6b10a65246cd45ee58fc07",
+  "deploymentRoot": "dist/client",
+  "bucket": "pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s",
+  "expectedOwner": "658271954302",
+  "linkage": "manually-reviewed-metadata-not-cryptographic-attestation",
+  "observedAt": "2026-09-11T00:02:12Z",
+  "objects": {
+    "metadata.json": {
+      "key": "releases/29767712137/1/metadata.json",
+      "versionId": "MhK.Bce7aR9Y46DRlUVT10WURQehNjqQ",
+      "bytes": 221,
+      "sha256": "000ea6e8f6488c2f9960b13b705b24700fd6bd5c720282e4456181e311613c26"
+    },
+    "site.zip": {
+      "key": "releases/29767712137/1/site.zip",
+      "versionId": "lWxECRd492WB_Exz7n_B.VaCSHCoDdig",
+      "bytes": 2004287,
+      "sha256": "1c0c54b889ff620eefb60f50990cfa221e0036623f6b10a65246cd45ee58fc07"
+    },
+    "site.zip.sha256": {
+      "key": "releases/29767712137/1/site.zip.sha256",
+      "versionId": "PQ5U5IX4Hqn5wYkNRli5B5TLuROIh8DB",
+      "bytes": 75,
+      "sha256": "fe1783ed89938e70487e1665adf0da1dd9a8a1fcdf596dd07f607efb82a6b9d7"
+    }
+  }
+}
