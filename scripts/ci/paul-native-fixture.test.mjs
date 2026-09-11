@@ -7,14 +7,13 @@ import { fileURLToPath } from 'node:url';
 
 const read = path => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 const workflow = Bun.YAML.parse(read('.github/workflows/paul-native-fixture.yml'));
-const admission = "${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.repository == 'soodoh/websites' && github.repository_id == '1358469291' && github.repository_owner == 'soodoh' && github.repository_owner_id == '18269267' && github.run_attempt == '1' && github.workflow_ref == 'soodoh/websites/.github/workflows/paul-native-fixture.yml@refs/heads/main' }}";
 const expected = {
-  name: 'Paul native fixture diagnostic',
+  name: 'Paul native fixture diagnostic (HELD)',
   on: { workflow_dispatch: null },
   permissions: { contents: 'read' },
   jobs: { diagnostic: {
-    if: admission,
-    name: 'Linux amd64 full guarded fixture',
+    if: '${{ false }}',
+    name: 'Held Linux amd64 full guarded fixture',
     'runs-on': 'ubuntu-24.04',
     'timeout-minutes': 45,
     steps: [
@@ -35,17 +34,14 @@ const expected = {
   } },
 };
 
-test('paul-native-fixture.yml is exactly one main/intended-repository manual diagnostic, no alternate activation or credential path', () => {
+test('paul-native-fixture.yml is exactly one held manual diagnostic, no alternate activation or credential path', () => {
   expect(workflow).toEqual(expected);
   expect(read('.github/workflows/paul-native-fixture.yml')).not.toMatch(/secrets|id-token|environment:|continue-on-error|workflow_call|workflow_run|pull_request|schedule:|push:/);
 });
 
-test('native workflow contract rejects relaxed admission, extra jobs/triggers, alternate runner and unsafe evidence changes', () => {
+test('native workflow contract rejects enabling, extra jobs/triggers, alternate runner and unsafe evidence changes', () => {
   const changes = [
     w => { w.jobs.diagnostic.if = '${{ true }}'; },
-    ...admission.slice(4, -3).split(' && ').map(clause => w => {
-      w.jobs.diagnostic.if = admission.replace(clause, 'true');
-    }),
     w => { w.jobs.extra = { if: '${{ false }}', 'runs-on': 'ubuntu-24.04', steps: [] }; },
     w => { w.on.push = {}; },
     w => { w.on.workflow_dispatch = { inputs: { mode: { default: 'candidate' } } }; },
