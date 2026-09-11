@@ -39,7 +39,7 @@
       "automaticEnabled": false,
       "manualEnabled": false,
       "roleArn": "arn:aws:iam::658271954302:role/pauldiloreto-amplify-hosting-GitHubDeploymentRole-JPjJmwTE3kcw",
-      "oidcSubject": null,
+      "oidcSubject": "repo:soodoh@18269267/websites@1358469291:environment:production-portfolio",
       "appId": "d121ux7va6hz6j"
     },
     "diloreto": {

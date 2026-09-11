@@ -1,0 +1,39 @@
+name: Paul native fixture diagnostic
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' &&
+      github.ref == 'refs/heads/main' &&
+      github.repository == 'soodoh/websites' &&
+      github.repository_id == '1358469291' &&
+      github.repository_owner == 'soodoh' &&
+      github.repository_owner_id == '18269267' &&
+      github.run_attempt == '1' &&
+      github.workflow_ref == 'soodoh/websites/.github/workflows/paul-native-fixture.yml@refs/heads/main' }}
+    name: Linux amd64 full guarded fixture
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Assert manual main checkout and native runner before setup
+        run: python3 -I -B scripts/ci/paul_native_fixture.py preflight
+      - uses: ./.github/actions/ci-tools
+      - name: Fresh fixture and exactly one full guarded measurement
+        run: python3 -I -B scripts/ci/paul_native_fixture.py run
+      - name: Preserve bounded diagnostic evidence even when acceptance fails
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: paul-native-fixture-diagnostic-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ci-artifacts/paul-native-fixture/preflight.json
+            ci-artifacts/paul-native-fixture/diagnostic.json
+          retention-days: 7
+          if-no-files-found: error

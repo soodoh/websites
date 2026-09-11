@@ -9,7 +9,7 @@ const deployFiles = ['_carolyn-release.yml', '_diloreto-release.yml', '_paul-rel
 const observationFiles = ['paul-identity-observation.yml'];
 
 test('all production jobs/calls have literal false publication lock; no unexpected workflow escapes', () => {
-  expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, ...observationFiles, 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
+  expect(readdirSync(root + '.github/workflows').sort()).toEqual([...deployFiles, ...observationFiles, 'paul-native-fixture.yml', 'ci.yml', '_carolyn-ci.yml', '_diloreto-ci.yml', '_paul-ci.yml', '_sarabeth-ci.yml'].sort());
   const runtime = JSON.parse(read('config/release-runtime.json'));
   expect(runtime.publicationLocked).toBe(true);
   expect(runtime.sites.sarabeth.candidateEnabled).toBe(false);
@@ -32,7 +32,7 @@ test('all production jobs/calls have literal false publication lock; no unexpect
   }
 });
 
-test('Paul identity observation is exactly main-only protected manual observation, not release authority', () => {
+test('Paul identity observation is locally disabled, with protected context unchanged', () => {
   expect(observationFiles).toEqual(['paul-identity-observation.yml']);
   const path = '.github/workflows/paul-identity-observation.yml';
   // Whole-object equality closes event/job/step/input additions, not just known bad operations.
@@ -42,7 +42,7 @@ test('Paul identity observation is exactly main-only protected manual observatio
     permissions: {},
     jobs: {
       observe: {
-        if: "${{ github.repository == 'soodoh/websites' && github.repository_id == '1358469291' && github.repository_owner == 'soodoh' && github.repository_owner_id == '18269267' && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.run_attempt == '1' && github.workflow_ref == 'soodoh/websites/.github/workflows/paul-identity-observation.yml@refs/heads/main' }}",
+        if: '${{ false }}',
         'runs-on': 'ubuntu-24.04',
         environment: 'production-portfolio',
         'timeout-minutes': 5,
