@@ -225,6 +225,19 @@ Resources:
                     StringEquals:
                       s3:VersionId: PQ5U5IX4Hqn5wYkNRli5B5TLuROIh8DB
           - !Ref AWS::NoValue
+        - !If
+          - HasMonorepoSubject
+          - PolicyName: MonorepoDomainRead
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: amplify:ListDomainAssociations
+                  Resource: !GetAtt AmplifyApp.Arn
+                - Effect: Allow
+                  Action: amplify:GetDomainAssociation
+                  Resource: !Sub ${AmplifyApp.Arn}/domains/${DomainName}
+          - !Ref AWS::NoValue
         - PolicyName: DeployVerifiedStaticArtifacts
           PolicyDocument:
             Version: "2012-10-17"
@@ -248,8 +261,8 @@ Resources:
                   - amplify:CreateDeployment
                   - amplify:StartDeployment
                 Resource:
-                  - !Sub ${ProductionBranch.Arn}/deployments/*
-                  - !Sub ${CandidateBranch.Arn}/deployments/*
+                  - !GetAtt ProductionBranch.Arn
+                  - !GetAtt CandidateBranch.Arn
               - Sid: ManageTargetBranchJobs
                 Effect: Allow
                 Action:
