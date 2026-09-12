@@ -1,6 +1,91 @@
 # Paul local cutover preparation — not activation
 
-## Current local acceptance retry — BLOCKED on isolated performance, not activation
+## Current readiness refresh and conditional local preparation — 2026-09-12
+
+The owner-authorized same-scope retry completed at 10:38:35–10:41:17Z: **22 AWS CLI
+invocations and 15 GitHub metadata GETs**, no retries or writes. First pinned personal STS
+verified account658271954302, `arn:aws:iam::658271954302:user/paul`, user ID
+`AIDAZSRAQ4V7HF4X6H6UZ`. GitHub caller/repository/environment identities matched; published
+main remains `31f9d69b559596c3a0ba67690d578d81fe54b00a` (tree of held TARGET `f8de639a`).
+The earlier expired-session attempt remains a failure, not part of these successful reads.
+Evidence: `/private/tmp/websites-paul-readiness-retry-evidence.jbt_0783/manifest.json` and
+`readiness-and-next-approval.md`; scratch is an inspection packet, not a recovery store.
+
+- Exact Paul stack is UPDATE_COMPLETE, termination protection true, with the same seven
+  physical resources. Returned recorded drift is MODIFIED for app/domain, NOT_CHECKED for
+  bucket/stack, IN_SYNC for the other resources; no new drift detection was executed.
+- Deployment role still trusts **only** legacy `repo:soodoh/portfolio-website:environment:production`.
+  Its sole inline policy lacks monorepo state, version-pinned recovery, releases-v2 and both
+  domain reads; zero attached policies and no returned permissions boundary. Shared OIDC
+  provider exists with audience sts.amazonaws.com; DiLoreto ownership remains unchanged.
+  These documents do not prove effective IAM, SCP/session/resource-policy access or federation.
+- App is WEB; app auto-build/deletion/branch creation and branch auto-build/previews are false.
+  Candidate is BETA; main PRODUCTION. The only domain is AVAILABLE, apex and www both map
+  to main; apex `verified=false`, www true. No production/candidate HTTP or DNS repair ran.
+- Candidate/main each returned five SUCCEED jobs; latest IDs8/5, ended July20 at
+  18:28:43.085Z/18:31:03.340Z. Candidate has a nextToken: **bounded history, not complete
+  inventory/drain**. Main has no token. Neither returned commit IDs nor serving-byte proof.
+- Existing bucket is us-east-1, versioning Enabled, AES256, all four public-access blocks true.
+  `NoSuchBucketPolicy` and exact state HeadObject404 are expected absences, not403 or body
+  reads. No state was created; no legacy object/version/body was accessed or revalidated.
+- Protected environment21361791310 retains reviewer soodoh, self-review allowed, admin
+  bypass false, sole Branch/main policy. Restore351776221 and legacy deploy315997019 are
+  registered active; this does not enable the locally literal-false jobs. Source main stays
+  `15630718474e8b97f7c9150dfc2357825e352adb`. Latest successful push is still29767712137/1
+  at original `d351ff5fa1fca7795eac611b1e3c086277414fbb` (one of five successes returned by
+  count). Five separate active-status queries each returned0. These filtered, non-atomic
+  snapshots are not a writer freeze; source production ownership remains intact.
+
+The readiness refresh added `MonorepoDomainRead`, conditional on **HasMonorepoSubject**:
+`amplify:ListDomainAssociations` uses `!GetAtt AmplifyApp.Arn`; the separate
+`amplify:GetDomainAssociation` uses `!Sub ${AmplifyApp.Arn}/domains/${DomainName}`.
+The [official Amplify IAM reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_amplify.html)
+requires app and domain resource types respectively. No wildcard domains, production writes,
+new resources, trust/default/provider changes or recovery-pin changes are added. Empty subject
+omits this policy. Previously published but **undeployed** optional subject/state/version grants
+and releases-v2 access are separate from this new local delta. Deployed Original versus the
+pre-edit template differs only in those existing transition seams (plus trailing whitespace);
+non-role resource definitions are unchanged. A future owning-stack change must not silently
+reconcile recorded app/domain drift or replace physical resources.
+
+The subsequent owner-approved local IAM correction changes only the existing
+`CreateTargetBranchDeployments` resources from branch `/deployments/*` suffixes to
+`!GetAtt ProductionBranch.Arn` and `!GetAtt CandidateBranch.Arn` (main/candidate).
+The same official reference requires **branches** for both `amplify:CreateDeployment`
+and `amplify:StartDeployment`; the retained deployed policy and Original template contain
+those mismatched suffixes. Actions and SID remain unchanged. Once separately deployed,
+this corrects deployment resource scoping for **both legacy and future monorepo callers**;
+it is not merely new read access or unchanged effective permission behavior. No actual
+IAM denial or explanation of historical deployment outcomes is established.
+
+Fresh local evidence: `/private/tmp/websites-paul-iam-validation.y1o_u4z3/manifest.json`.
+One scratch Python3.14.7 venv installed **cfn-lint1.42.0** and resolved required dependencies
+from public PyPI wheels only. The actual final template passes offline us-east-1 packaged-schema
+validation with no findings; this closes the earlier unrun schema gate, **not effective IAM**.
+The new regression genuinely failed on the old resources, then passed after the two-line fix.
+Focused Bun8/93 assertions, root CI74/1,132 plus28 CI Python/107 release Python, workspace30/433,
+and serial uncached app lint4/4 pass; only pre-existing Biome schema-version information remains.
+The conditional domain-read policy/tests, exact trust/state/version pins and historical-gates
+heading correction are preserved. No repository reinstall, account access or Git mutation ran.
+
+The native fullguard fixture34651294220 already passed three0.98 scores and was re-locked in
+published main; the earlier local failures below remain historical failures, not current native
+blockers or waived thresholds. No new benchmark, browser, Docker, build or real recovery ran.
+The readiness-refresh and subsequent local-correction manifests retain their separate gate receipts.
+No new commit, staging, publication, OIDC mint, settings/cloud mutation or deployment occurred.
+All workflow/runtime/publication/bootstrap/rehearsal/drain locks remain unchanged. **Production0/4.**
+
+Next: independently review this cumulative three-path preparation; then separately approve
+publication and an exact owning-IaC change-set plan covering the deployment-ARN correction,
+reviewed subject/state parameters and existing resource identities. Cloud writes, protected federation verification, any workflow/settings activation,
+create-only state with a freshly validated distinct monorepo baseline, fresh serving-identity
+checks and immutable candidate-only recovery rehearsal each need explicit later authority.
+The existing candidate is shared: separately approve legacy-writer exclusion/drain for rehearsal.
+Production then needs its own fresh writer freeze/drain, identical-artifact promotion and serving
+acceptance approval. Do not select a future SHA, overwrite state or substitute recovery pins.
+Shared-provider Retain remains a separate DiLoreto owning-stack safeguard, not this Paul patch.
+
+## Historical local acceptance retry — BLOCKED on isolated performance, not activation
 
 Owner-approved same-protocol continuation repaired the NEW acceptance Dockerfile with explicit
 `apt-get install --no-install-recommends -y unzip` and same-step package-list cleanup. The actual
@@ -176,7 +261,11 @@ These guards are **not OS-level egress confinement**. The current retry exercise
 positive/negative local behavior as recorded above; real guarded Lighthouse still fails its unchanged
 performance gate. No legacy archive was consumed or executed locally.
 
-## Remaining local and live gates
+## Historical remaining gates — superseded by the current readiness section
+
+The following records the earlier acceptance-retry checkpoint, not current readiness. The native
+fixture subsequently passed and was re-locked; the domain-read grants are now prepared locally but
+remain absent from the deployed role. Historical failures and limits below are retained as recorded.
 
 The missing extraction prerequisite and nonroot report-path defects are corrected; original failures
 remain recorded. The one approved Lighthouse diagnostic iteration is consumed. Next requires an
