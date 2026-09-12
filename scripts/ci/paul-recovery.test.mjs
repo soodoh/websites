@@ -99,6 +99,62 @@ test('Paul recovery record binds original identity and each exact key/version/le
   expect(JSON.stringify(pins)).not.toMatch(/\/private\/tmp|\/Users\/|normalized|signature-verified/);
 });
 
+test('owning Paul IAM creates and starts deployments on exact branch ARNs, not deployment suffixes', () => {
+  // Amplify's Service Authorization Reference requires branches for both actions.
+  const policy = template.Resources.GitHubDeploymentRole.Properties.Policies.find(policy => policy.PolicyName === 'DeployVerifiedStaticArtifacts');
+  expect(policy.PolicyDocument.Statement.filter(statement => statement.Sid === 'CreateTargetBranchDeployments')).toEqual([{
+    Sid: 'CreateTargetBranchDeployments', Effect: 'Allow',
+    Action: ['amplify:CreateDeployment', 'amplify:StartDeployment'],
+    Resource: ['ProductionBranch.Arn', 'CandidateBranch.Arn'],
+  }]);
+  expect(templateText).toContain(`              - Sid: CreateTargetBranchDeployments
+                Effect: Allow
+                Action:
+                  - amplify:CreateDeployment
+                  - amplify:StartDeployment
+                Resource:
+                  - !GetAtt ProductionBranch.Arn
+                  - !GetAtt CandidateBranch.Arn`);
+  expect(templateText.match(/amplify:(?:CreateDeployment|StartDeployment)/g)).toHaveLength(2);
+  expect(templateText).not.toContain('/deployments/');
+  for (const [branch, name] of [['Production', 'main'], ['Candidate', 'candidate']]) {
+    expect(template.Parameters[`${branch}BranchName`].Default).toBe(name);
+    expect(template.Resources[`${branch}Branch`].Properties.AppId).toBe('AmplifyApp.AppId');
+    expect(template.Resources[`${branch}Branch`].Properties.BranchName).toBe(`${branch}BranchName`);
+  }
+});
+
+test('owning Paul IAM conditionally lists the exact app and gets only its configured domain', () => {
+  const policies = template.Resources.GitHubDeploymentRole.Properties.Policies;
+  expect(policies[2]).toEqual(['HasMonorepoSubject', {
+    PolicyName: 'MonorepoDomainRead', PolicyDocument: {
+      Version: '2012-10-17', Statement: [
+        { Effect: 'Allow', Action: 'amplify:ListDomainAssociations', Resource: 'AmplifyApp.Arn' },
+        { Effect: 'Allow', Action: 'amplify:GetDomainAssociation', Resource: '${AmplifyApp.Arn}/domains/${DomainName}' },
+      ],
+    },
+  }, 'AWS::NoValue']);
+  expect(template.Parameters.MonorepoSubject.Default).toBe('');
+  expect(template.Parameters.DomainName.Default).toBe('pauldiloreto.com');
+  expect(templateText).toContain('HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]');
+  expect(templateText).toContain(`        - !If
+          - HasMonorepoSubject
+          - PolicyName: MonorepoDomainRead
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: amplify:ListDomainAssociations
+                  Resource: !GetAtt AmplifyApp.Arn
+                - Effect: Allow
+                  Action: amplify:GetDomainAssociation
+                  Resource: !Sub \${AmplifyApp.Arn}/domains/\${DomainName}
+          - !Ref AWS::NoValue`);
+  // No unconditional, wildcard or duplicate domain grants elsewhere in the template.
+  expect(templateText.match(/amplify:(?:ListDomainAssociations|GetDomainAssociation)/g)).toHaveLength(2);
+  expect(policies.filter(policy => !Array.isArray(policy)).map(policy => policy.PolicyName)).toEqual(['DeployVerifiedStaticArtifacts']);
+});
+
 test('owning Paul IAM adds only individually version-conditioned recovery reads, exact optional bindings and no provider', () => {
   const policy = JSON.parse(read('config/release-policy.json'));
   const runtime = JSON.parse(read('config/release-runtime.json'));
@@ -129,7 +185,7 @@ test('owning Paul IAM adds only individually version-conditioned recovery reads,
       })),
     },
   }, 'AWS::NoValue']);
-  expect(role.Policies).toHaveLength(3);
+  expect(role.Policies).toHaveLength(4);
   expect(templateText.match(/Action: s3:GetObjectVersion/g)).toHaveLength(3);
   expect(templateText).toContain('HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]');
   expect(templateText).toContain('HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]');
