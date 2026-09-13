@@ -47,3 +47,5 @@ New Conventional Commits require one scope: `carolyn`, `paul`, `diloreto`, `sara
 uses `deps`. The parent separately owns approved all-history message normalization,
 including the published initial commit; this rename stage does not rewrite history.
 Later publication of that normalized history needs separate non-fast-forward approval.
+
+<!-- Temporary validation-only docs scope marker: 20260906-890d1b. Do not merge. -->
