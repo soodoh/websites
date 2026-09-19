@@ -1,4 +1,4 @@
-import { expect, test } from "./recovery.fixture";
+import { expect, test } from "@playwright/test";
 
 const canonicalUrl = "https://pauldiloreto.com/";
 const expectsStatic404 = process.env.PLAYWRIGHT_EXPECT_STATIC_404 === "1";

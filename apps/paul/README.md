@@ -9,7 +9,7 @@
 
 My Portfolio website displaying various work and information about myself as a Software Engineer. Feel free to review my code and check out the [live website](https://pauldiloreto.com).
 
-The website is a fully static TanStack Start + React application hosted by AWS Amplify. GitHub Actions validates and deploys the prerendered `dist/client` artifact through a candidate branch before production promotion. See the [hosting runbook](docs/hosting.md) for architecture, deployment, DNS, and rollback procedures.
+The website is a fully static TanStack Start + React application hosted by AWS Amplify. The monorepo validates and deploys the prerendered `dist/client` artifact. See the workspace [deployment runbook](../../docs/deployment.md) for configuration, cutover, and rollback.
 
 ## Local development
 

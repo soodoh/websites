@@ -21,9 +21,4 @@ test-results/
 *.key
 .DS_Store
 .pi/
-ci-artifacts/
-release-output/
-release-reports/
-release-reconciliation.json
-scope-evidence.json
 __pycache__/

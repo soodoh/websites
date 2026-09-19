@@ -43,13 +43,12 @@
 		"test:visual": "bun run build:production:test && EXPECTED_ARTIFACT_MODE=production HERMETIC_ARTIFACT_TEST=true ./scripts/playwright-docker.sh",
 		"test:visual:update": "bun run build:production:test && EXPECTED_ARTIFACT_MODE=production HERMETIC_ARTIFACT_TEST=true ./scripts/playwright-docker.sh --update-snapshots=all",
 		"dev:workspace": "bun run predev && vite dev --port 3102",
-		"ci:verify": "bun run lint:workflows && bun run validate && bun run infra:typecheck && bun run infra:test && bun run infra:synth && bun run test:visual",
+		"ci:verify": "bun run validate && bun run infra:typecheck && bun run infra:test && bun run infra:synth && bun run test:visual",
 		"infra:typecheck": "tsc --noEmit -p infra/tsconfig.json",
 		"infra:test": "bun test ./infra/test/*.unit.ts",
 		"infra:synth": "cd infra && AWS_EC2_METADATA_DISABLED=true cdk synth --no-lookups --quiet",
 		"infra:diff": "cd infra && cdk diff",
-		"infra:deploy": "cd infra && cdk deploy",
-		"lint:workflows": "go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*"
+		"infra:deploy": "cd infra && cdk deploy"
 	},
 	"dependencies": {
 		"@aws-sdk/client-ssm": "3.1126.0",

@@ -1,0 +1,55 @@
+name: Deploy Sarabeth
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/sarabeth/**
+      - amplify.yml
+      - .github/actions/ci-tools/**
+      - .github/workflows/deploy-sarabeth.yml
+      - scripts/deploy/**
+      - package.json
+      - bun.lock
+      - bunfig.toml
+      - turbo.json
+      - .nvmrc
+      - .bun-version
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sarabeth-production
+  cancel-in-progress: false
+jobs:
+  verify:
+    uses: ./.github/workflows/_sarabeth-ci.yml
+  deploy:
+    needs: verify
+    if: github.ref == 'refs/heads/main' && vars.SARABETH_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment:
+      name: production-sarabeth
+      url: ${{ vars.PRODUCTION_URL }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          allowed-account-ids: ${{ vars.AWS_ACCOUNT_ID }}
+          unset-current-credentials: true
+      - name: Start and wait for repository-connected release
+        env:
+          AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+          AMPLIFY_BRANCH: ${{ vars.AMPLIFY_BRANCH }}
+        run: scripts/deploy/amplify-release.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" "$GITHUB_SHA"
+      - name: Smoke test production
+        env:
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
+        run: curl --fail --silent --show-error --location --output /dev/null "$PRODUCTION_URL"

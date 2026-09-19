@@ -46,5 +46,5 @@
   `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
 - Use this app's scope for app-specific changes (example: `fix(carolyn): handle missing data`).
 - Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
-- Install at the workspace root; this app lives at `apps/carolyn`. Historical source
-  repository URLs and deployed identities are unchanged.
+- Install at the workspace root; this app lives at `apps/carolyn`.
+- For deployment changes, use the root workflow and read `../../docs/deployment.md`.

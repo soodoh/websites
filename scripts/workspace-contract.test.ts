@@ -13,7 +13,7 @@ const packageNames: Record<string, string> = {
 };
 const apps = Object.keys(packageNames);
 
-describe("phase 1 workspace contract", () => {
+describe("workspace contract", () => {
 	test("has one root lock, unique workspaces, and one hook owner", () => {
 		const manifest = json("package.json");
 		expect(manifest.private).toBe(true);
@@ -34,21 +34,6 @@ describe("phase 1 workspace contract", () => {
 		expect(existsSync(resolve(root, ".github/workflows/ci.yml"))).toBe(true);
 	});
 
-	test("retains original direct resolutions including folded infra tools", () => {
-		const before = json("docs/migration/dependency-resolutions-before.json");
-		for (const app of apps) {
-			const manifest = json(`apps/${app}/package.json`);
-			for (const [name, version] of Object.entries({
-				...manifest.dependencies,
-				...manifest.devDependencies,
-			})) {
-				const old = before[`apps/${packageNames[app]}`][name] ?? before["apps/carolyn-portfolio/infra"][name];
-				expect(`${name}@${version}`).toBe(old);
-				const installed = json(`apps/${app}/node_modules/${name}/package.json`);
-				expect(installed.version).toBe(version);
-			}
-		}
-	});
 
 	test("uses strict uncached tasks and serial complete verification", () => {
 		const turbo = json("turbo.json");

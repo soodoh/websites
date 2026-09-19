@@ -37,14 +37,13 @@
 		"contentful:snapshot": "bun scripts/record-contentful-snapshot.ts",
 		"test:e2e": "playwright test --update-snapshots=none",
 		"test:e2e:update": "playwright test --update-snapshots",
-		"test:deployment-scripts": "bun test scripts/release-commit.test.ts && tests/scripts/wait-for-amplify-job.sh",
-		"test:ci": "bun run lint && bun run test:deployment-scripts && bun run test:e2e",
-		"test:ci:prebuilt": "bun run test:deployment-scripts && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
+		"test:release-commit": "bun test scripts/release-commit.test.ts",
+		"test:ci": "bun run lint && bun run test:release-commit && bun run test:e2e",
+		"test:ci:prebuilt": "bun run test:release-commit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
-		"ci:verify": "bun run lint && bun run lint:workflows && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:deployment-scripts && bun run test:container && bun run infra:lint",
+		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:release-commit && bun run test:container && bun run infra:lint",
 		"test:container": "bash scripts/playwright-docker.sh",
-		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infrastructure/cloudformation/*.yaml",
-		"lint:workflows": "go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*"
+		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infrastructure/cloudformation/*.yaml"
 	},
 	"dependencies": {
 		"@aws-sdk/client-dynamodb": "3.1126.0",

@@ -41,4 +41,4 @@ The ignored output is written to `.amplify-hosting/`. Amplify receives only non-
 
 `/media` remains prerendered and static. After hydration, its client wrapper calls `/api/youtube-playlist`; that compute route queries only the configured playlist and returns normalized public video metadata. The API key is never bundled into React or accepted from the browser. Playwright intercepts the endpoint with [`tests/fixtures/youtube-playlist.json`](tests/fixtures/youtube-playlist.json), so CI never calls Google or SSM.
 
-See [`docs/operations.md`](docs/operations.md) for deployment ordering, CMS rebuild, rollback, DNS, monitoring, quota, secret rotation, and disaster-recovery procedures. [`docs/privacy-policy.md`](docs/privacy-policy.md) records the owner-approved YouTube disclosure published at `/privacy`; it is not legal advice.
+See the workspace [`docs/deployment.md`](../../docs/deployment.md) for deployment and rollback operations. [`docs/privacy-policy.md`](docs/privacy-policy.md) records the owner-approved YouTube disclosure published at `/privacy`; it is not legal advice.
