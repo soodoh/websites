@@ -8,12 +8,6 @@ Parameters:
     AllowedPattern: "^$|^[^*?\\s]+$"
     AllowedValues: ["", "repo:soodoh@18269267/websites@1358469291:environment:production-portfolio"]
     Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
-  MonorepoStateObjectArn:
-    Type: String
-    Default: ""
-    AllowedPattern: "^$|^arn:aws:s3:::[a-z0-9.-]+/[^*?]+$"
-    AllowedValues: ["", "arn:aws:s3:::pauldiloreto-amplify-hosting-verifiedreleasebucket-idabawspxy3s/release-state/soodoh-websites/paul.json"]
-    Description: Optional approved existing per-site state object only; no bucket creation.
   AmplifyAppName:
     Type: String
     Default: pauldiloreto-portfolio
@@ -50,7 +44,6 @@ Parameters:
 
 Conditions:
   HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
-  HasMonorepoState: !Not [!Equals [!Ref MonorepoStateObjectArn, ""]]
   CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
 
 Resources:
@@ -190,54 +183,6 @@ Resources:
                   - !Sub repo:${GitHubRepository}:environment:production
                   - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
       Policies:
-        - !If
-          - HasMonorepoState
-          - PolicyName: MonorepoReleaseState
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action: [s3:GetObject, s3:PutObject]
-                  Resource: !Ref MonorepoStateObjectArn
-          - !Ref AWS::NoValue
-        - !If
-          - HasMonorepoSubject
-          - PolicyName: PinnedLegacyRecovery
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action: s3:GetObjectVersion
-                  Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/29767712137/1/metadata.json
-                  Condition:
-                    StringEquals:
-                      s3:VersionId: MhK.Bce7aR9Y46DRlUVT10WURQehNjqQ
-                - Effect: Allow
-                  Action: s3:GetObjectVersion
-                  Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/29767712137/1/site.zip
-                  Condition:
-                    StringEquals:
-                      s3:VersionId: lWxECRd492WB_Exz7n_B.VaCSHCoDdig
-                - Effect: Allow
-                  Action: s3:GetObjectVersion
-                  Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/29767712137/1/site.zip.sha256
-                  Condition:
-                    StringEquals:
-                      s3:VersionId: PQ5U5IX4Hqn5wYkNRli5B5TLuROIh8DB
-          - !Ref AWS::NoValue
-        - !If
-          - HasMonorepoSubject
-          - PolicyName: MonorepoDomainRead
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action: amplify:ListDomainAssociations
-                  Resource: !GetAtt AmplifyApp.Arn
-                - Effect: Allow
-                  Action: amplify:GetDomainAssociation
-                  Resource: !Sub ${AmplifyApp.Arn}/domains/${DomainName}
-          - !Ref AWS::NoValue
         - PolicyName: DeployVerifiedStaticArtifacts
           PolicyDocument:
             Version: "2012-10-17"
@@ -281,9 +226,7 @@ Resources:
                 Action:
                   - s3:GetObject
                   - s3:PutObject
-                Resource:
-                  - !Sub ${VerifiedReleaseBucket.Arn}/releases/*
-                  - !Sub ${VerifiedReleaseBucket.Arn}/releases-v2/soodoh-websites/paul/*
+                Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/*
 
 Outputs:
   AmplifyAppId:
