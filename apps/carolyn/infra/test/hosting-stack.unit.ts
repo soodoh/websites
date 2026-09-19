@@ -139,13 +139,17 @@ describe("HostingStack production resources", () => {
 			CacheConfig: { Type: "AMPLIFY_MANAGED" },
 			EnableBranchAutoDeletion: false,
 			Platform: "WEB_COMPUTE",
-			Repository: "https://github.com/soodoh/carolyn-portfolio",
+			Repository: "https://github.com/soodoh/websites",
 		});
 		template.hasResourceProperties("AWS::Amplify::Branch", {
 			BranchName: "amplify-production",
 			EnableAutoBuild: false,
 			EnablePerformanceMode: false,
 			EnablePullRequestPreview: false,
+			EnvironmentVariables: [
+				{ Name: "CONTENTFUL_SPACE_ID", Value: { Ref: "ContentfulSpaceId" } },
+				{ Name: "AMPLIFY_MONOREPO_APP_ROOT", Value: "apps/carolyn" },
+			],
 			Framework: "Nitro",
 			Stage: "PRODUCTION",
 		});
@@ -286,6 +290,7 @@ describe("HostingStack production resources", () => {
 							"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
 							"token.actions.githubusercontent.com:sub": [
 								"repo:soodoh/carolyn-portfolio:environment:production",
+								"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn",
 							],
 						},
 					},

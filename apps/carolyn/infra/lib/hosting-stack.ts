@@ -46,8 +46,12 @@ import { PRODUCTION_AWS_ACCOUNT, PRODUCTION_AWS_REGION } from "./environment";
 const DOMAIN_NAME = "carolyndiloreto.com";
 const LEGACY_DOMAIN_NAME = "diloreto.com";
 const LEGACY_DOMAIN_PREFIX = "carolyn";
-const REPOSITORY_URL = "https://github.com/soodoh/carolyn-portfolio";
+const REPOSITORY_URL = "https://github.com/soodoh/websites";
 const PRODUCTION_BRANCH = "amplify-production";
+const LEGACY_GITHUB_SUBJECT =
+	"repo:soodoh/carolyn-portfolio:environment:production";
+const MONOREPO_GITHUB_SUBJECT =
+	"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn";
 
 // Route 53 Registrar created this zone when the domain was registered. It is
 // imported so CDK does not create a duplicate hosted zone during migration.
@@ -71,44 +75,6 @@ export class HostingStack extends Stack {
 		if (Stack.of(this).region !== PRODUCTION_AWS_REGION) {
 			throw new Error(
 				`This stack must be deployed in ${PRODUCTION_AWS_REGION}`,
-			);
-		}
-
-		// Optional offline-authored transition: supplied explicitly after inventory/review.
-		// Omission preserves every deployed identity and the source repository connection.
-		const transition = this.node.tryGetContext("monorepoTransition") as
-			| {
-					subject: string;
-					stateObjectArn: string;
-					repositoryConnection: boolean;
-					candidateBranch?: string | null;
-			  }
-			| undefined;
-		if (transition) {
-			if (
-				typeof transition.subject !== "string" ||
-				!/^[^*?\s]+$/.test(transition.subject) ||
-				!/^arn:aws:s3:::[a-z0-9.-]+\/[^*?]+$/.test(transition.stateObjectArn) ||
-				typeof transition.repositoryConnection !== "boolean"
-			) {
-				throw new Error(
-					"Exact observed monorepo subject/state object and connection decision required",
-				);
-			}
-		}
-
-		const candidateName = transition?.candidateBranch;
-		if (
-			candidateName != null &&
-			(typeof candidateName !== "string" ||
-				!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(candidateName) ||
-				["main", PRODUCTION_BRANCH, "sarabeth-production"].includes(
-					candidateName,
-				) ||
-				transition?.repositoryConnection !== true)
-		) {
-			throw new Error(
-				"Exact isolated candidate branch and explicit monorepo connection required",
 			);
 		}
 
@@ -284,9 +250,7 @@ export class HostingStack extends Stack {
 			iamServiceRole: amplifyServiceRole.roleArn,
 			name: "carolyn-portfolio",
 			platform: "WEB_COMPUTE",
-			repository: transition?.repositoryConnection
-				? "https://github.com/soodoh/websites"
-				: REPOSITORY_URL,
+			repository: REPOSITORY_URL,
 		});
 		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
 			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
@@ -330,40 +294,12 @@ export class HostingStack extends Stack {
 					name: "CONTENTFUL_SPACE_ID",
 					value: contentfulSpaceId.valueAsString,
 				},
-				...(transition?.repositoryConnection
-					? [{ name: "AMPLIFY_MONOREPO_APP_ROOT", value: "apps/carolyn" }]
-					: []),
+				{ name: "AMPLIFY_MONOREPO_APP_ROOT", value: "apps/carolyn" },
 			],
 			framework: "Nitro",
 			stage: "PRODUCTION",
 		});
 		branch.addDependency(amplifyApp);
-
-		// Absent by default; never associated with either existing production domain.
-		const candidateBranch =
-			candidateName != null
-				? new CfnBranch(this, "MonorepoCandidateBranch", {
-						appId: amplifyApp.attrAppId,
-						branchName: candidateName,
-						computeRoleArn: amplifyComputeRole.roleArn,
-						description: "Explicit isolated monorepo first-cutover validation",
-						enableAutoBuild: false,
-						enablePerformanceMode: false,
-						enablePullRequestPreview: false,
-						environmentVariables: [
-							{
-								name: "CONTENTFUL_SPACE_ID",
-								value: contentfulSpaceId.valueAsString,
-							},
-							{ name: "AMPLIFY_MONOREPO_APP_ROOT", value: "apps/carolyn" },
-							{ name: "CAROLYN_CANDIDATE_BRANCH", value: candidateName },
-						],
-						framework: "Nitro",
-						stage: "BETA",
-					})
-				: undefined;
-		candidateBranch?.addDependency(amplifyApp);
-		candidateBranch?.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
 		const domain = new CfnDomain(this, "ProductionDomain", {
 			appId: amplifyApp.attrAppId,
@@ -489,8 +425,8 @@ export class HostingStack extends Stack {
 			StringEquals: {
 				"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
 				"token.actions.githubusercontent.com:sub": [
-					"repo:soodoh/carolyn-portfolio:environment:production",
-					...(transition ? [transition.subject] : []),
+					LEGACY_GITHUB_SUBJECT,
+					MONOREPO_GITHUB_SUBJECT,
 				],
 			},
 		};
@@ -523,63 +459,6 @@ export class HostingStack extends Stack {
 				resources: [`${branch.attrArn}/jobs/*`],
 			}),
 		);
-
-		if (candidateBranch) {
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:GetBranch", "amplify:ListJobs"],
-					resources: [candidateBranch.attrArn],
-				}),
-			);
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:GetJob", "amplify:StartJob", "amplify:StopJob"],
-					resources: [`${candidateBranch.attrArn}/jobs/*`],
-				}),
-			);
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:GetDomainAssociation"],
-					resources: [
-						`${amplifyApp.attrArn}/domains/${DOMAIN_NAME}`,
-						`${amplifyApp.attrArn}/domains/${LEGACY_DOMAIN_NAME}`,
-					],
-				}),
-			);
-			amplifyServiceRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:GetJob"],
-					resources: [`${candidateBranch.attrArn}/jobs/*`],
-				}),
-			);
-		}
-
-		if (transition) {
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["s3:GetObject", "s3:PutObject"],
-					resources: [transition.stateObjectArn],
-				}),
-			);
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:StopJob"],
-					resources: [`${branch.attrArn}/jobs/*`],
-				}),
-			);
-			deploymentRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:ListJobs"],
-					resources: [branch.attrArn],
-				}),
-			);
-			amplifyServiceRole.addToPolicy(
-				new PolicyStatement({
-					actions: ["amplify:GetJob"],
-					resources: [`${branch.attrArn}/jobs/*`],
-				}),
-			);
-		}
 
 		new CfnOutput(this, "AmplifyAppId", { value: amplifyApp.attrAppId });
 		new CfnOutput(this, "AmplifyDefaultDomain", {
