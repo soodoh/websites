@@ -58,6 +58,7 @@ const headersFor = (pattern: string) =>
 
 const transitionSource = readApp("infra/amplify-hosting-transition.yml");
 const smoke = readApp("scripts/hosting-smoke.mjs");
+const outputFinalizer = readApp("scripts/finalize-static-output.ts");
 const outputAssertion = readApp("scripts/assert-static-output.ts");
 const workflow = readWorkspace(".github/workflows/deploy-diloreto.yml");
 const domainVariable = `$${"{DomainName}"}`;
@@ -197,9 +198,12 @@ describe("native Amplify hosting contract", () => {
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page.missing"');
 	});
 
-	test("relies on Amplify clean URLs for both forms of the static route", () => {
+	test("emits both Amplify clean-URL file forms without redirects", () => {
 		expect(rules.some((rule) => rule.Source.startsWith("/areyou"))).toBeFalse();
+		expect(outputFinalizer).toContain("writeCleanPathAliases");
 		expect(outputAssertion).toContain('"areyou/index.html"');
+		expect(outputAssertion).toContain('"areyou.html"');
+		expect(outputAssertion).toContain("historyAlias !== history");
 		expect(smoke).toContain('new URL("/areyou", baseUrl)');
 		expect(smoke).toContain('new URL("/areyou/", baseUrl)');
 	});

@@ -17,7 +17,7 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 | Existing responsibility | Native Amplify replacement |
 | --- | --- |
 | Custom 404 body with a real 404 status | Final catch-all custom rule `/<*> → /404.html` with Amplify's `404-200` **404 rewrite** status. Unlike status `404`, this preserves the requested URL while returning the custom body with HTTP 404. |
-| `/areyou` and `/areyou/` | Amplify clean URLs serve `/areyou/index.html` for both forms without changing the address bar. |
+| `/areyou` and `/areyou/` | The static artifact contains identical `/areyou.html` and `/areyou/index.html` documents. Amplify serves the first for `/areyou` without changing the address and the second for `/areyou/`. The build creates the same pair for every directory-index route. |
 | `www.diloreto.com` redirect | Domain-only `301` rule to `https://diloreto.com`. Amplify appends the original path. |
 | `paul.diloreto.com` redirect | Domain-only `301` rule to `https://pauldiloreto.com`. Amplify appends the original path. |
 | Redirect query strings | Amplify forwards all query parameters for `301` and `302` rules when the source does not match a specific query and the target has no query. Both DiLoreto rules meet those conditions. |
@@ -31,7 +31,7 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 
 AWS documents the relevant native behavior:
 
-- [Redirect and rewrite examples](https://docs.aws.amazon.com/amplify/latest/userguide/redirect-rewrite-examples.html): domain-only redirect paths are appended automatically, clean URLs serve a directory's `index.html`, and all query parameters are forwarded for ordinary `301`/`302` redirects. Its `404` redirect example does not preserve the URL/body contract required here.
+- [Redirect and rewrite examples](https://docs.aws.amazon.com/amplify/latest/userguide/redirect-rewrite-examples.html): domain-only redirect paths are appended automatically, an extensionless URL serves its matching `.html` file without changing the address, and all query parameters are forwarded for ordinary `301`/`302` redirects. Amplify redirects to a trailing slash when only a directory `index.html` exists, so the DiLoreto build emits both file forms. The documentation's `404` redirect example does not preserve the URL/body contract required here.
 - [Redirect semantics and ordering](https://docs.aws.amazon.com/amplify/latest/userguide/redirects.html): `301` is permanent, `404` is the not-found response, rules are ordered, and the query-forwarding exceptions apply only to query-specific sources or targets containing a query.
 - [Amplify `CustomRule` API](https://docs.aws.amazon.com/amplify/latest/APIReference/API_CustomRule.html): `404` and `404-200` are distinct supported statuses; AWS identifies `404-200` as the 404 rewrite. The [Amplify Hosting issue that introduced the behavior](https://github.com/aws-amplify/amplify-hosting/issues/70) confirms that `404-200` with `/404.html` preserves the missing URL and returns status 404. A Legacy-phase production smoke demonstrated that status `404` instead emits a `302 Location: /404.html`, so DiLoreto uses `404-200`.
 - [Custom headers](https://docs.aws.amazon.com/amplify/latest/userguide/setting-custom-headers.html): headers can be set for all responses; Amplify honors origin/custom cache control; and custom cache control is applied only to successful `200` responses so error responses are not cached for other users.
@@ -44,8 +44,8 @@ AWS documents the relevant native behavior:
 `infra/hosting-contract.test.ts` parses the template and guards the final-state contract:
 
 - native domain prefixes and absence of custom edge, certificate, hosted-zone, and record-set resources;
-- exact `404` fallback status and custom body artifact;
-- both clean-path forms;
+- exact `404-200` rewrite fallback and custom body artifact;
+- identical `.html` and directory-index artifacts for both clean-path forms;
 - domain-only permanent redirect rules that permit documented path/query forwarding;
 - immutable caching only for fingerprinted assets;
 - no-store caching for HTML, public non-fingerprinted files, and the release marker;

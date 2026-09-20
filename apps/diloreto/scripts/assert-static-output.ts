@@ -64,8 +64,17 @@ const requiredRouteFiles = routeFiles
 		const outputPath = routeOutputPath(path);
 		return outputPath ? [outputPath] : [];
 	});
+const requiredCleanPathAliases = requiredRouteFiles.flatMap((path) =>
+	path.endsWith("/index.html")
+		? [`${path.slice(0, -"/index.html".length)}.html`]
+		: [],
+);
 
-for (const requiredFile of [...requiredRouteFiles, ...requiredAssets]) {
+for (const requiredFile of [
+	...requiredRouteFiles,
+	...requiredCleanPathAliases,
+	...requiredAssets,
+]) {
 	const path = join(outputDirectory, requiredFile);
 	if (!(await stat(path)).isFile()) {
 		throw new Error(`Missing required static file: ${path}`);
@@ -95,8 +104,17 @@ const history = await readFile(
 	join(outputDirectory, "areyou/index.html"),
 	"utf8",
 );
+const historyAlias = await readFile(
+	join(outputDirectory, "areyou.html"),
+	"utf8",
+);
 const notFound = await readFile(join(outputDirectory, "404.html"), "utf8");
 
+if (historyAlias !== history) {
+	throw new Error(
+		"The extensionless clean-path alias differs from its route document",
+	);
+}
 if (!home.includes("<picture") || !history.includes("<picture")) {
 	throw new Error(
 		"Responsive picture markup is missing from prerendered pages",
