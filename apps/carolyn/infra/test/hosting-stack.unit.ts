@@ -144,7 +144,7 @@ describe("HostingStack production resources", () => {
 		const { resource: app } = getResource(template, "AWS::Amplify::App");
 		expect(app.Properties.BuildSpec).toContain("appRoot: apps/carolyn");
 		expect(app.Properties.BuildSpec).toContain("appRoot: apps/sarabeth");
-		template.resourceCountIs("AWS::Amplify::Branch", 2);
+		template.resourceCountIs("AWS::Amplify::Branch", 1);
 		template.hasResourceProperties("AWS::Amplify::Branch", {
 			BranchName: "main",
 			EnableAutoBuild: false,
@@ -348,16 +348,14 @@ describe("HostingStack production resources", () => {
 			DomainName: "carolyndiloreto.com",
 			EnableAutoSubDomain: false,
 			SubDomainSettings: [
-				{ BranchName: "amplify-production", Prefix: "" },
-				{ BranchName: "amplify-production", Prefix: "www" },
+				{ BranchName: "main", Prefix: "" },
+				{ BranchName: "main", Prefix: "www" },
 			],
 		});
 		template.hasResourceProperties("AWS::Amplify::Domain", {
 			DomainName: "diloreto.com",
 			EnableAutoSubDomain: false,
-			SubDomainSettings: [
-				{ BranchName: "amplify-production", Prefix: "carolyn" },
-			],
+			SubDomainSettings: [{ BranchName: "main", Prefix: "carolyn" }],
 		});
 
 		const { logicalId: topicLogicalId } = getResource(
