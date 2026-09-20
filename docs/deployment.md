@@ -44,7 +44,7 @@ The wizard configures one webhook in each site's Contentful space. Each webhook 
 
 A Contentful-triggered build checks out the repository-connected `main` branch and runs the root `amplify.yml`. It cannot choose a different source revision, but it also does not pass through the GitHub workflow or protected GitHub Environment. Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds.
 
-To rotate a compromised or exposed URL, increment `WebhookRotationVersion` for that site's stack and deploy the reviewed update. The custom resource creates the replacement before CloudFormation deletes the old webhook. Promptly replace the URL in Contentful, then verify one controlled build. Carolyn starts at rotation version `1`; Sarabeth retains its independently managed version.
+To rotate a compromised or exposed URL, increment `WebhookRotationVersion` for that site's stack and deploy the reviewed update. The custom resource creates the replacement before CloudFormation deletes the old webhook. Promptly replace the URL in Contentful, then verify one controlled build. Carolyn currently uses rotation version `2`; Sarabeth retains its independently managed version.
 
 ### Carolyn repository authorization
 

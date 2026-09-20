@@ -188,7 +188,7 @@ export class HostingStack extends Stack {
 			this,
 			"WebhookRotationVersion",
 			{
-				default: "1",
+				default: "2",
 				description:
 					"Increment only to rotate the Contentful build webhook URL",
 				type: "String",

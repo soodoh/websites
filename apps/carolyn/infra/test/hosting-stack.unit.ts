@@ -332,7 +332,7 @@ describe("HostingStack production resources", () => {
 	test("manages a rotatable Contentful build webhook", () => {
 		const template = createTemplate();
 		template.hasParameter("WebhookRotationVersion", {
-			Default: "1",
+			Default: "2",
 			Type: "String",
 		});
 		template.resourceCountIs("AWS::Lambda::Function", 1);
