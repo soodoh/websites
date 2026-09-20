@@ -73,10 +73,10 @@ jobs:
           AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
           AMPLIFY_BRANCH: ${{ vars.AMPLIFY_BRANCH }}
         run: scripts/deploy/amplify-static.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" release/site.zip
-      - name: Verify Amplify and public URLs
+      - name: Verify native Amplify hosting
         env:
-          AMPLIFY_URL: ${{ vars.AMPLIFY_URL }}
-          PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
-        run: |
-          curl --fail --silent --show-error "${AMPLIFY_URL%/}/release.json" | jq -e --arg commit "$GITHUB_SHA" '.commit == $commit'
-          curl --fail --silent --show-error "${PRODUCTION_URL%/}/release.json" | jq -e --arg commit "$GITHUB_SHA" '.commit == $commit'
+          HOSTING_BASE_URL: ${{ vars.PRODUCTION_URL }}
+          HOSTING_EXPECT_AMPLIFY: "1"
+          HOSTING_EXPECT_COMMIT: ${{ github.sha }}
+          HOSTING_EXPECT_DOMAIN_REDIRECTS: "1"
+        run: node apps/diloreto/scripts/hosting-smoke.mjs

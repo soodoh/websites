@@ -27,11 +27,13 @@
 		"test:playwright": "bash scripts/test-playwright-docker.sh",
 		"test:playwright:update": "bash scripts/test-playwright-docker.sh --update-snapshots",
 		"test:smoke": "bash scripts/test-playwright-docker.sh tests/smoke.spec.ts",
+		"test:hosting": "node scripts/hosting-smoke.mjs",
 		"test:genealogy": "bun test scripts/genealogy",
+		"test:infra": "bun test infra/hosting-contract.test.ts",
 		"check": "bun run lint && bun run typecheck && bun run test:genealogy && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
 		"dev:workspace": "vite dev --port 3103",
-		"ci:verify": "bun run lint && bun run typecheck && bun run test:genealogy && bun run infra:lint && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
-		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infra/amplify-hosting.yml"
+		"ci:verify": "bun run lint && bun run typecheck && bun run test:genealogy && bun run infra:lint && bun run test:infra && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
+		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infra/amplify-hosting.yml infra/amplify-hosting-transition.yml"
 	},
 	"dependencies": {
 		"@tanstack/react-router": "1.170.32",

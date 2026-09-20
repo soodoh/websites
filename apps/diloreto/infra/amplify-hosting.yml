@@ -1,35 +1,14 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Static AWS Amplify Hosting, CloudFront delivery, DNS, and GitHub OIDC access for diloreto.com
+Description: Static AWS Amplify Hosting, native custom domain, and GitHub OIDC access for diloreto.com
 
 Parameters:
-  EnableCustomDomain:
+  EnableAmplifyDomain:
     Type: String
     Default: "false"
     AllowedValues:
       - "true"
       - "false"
-    Description: Create the ACM certificate and attach the apex and www aliases to CloudFront.
-  EnableDnsCutover:
-    Type: String
-    Default: "false"
-    AllowedValues:
-      - "true"
-      - "false"
-    Description: Create Route 53 apex and www aliases after the CloudFront custom domain is ready.
-  EnablePaulRedirect:
-    Type: String
-    Default: "false"
-    AllowedValues:
-      - "true"
-      - "false"
-    Description: Add paul.diloreto.com to the edge certificate and redirect it to pauldiloreto.com.
-  EnablePaulDnsCutover:
-    Type: String
-    Default: "false"
-    AllowedValues:
-      - "true"
-      - "false"
-    Description: Create the Route 53 paul CNAME only after its CloudFront alias is ready.
+    Description: Create the native Amplify domain association only after candidate-domain validation and the approval-gated cutover steps.
   ExistingGitHubOidcProviderArn:
     Type: String
     Default: ""
@@ -47,83 +26,35 @@ Parameters:
     Type: String
     Default: diloreto-website-github-deploy
     AllowedPattern: "^[A-Za-z0-9+=,.@_-]+$"
-  HostedZoneId:
-    Type: String
-    Default: Z07741203I5VR48TBSMSA
-    AllowedPattern: "^Z[A-Z0-9]+$"
-    Description: Public Route 53 hosted zone ID for DomainName.
-
-Rules:
-  DnsCutoverRequiresCustomDomain:
-    RuleCondition: !Equals [!Ref EnableDnsCutover, "true"]
-    Assertions:
-      - Assert: !Equals [!Ref EnableCustomDomain, "true"]
-        AssertDescription: EnableCustomDomain must be true when EnableDnsCutover is true.
-  PaulRedirectRequiresCustomDomain:
-    RuleCondition: !Equals [!Ref EnablePaulRedirect, "true"]
-    Assertions:
-      - Assert: !Equals [!Ref EnableCustomDomain, "true"]
-        AssertDescription: EnableCustomDomain must be true when EnablePaulRedirect is true.
-  PaulDnsCutoverRequiresReadyRedirect:
-    RuleCondition: !Equals [!Ref EnablePaulDnsCutover, "true"]
-    Assertions:
-      - Assert: !Equals [!Ref EnablePaulRedirect, "true"]
-        AssertDescription: EnablePaulRedirect must be true when EnablePaulDnsCutover is true.
 
 Conditions:
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
-  CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
-  CreateDnsRecords: !And
-    - !Condition CreateCustomDomain
-    - !Equals [!Ref EnableDnsCutover, "true"]
-  CreatePaulRedirect: !And
-    - !Condition CreateCustomDomain
-    - !Equals [!Ref EnablePaulRedirect, "true"]
-  CreatePaulDnsRecord: !And
-    - !Condition CreatePaulRedirect
-    - !Equals [!Ref EnablePaulDnsCutover, "true"]
+  CreateAmplifyDomain: !Equals [!Ref EnableAmplifyDomain, "true"]
 
 Resources:
   AmplifyApp:
     Type: AWS::Amplify::App
     Properties:
       Name: diloreto-website
-      Description: Static origin for diloreto.com, deployed by GitHub Actions.
+      Description: Static site for diloreto.com, deployed by GitHub Actions and served directly by Amplify Hosting.
       Platform: WEB
       EnableBranchAutoDeletion: false
-      CustomRules: []
+      CustomRules:
+        - Source: !Sub "https://www.${DomainName}"
+          Target: !Sub "https://${DomainName}"
+          Status: "301"
+        - Source: !Sub "https://paul.${DomainName}"
+          Target: https://pauldiloreto.com
+          Status: "301"
+        - Source: /<*>
+          Target: /404.html
+          Status: "404"
       CustomHeaders: |
         customHeaders:
-          - pattern: '/assets/*'
-            headers:
-              - key: 'Cache-Control'
-                value: 'public, max-age=31536000, immutable'
-          - pattern: '**/*.html'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
-          - pattern: '/'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
-          - pattern: '/areyou*'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
-          - pattern: '/robots.txt'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
-          - pattern: '/favicon.png'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
-          - pattern: '/apple-touch-icon.png'
-            headers:
-              - key: 'Cache-Control'
-                value: 'no-cache'
           - pattern: '**'
             headers:
+              - key: 'Strict-Transport-Security'
+                value: 'max-age=63072000; includeSubDomains'
               - key: 'X-Content-Type-Options'
                 value: 'nosniff'
               - key: 'X-Frame-Options'
@@ -132,6 +63,38 @@ Resources:
                 value: 'strict-origin-when-cross-origin'
               - key: 'Permissions-Policy'
                 value: 'camera=(), geolocation=(), microphone=()'
+          - pattern: '**/*.html'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/areyou*'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/assets/*'
+            headers:
+              - key: 'Cache-Control'
+                value: 'public, max-age=31536000, immutable'
+          - pattern: '/robots.txt'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/favicon.png'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/apple-touch-icon.png'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
+          - pattern: '/release.json'
+            headers:
+              - key: 'Cache-Control'
+                value: 'no-cache, no-store, must-revalidate'
       Tags:
         - Key: Project
           Value: diloreto-website
@@ -154,257 +117,22 @@ Resources:
         - Key: ManagedBy
           Value: CloudFormation
 
-  EdgeCachePolicy:
-    Type: AWS::CloudFront::CachePolicy
+  AmplifyDomain:
+    Type: AWS::Amplify::Domain
+    Condition: CreateAmplifyDomain
+    DependsOn:
+      - AmplifyBranch
     Properties:
-      CachePolicyConfig:
-        Name: diloreto-website-edge-cache
-        Comment: Honor Amplify Cache-Control while forwarding query strings.
-        DefaultTTL: 0
-        MinTTL: 0
-        MaxTTL: 31536000
-        ParametersInCacheKeyAndForwardedToOrigin:
-          CookiesConfig:
-            CookieBehavior: none
-          EnableAcceptEncodingBrotli: true
-          EnableAcceptEncodingGzip: true
-          HeadersConfig:
-            HeaderBehavior: none
-          QueryStringsConfig:
-            QueryStringBehavior: all
-
-  EdgeRequestFunction:
-    Type: AWS::CloudFront::Function
-    Properties:
-      Name: diloreto-website-request
-      AutoPublish: true
-      FunctionConfig:
-        Comment: Redirect www and Paul, then internally normalize clean static paths.
-        Runtime: cloudfront-js-2.0
-      FunctionCode: !Sub |
-        function addQueryValue(parts, key, value) {
-          parts.push(key + '=' + value);
-        }
-
-        function querySuffix(querystring) {
-          var parts = [];
-          for (var key in querystring) {
-            var entry = querystring[key];
-            if (entry.multiValue) {
-              for (var index = 0; index < entry.multiValue.length; index += 1) {
-                addQueryValue(parts, key, entry.multiValue[index].value);
-              }
-            } else {
-              addQueryValue(parts, key, entry.value);
-            }
-          }
-          return parts.length === 0 ? '' : '?' + parts.join('&');
-        }
-
-        function handler(event) {
-          var request = event.request;
-          var host = request.headers.host && request.headers.host.value.toLowerCase();
-
-          if (host === 'www.${DomainName}') {
-            return {
-              statusCode: 301,
-              statusDescription: 'Moved Permanently',
-              headers: {
-                location: {
-                  value: 'https://${DomainName}' + request.uri + querySuffix(request.querystring)
-                }
-              }
-            };
-          }
-
-          if (host === 'paul.${DomainName}') {
-            return {
-              statusCode: 301,
-              statusDescription: 'Moved Permanently',
-              headers: {
-                location: {
-                  value: 'https://pauldiloreto.com' + request.uri + querySuffix(request.querystring)
-                }
-              }
-            };
-          }
-
-          var finalSegment = request.uri.slice(request.uri.lastIndexOf('/') + 1);
-          if (request.uri !== '/' && request.uri.slice(-1) !== '/' && finalSegment.indexOf('.') === -1) {
-            request.uri += '/';
-          }
-          return request;
-        }
-      Tags:
-        - Key: Project
-          Value: diloreto-website
-        - Key: ManagedBy
-          Value: CloudFormation
-
-  EdgeCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Condition: CreateCustomDomain
-    Properties:
+      AppId: !GetAtt AmplifyApp.AppId
       DomainName: !Ref DomainName
-      SubjectAlternativeNames:
-        - !Sub "www.${DomainName}"
-        - !If
-          - CreatePaulRedirect
-          - !Sub "paul.${DomainName}"
-          - !Ref AWS::NoValue
-      ValidationMethod: DNS
-      DomainValidationOptions:
-        - DomainName: !Ref DomainName
-          HostedZoneId: !Ref HostedZoneId
-        - DomainName: !Sub "www.${DomainName}"
-          HostedZoneId: !Ref HostedZoneId
-        - !If
-          - CreatePaulRedirect
-          - DomainName: !Sub "paul.${DomainName}"
-            HostedZoneId: !Ref HostedZoneId
-          - !Ref AWS::NoValue
-      KeyAlgorithm: RSA_2048
-      CertificateTransparencyLoggingPreference: ENABLED
-      Tags:
-        - Key: Project
-          Value: diloreto-website
-        - Key: ManagedBy
-          Value: CloudFormation
-
-  EdgeDistribution:
-    Type: AWS::CloudFront::Distribution
-    Properties:
-      DistributionConfig:
-        Aliases: !If
-          - CreateCustomDomain
-          - - !Ref DomainName
-            - !Sub "www.${DomainName}"
-            - !If
-              - CreatePaulRedirect
-              - !Sub "paul.${DomainName}"
-              - !Ref AWS::NoValue
-          - !Ref AWS::NoValue
-        Comment: Canonical edge delivery for the static diloreto-website Amplify origin.
-        CacheBehaviors:
-          - AllowedMethods:
-              - GET
-              - HEAD
-              - OPTIONS
-            CachedMethods:
-              - GET
-              - HEAD
-              - OPTIONS
-            CachePolicyId: !Ref EdgeCachePolicy
-            Compress: true
-            FunctionAssociations:
-              - EventType: viewer-request
-                FunctionARN: !GetAtt EdgeRequestFunction.FunctionMetadata.FunctionARN
-            PathPattern: assets/*
-            TargetOriginId: AmplifyOrigin
-            ViewerProtocolPolicy: redirect-to-https
-        CustomErrorResponses:
-          - ErrorCachingMinTTL: 0
-            ErrorCode: 404
-            ResponseCode: 404
-            ResponsePagePath: /404.html
-        DefaultCacheBehavior:
-          AllowedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          CachedMethods:
-            - GET
-            - HEAD
-            - OPTIONS
-          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
-          Compress: true
-          FunctionAssociations:
-            - EventType: viewer-request
-              FunctionARN: !GetAtt EdgeRequestFunction.FunctionMetadata.FunctionARN
-          TargetOriginId: AmplifyOrigin
-          ViewerProtocolPolicy: redirect-to-https
-        DefaultRootObject: index.html
-        Enabled: true
-        HttpVersion: http2and3
-        IPV6Enabled: true
-        Origins:
-          - Id: AmplifyOrigin
-            DomainName: !Sub "${AmplifyBranch.BranchName}.${AmplifyApp.DefaultDomain}"
-            CustomOriginConfig:
-              OriginProtocolPolicy: https-only
-              OriginSSLProtocols:
-                - TLSv1.2
-        PriceClass: PriceClass_100
-        ViewerCertificate: !If
-          - CreateCustomDomain
-          - AcmCertificateArn: !Ref EdgeCertificate
-            MinimumProtocolVersion: TLSv1.2_2021
-            SslSupportMethod: sni-only
-          - CloudFrontDefaultCertificate: true
-      Tags:
-        - Key: Project
-          Value: diloreto-website
-        - Key: ManagedBy
-          Value: CloudFormation
-
-  ApexIpv4Record:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateDnsRecords
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Ref DomainName
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt EdgeDistribution.DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-
-  ApexIpv6Record:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateDnsRecords
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Ref DomainName
-      Type: AAAA
-      AliasTarget:
-        DNSName: !GetAtt EdgeDistribution.DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-
-  WwwIpv4Record:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateDnsRecords
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub "www.${DomainName}"
-      Type: A
-      AliasTarget:
-        DNSName: !GetAtt EdgeDistribution.DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-
-  WwwIpv6Record:
-    Type: AWS::Route53::RecordSet
-    Condition: CreateDnsRecords
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub "www.${DomainName}"
-      Type: AAAA
-      AliasTarget:
-        DNSName: !GetAtt EdgeDistribution.DomainName
-        EvaluateTargetHealth: false
-        HostedZoneId: Z2FDTNDATAQYW2
-
-  PaulRedirectRecord:
-    Type: AWS::Route53::RecordSet
-    Condition: CreatePaulDnsRecord
-    Properties:
-      HostedZoneId: !Ref HostedZoneId
-      Name: !Sub "paul.${DomainName}"
-      Type: CNAME
-      TTL: 300
-      ResourceRecords:
-        - !GetAtt EdgeDistribution.DomainName
+      EnableAutoSubDomain: false
+      SubDomainSettings:
+        - Prefix: ""
+          BranchName: !Ref BranchName
+        - Prefix: www
+          BranchName: !Ref BranchName
+        - Prefix: paul
+          BranchName: !Ref BranchName
 
   GitHubOidcProvider:
     DeletionPolicy: Retain
@@ -477,8 +205,16 @@ Outputs:
     Description: Production Amplify branch ARN.
     Value: !GetAtt AmplifyBranch.Arn
   AmplifyBranchUrl:
-    Description: Default production branch URL.
+    Description: Default production branch URL used for pre-cutover validation.
     Value: !Sub "https://${AmplifyBranch.BranchName}.${AmplifyApp.DefaultDomain}"
+  AmplifyDomainArn:
+    Condition: CreateAmplifyDomain
+    Description: Native Amplify domain association ARN.
+    Value: !GetAtt AmplifyDomain.Arn
+  AmplifyCertificateRecord:
+    Condition: CreateAmplifyDomain
+    Description: Amplify-managed certificate validation DNS record.
+    Value: !GetAtt AmplifyDomain.CertificateRecord
   GitHubDeploymentRoleArn:
     Description: IAM role assumed by the GitHub production environment through OIDC.
     Value: !GetAtt GitHubDeploymentRole.Arn
@@ -488,24 +224,11 @@ Outputs:
       - CreateGitHubOidcProvider
       - !Ref GitHubOidcProvider
       - !Ref ExistingGitHubOidcProviderArn
-  EdgeDistributionId:
-    Description: CloudFront distribution ID.
-    Value: !Ref EdgeDistribution
-  EdgeDefaultDomain:
-    Description: CloudFront-generated domain used for pre-cutover validation.
-    Value: !GetAtt EdgeDistribution.DomainName
-  EdgeDefaultUrl:
-    Description: CloudFront-generated URL used for pre-cutover validation.
-    Value: !Sub "https://${EdgeDistribution.DomainName}"
-  EdgeCertificateArn:
-    Condition: CreateCustomDomain
-    Description: ACM certificate ARN for the apex, www, and optional Paul redirect names.
-    Value: !Ref EdgeCertificate
   ProductionUrl:
-    Condition: CreateDnsRecords
+    Condition: CreateAmplifyDomain
     Description: Canonical production URL.
     Value: !Sub "https://${DomainName}"
   PaulRedirectUrl:
-    Condition: CreatePaulDnsRecord
-    Description: Legacy Paul hostname redirected by the edge distribution.
+    Condition: CreateAmplifyDomain
+    Description: Legacy Paul hostname redirected by Amplify Hosting.
     Value: !Sub "https://paul.${DomainName}"

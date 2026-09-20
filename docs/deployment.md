@@ -24,7 +24,7 @@ Set these variables on each GitHub Environment:
 - `AMPLIFY_BRANCH`
 - `PRODUCTION_URL`
 
-DiLoreto also needs `AMPLIFY_URL` for the direct Amplify origin.
+DiLoreto's public domain is a native Amplify domain association, so it does not require a separate origin URL variable.
 
 The OIDC role trust must name only the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
 
@@ -66,11 +66,13 @@ Rollback is source-driven:
 
 Static workflows package and deploy the output built in that workflow run. GitHub artifacts are diagnostics and handoff between jobs, not a permanent release store. If byte-for-byte long-term static rollback is required later, use an AWS-native versioned S3 release bucket rather than committed repository evidence.
 
+DiLoreto is served directly by its native Amplify domain association. Its deployment smoke checks the public release marker, clean paths, custom 404 status/body, caching, security headers, and domain redirects. The CloudFront-to-Amplify migration must use `apps/diloreto/infra/amplify-hosting-transition.yml` and follow the `Legacy`, `Candidate`, `AliasRelease`, `Native`, soak, and rollback gates in [`../apps/diloreto/infra/hosting-architecture.md`](../apps/diloreto/infra/hosting-architecture.md); never apply the final-state template directly to the legacy stack as a one-step cutover.
+
 Paul deploys directly to its production Amplify branch. Its former candidate branch and verified-release bucket are not part of the deployment path. Removing those resources from the CloudFormation template deletes the candidate branch, but the bucket's retain policy leaves the bucket and all versions outside stack ownership. Emptying and deleting that retained bucket is a separate approval-gated operation. Production deployment and rollback remain source-driven.
 
 ## Infrastructure
 
-The current CloudFormation/CDK stacks remain the owners of existing resources during the deployment migration. Do not let a second IaC tool manage the same resource.
+The current CloudFormation/CDK stacks remain the owners of existing resources during the deployment migration. Native Amplify domain associations and their service-managed DNS records remain owned through those stacks. Do not let a second IaC tool manage the same resource.
 
 OpenTofu is a separate follow-up:
 

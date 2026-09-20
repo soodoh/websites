@@ -61,6 +61,14 @@ test("core pages return success and home navigation works", async ({
 	expect(headerBox?.y).toBe(0);
 });
 
+test("clean static paths serve without a redirect", async ({ request }) => {
+	for (const path of ["/areyou", "/areyou/"]) {
+		const response = await request.get(path, { maxRedirects: 0 });
+		expect(response.status(), `HTTP status for ${path}`).toBe(200);
+		expect(await response.text()).toContain("Explore the Family Tree");
+	}
+});
+
 test("contact and biography dialogs preserve content and restore focus", async ({
 	page,
 }) => {
@@ -117,8 +125,17 @@ test("contact and biography dialogs preserve content and restore focus", async (
 
 test("custom 404 keeps its status and loads no JavaScript", async ({
 	page,
+	request,
 	diagnostics,
 }) => {
+	for (const path of ["/not-a-real-route", "/not-a-real-file.missing"]) {
+		const response = await request.get(path, { maxRedirects: 0 });
+		expect(response.status(), `HTTP status for ${path}`).toBe(404);
+		const body = await response.text();
+		expect(body).toContain("404: Page Not Found");
+		expect(body).not.toContain("<script");
+	}
+
 	const javascriptRequests: string[] = [];
 	page.on("request", (request) => {
 		if (

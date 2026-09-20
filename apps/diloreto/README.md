@@ -22,7 +22,9 @@ The workspace dev command serves DiLoreto on `http://localhost:3103`. To run onl
 - `src/content/` contains typed site and family-history content.
 - `src/assets/images/` contains build-managed images.
 - `tests/` contains desktop/mobile smoke, interaction, and visual coverage.
-- `infra/` contains the retained Amplify CloudFormation template.
+- `infra/` contains the final-state CloudFormation template, the four-phase migration template, and the [native Amplify hosting decision](infra/hosting-architecture.md).
+
+The production delivery path is Route 53 to a native Amplify domain association. Amplify owns the custom 404 rewrite, clean URLs, domain redirects, cache/security headers, and managed TLS; GitHub Actions continues to upload the verified `dist/client` artifact directly to the production branch.
 
 `bun run genealogy:build` regenerates `src/content/genealogy/generated.json`. The deployable static artifact is `dist/client`.
 
@@ -38,7 +40,9 @@ Useful focused commands from `apps/diloreto`:
 
 ```sh
 bun run test:genealogy
+bun run test:infra
 bun run test:smoke
+bun run test:hosting          # candidate/production URL supplied through environment
 bun run test:playwright
 bun run test:playwright:update   # intentional, reviewed screenshot changes only
 bun run check
