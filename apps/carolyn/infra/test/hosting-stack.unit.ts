@@ -141,6 +141,9 @@ describe("HostingStack production resources", () => {
 			Platform: "WEB_COMPUTE",
 			Repository: "https://github.com/soodoh/websites",
 		});
+		const { resource: app } = getResource(template, "AWS::Amplify::App");
+		expect(app.Properties.BuildSpec).toContain("appRoot: apps/carolyn");
+		expect(app.Properties.BuildSpec).toContain("appRoot: apps/sarabeth");
 		template.resourceCountIs("AWS::Amplify::Branch", 2);
 		template.hasResourceProperties("AWS::Amplify::Branch", {
 			BranchName: "main",

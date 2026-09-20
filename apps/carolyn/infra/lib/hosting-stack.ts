@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import type { StackProps } from "aws-cdk-lib";
 import {
 	ArnFormat,
@@ -47,6 +48,10 @@ const DOMAIN_NAME = "carolyndiloreto.com";
 const LEGACY_DOMAIN_NAME = "diloreto.com";
 const LEGACY_DOMAIN_PREFIX = "carolyn";
 const REPOSITORY_URL = "https://github.com/soodoh/websites";
+const MONOREPO_BUILD_SPEC = readFileSync(
+	new URL("../../../../amplify.yml", import.meta.url),
+	"utf8",
+);
 const LEGACY_PRODUCTION_BRANCH = "amplify-production";
 const PRODUCTION_BRANCH = "main";
 const LEGACY_GITHUB_SUBJECT =
@@ -232,6 +237,7 @@ export class HostingStack extends Stack {
 		);
 		const amplifyApp = new CfnApp(this, "AmplifyApp", {
 			accessToken: githubAccessToken,
+			buildSpec: MONOREPO_BUILD_SPEC,
 			cacheConfig: { type: "AMPLIFY_MANAGED" },
 			customRules: [
 				{
