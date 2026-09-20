@@ -188,9 +188,9 @@ describe("native Amplify hosting contract", () => {
 		expect(rules.at(-1)).toEqual({
 			Source: "/<*>",
 			Target: "/404.html",
-			Status: "404",
+			Status: "404-200",
 		});
-		expect(rules.at(-1)?.Status).not.toBe("404-200");
+		expect(rules.at(-1)?.Status).not.toBe("404");
 		expect(outputAssertion).toContain("404: Page Not Found");
 		expect(outputAssertion).toContain("must not contain hydration scripts");
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page"');

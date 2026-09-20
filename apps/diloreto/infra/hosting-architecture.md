@@ -16,7 +16,7 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 
 | Existing responsibility | Native Amplify replacement |
 | --- | --- |
-| Custom 404 body with a real 404 status | Final catch-all custom rule `/<*> → /404.html` with status `404`. This intentionally does not use `404-200`. |
+| Custom 404 body with a real 404 status | Final catch-all custom rule `/<*> → /404.html` with Amplify's `404-200` **404 rewrite** status. Unlike status `404`, this preserves the requested URL while returning the custom body with HTTP 404. |
 | `/areyou` and `/areyou/` | Amplify clean URLs serve `/areyou/index.html` for both forms without changing the address bar. |
 | `www.diloreto.com` redirect | Domain-only `301` rule to `https://diloreto.com`. Amplify appends the original path. |
 | `paul.diloreto.com` redirect | Domain-only `301` rule to `https://pauldiloreto.com`. Amplify appends the original path. |
@@ -31,9 +31,9 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 
 AWS documents the relevant native behavior:
 
-- [Redirect and rewrite examples](https://docs.aws.amazon.com/amplify/latest/userguide/redirect-rewrite-examples.html): a `404` rule serves a custom not-found page; domain-only redirect paths are appended automatically; clean URLs serve a directory's `index.html`; and all query parameters are forwarded for ordinary `301`/`302` redirects.
+- [Redirect and rewrite examples](https://docs.aws.amazon.com/amplify/latest/userguide/redirect-rewrite-examples.html): domain-only redirect paths are appended automatically, clean URLs serve a directory's `index.html`, and all query parameters are forwarded for ordinary `301`/`302` redirects. Its `404` redirect example does not preserve the URL/body contract required here.
 - [Redirect semantics and ordering](https://docs.aws.amazon.com/amplify/latest/userguide/redirects.html): `301` is permanent, `404` is the not-found response, rules are ordered, and the query-forwarding exceptions apply only to query-specific sources or targets containing a query.
-- [Amplify `CustomRule` API](https://docs.aws.amazon.com/amplify/latest/APIReference/API_CustomRule.html): `404` and `404-200` are distinct supported statuses. DiLoreto uses `404` to retain the actual status.
+- [Amplify `CustomRule` API](https://docs.aws.amazon.com/amplify/latest/APIReference/API_CustomRule.html): `404` and `404-200` are distinct supported statuses; AWS identifies `404-200` as the 404 rewrite. The [Amplify Hosting issue that introduced the behavior](https://github.com/aws-amplify/amplify-hosting/issues/70) confirms that `404-200` with `/404.html` preserves the missing URL and returns status 404. A Legacy-phase production smoke demonstrated that status `404` instead emits a `302 Location: /404.html`, so DiLoreto uses `404-200`.
 - [Custom headers](https://docs.aws.amazon.com/amplify/latest/userguide/setting-custom-headers.html): headers can be set for all responses; Amplify honors origin/custom cache control; and custom cache control is applied only to successful `200` responses so error responses are not cached for other users.
 - [`AWS::Amplify::Domain`](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-amplify-domain.html): CloudFormation owns the custom-domain association, its subdomain settings, and managed-certificate lifecycle. For Route 53 domains, Amplify handles the DNS records.
 - [Route 53 custom domains](https://docs.aws.amazon.com/amplify/latest/userguide/to-add-a-custom-domain-managed-by-amazon-route-53.html) and [subdomain management](https://docs.aws.amazon.com/amplify/latest/userguide/to-manage-subdomains.html): Amplify can associate the apex and selected subdomains and supports subdomain-only candidate setups.
