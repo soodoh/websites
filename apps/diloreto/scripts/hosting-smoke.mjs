@@ -82,11 +82,11 @@ for (const { path, amplifyCanonicalPath } of [
 	let missing = await request(new URL(path, baseUrl));
 	missingResponses.push({ path, response: missing.response });
 
-	if (expectAmplify && amplifyCanonicalPath) {
-		assert(
-			missing.response.status === 301,
-			`${path} returned ${missing.response.status}, expected Amplify's 301 clean-URL canonicalization`,
-		);
+	if (
+		expectAmplify &&
+		amplifyCanonicalPath &&
+		missing.response.status === 301
+	) {
 		const location = missing.response.headers.get("location");
 		assert(location, `${path} did not return a Location header`);
 		const canonicalUrl = new URL(location, baseUrl);

@@ -52,7 +52,7 @@ AWS documents the relevant native behavior:
 - security headers; and
 - continued use of the shared static uploader and post-deploy release verification.
 
-The local Playwright smoke verifies real static-server behavior for `/`, `/areyou`, `/areyou/`, extensionless missing paths, file-like missing paths, custom 404 body/status, and absence of 404 hydration JavaScript. `scripts/hosting-smoke.mjs` is the candidate/production HTTP check for cache headers, security headers, domain redirects, Amplify's accepted extensionless-missing-path canonicalization, and the deployed commit marker.
+The local Playwright smoke verifies real static-server behavior for `/`, `/areyou`, `/areyou/`, extensionless missing paths, file-like missing paths, custom 404 body/status, and absence of 404 hydration JavaScript. `scripts/hosting-smoke.mjs` is the candidate/production HTTP check for cache headers, security headers, domain redirects, and the deployed commit marker. It accepts the retained edge's direct extensionless custom `404`; when Amplify's accepted `301` canonicalization is observed, it validates both the canonical location and final custom `404`.
 
 ## Candidate validation result
 

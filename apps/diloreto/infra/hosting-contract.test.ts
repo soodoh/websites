@@ -197,9 +197,7 @@ describe("native Amplify hosting contract", () => {
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page"');
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page/"');
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page.missing"');
-		expect(smoke).toContain(
-			"expected Amplify's 301 clean-URL canonicalization",
-		);
+		expect(smoke).toContain("missing.response.status === 301");
 	});
 
 	test("emits both Amplify clean-URL file forms without redirects", () => {
