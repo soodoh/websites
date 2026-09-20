@@ -64,7 +64,20 @@ The approved `Candidate` phase was applied on 2026-09-20 without moving producti
 - security headers are present on both the canonicalization response and custom 404; and
 - the existing CloudFront production path remains unchanged and passes the full production smoke.
 
-The extensionless `301 → 404` sequence is Amplify's documented clean-URL behavior and was explicitly accepted after this candidate probe. The stack remains paused at `MigrationPhase=Candidate`; advancing to `AliasRelease` still requires a separate approval.
+The extensionless `301 → 404` sequence is Amplify's documented clean-URL behavior and was explicitly accepted after this candidate probe. Separate approvals subsequently advanced the stack through `AliasRelease` and `Native`.
+
+## Native cutover result
+
+The approved production cutover completed on 2026-09-20 with the stack at `UPDATE_COMPLETE` and `MigrationPhase=Native`:
+
+- the reviewed `AliasRelease` change set removed only the three CloudFront aliases and five stack-owned production DNS records;
+- the old distribution, function, cache policy, and ACM certificate remain available without aliases for rollback;
+- the reviewed `Native` change set performed one non-replacement update to `AmplifyDomain`, replacing the candidate prefix with apex and adding `www` and `paul`;
+- Amplify reports the domain association as `AVAILABLE` with `UPDATE_COMPLETE`, and its service-managed Route 53 records resolve apex, `www`, and `paul` to the native distribution;
+- production root, both clean-path forms, both custom-404 forms, cache/security headers, domain redirects with paths and queries, assets, and release commit `a389668b62238f900661ba768b0b547ed306053f` pass the HTTP smoke; and
+- the production Playwright deployment smoke passes for `/` and `/areyou`.
+
+The transition resources must remain at `Native` for the soak and rollback window. Final edge cleanup is still a separate approval-gated operation.
 
 ## Approval-gated migration
 
@@ -94,11 +107,8 @@ After final cleanup, rollback is slower: apply the transition template at `Alias
 
 ## Remaining live-validation uncertainties
 
-The documented behavior is sufficient for the final design, but these service-level facts still require the candidate and cutover checks above:
+The candidate and production checks resolved the routing, certificate, DNS, redirect, cache, and security-header questions. Residual operational risks are:
 
-- exact production header composition after the native association replaces the current CloudFront path (candidate checks confirmed the configured security headers on the native `301` and rewritten `404` responses);
-- exact DNS record transitions performed by `AWS::Amplify::Domain` in this existing Route 53 zone;
-- time required for the old CloudFront aliases to become claimable by Amplify;
-- managed-certificate issuance for apex, `www`, and `paul` in this account/region;
-- exact production `Location` values for both domain redirects, including query preservation; and
-- whether any unrecorded production-only header or TLS behavior exists outside the checked contract.
+- the Amplify API's three per-subdomain `verified` fields remained `false` even though the association and update report complete, service-managed DNS is present, TLS succeeds, and all production checks pass;
+- sustained behavior and managed-certificate renewal still require the planned soak; and
+- rollback timing through `Native → AliasRelease → Candidate` has been designed but not exercised in production.
