@@ -6,6 +6,7 @@ import {
 	CfnCondition,
 	CfnOutput,
 	CfnParameter,
+	CustomResource,
 	Duration,
 	Fn,
 	RemovalPolicy,
@@ -30,6 +31,11 @@ import {
 	ServicePrincipal,
 	WebIdentityPrincipal,
 } from "aws-cdk-lib/aws-iam";
+import {
+	Code,
+	Function as LambdaFunction,
+	Runtime,
+} from "aws-cdk-lib/aws-lambda";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { Topic } from "aws-cdk-lib/aws-sns";
@@ -54,6 +60,74 @@ const MONOREPO_BUILD_SPEC = readFileSync(
 const PRODUCTION_BRANCH = "main";
 const MONOREPO_GITHUB_SUBJECT =
 	"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn";
+const WEBHOOK_PROVIDER_FUNCTION_NAME =
+	"carolyn-amplify-webhook-custom-resource";
+const WEBHOOK_PROVIDER_CODE = `
+import boto3
+import json
+import urllib.request
+
+amplify = boto3.client("amplify")
+
+
+def respond(event, context, status, physical_id, data, reason=None):
+    body = json.dumps({
+        "Status": status,
+        "Reason": reason or f"See CloudWatch log stream {context.log_stream_name}",
+        "PhysicalResourceId": physical_id,
+        "StackId": event["StackId"],
+        "RequestId": event["RequestId"],
+        "LogicalResourceId": event["LogicalResourceId"],
+        "NoEcho": False,
+        "Data": data,
+    }).encode()
+    request = urllib.request.Request(
+        event["ResponseURL"],
+        data=body,
+        method="PUT",
+        headers={"content-type": "", "content-length": str(len(body))},
+    )
+    urllib.request.urlopen(request).read()
+
+
+def handler(event, context):
+    physical_id = event.get("PhysicalResourceId", context.log_stream_name)
+    try:
+        properties = event["ResourceProperties"]
+        request_type = event["RequestType"]
+        if request_type == "Delete":
+            if event.get("PhysicalResourceId"):
+                try:
+                    amplify.delete_webhook(webhookId=event["PhysicalResourceId"])
+                except amplify.exceptions.NotFoundException:
+                    pass
+            respond(event, context, "SUCCESS", physical_id, {})
+            return
+        rotate = (
+            request_type == "Update"
+            and event.get("OldResourceProperties", {}).get("RotationVersion")
+            != properties.get("RotationVersion")
+        )
+        if request_type == "Update" and event.get("PhysicalResourceId") and not rotate:
+            result = amplify.update_webhook(
+                webhookId=event["PhysicalResourceId"],
+                branchName=properties["BranchName"],
+                description=properties["Description"],
+            )["webhook"]
+        else:
+            result = amplify.create_webhook(
+                appId=properties["AppId"],
+                branchName=properties["BranchName"],
+                description=properties["Description"],
+            )["webhook"]
+        physical_id = result["webhookId"]
+        respond(event, context, "SUCCESS", physical_id, {
+            "WebhookUrl": result["webhookUrl"],
+            "WebhookArn": result["webhookArn"],
+        })
+    except Exception as error:
+        respond(event, context, "FAILED", physical_id, {}, str(error))
+`;
 
 // Route 53 Registrar created this zone when the domain was registered. It is
 // imported so CDK does not create a duplicate hosted zone during migration.
@@ -107,6 +181,16 @@ export class HostingStack extends Stack {
 				default: "true",
 				description:
 					"Create the validated production and legacy Amplify domain associations",
+				type: "String",
+			},
+		);
+		const webhookRotationVersion = new CfnParameter(
+			this,
+			"WebhookRotationVersion",
+			{
+				default: "1",
+				description:
+					"Increment only to rotate the Contentful build webhook URL",
 				type: "String",
 			},
 		);
@@ -272,6 +356,77 @@ export class HostingStack extends Stack {
 			description: "Exact-SHA production releases from GitHub Actions",
 		});
 		branch.addDependency(amplifyApp);
+
+		const webhookLogGroup = new LogGroup(
+			this,
+			"WebhookCustomResourceLogGroup",
+			{
+				logGroupName: `/aws/lambda/${WEBHOOK_PROVIDER_FUNCTION_NAME}`,
+				removalPolicy: RemovalPolicy.RETAIN,
+				retention: RetentionDays.TWO_WEEKS,
+			},
+		);
+		const webhookRole = new Role(this, "WebhookCustomResourceRole", {
+			assumedBy: new ServicePrincipal("lambda.amazonaws.com"),
+			description:
+				"Manages the Carolyn Portfolio Amplify webhook used by Contentful",
+		});
+		webhookRole.addToPolicy(
+			new PolicyStatement({
+				actions: [
+					"amplify:CreateWebhook",
+					"amplify:DeleteWebhook",
+					"amplify:GetWebhook",
+					"amplify:UpdateWebhook",
+				],
+				resources: [
+					amplifyApp.attrArn,
+					`${amplifyApp.attrArn}/*`,
+					this.formatArn({
+						arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
+						resource: "webhooks",
+						resourceName: "*",
+						service: "amplify",
+					}),
+				],
+			}),
+		);
+		webhookRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["logs:CreateLogStream", "logs:PutLogEvents"],
+				resources: [`${webhookLogGroup.logGroupArn}:*`],
+			}),
+		);
+		const webhookProvider = new LambdaFunction(
+			this,
+			"WebhookCustomResourceFunction",
+			{
+				code: Code.fromInline(WEBHOOK_PROVIDER_CODE),
+				description:
+					"CloudFormation provider for the Carolyn Contentful Amplify build webhook",
+				functionName: WEBHOOK_PROVIDER_FUNCTION_NAME,
+				handler: "index.handler",
+				role: webhookRole,
+				runtime: Runtime.PYTHON_3_13,
+				timeout: Duration.seconds(60),
+			},
+		);
+		webhookProvider.node.addDependency(webhookLogGroup);
+		const contentfulBuildWebhook = new CustomResource(
+			this,
+			"ContentfulBuildWebhook",
+			{
+				properties: {
+					AppId: amplifyApp.attrAppId,
+					BranchName: PRODUCTION_BRANCH,
+					Description: "Contentful publish and unpublish production rebuilds",
+					RotationVersion: webhookRotationVersion.valueAsString,
+				},
+				resourceType: "Custom::AmplifyWebhook",
+				serviceToken: webhookProvider.functionArn,
+			},
+		);
+		contentfulBuildWebhook.node.addDependency(branch);
 
 		const domain = new CfnDomain(this, "ProductionDomain", {
 			appId: amplifyApp.attrAppId,
@@ -451,6 +606,11 @@ export class HostingStack extends Stack {
 		});
 		new CfnOutput(this, "ProjectAuthSecretParameter", {
 			value: PROJECT_AUTH_SECRET_PARAMETER,
+		});
+		new CfnOutput(this, "ContentfulWebhookUrl", {
+			description:
+				"Sensitive Amplify incoming webhook URL for Carolyn Contentful production events",
+			value: contentfulBuildWebhook.getAttString("WebhookUrl"),
 		});
 	}
 

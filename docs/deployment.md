@@ -11,7 +11,7 @@ Every site owns one workflow. The workflow validates the current commit, then de
 | Carolyn | `deploy-carolyn.yml` | `production-carolyn` | repository-connected Amplify release |
 | Sarabeth | `deploy-sarabeth.yml` | `production-sarabeth` | repository-connected Amplify release |
 
-GitHub's environment protection is the approval seam. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group.
+GitHub's environment protection is the approval seam for source releases. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate infrastructure-managed Contentful webhooks that rebuild the already-connected `main` revision after a production content publish; those content releases do not grant permission to select or change source code.
 
 ## Required configuration
 
@@ -28,7 +28,23 @@ DiLoreto's public domain is a native Amplify domain association, so it does not 
 
 The OIDC role trust must name only the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
 
-For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic Amplify builds should remain off because GitHub Actions starts the release after validation.
+For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic repository builds should remain off because GitHub Actions starts source releases after validation. The incoming Contentful webhooks are the only additional build triggers.
+
+### Contentful build webhooks
+
+Carolyn and Sarabeth each own a distinct Amplify incoming webhook in their existing infrastructure stack. Both stacks expose its sensitive URL as `ContentfulWebhookUrl`. Never commit, log, or reuse these URLs between sites.
+
+After deploying reviewed infrastructure changes, run:
+
+```sh
+scripts/setup-contentful-webhooks.sh
+```
+
+The wizard configures one webhook in each site's Contentful space. Each webhook is restricted to the `master` environment and to entry/asset publish and unpublish events. The optional final wizard stage directly invokes each Amplify webhook, which starts a real production build and deploy; use that stage only with explicit production approval.
+
+A Contentful-triggered build checks out the repository-connected `main` branch and runs the root `amplify.yml`. It cannot choose a different source revision, but it also does not pass through the GitHub workflow or protected GitHub Environment. Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds.
+
+To rotate a compromised or exposed URL, increment `WebhookRotationVersion` for that site's stack and deploy the reviewed update. The custom resource creates the replacement before CloudFormation deletes the old webhook. Promptly replace the URL in Contentful, then verify one controlled build. Carolyn starts at rotation version `1`; Sarabeth retains its independently managed version.
 
 ### Carolyn repository authorization
 
@@ -53,7 +69,9 @@ Removing the key from CDK does not delete it because its removal policy is `RETA
 
 All four sites are owned by this monorepo. Their legacy deployment writers are disabled and their AWS roles trust only the matching monorepo environment.
 
-For an intentional deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. Approve the protected production environment, then verify the workflow smoke check and public site.
+For an intentional source deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. Approve the protected production environment, then verify the workflow smoke check and public site.
+
+For Carolyn or Sarabeth content-only changes, publish or unpublish through the configured production Contentful space. Confirm the corresponding Amplify webhook build succeeds before considering the content release complete. A failed content build leaves the previously successful deployment serving production.
 
 ## Rollback
 

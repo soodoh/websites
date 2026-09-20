@@ -329,6 +329,62 @@ describe("HostingStack production resources", () => {
 		});
 	});
 
+	test("manages a rotatable Contentful build webhook", () => {
+		const template = createTemplate();
+		template.hasParameter("WebhookRotationVersion", {
+			Default: "1",
+			Type: "String",
+		});
+		template.resourceCountIs("AWS::Lambda::Function", 1);
+		template.hasResourceProperties("AWS::Lambda::Function", {
+			Description:
+				"CloudFormation provider for the Carolyn Contentful Amplify build webhook",
+			FunctionName: "carolyn-amplify-webhook-custom-resource",
+			Handler: "index.handler",
+			Runtime: "python3.13",
+			Timeout: 60,
+		});
+		template.hasResourceProperties("AWS::Logs::LogGroup", {
+			LogGroupName: "/aws/lambda/carolyn-amplify-webhook-custom-resource",
+			RetentionInDays: 14,
+		});
+		template.hasResourceProperties("AWS::IAM::Policy", {
+			PolicyDocument: {
+				Statement: [
+					{
+						Action: [
+							"amplify:CreateWebhook",
+							"amplify:DeleteWebhook",
+							"amplify:GetWebhook",
+							"amplify:UpdateWebhook",
+						],
+						Effect: "Allow",
+					},
+					{
+						Action: ["logs:CreateLogStream", "logs:PutLogEvents"],
+						Effect: "Allow",
+					},
+				],
+				Version: "2012-10-17",
+			},
+		});
+
+		const { resource: webhook } = getResource(
+			template,
+			"Custom::AmplifyWebhook",
+		);
+		expect(webhook.Properties).toMatchObject({
+			AppId: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
+			BranchName: "main",
+			Description: "Contentful publish and unpublish production rebuilds",
+			RotationVersion: { Ref: "WebhookRotationVersion" },
+		});
+		expect(template.toJSON().Outputs.ContentfulWebhookUrl).toMatchObject({
+			Description:
+				"Sensitive Amplify incoming webhook URL for Carolyn Contentful production events",
+		});
+	});
+
 	test("pins domains, SNS alarm wiring, and both budget notifications", () => {
 		const template = createTemplate();
 		template.resourceCountIs("AWS::Amplify::Domain", 2);
@@ -459,7 +515,11 @@ describe("HostingStack production resources", () => {
 
 	test("retains logs and relies on the AWS-managed SSM key", () => {
 		const template = createTemplate();
-		const { resource: logGroup } = getResource(template, "AWS::Logs::LogGroup");
+		const { resource: logGroup } = getResource(
+			template,
+			"AWS::Logs::LogGroup",
+			"AmplifySsrLogGroup",
+		);
 		expect(logGroup).toMatchObject({
 			DeletionPolicy: "Retain",
 			Properties: { RetentionInDays: 14 },

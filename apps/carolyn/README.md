@@ -54,4 +54,4 @@ Canonical visual tests run in the pinned ARM64 Playwright container. Production 
 
 ## Deployment
 
-Production deployments are owned by the monorepo workflow and protected GitHub Environment. See [`../../docs/deployment.md`](../../docs/deployment.md) for deployment, rollback, and infrastructure ownership rules.
+Production source deployments are owned by the monorepo workflow and protected GitHub Environment. Production Contentful publish/unpublish events use Carolyn's separate infrastructure-managed Amplify webhook. See [`../../docs/deployment.md`](../../docs/deployment.md) for webhook setup, deployment, rollback, and infrastructure ownership rules.
