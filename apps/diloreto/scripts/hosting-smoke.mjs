@@ -69,12 +69,39 @@ assert(
 );
 
 const missingResponses = [];
-for (const path of [
-	"/hosting-migration-smoke/missing-page",
-	"/hosting-migration-smoke/missing-page.missing",
+for (const { path, amplifyCanonicalPath } of [
+	{
+		path: "/hosting-migration-smoke/missing-page",
+		amplifyCanonicalPath: "/hosting-migration-smoke/missing-page/",
+	},
+	{
+		path: "/hosting-migration-smoke/missing-page.missing",
+		amplifyCanonicalPath: undefined,
+	},
 ]) {
-	const missing = await request(new URL(path, baseUrl));
+	let missing = await request(new URL(path, baseUrl));
 	missingResponses.push({ path, response: missing.response });
+
+	if (expectAmplify && amplifyCanonicalPath) {
+		assert(
+			missing.response.status === 301,
+			`${path} returned ${missing.response.status}, expected Amplify's 301 clean-URL canonicalization`,
+		);
+		const location = missing.response.headers.get("location");
+		assert(location, `${path} did not return a Location header`);
+		const canonicalUrl = new URL(location, baseUrl);
+		assert(
+			canonicalUrl.origin === baseUrl.origin &&
+				canonicalUrl.pathname === amplifyCanonicalPath,
+			`${path} canonicalized to the wrong URL: ${canonicalUrl}`,
+		);
+		missing = await request(canonicalUrl);
+		missingResponses.push({
+			path: amplifyCanonicalPath,
+			response: missing.response,
+		});
+	}
+
 	assert(
 		missing.response.status === 404,
 		`${path} returned ${missing.response.status}, expected 404`,

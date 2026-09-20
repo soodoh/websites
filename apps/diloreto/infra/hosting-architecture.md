@@ -16,7 +16,7 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 
 | Existing responsibility | Native Amplify replacement |
 | --- | --- |
-| Custom 404 body with a real 404 status | Final catch-all custom rule `/<*> → /404.html` with Amplify's `404-200` **404 rewrite** status. Unlike status `404`, this preserves the requested URL while returning the custom body with HTTP 404. |
+| Custom 404 body with a real 404 status | Final catch-all custom rule `/<*> → /404.html` with Amplify's `404-200` **404 rewrite** status. File-like and slash-terminated missing paths return the custom body directly with HTTP 404. Amplify first canonicalizes an extensionless missing path to its trailing-slash form with a `301`; the canonical URL then returns the custom HTTP 404. This native behavior was explicitly accepted after candidate validation. |
 | `/areyou` and `/areyou/` | The static artifact contains identical `/areyou.html` and `/areyou/index.html` documents. Amplify serves the first for `/areyou` without changing the address and the second for `/areyou/`. The build creates the same pair for every directory-index route. |
 | `www.diloreto.com` redirect | Domain-only `301` rule to `https://diloreto.com`. Amplify appends the original path. |
 | `paul.diloreto.com` redirect | Domain-only `301` rule to `https://pauldiloreto.com`. Amplify appends the original path. |
@@ -33,7 +33,7 @@ AWS documents the relevant native behavior:
 
 - [Redirect and rewrite examples](https://docs.aws.amazon.com/amplify/latest/userguide/redirect-rewrite-examples.html): domain-only redirect paths are appended automatically, an extensionless URL serves its matching `.html` file without changing the address, and all query parameters are forwarded for ordinary `301`/`302` redirects. Amplify redirects to a trailing slash when only a directory `index.html` exists, so the DiLoreto build emits both file forms. The documentation's `404` redirect example does not preserve the URL/body contract required here.
 - [Redirect semantics and ordering](https://docs.aws.amazon.com/amplify/latest/userguide/redirects.html): `301` is permanent, `404` is the not-found response, rules are ordered, and the query-forwarding exceptions apply only to query-specific sources or targets containing a query.
-- [Amplify `CustomRule` API](https://docs.aws.amazon.com/amplify/latest/APIReference/API_CustomRule.html): `404` and `404-200` are distinct supported statuses; AWS identifies `404-200` as the 404 rewrite. The [Amplify Hosting issue that introduced the behavior](https://github.com/aws-amplify/amplify-hosting/issues/70) confirms that `404-200` with `/404.html` preserves the missing URL and returns status 404. A Legacy-phase production smoke demonstrated that status `404` instead emits a `302 Location: /404.html`, so DiLoreto uses `404-200`.
+- [Amplify `CustomRule` API](https://docs.aws.amazon.com/amplify/latest/APIReference/API_CustomRule.html): `404` and `404-200` are distinct supported statuses; AWS identifies `404-200` as the 404 rewrite. The [Amplify Hosting issue that introduced the behavior](https://github.com/aws-amplify/amplify-hosting/issues/70) confirms that `404-200` with `/404.html` returns the custom page with status 404 instead of redirecting to the error document. A Legacy-phase production smoke demonstrated that status `404` instead emits a `302 Location: /404.html`, so DiLoreto uses `404-200`.
 - [Custom headers](https://docs.aws.amazon.com/amplify/latest/userguide/setting-custom-headers.html): headers can be set for all responses; Amplify honors origin/custom cache control; and custom cache control is applied only to successful `200` responses so error responses are not cached for other users.
 - [`AWS::Amplify::Domain`](https://docs.aws.amazon.com/AWSCloudFormation/latest/TemplateReference/aws-resource-amplify-domain.html): CloudFormation owns the custom-domain association, its subdomain settings, and managed-certificate lifecycle. For Route 53 domains, Amplify handles the DNS records.
 - [Route 53 custom domains](https://docs.aws.amazon.com/amplify/latest/userguide/to-add-a-custom-domain-managed-by-amazon-route-53.html) and [subdomain management](https://docs.aws.amazon.com/amplify/latest/userguide/to-manage-subdomains.html): Amplify can associate the apex and selected subdomains and supports subdomain-only candidate setups.
@@ -52,7 +52,19 @@ AWS documents the relevant native behavior:
 - security headers; and
 - continued use of the shared static uploader and post-deploy release verification.
 
-The local Playwright smoke verifies real static-server behavior for `/`, `/areyou`, `/areyou/`, extensionless missing paths, file-like missing paths, custom 404 body/status, and absence of 404 hydration JavaScript. `scripts/hosting-smoke.mjs` is the candidate/production HTTP check for cache headers, security headers, redirects, and the deployed commit marker.
+The local Playwright smoke verifies real static-server behavior for `/`, `/areyou`, `/areyou/`, extensionless missing paths, file-like missing paths, custom 404 body/status, and absence of 404 hydration JavaScript. `scripts/hosting-smoke.mjs` is the candidate/production HTTP check for cache headers, security headers, domain redirects, Amplify's accepted extensionless-missing-path canonicalization, and the deployed commit marker.
+
+## Candidate validation result
+
+The approved `Candidate` phase was applied on 2026-09-20 without moving production traffic. `candidate.diloreto.com` became `AVAILABLE` and mapped only to the existing `main` branch. Live checks established:
+
+- `/areyou`, `/areyou/`, `/familytree`, and `/familytree/` return `200` without redirects because the artifact contains both clean-URL file forms;
+- a file-like missing path returns the hydration-free custom body directly with `404`;
+- an extensionless missing path returns `301 Location: <same-path>/`, then the slash-terminated path returns the hydration-free custom body with `404`;
+- security headers are present on both the canonicalization response and custom 404; and
+- the existing CloudFront production path remains unchanged and passes the full production smoke.
+
+The extensionless `301 → 404` sequence is Amplify's documented clean-URL behavior and was explicitly accepted after this candidate probe. The stack remains paused at `MigrationPhase=Candidate`; advancing to `AliasRelease` still requires a separate approval.
 
 ## Approval-gated migration
 
@@ -84,7 +96,7 @@ After final cleanup, rollback is slower: apply the transition template at `Alias
 
 The documented behavior is sufficient for the final design, but these service-level facts still require the candidate and cutover checks above:
 
-- actual header composition on rewritten 404 responses (AWS explicitly excludes custom `Cache-Control` from non-200 responses, but security headers must be observed);
+- exact production header composition after the native association replaces the current CloudFront path (candidate checks confirmed the configured security headers on the native `301` and rewritten `404` responses);
 - exact DNS record transitions performed by `AWS::Amplify::Domain` in this existing Route 53 zone;
 - time required for the old CloudFront aliases to become claimable by Amplify;
 - managed-certificate issuance for apex, `www`, and `paul` in this account/region;

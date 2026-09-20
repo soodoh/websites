@@ -195,7 +195,11 @@ describe("native Amplify hosting contract", () => {
 		expect(outputAssertion).toContain("404: Page Not Found");
 		expect(outputAssertion).toContain("must not contain hydration scripts");
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page"');
+		expect(smoke).toContain('"/hosting-migration-smoke/missing-page/"');
 		expect(smoke).toContain('"/hosting-migration-smoke/missing-page.missing"');
+		expect(smoke).toContain(
+			"expected Amplify's 301 clean-URL canonicalization",
+		);
 	});
 
 	test("emits both Amplify clean-URL file forms without redirects", () => {
