@@ -105,6 +105,31 @@ Resources:
                   - iam:UntagOpenIDConnectProvider
                   - iam:UpdateOpenIDConnectProviderThumbprint
                 Resource: !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+              - Sid: ManageOwnInlinePolicy
+                Effect: Allow
+                Action:
+                  - iam:DeleteRolePolicy
+                  - iam:GetRole
+                  - iam:GetRolePolicy
+                  - iam:ListRolePolicies
+                  - iam:PutRolePolicy
+                  - iam:TagRole
+                  - iam:UntagRole
+                  - iam:UpdateAssumeRolePolicy
+                  - iam:UpdateRole
+                  - iam:UpdateRoleDescription
+                Resource:
+                  - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-cloudformation-execution
+                  - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-infrastructure-github
+              - Sid: ManageWorkloadPermissionsBoundary
+                Effect: Allow
+                Action:
+                  - iam:CreatePolicyVersion
+                  - iam:DeletePolicyVersion
+                  - iam:GetPolicy
+                  - iam:GetPolicyVersion
+                  - iam:ListPolicyVersions
+                Resource: !Ref WorkloadPermissionsBoundary
               - Sid: CreateBoundedWorkloadRoles
                 Effect: Allow
                 Action:
@@ -175,6 +200,7 @@ Resources:
                   - logs:CreateLogGroup
                   - logs:DeleteLogGroup
                   - logs:DescribeIndexPolicies
+                  - logs:ListTagsForResource
                   - logs:PutRetentionPolicy
                   - logs:DeleteRetentionPolicy
                   - logs:TagResource
