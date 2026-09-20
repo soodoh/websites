@@ -24,7 +24,7 @@ The workspace dev command serves DiLoreto on `http://localhost:3103`. To run onl
 - `tests/` contains desktop/mobile smoke, interaction, and visual coverage.
 - `infra/` contains the final-state CloudFormation template, the four-phase migration template, and the [native Amplify hosting decision](infra/hosting-architecture.md).
 
-The production delivery path is Route 53 to a native Amplify domain association. The staged migration is soaking at `Native`: Amplify owns the production domain mappings, custom 404 rewrite, clean URLs, redirects, cache/security headers, and managed TLS, while the former custom CloudFront resources remain retained without aliases for rollback. GitHub Actions continues to upload the verified `dist/client` artifact directly to the production branch.
+The production delivery path is Route 53 to a native Amplify domain association. Amplify owns the production domain mappings, custom 404 rewrite, clean URLs, redirects, cache/security headers, and managed TLS. GitHub Actions uploads the verified `dist/client` artifact directly to the production branch. The former custom CloudFront resources were removed after the approved cutover and final cleanup.
 
 `bun run genealogy:build` regenerates `src/content/genealogy/generated.json`. The deployable static artifact is `dist/client`.
 

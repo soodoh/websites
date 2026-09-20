@@ -77,13 +77,23 @@ The approved production cutover completed on 2026-09-20 with the stack at `UPDAT
 - production root, both clean-path forms, both custom-404 forms, cache/security headers, domain redirects with paths and queries, assets, and release commit `a389668b62238f900661ba768b0b547ed306053f` pass the HTTP smoke; and
 - the production Playwright deployment smoke passes for `/` and `/areyou`.
 
-The transition resources must remain at `Native` for the soak and rollback window. Final edge cleanup is still a separate approval-gated operation.
+The transition resources remained available at `Native` until the separately approved final cleanup.
 
-## Approval-gated migration
+## Final cleanup result
 
-Do **not** apply the final-state template directly to the current stack. CloudFront alternate-domain names must be released before Amplify can claim them, and the current Route 53 alias records are stack-owned resources. A direct update would combine alias release, DNS replacement, certificate replacement, and edge deletion in one unverified operation.
+The owner explicitly approved skipping the soak and performing final cleanup on 2026-09-20. The reviewed final-state change set:
 
-Use `amplify-hosting-transition.yml` with the existing stack. It retains every legacy logical ID and adds an explicit four-phase state machine. Advance exactly one phase per reviewed, approval-gated change set; do not create a second stack or IaC owner.
+- retained `AmplifyApp`, `AmplifyBranch`, `AmplifyDomain`, `GitHubDeploymentRole`, and `GitHubOidcProvider` with no replacements;
+- changed only the Amplify app description; and
+- deleted exactly `EdgeDistribution`, `EdgeRequestFunction`, `EdgeCachePolicy`, and `EdgeCertificate`.
+
+The stack completed successfully using `amplify-hosting.yml` with `EnableAmplifyDomain=true`. Direct AWS reads confirm the four edge resources no longer exist and the stack contains only the five expected Amplify/IAM resources. Production HTTP smoke still passes, and the obsolete GitHub Environment variable `AMPLIFY_URL` was deleted while all six workflow variables were retained.
+
+## Completed approval-gated migration
+
+The migration followed the procedure below. It remains as audit and rollback context; do **not** apply the final-state template directly to any legacy stack because that would combine alias release, DNS replacement, certificate replacement, and edge deletion in one unverified operation.
+
+`amplify-hosting-transition.yml` retained every legacy logical ID and provided the explicit four-phase state machine. Each phase advanced through a separately reviewed, approval-gated change set without creating a second stack or IaC owner.
 
 1. **Inventory and change-set gate.** With approval, record the current stack parameters, outputs, CloudFront distribution configuration, certificate ARN/status, Amplify app/branch IDs, domain associations, Route 53 records, and current release marker. Create change sets only; do not execute until each resource replacement/deletion is understood.
 2. **`Legacy` — behavior preparation.** Deploy the transition template with its default `MigrationPhase=Legacy`. This keeps the production aliases and stack-owned DNS records on CloudFront, does not create `AmplifyDomain`, and applies the final Amplify rules and headers. Deploy a normal static release and verify the default Amplify branch URL for root, clean paths, both 404 forms, cache/security headers, and the release marker.
@@ -91,7 +101,7 @@ Use `amplify-hosting-transition.yml` with the existing stack. It retains every l
 4. **`AliasRelease` — cutover gate.** Schedule a rollback window and set `MigrationPhase=AliasRelease` in a separate approved update. This removes the production aliases from the old distribution and deletes only the stack-owned apex/`www`/`paul` records. It retains the distribution, function, cache policy, certificate, and candidate association. Confirm completion before proceeding. A short interruption is possible while the globally unique CloudFront aliases are released.
 5. **`Native` — production association.** In another approved update, set `MigrationPhase=Native`. This updates `AmplifyDomain` from candidate-only to apex, `www`, and `paul`; the old edge resources remain available without aliases. Wait for the Amplify domain and update statuses to complete and for all three DNS answers and certificates to converge.
 6. **Production validation.** Run `scripts/hosting-smoke.mjs` with `HOSTING_BASE_URL=https://diloreto.com`, `HOSTING_EXPECT_AMPLIFY=1`, `HOSTING_EXPECT_DOMAIN_REDIRECTS=1`, and the expected release commit. Also run the Playwright deployment smoke against production. Validate `/`, both `/areyou` forms, both 404 forms, redirect paths/queries, headers, assets, and release identity.
-7. **Soak and cleanup gate.** Keep the transition template at `Native` for an agreed soak. Only after explicit approval, create a change set using final-state `amplify-hosting.yml` with `EnableAmplifyDomain=true`. The `AmplifyDomain`, app, branch, and IAM logical IDs remain stable; the change set should delete only the unused edge resources and obsolete outputs/parameters. Execute only after confirming it will not replace the native domain or delete Amplify-managed DNS records.
+7. **Soak and cleanup gate.** Keep the transition template at `Native` for an agreed soak unless the owner explicitly approves skipping it. Only after explicit approval, create a change set using final-state `amplify-hosting.yml` with `EnableAmplifyDomain=true`. The `AmplifyDomain`, app, branch, and IAM logical IDs remain stable; the change set should delete only the unused edge resources and obsolete outputs/parameters. Execute only after confirming it will not replace the native domain or delete Amplify-managed DNS records.
 
 ## Rollback
 
@@ -110,5 +120,5 @@ After final cleanup, rollback is slower: apply the transition template at `Alias
 The candidate and production checks resolved the routing, certificate, DNS, redirect, cache, and security-header questions. Residual operational risks are:
 
 - the Amplify API's three per-subdomain `verified` fields remained `false` even though the association and update report complete, service-managed DNS is present, TLS succeeds, and all production checks pass;
-- sustained behavior and managed-certificate renewal still require the planned soak; and
-- rollback timing through `Native → AliasRelease → Candidate` has been designed but not exercised in production.
+- sustained behavior and managed-certificate renewal require normal production monitoring because the owner explicitly skipped the planned soak; and
+- the slower post-cleanup rollback path has been designed but not exercised in production.
