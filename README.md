@@ -22,6 +22,6 @@ Pull requests run `.github/workflows/ci.yml`, which verifies the root and all fo
 - `.github/workflows/deploy-carolyn.yml`
 - `.github/workflows/deploy-sarabeth.yml`
 
-Each deployment workflow uses native path filters, a site-specific GitHub Environment, AWS OIDC, and a non-canceling concurrency group. Deployment jobs remain disabled until their repository-level `<SITE>_DEPLOY_ENABLED` variable is set to `true` during that site's cutover.
+Each deployment workflow uses native path filters, a site-specific GitHub Environment, AWS OIDC, and a non-canceling concurrency group. A merge to `main` that matches a site's paths validates and deploys that site; manual dispatches must also target `main`.
 
 See [deployment and rollback operations](docs/deployment.md) and the [current migration plan](docs/migration/README.md).

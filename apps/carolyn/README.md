@@ -187,9 +187,7 @@ Before provisioning production DNS or relying on Amplify:
 
 ### Configure GitHub deployment variables
 
-Create a GitHub Actions environment named `production`, restrict it to the selected `main` branch, and leave required reviewers disabled so validated main deployments remain automatic. The deployment job references this environment even though it needs no application credential; production password smoke coverage runs against the hermetic fixture artifact instead of storing a real project password in GitHub.
-
-GitHub includes the environment, rather than the branch ref, in an environment job's OIDC subject. The deployment role therefore trusts exactly `repo:soodoh/carolyn-portfolio:environment:production`. If the job's environment name changes, update the CDK trust policy and deploy the stack before running the workflow again.
+The root deployment workflow uses the protected `production-carolyn` GitHub Environment, restricted to `main`. The deployment role trusts only the monorepo environment subject `repo:soodoh@18269267/websites@1358469291:environment:production-carolyn`. If the environment name changes, update the CDK trust policy and deploy the stack before running the workflow again.
 
 Read stack outputs, then configure non-secret repository variables:
 

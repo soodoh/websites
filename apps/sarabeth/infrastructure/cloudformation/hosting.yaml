@@ -473,9 +473,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub:
-                  - repo:soodoh/sarabeth-studio:ref:refs/heads/main
-                  - repo:soodoh@18269267/websites@1358469291:environment:production-sarabeth
+                token.actions.githubusercontent.com:sub: repo:soodoh@18269267/websites@1358469291:environment:production-sarabeth
       Policies:
         - PolicyName: ReleaseSpecificAmplifyApp
           PolicyDocument:
