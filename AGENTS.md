@@ -1,8 +1,11 @@
 # Websites workspace
 
+This file defines workspace-wide rules. For work under an app, apply it together with the
+nearest app `AGENTS.md`, which contains only that app's constraints.
+
 Install only at the repository root with Bun 1.4.0 and Node 24.20.0:
 `bun install --frozen-lockfile`. `bun.lock` is authoritative; Bun's isolated linker means
-apps must declare every dependency they import. Read an app's `AGENTS.md` before changing it.
+apps must declare every dependency they import.
 
 ## Commands
 

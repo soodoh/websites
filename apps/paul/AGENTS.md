@@ -1,50 +1,24 @@
-# Repository Guidelines
+# Paul portfolio
 
-## Project Structure & Module Organization
+Apply the workspace rules in `../../AGENTS.md` together with this app-specific overlay.
 
-This is a TanStack Start + React + TypeScript app built with Vite.
+## Architecture
 
-- `src/routes/`: file-based route modules (`__root.tsx`, `index.tsx`)
-- `src/components/`: reusable UI and page components (`ui/` for shadcn primitives)
-- `src/content/`: static content data (about, projects, socials)
-- `src/styles/`: global styles (`globals.css`)
-- `public/`: static assets (images, favicon)
-- `dist/`: build artifacts (do not edit)
+- `src/routes/` contains TanStack Start file routes.
+- `src/components/` contains reusable UI and page components; shadcn primitives live under `src/components/ui/`.
+- `src/content/` contains static portfolio data; `src/styles/globals.css` contains global styles.
+- `e2e/` contains Playwright functional and visual coverage.
+- Treat `src/routeTree.gen.ts` and `dist/` as generated output.
 
-Use the `@/` alias for imports from `src` (for example, `@/components/Header`).
+This app is fully static. `bun run build` emits the deployable artifact under `dist/client`, and `bun run start` serves that exact directory.
 
-## Build, Test, and Development Commands
+## Workflows
 
-Use Bun for all local workflows:
+- `bun run test:static`: validate the generated static artifact.
+- `bun run test:e2e`: run functional and visual tests in the pinned Docker environment.
+- `bun run test:e2e:static`: build and test production-static behavior, including static 404 handling.
+- `bun run test:e2e:update`: regenerate committed baselines only for an intentional, reviewed visual change. Use `test:e2e:local` only for debugging, not baseline updates.
 
-- `bun run dev`: start the Vite dev server
-- `bun run build`: produce production build output
-- `bun run start`: serve the built static site from `dist/client`
-- `bun run lint`: run Biome (lint + format check)
-- `bun run lint:fix`: apply Biome fixes (lint + format)
-- `bun run typecheck`: type-check application, Playwright, config, and tooling files
+## Conventions
 
-Before opening a PR, run at least `bun run lint`, `bun run typecheck`, and `bun run build`.
-
-## Coding Style & Naming Conventions
-
-- Language: TypeScript + TSX, strict mode enabled.
-- Indentation: tabs (Biome default); keep imports sorted/alphabetized.
-- Prefer absolute imports via `@/`; relative imports outside the same folder are blocked by linting.
-- Components and route modules: `PascalCase` files for components, route filenames follow TanStack conventions.
-- Keep content constants in `src/content/*.ts` and UI logic in `src/components/*`.
-
-## Testing Guidelines
-
-Playwright functional and visual tests are committed under `e2e/`. Run `bun run test:e2e` against the committed Docker-pinned snapshots, or `bun run test:e2e:static` to build and exercise the production-static output. Update snapshots only for intentional visual changes.
-
-Treat `bun run lint`, `bun run typecheck`, `bun run build`, `bun run test:static`, and the relevant Playwright command as required quality gates.
-
-## Commit & Pull Request Guidelines
-
-- Root Lefthook/commitlint require Conventional Commits with one approved scope:
-  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
-- Use this app's scope for app-specific changes (example: `fix(paul): handle missing data`).
-- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
-- Install at the workspace root; this app lives at `apps/paul`.
-- For deployment changes, use the root workflow and read `../../docs/deployment.md`.
+Use strict TypeScript and functional React components. Keep content constants in `src/content/`, UI logic in `src/components/`, and cross-directory imports on the `@/` alias. Follow `biome.json` for formatting and import organization.

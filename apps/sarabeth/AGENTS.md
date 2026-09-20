@@ -1,49 +1,28 @@
-# Repository Guidelines
+# Sarabeth Studio
 
-## Project Structure & Module Organization
+Apply the workspace rules in `../../AGENTS.md` together with this app-specific overlay.
 
-- `src/routes/`: TanStack Start file routes (`about`, `lessons`, `media`, etc.) and server route handlers (for example `src/routes/api.email.ts`).
-- `src/router.tsx`: TanStack Router instance; `src/routeTree.gen.ts` is generated and must not be edited manually.
-- `components/`: Reusable React components, organized by feature; shared UI primitives live in `components/ui/`.
-- `utils/`: External integrations and data shaping (`contentful.ts`, `fetchers/*`, `types/*`).
-- `styles/`: Global styling (`styles/globals.css`).
-- `public/`: Static assets (favicons and images).
-- `lib/`: Small shared helpers (`lib/utils.ts`).
+## Architecture
 
-## Build, Test, and Development Commands
+- `src/routes/` contains TanStack Start page routes and server handlers such as `api.email.ts`.
+- `src/router.tsx` creates the router; treat `src/routeTree.gen.ts` as generated.
+- `components/`, `utils/`, `styles/`, and `lib/` contain shared UI, integrations/data shaping, global styles, and small helpers.
+- `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
+- `infrastructure/` contains retained CloudFormation templates.
 
-- `bun dev`: Start local dev server at `http://localhost:3000`.
-- `bun build`: Create production build.
-- `bun start`: Run the production server locally.
-- `bun lint`: Run Biome across the repository.
-- `bun lint:fix`: Auto-fix lint issues where possible.
+## Workflows
 
-## Coding Style & Naming Conventions
+- `bun run typecheck` and `bun run lint`: focused static checks.
+- `bun run test:container`: canonical Docker-pinned browser tests.
+- `bun run build:playwright:unchecked`: fixture browser build used by the verification chain.
+- `bun run build:amplify:fixture`, `bun run prepare:amplify`, and `bun run validate:amplify`: build and validate the fixture Amplify artifact.
 
-- Language: TypeScript + React function components.
-- Indentation: 2 spaces; keep files Prettier-friendly.
-- Components use PascalCase folders/files with `index.tsx` (example: `components/Header/index.tsx`).
-- Route segments use lowercase names in `src/routes/`.
-- Use path alias imports (`@/...`) for cross-folder imports.
-- Keep imports sorted and grouped consistently.
+Add contract tests under `tests/contract/` and page/visual coverage under `tests/visual/`. Update browser snapshots only for reviewed UI changes.
 
-## Testing Guidelines
+## Security
 
-- Playwright coverage lives under `tests/`.
-- Minimum verification is `bun lint`, then `RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright` for affected browser behavior.
-- For new tests, prefer colocated `*.test.ts` or `*.test.tsx` files near the code they cover.
+- Keep Contentful and YouTube tokens server-only; never expose them through `VITE_` variables or browser code.
+- Production retrieves `CONTENTFUL_ACCESS_TOKEN` from `/sarabeth-studio/production/contentful/access-token` during Amplify `preBuild`.
+- The contact and runtime integrations use the AWS SDK default credential provider chain and compute IAM role. Keep static AWS access keys out of app configuration.
 
-## Commit & Pull Request Guidelines
-
-- Root Lefthook/commitlint require Conventional Commits with one approved scope:
-  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
-- Use this app's scope for app-specific changes (example: `fix(sarabeth): handle missing data`).
-- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
-- Install at the workspace root; this app lives at `apps/sarabeth`.
-- For deployment changes, use the root workflow and read `../../docs/deployment.md`.
-
-## Security & Configuration Tips
-
-- Keep secrets in `.env` only; never commit credentials.
-- Production builds receive the non-secret `CONTENTFUL_SPACE_ID` as Amplify branch configuration and retrieve `CONTENTFUL_ACCESS_TOKEN` from the standard SSM `SecureString` at `/sarabeth-studio/production/contentful/access-token` during `preBuild`; never expose the token to browser code or commit it.
-- The contact endpoint uses the AWS SDK default credential provider chain. In Amplify, permissions come only from the compute IAM role; do not add static AWS access-key environment variables.
+Use TypeScript, functional React components, the `@/` alias for cross-folder imports, and `biome.json` as the formatting source of truth.
