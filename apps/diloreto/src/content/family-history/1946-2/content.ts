@@ -1,12 +1,12 @@
-import alfedenaRelativesFamilyGroupImage from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-family-group-src-46d.jpg?responsive";
-import alfedenaRelativesGilbertKneeling46HImage from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-gilbert-kneeling-src-46h.jpg?responsive";
-import alfedenaRelativesGilbertKneeling89Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-gilbert-kneeling-src-89.jpg?responsive";
-import romeElderlyWomanPortraitImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-elderly-woman-portrait-src-46f.jpg?responsive";
-import romeManAtDeskImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-man-at-desk-src-46e.jpg?responsive";
-import romeParentsAndChildImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-parents-and-child-src-46g.jpg?responsive";
-import romeRelativesBalconyGroupImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-relatives-balcony-group-src-46c.jpg?responsive";
-import romeWomanSeatedOnBalconyImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-woman-seated-on-balcony-src-46a.jpg?responsive";
-import romeWomanStandingOnBalconyImage from "~/assets/images/family-history/1946-gilbert-italy-trip/rome-woman-standing-on-balcony-src-46b.jpg?responsive";
+import alfedenaRelativesFamilyGroupImage from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-family-group-src-46d.jpg?responsive";
+import alfedenaRelativesGilbertKneeling46HImage from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-gilbert-kneeling-src-46h.jpg?responsive";
+import alfedenaRelativesGilbertKneeling89Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-relatives-gilbert-kneeling-src-89.jpg?responsive";
+import romeElderlyWomanPortraitImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-elderly-woman-portrait-src-46f.jpg?responsive";
+import romeManAtDeskImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-man-at-desk-src-46e.jpg?responsive";
+import romeParentsAndChildImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-parents-and-child-src-46g.jpg?responsive";
+import romeRelativesBalconyGroupImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-relatives-balcony-group-src-46c.jpg?responsive";
+import romeWomanSeatedOnBalconyImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-woman-seated-on-balcony-src-46a.jpg?responsive";
+import romeWomanStandingOnBalconyImage from "@/assets/images/family-history/1946-gilbert-italy-trip/rome-woman-standing-on-balcony-src-46b.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

@@ -1,5 +1,5 @@
 import { type APIRequestContext, expect, test } from "@playwright/test";
-import { selectFilter } from "@/tests/visual-helpers";
+import { selectFilter } from "@tests/visual-helpers";
 
 const canonicalOrigin = "https://carolyndiloreto.com";
 const legacyOrigin = "https://carolyn.diloreto.com";

@@ -1,4 +1,5 @@
 import { afterAll, describe, expect, test } from "bun:test";
+import { contentfulFixture } from "@tests/fixtures/contentful";
 import type { Asset as ContentfulAsset } from "contentful";
 import { createLiveShapedFixture } from "@/lib/content-source";
 import {
@@ -19,7 +20,6 @@ import {
 } from "@/lib/fetch-projects";
 import { decodeImage, isImagePlaceholder } from "@/lib/image-type";
 import type { SocialMedia } from "@/lib/types";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 const originalEnvironment = {
 	contentfulAccessToken: process.env.CONTENTFUL_ACCESS_TOKEN,

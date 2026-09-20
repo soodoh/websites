@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { App } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
-import { getCleanUrlRules } from "../../lib/amplify-artifact";
+import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
 import {
 	PRODUCTION_AWS_ACCOUNT,
 	PRODUCTION_AWS_REGION,

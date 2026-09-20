@@ -1,11 +1,11 @@
 import { describe, expect, test } from "bun:test";
-import type { ContentSourceLoader } from "@/lib/content-source";
-import manifest from "@/lib/project-auth-manifest.json";
 import {
 	assertFixtureProjectSlugCorrespondence,
 	loadContentfulFixtureProjects,
-} from "@/scripts/contentful-fixture-projects";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
+} from "@scripts/contentful-fixture-projects";
+import { contentfulFixture } from "@tests/fixtures/contentful";
+import type { ContentSourceLoader } from "@/lib/content-source";
+import manifest from "@/lib/project-auth-manifest.json";
 
 function requireFixtureProject() {
 	const project = contentfulFixture.projects[0];

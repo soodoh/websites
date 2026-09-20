@@ -1,4 +1,4 @@
-import alfedenaVillageAerialViewImage from "~/assets/images/family-history/places/alfedena-village-aerial-view.jpg?responsive";
+import alfedenaVillageAerialViewImage from "@/assets/images/family-history/places/alfedena-village-aerial-view.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

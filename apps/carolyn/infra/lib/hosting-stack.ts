@@ -36,12 +36,12 @@ import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import type { Construct } from "constructs";
-import { getCleanUrlRules } from "../../lib/amplify-artifact";
+import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
 import {
 	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
 	PRODUCTION_SECRET_PARAMETERS,
 	PROJECT_AUTH_SECRET_PARAMETER,
-} from "../../lib/deployment-parameters";
+} from "../../src/lib/deployment-parameters";
 import { PRODUCTION_AWS_ACCOUNT, PRODUCTION_AWS_REGION } from "./environment";
 
 const DOMAIN_NAME = "carolyndiloreto.com";

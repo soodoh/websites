@@ -3,8 +3,8 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig, loadEnv } from "vite";
-import { getStaticPublicPaths } from "./lib/amplify-artifact";
-import { getArtifactMode } from "./lib/build-environment";
+import { getStaticPublicPaths } from "./src/lib/amplify-artifact.ts";
+import { getArtifactMode } from "./src/lib/build-environment.ts";
 
 const staticPublicPaths = new Set(getStaticPublicPaths());
 

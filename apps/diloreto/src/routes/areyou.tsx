@@ -1,15 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { lazy, Suspense, useCallback, useRef, useState } from "react";
-import type { OpenPhoto } from "~/components/photo";
-import Record from "~/components/record";
-import { Button } from "~/components/ui/button";
-import { contacts } from "~/content/contacts";
-import { familyHistory } from "~/content/family-history";
-import type { ContentImage } from "~/content/image";
+import type { OpenPhoto } from "@/components/photo";
+import Record from "@/components/record";
+import { Button } from "@/components/ui/button";
+import { contacts } from "@/content/contacts";
+import { familyHistory } from "@/content/family-history";
+import type { ContentImage } from "@/content/image";
 
-const ContactModal = lazy(() => import("~/components/contact-modal"));
-const ImageModal = lazy(() => import("~/components/image-modal"));
+const ContactModal = lazy(() => import("@/components/contact-modal"));
+const ImageModal = lazy(() => import("@/components/image-modal"));
 
 const allPhotos: ContentImage[] = familyHistory.flatMap((record) => {
 	if (record.link) {

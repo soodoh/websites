@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { selectFilter } from "@/tests/visual-helpers";
+import { selectFilter } from "@tests/visual-helpers";
 
 const staticProjectPath = "/projects/d23-membership-page";
 const artifactMode = process.env.EXPECTED_ARTIFACT_MODE;

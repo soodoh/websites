@@ -1,5 +1,5 @@
 import type { BrowserContext } from "@playwright/test";
-import youtubePlaylistJson from "@/tests/fixtures/youtube-playlist.json" with {
+import youtubePlaylistJson from "@tests/fixtures/youtube-playlist.json" with {
 	type: "json",
 };
 import { decodeYouTubePlaylist } from "@/utils/youtube-playlist-data";

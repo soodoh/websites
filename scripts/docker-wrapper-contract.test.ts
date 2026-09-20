@@ -137,6 +137,9 @@ echo 0123456789abcdef0123456789abcdef01234567
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test");
 					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test");
 				}
+				if (app === "diloreto") {
+					expect(commands).toContain("--tmpfs /tmp:rw,size=2g,mode=1777");
+				}
 			} finally {
 				rmSync(scratch, { recursive: true, force: true });
 			}

@@ -1,6 +1,6 @@
 import type { ImgHTMLAttributes, JSX } from "react";
-import type { ContentImage } from "~/content/image";
-import { cn } from "~/lib/utils";
+import type { ContentImage } from "@/content/image";
+import { cn } from "@/lib/utils";
 
 type ResponsiveImageProps = Omit<
 	ImgHTMLAttributes<HTMLImageElement>,

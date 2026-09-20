@@ -5,10 +5,10 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 ## Architecture
 
 - `src/routes/` contains TanStack Start file routes; `src/routes/__root.tsx` defines the document shell.
-- `components/` contains reusable React UI; `lib/` contains Contentful access, authorization, image helpers, and shared types.
+- `src/components/` contains reusable React UI; `src/lib/` contains Contentful access, authorization, image helpers, and shared types.
 - `tests/` contains Playwright behavior/visual coverage and focused Bun tests under `tests/unit/`.
 - `infra/` contains the retained AWS CDK application and its tests.
-- Treat `src/routeTree.gen.ts` and `lib/project-auth-manifest.json` as generated files. The auth manifest must remain uncommitted.
+- Treat `src/routeTree.gen.ts` and `src/lib/project-auth-manifest.json` as generated files. The auth manifest must remain uncommitted.
 
 ## Workflows
 

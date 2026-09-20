@@ -21,13 +21,13 @@ Local Contentful and protected-project development uses ignored `.env` values:
 - `CONTENTFUL_ACCESS_TOKEN`
 - `PROJECT_AUTH_SECRET`
 
-Keep these values server-only. The predev/build steps generate the ignored `lib/project-auth-manifest.json`.
+Keep these values server-only. The predev/build steps generate the ignored `src/lib/project-auth-manifest.json`.
 
 ## Architecture
 
 - `src/routes/` contains TanStack Start routes.
-- `components/` contains shared React UI.
-- `lib/` contains Contentful access, project authorization, image helpers, and shared types.
+- `src/components/` contains shared React UI.
+- `src/lib/` contains Contentful access, project authorization, image helpers, and shared types.
 - `tests/` contains Playwright behavior/visual tests and focused Bun unit tests.
 - `infra/` contains the retained AWS CDK infrastructure.
 

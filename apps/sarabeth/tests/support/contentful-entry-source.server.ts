@@ -1,4 +1,4 @@
-import { contentfulEntryFixture } from "@/tests/support/contentful-entry-fixture";
+import { contentfulEntryFixture } from "@tests/support/contentful-entry-fixture";
 import type { EntrySource } from "@/utils/contentful-entry-source";
 
 export const contentfulEntrySource: EntrySource = {

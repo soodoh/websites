@@ -1,5 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
-import { expect, fetchRoutedResponse, test } from "@/tests/playwright";
+import { expect, fetchRoutedResponse, test } from "@tests/playwright";
 import {
 	expectControlContrast,
 	expectCurrentPath,
@@ -8,7 +8,7 @@ import {
 	expectStickyFilterBelowHeader,
 	selectFilter,
 	settleVisualPage,
-} from "@/tests/visual-helpers";
+} from "@tests/visual-helpers";
 
 const photographyFilters = ["Dance", "Portraits", "Spaces"] as const;
 const albumExpectations = {

@@ -25,6 +25,7 @@ docker build --file "${repository_root}/Dockerfile.playwright" --tag "${image_na
 docker_args=(
 	--init
 	--ipc host
+	--tmpfs /tmp:rw,size=2g,mode=1777
 	--user "$(id -u):$(id -g)"
 	--env CI=1
 	--env HOME=/tmp/playwright-home

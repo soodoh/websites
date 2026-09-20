@@ -1,5 +1,11 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import type { Node as RichTextNode } from "@contentful/rich-text-types";
+import { loadContentfulFixtureProjects } from "@scripts/contentful-fixture-projects";
+import {
+	recoverFixtureOutputs,
+	replaceFixtureOutputs,
+	withFixtureOutputLock,
+} from "@scripts/fixture-output-transaction";
 import pAll from "p-all";
 import sharp from "sharp";
 import { getAboutContent } from "@/lib/fetch-about-data";
@@ -7,12 +13,6 @@ import { getSocialMedia } from "@/lib/fetch-home-data";
 import getAlbums from "@/lib/fetch-photos";
 import { decodeImage } from "@/lib/image-type";
 import type { ImageType } from "@/lib/types";
-import { loadContentfulFixtureProjects } from "@/scripts/contentful-fixture-projects";
-import {
-	recoverFixtureOutputs,
-	replaceFixtureOutputs,
-	withFixtureOutputLock,
-} from "@/scripts/fixture-output-transaction";
 
 const assetDirectory = new URL("../public/test-assets/", import.meta.url);
 const stagedAssetDirectory = new URL(

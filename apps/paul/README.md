@@ -21,7 +21,7 @@ The workspace dev command serves Paul on `http://localhost:3101`. To run only th
 - `src/components/` contains reusable UI and page components.
 - `src/content/` contains portfolio and social content.
 - `src/styles/` contains global styles.
-- `e2e/` contains Playwright behavior and visual coverage.
+- `tests/` contains Playwright behavior and visual coverage.
 - `infra/` contains the retained Amplify CloudFormation template.
 
 `bun run build` emits the deployable static site under `dist/client`; `bun run start` serves that exact directory.

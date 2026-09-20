@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { JSX, MouseEventHandler } from "react";
-import type { ContentImage } from "~/content/image";
+import type { ContentImage } from "@/content/image";
 import ResponsiveImage from "./responsive-image";
 
 type TileContentProps = {

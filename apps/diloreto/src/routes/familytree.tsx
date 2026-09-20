@@ -25,11 +25,11 @@ import type {
 	GenealogyEvent,
 	GenealogyNote,
 	GenealogyPerson,
-} from "~/content/genealogy";
-import { genealogy } from "~/content/genealogy";
-import "~/styles/family-tree.css";
+} from "@/content/genealogy";
+import { genealogy } from "@/content/genealogy";
+import "@/styles/family-tree.css";
 
-const FamilyTreeGraph = lazy(() => import("~/components/family-tree-graph"));
+const FamilyTreeGraph = lazy(() => import("@/components/family-tree-graph"));
 
 type FamilyTreeSearch = {
 	person?: string;

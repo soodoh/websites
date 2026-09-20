@@ -22,7 +22,7 @@ The workspace dev command serves DiLoreto on `http://localhost:3103`. To run onl
 - `src/content/` contains typed site and family-history content.
 - `src/assets/images/` contains build-managed images.
 - `tests/` contains desktop/mobile smoke, interaction, and visual coverage.
-- `infrastructure/` contains the retained Amplify CloudFormation template.
+- `infra/` contains the retained Amplify CloudFormation template.
 
 `bun run genealogy:build` regenerates `src/content/genealogy/generated.json`. The deployable static artifact is `dist/client`.
 

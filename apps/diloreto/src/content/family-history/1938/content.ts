@@ -1,4 +1,4 @@
-import nickMaryDiloretoStoreImage from "~/assets/images/family-history/people-and-events/nick-mary-diloreto-sons-store-circa-1938.jpg?responsive";
+import nickMaryDiloretoStoreImage from "@/assets/images/family-history/people-and-events/nick-mary-diloreto-sons-store-circa-1938.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

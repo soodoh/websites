@@ -1,24 +1,24 @@
 import { XIcon } from "lucide-react";
 import type { JSX, KeyboardEvent, RefObject } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import ResponsiveImage from "~/components/responsive-image";
-import { Button } from "~/components/ui/button";
-import type { CarouselApi } from "~/components/ui/carousel";
+import ResponsiveImage from "@/components/responsive-image";
+import { Button } from "@/components/ui/button";
+import type { CarouselApi } from "@/components/ui/carousel";
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
 	CarouselPrevious,
-} from "~/components/ui/carousel";
+} from "@/components/ui/carousel";
 import {
 	Dialog,
 	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogTitle,
-} from "~/components/ui/dialog";
-import type { ContentImage } from "~/content/image";
+} from "@/components/ui/dialog";
+import type { ContentImage } from "@/content/image";
 
 type ImageModalProps = {
 	onClose: () => void;

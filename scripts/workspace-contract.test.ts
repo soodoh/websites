@@ -52,6 +52,22 @@ describe("workspace contract", () => {
 			expect(existsSync(resolve(root, `apps/${app}/bun.lock`))).toBe(false);
 			expect(existsSync(resolve(root, `apps/${app}/.nvmrc`))).toBe(false);
 			expect(existsSync(resolve(root, `apps/${app}/.bun-version`))).toBe(false);
+			expect(json(`apps/${app}/tsconfig.json`).compilerOptions.paths["@/*"]).toEqual([
+				"./src/*",
+			]);
+			for (const directory of ["src", "tests", "infra"]) {
+				expect(existsSync(resolve(root, `apps/${app}/${directory}`))).toBe(true);
+			}
+			for (const legacyDirectory of [
+				"components",
+				"e2e",
+				"infrastructure",
+				"lib",
+				"styles",
+				"utils",
+			]) {
+				expect(existsSync(resolve(root, `apps/${app}/${legacyDirectory}`))).toBe(false);
+			}
 		}
 		expect(existsSync(resolve(root, "apps/carolyn/infra/package.json"))).toBe(false);
 		expect(existsSync(resolve(root, ".github/workflows/ci.yml"))).toBe(true);

@@ -1,4 +1,4 @@
-import camilloDamicoFarmFamilyImage from "~/assets/images/family-history/people-and-events/camillo-damico-farm-family-1909-1910.png?responsive";
+import camilloDamicoFarmFamilyImage from "@/assets/images/family-history/people-and-events/camillo-damico-farm-family-1909-1910.png?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

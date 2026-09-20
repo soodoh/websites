@@ -1,5 +1,5 @@
-import { expect, type Page, test } from "@/tests/playwright";
-import { getContrastRatio } from "@/tests/support/contrast";
+import { expect, type Page, test } from "@tests/playwright";
+import { getContrastRatio } from "@tests/support/contrast";
 import { emailFieldLimits } from "@/utils/email";
 
 test("hydrates and performs client-side header navigation", async ({

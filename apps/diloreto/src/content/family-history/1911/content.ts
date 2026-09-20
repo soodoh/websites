@@ -1,5 +1,5 @@
-import gaetanoCleoniceWedding1913Image from "~/assets/images/family-history/people-and-events/gaetano-damico-cleonice-diloreto-wedding-1913.jpg?responsive";
-import remoMariannaWedding1911Image from "~/assets/images/family-history/people-and-events/remo-diloreto-marianna-damico-wedding-1911.jpg?responsive";
+import gaetanoCleoniceWedding1913Image from "@/assets/images/family-history/people-and-events/gaetano-damico-cleonice-diloreto-wedding-1913.jpg?responsive";
+import remoMariannaWedding1911Image from "@/assets/images/family-history/people-and-events/remo-diloreto-marianna-damico-wedding-1911.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

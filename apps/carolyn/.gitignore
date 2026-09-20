@@ -45,7 +45,7 @@ bun-debug.log*
 .netlify
 
 # Generated auth manifest
-lib/project-auth-manifest.json
+src/lib/project-auth-manifest.json
 
 # Fixture/build transaction recovery artifacts
 /public/.test-assets-staging/

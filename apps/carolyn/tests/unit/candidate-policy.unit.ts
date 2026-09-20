@@ -4,7 +4,7 @@ import {
 	candidateOrigin,
 	candidateRequestAllowed,
 	routeCandidateRequest,
-} from "@/tests/candidate-policy";
+} from "@tests/candidate-policy";
 
 const environment = {
 	CAROLYN_CANDIDATE_BRANCH: "fixture-candidate",

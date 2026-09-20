@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { createTestSnapshot } from "@/tests/support/snapshot-test-data";
+import { createTestSnapshot } from "@tests/support/snapshot-test-data";
 import { createImageFormatter, formatAsset } from "@/utils/contentful-assets";
 import {
 	decodeContentfulSnapshot,

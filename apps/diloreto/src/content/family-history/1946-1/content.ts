@@ -1,12 +1,12 @@
-import alfedenaPanoramaView01Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-01-src-117.jpg?responsive";
-import alfedenaPanoramaView02Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-02-src-118.jpg?responsive";
-import alfedenaPanoramaView03Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-03-src-119.jpg?responsive";
-import alfedenaPanoramaView04Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-04-src-120.jpg?responsive";
-import alfedenaPanoramaView05Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-05-src-121.jpg?responsive";
-import alfedenaPanoramaView06Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-06-src-122.jpg?responsive";
-import alfedenaWarRuinsApril1946Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-april-1946.jpg?responsive";
-import alfedenaWarRuinsView01Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-view-01-src-111.jpg?responsive";
-import alfedenaWarRuinsView02Image from "~/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-view-02-src-112.jpg?responsive";
+import alfedenaPanoramaView01Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-01-src-117.jpg?responsive";
+import alfedenaPanoramaView02Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-02-src-118.jpg?responsive";
+import alfedenaPanoramaView03Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-03-src-119.jpg?responsive";
+import alfedenaPanoramaView04Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-04-src-120.jpg?responsive";
+import alfedenaPanoramaView05Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-05-src-121.jpg?responsive";
+import alfedenaPanoramaView06Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-panorama-view-06-src-122.jpg?responsive";
+import alfedenaWarRuinsApril1946Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-april-1946.jpg?responsive";
+import alfedenaWarRuinsView01Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-view-01-src-111.jpg?responsive";
+import alfedenaWarRuinsView02Image from "@/assets/images/family-history/1946-gilbert-italy-trip/alfedena-war-ruins-view-02-src-112.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

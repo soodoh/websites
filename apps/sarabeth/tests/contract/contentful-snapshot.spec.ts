@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, rename, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
-import { createTestSnapshot } from "@/tests/support/snapshot-test-data";
+import { createTestSnapshot } from "@tests/support/snapshot-test-data";
 import {
 	loadContentfulSnapshot,
 	swapSnapshotDirectory,

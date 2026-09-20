@@ -8,9 +8,9 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import type { JSX, ReactNode } from "react";
-import Header from "~/components/header";
-import NotFound from "~/components/not-found";
-import appCss from "~/styles/app.css?url";
+import Header from "@/components/header";
+import NotFound from "@/components/not-found";
+import appCss from "@/styles/app.css?url";
 
 export function RootDocument({
 	children,

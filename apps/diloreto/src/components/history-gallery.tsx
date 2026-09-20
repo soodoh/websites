@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { HistoryRecord } from "~/content/family-history";
+import type { HistoryRecord } from "@/content/family-history";
 import Photo, { type OpenPhoto } from "./photo";
 
 type HistoryGalleryProps = {

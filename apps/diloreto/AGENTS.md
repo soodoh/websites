@@ -9,6 +9,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/content/` contains typed static content; imported images live under `src/assets/images/`.
 - `src/styles/app.css` contains Tailwind v4 and shadcn theme tokens.
 - `tests/` contains Playwright interaction, smoke, and visual coverage.
+- `infra/` contains the retained Amplify CloudFormation template.
 - Treat `src/routeTree.gen.ts` and `src/content/genealogy/generated.json` as generated files. Regenerate genealogy data with `bun run genealogy:build`.
 
 ## Workflows
@@ -22,4 +23,4 @@ The deployable static artifact is `dist/client`. Smoke and Playwright tests exer
 
 ## Conventions
 
-Use TypeScript and follow `biome.json`. Keep route filenames aligned with URL structure, component/view files in `PascalCase`, and utility modules lowercase. The source alias is `~/`, mapped to `src/`.
+Use TypeScript and follow `biome.json`. Keep route filenames aligned with URL structure, component/view files in `PascalCase`, and utility modules lowercase. The source alias is `@/`, mapped to `src/`.

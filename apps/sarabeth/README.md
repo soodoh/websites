@@ -20,10 +20,10 @@ Contentful and YouTube development values belong in an ignored `.env` file. Keep
 ## Architecture
 
 - `src/routes/` contains page routes and server handlers.
-- `components/` contains shared React UI.
-- `utils/` contains Contentful fetchers, integrations, and data shaping.
+- `src/components/` contains shared React UI.
+- `src/utils/` contains Contentful fetchers, integrations, and data shaping.
 - `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
-- `infrastructure/` contains the retained CloudFormation templates.
+- `infra/` contains the retained CloudFormation templates.
 
 The media page calls a server-side YouTube endpoint after hydration. Contact and runtime integrations use the AWS SDK default credential provider chain; production credentials come from IAM roles and SSM rather than static AWS keys.
 

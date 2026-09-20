@@ -33,4 +33,6 @@ AWS changes, workflow dispatch, source-writer shutdown, production HTTP tests, o
 
 Root Lefthook/commitlint require Conventional Commits with one scope: `carolyn`, `paul`,
 `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`. Root Renovate owns dependency updates.
-Keep secrets, credentials, build output, auth manifests, reports, and generated evidence out of Git.
+Each app keeps source under `src/`, browser tests under `tests/`, retained IaC under `infra/`,
+and maps `@/` to `src/`. Keep secrets, credentials, build output, auth manifests, reports, and
+generated evidence out of Git.

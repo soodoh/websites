@@ -7,7 +7,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/routes/` contains TanStack Start file routes.
 - `src/components/` contains reusable UI and page components; shadcn primitives live under `src/components/ui/`.
 - `src/content/` contains static portfolio data; `src/styles/globals.css` contains global styles.
-- `e2e/` contains Playwright functional and visual coverage.
+- `tests/` contains Playwright functional and visual coverage.
 - Treat `src/routeTree.gen.ts` and `dist/` as generated output.
 
 This app is fully static. `bun run build` emits the deployable artifact under `dist/client`, and `bun run start` serves that exact directory.

@@ -6,9 +6,9 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 
 - `src/routes/` contains TanStack Start page routes and server handlers such as `api.email.ts`.
 - `src/router.tsx` creates the router; treat `src/routeTree.gen.ts` as generated.
-- `components/`, `utils/`, `styles/`, and `lib/` contain shared UI, integrations/data shaping, global styles, and small helpers.
+- `src/components/`, `src/utils/`, `src/styles/`, and `src/lib/` contain shared UI, integrations/data shaping, global styles, and small helpers.
 - `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
-- `infrastructure/` contains retained CloudFormation templates.
+- `infra/` contains retained CloudFormation templates.
 
 ## Workflows
 

@@ -1,6 +1,6 @@
 import { test as base, expect } from "@playwright/test";
-import { installContentfulRoutes } from "@/tests/support/contentful-routes";
-import { installYouTubePlaylistRoute } from "@/tests/support/youtube-playlist-route";
+import { installContentfulRoutes } from "@tests/support/contentful-routes";
+import { installYouTubePlaylistRoute } from "@tests/support/youtube-playlist-route";
 
 const fixedBrowserTime = new Date("2026-01-01T12:00:00.000Z");
 

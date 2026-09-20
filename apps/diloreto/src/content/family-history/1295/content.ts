@@ -1,4 +1,4 @@
-import diloretoHomesteadMapImage from "~/assets/images/family-history/maps/diloreto-homestead-alfedena.gif?responsive";
+import diloretoHomesteadMapImage from "@/assets/images/family-history/maps/diloreto-homestead-alfedena.gif?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

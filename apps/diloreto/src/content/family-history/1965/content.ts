@@ -1,4 +1,4 @@
-import diloretoFamilyReunionProgram1965Image from "~/assets/images/family-history/people-and-events/diloreto-family-reunion-program-1965.gif?responsive";
+import diloretoFamilyReunionProgram1965Image from "@/assets/images/family-history/people-and-events/diloreto-family-reunion-program-1965.gif?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

@@ -1,7 +1,7 @@
 import { createServer, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
 import { expect, test } from "@playwright/test";
-import { routeCandidateRequest } from "@/tests/candidate-policy";
+import { routeCandidateRequest } from "@tests/candidate-policy";
 
 async function listen(server: Server): Promise<string> {
 	await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));

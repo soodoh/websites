@@ -1,16 +1,13 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { extractYamlBlock } from "@/tests/support/yaml-block";
+import { extractYamlBlock } from "@tests/support/yaml-block";
 
 const hostingTemplate = readFileSync(
-	new URL("../../infrastructure/cloudformation/hosting.yaml", import.meta.url),
+	new URL("../../infra/cloudformation/hosting.yaml", import.meta.url),
 	"utf8",
 );
 const bootstrapTemplate = readFileSync(
-	new URL(
-		"../../infrastructure/cloudformation/bootstrap.yaml",
-		import.meta.url,
-	),
+	new URL("../../infra/cloudformation/bootstrap.yaml", import.meta.url),
 	"utf8",
 );
 

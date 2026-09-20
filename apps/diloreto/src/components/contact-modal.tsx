@@ -4,8 +4,8 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-} from "~/components/ui/dialog";
-import type { Contact } from "~/content/contacts";
+} from "@/components/ui/dialog";
+import type { Contact } from "@/content/contacts";
 
 type ContactModalProps = {
 	open: boolean;

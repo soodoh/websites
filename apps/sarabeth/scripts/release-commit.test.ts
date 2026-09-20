@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { resolveReleaseCommit } from "@/scripts/release-commit";
+import { resolveReleaseCommit } from "@scripts/release-commit";
 
 const commit = "0123456789abcdef0123456789abcdef01234567";
 
