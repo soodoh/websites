@@ -58,11 +58,6 @@ function expectSecretPolicy(
 	roleLogicalIdFragment: string,
 	expectedLogStatements: unknown[] = [],
 ): void {
-	const { logicalId: keyLogicalId } = getResource(
-		template,
-		"AWS::KMS::Key",
-		"ProductionSecretKey",
-	);
 	const { logicalId: roleLogicalId } = getResource(
 		template,
 		"AWS::IAM::Role",
@@ -80,16 +75,6 @@ function expectSecretPolicy(
 				Action: "ssm:GetParameter",
 				Effect: "Allow",
 				Resource: secretParameterArns,
-			},
-			{
-				Action: "kms:Decrypt",
-				Condition: {
-					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN": secretParameterArns,
-					},
-				},
-				Effect: "Allow",
-				Resource: { "Fn::GetAtt": [keyLogicalId, "Arn"] },
 			},
 			...expectedLogStatements,
 		],
@@ -135,6 +120,11 @@ describe("HostingStack environment guardrails", () => {
 describe("HostingStack production resources", () => {
 	test("configures WEB_COMPUTE with exact bounded secret policies", () => {
 		const template = createTemplate();
+		template.hasParameter("GitHubAccessTokenSecretArn", {
+			Default: "",
+			NoEcho: true,
+			Type: "String",
+		});
 		template.hasResourceProperties("AWS::Amplify::App", {
 			CacheConfig: { Type: "AMPLIFY_MANAGED" },
 			EnableBranchAutoDeletion: false,
@@ -467,7 +457,7 @@ describe("HostingStack production resources", () => {
 		});
 	});
 
-	test("retains logs and rotates and retains the production KMS key", () => {
+	test("retains logs and relies on the AWS-managed SSM key", () => {
 		const template = createTemplate();
 		const { resource: logGroup } = getResource(template, "AWS::Logs::LogGroup");
 		expect(logGroup).toMatchObject({
@@ -475,15 +465,9 @@ describe("HostingStack production resources", () => {
 			Properties: { RetentionInDays: 14 },
 			UpdateReplacePolicy: "Retain",
 		});
-		const { resource: key } = getResource(
-			template,
-			"AWS::KMS::Key",
-			"ProductionSecretKey",
-		);
-		expect(key).toMatchObject({
-			DeletionPolicy: "Retain",
-			Properties: { EnableKeyRotation: true },
-			UpdateReplacePolicy: "Retain",
-		});
+		template.resourceCountIs("AWS::KMS::Key", 0);
+		template.resourceCountIs("AWS::KMS::Alias", 0);
+		expect(JSON.stringify(template.toJSON())).not.toContain("kms:Decrypt");
+		expect(template.toJSON().Outputs).not.toHaveProperty("SecretKmsKeyArn");
 	});
 });

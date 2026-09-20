@@ -14,10 +14,6 @@ Parameters:
     Type: String
     Default: main
     Description: Amplify branch that serves production.
-  CandidateBranchName:
-    Type: String
-    Default: candidate
-    Description: Amplify branch used to verify an artifact before production promotion.
   GitHubOidcProviderArn:
     Type: String
     NoEcho: true
@@ -100,24 +96,12 @@ Resources:
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: !Ref ProductionBranchName
-      Description: Production branch promoted only after candidate acceptance succeeds.
+      Description: Production branch deployed directly by the protected GitHub Actions environment.
       EnableAutoBuild: false
       EnablePerformanceMode: false
       EnablePullRequestPreview: false
       Framework: TanStack Start (static)
       Stage: PRODUCTION
-
-  CandidateBranch:
-    Type: AWS::Amplify::Branch
-    Properties:
-      AppId: !GetAtt AmplifyApp.AppId
-      BranchName: !Ref CandidateBranchName
-      Description: Pre-production branch for verification of the exact release artifact.
-      EnableAutoBuild: false
-      EnablePerformanceMode: false
-      EnablePullRequestPreview: false
-      Framework: TanStack Start (static)
-      Stage: BETA
 
   AmplifyDomain:
     Type: AWS::Amplify::Domain
@@ -134,27 +118,10 @@ Resources:
         - Prefix: www
           BranchName: !Ref ProductionBranchName
 
-  VerifiedReleaseBucket:
-    Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
-    UpdateReplacePolicy: Retain
-    Properties:
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-      VersioningConfiguration:
-        Status: Enabled
-
   GitHubDeploymentRole:
     Type: AWS::IAM::Role
     Properties:
-      Description: GitHub Actions OIDC role for manual deployments to this app's candidate and production branches.
+      Description: GitHub Actions OIDC role for direct deployments to this app's production branch.
       MaxSessionDuration: 10800
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -183,36 +150,19 @@ Resources:
                 Action:
                   - amplify:GetBranch
                   - amplify:ListJobs
-                Resource:
-                  - !GetAtt ProductionBranch.Arn
-                  - !GetAtt CandidateBranch.Arn
+                Resource: !GetAtt ProductionBranch.Arn
               - Sid: CreateTargetBranchDeployments
                 Effect: Allow
                 Action:
                   - amplify:CreateDeployment
                   - amplify:StartDeployment
-                Resource:
-                  - !Sub ${ProductionBranch.Arn}/deployments/*
-                  - !Sub ${CandidateBranch.Arn}/deployments/*
+                Resource: !Sub ${ProductionBranch.Arn}/deployments/*
               - Sid: ManageTargetBranchJobs
                 Effect: Allow
                 Action:
                   - amplify:GetJob
                   - amplify:StopJob
-                Resource:
-                  - !Sub ${ProductionBranch.Arn}/jobs/*
-                  - !Sub ${CandidateBranch.Arn}/jobs/*
-              - Sid: ListVerifiedReleases
-                Effect: Allow
-                Action:
-                  - s3:ListBucket
-                Resource: !GetAtt VerifiedReleaseBucket.Arn
-              - Sid: ManageVerifiedReleases
-                Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                Resource: !Sub ${VerifiedReleaseBucket.Arn}/releases/*
+                Resource: !Sub ${ProductionBranch.Arn}/jobs/*
 
 Outputs:
   AmplifyAppId:
@@ -221,18 +171,12 @@ Outputs:
   GitHubDeploymentRoleArn:
     Description: OIDC role ARN used by the GitHub production environment.
     Value: !GetAtt GitHubDeploymentRole.Arn
-  VerifiedReleaseBucketName:
-    Description: Private release store used for deployment recovery and manual rollback.
-    Value: !Ref VerifiedReleaseBucket
   AmplifyDefaultDomain:
     Description: Amplify-managed default domain for the app.
     Value: !GetAtt AmplifyApp.DefaultDomain
   ProductionBranchUrl:
     Description: Default Amplify URL for the production branch.
     Value: !Sub https://${ProductionBranchName}.${AmplifyApp.DefaultDomain}
-  CandidateBranchUrl:
-    Description: Default Amplify URL for the candidate branch.
-    Value: !Sub https://${CandidateBranchName}.${AmplifyApp.DefaultDomain}
   HostedZoneId:
     Description: Route 53 hosted zone ID for the apex domain.
     Value: !Ref HostedZone
