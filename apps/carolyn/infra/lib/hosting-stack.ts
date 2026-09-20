@@ -47,7 +47,8 @@ const DOMAIN_NAME = "carolyndiloreto.com";
 const LEGACY_DOMAIN_NAME = "diloreto.com";
 const LEGACY_DOMAIN_PREFIX = "carolyn";
 const REPOSITORY_URL = "https://github.com/soodoh/websites";
-const PRODUCTION_BRANCH = "amplify-production";
+const LEGACY_PRODUCTION_BRANCH = "amplify-production";
+const PRODUCTION_BRANCH = "main";
 const LEGACY_GITHUB_SUBJECT =
 	"repo:soodoh/carolyn-portfolio:environment:production";
 const MONOREPO_GITHUB_SUBJECT =
@@ -281,11 +282,9 @@ export class HostingStack extends Stack {
 			}),
 		);
 
-		const branch = new CfnBranch(this, "ProductionBranch", {
+		const branchProperties = {
 			appId: amplifyApp.attrAppId,
-			branchName: PRODUCTION_BRANCH,
 			computeRoleArn: amplifyComputeRole.roleArn,
-			description: "Exact-SHA production releases from GitHub Actions",
 			enableAutoBuild: false,
 			enablePerformanceMode: false,
 			enablePullRequestPreview: false,
@@ -298,6 +297,17 @@ export class HostingStack extends Stack {
 			],
 			framework: "Nitro",
 			stage: "PRODUCTION",
+		};
+		const legacyBranch = new CfnBranch(this, "ProductionBranch", {
+			...branchProperties,
+			branchName: LEGACY_PRODUCTION_BRANCH,
+			description: "Rollback branch retained during the monorepo cutover",
+		});
+		legacyBranch.addDependency(amplifyApp);
+		const branch = new CfnBranch(this, "MonorepoProductionBranch", {
+			...branchProperties,
+			branchName: PRODUCTION_BRANCH,
+			description: "Exact-SHA production releases from GitHub Actions",
 		});
 		branch.addDependency(amplifyApp);
 
@@ -306,12 +316,12 @@ export class HostingStack extends Stack {
 			domainName: hostedZone.zoneName,
 			enableAutoSubDomain: false,
 			subDomainSettings: [
-				{ branchName: PRODUCTION_BRANCH, prefix: "" },
-				{ branchName: PRODUCTION_BRANCH, prefix: "www" },
+				{ branchName: LEGACY_PRODUCTION_BRANCH, prefix: "" },
+				{ branchName: LEGACY_PRODUCTION_BRANCH, prefix: "www" },
 			],
 		});
 		domain.cfnOptions.condition = shouldCreateDomainAssociation;
-		domain.addDependency(branch);
+		domain.addDependency(legacyBranch);
 
 		// This association attaches only carolyn.diloreto.com to the Carolyn app.
 		// The shared diloreto.com Route 53 zone is owned by a separate AWS account;
@@ -322,13 +332,13 @@ export class HostingStack extends Stack {
 			enableAutoSubDomain: false,
 			subDomainSettings: [
 				{
-					branchName: PRODUCTION_BRANCH,
+					branchName: LEGACY_PRODUCTION_BRANCH,
 					prefix: LEGACY_DOMAIN_PREFIX,
 				},
 			],
 		});
 		legacyDomain.cfnOptions.condition = shouldCreateDomainAssociation;
-		legacyDomain.addDependency(branch);
+		legacyDomain.addDependency(legacyBranch);
 
 		new LogGroup(this, "AmplifySsrLogGroup", {
 			logGroupName: `/aws/amplify/${amplifyApp.attrAppId}`,

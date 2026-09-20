@@ -141,8 +141,9 @@ describe("HostingStack production resources", () => {
 			Platform: "WEB_COMPUTE",
 			Repository: "https://github.com/soodoh/websites",
 		});
+		template.resourceCountIs("AWS::Amplify::Branch", 2);
 		template.hasResourceProperties("AWS::Amplify::Branch", {
-			BranchName: "amplify-production",
+			BranchName: "main",
 			EnableAutoBuild: false,
 			EnablePerformanceMode: false,
 			EnablePullRequestPreview: false,
@@ -235,7 +236,7 @@ describe("HostingStack production resources", () => {
 		const { resource: productionBranch } = getResource(
 			template,
 			"AWS::Amplify::Branch",
-			"ProductionBranch",
+			"MonorepoProductionBranch",
 		);
 		expect(productionBranch.Properties.ComputeRoleArn).toEqual({
 			"Fn::GetAtt": [computeRoleLogicalId, "Arn"],
@@ -317,7 +318,7 @@ describe("HostingStack production resources", () => {
 				{
 					Action: "amplify:GetBranch",
 					Effect: "Allow",
-					Resource: { "Fn::GetAtt": ["ProductionBranch", "Arn"] },
+					Resource: { "Fn::GetAtt": ["MonorepoProductionBranch", "Arn"] },
 				},
 				{
 					Action: ["amplify:GetJob", "amplify:StartJob"],
@@ -325,7 +326,10 @@ describe("HostingStack production resources", () => {
 					Resource: {
 						"Fn::Join": [
 							"",
-							[{ "Fn::GetAtt": ["ProductionBranch", "Arn"] }, "/jobs/*"],
+							[
+								{ "Fn::GetAtt": ["MonorepoProductionBranch", "Arn"] },
+								"/jobs/*",
+							],
 						],
 					},
 				},
