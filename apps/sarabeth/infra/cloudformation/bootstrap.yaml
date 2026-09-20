@@ -30,19 +30,15 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Sid: AmplifyJobsAndWebhooks
+          - Sid: AmplifyJobs
             Effect: Allow
             Action:
-              - amplify:CreateWebhook
-              - amplify:DeleteWebhook
               - amplify:GetApp
               - amplify:GetBranch
               - amplify:GetJob
-              - amplify:GetWebhook
               - amplify:ListJobs
               - amplify:StartJob
               - amplify:StopJob
-              - amplify:UpdateWebhook
             Resource: "*"
           - Sid: ContentfulBuildParameter
             Effect: Allow
@@ -156,7 +152,6 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-service
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-compute-main
-                  - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-webhook-provider
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-deploy-main
                 Condition:
                   StringEquals:
@@ -180,7 +175,6 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-service
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-compute-main
-                  - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-webhook-provider
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-deploy-main
               - Sid: PassProjectRoles
                 Effect: Allow
@@ -188,30 +182,12 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-service
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-compute-main
-                  - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-webhook-provider
                   - !Sub arn:${AWS::Partition}:iam::${AWS::AccountId}:role/sarabeth-amplify-deploy-main
                 Condition:
                   StringEquals:
                     iam:PassedToService:
                       - amplify.amazonaws.com
                       - cloudformation.amazonaws.com
-                      - lambda.amazonaws.com
-              - Sid: AmplifyWebhookCustomResource
-                Effect: Allow
-                Action:
-                  - lambda:AddPermission
-                  - lambda:CreateFunction
-                  - lambda:DeleteFunction
-                  - lambda:GetFunction
-                  - lambda:GetFunctionConfiguration
-                  - lambda:InvokeFunction
-                  - lambda:ListTags
-                  - lambda:RemovePermission
-                  - lambda:TagResource
-                  - lambda:UntagResource
-                  - lambda:UpdateFunctionCode
-                  - lambda:UpdateFunctionConfiguration
-                Resource: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:sarabeth-amplify-*
               - Sid: AmplifyLogs
                 Effect: Allow
                 Action:
@@ -226,8 +202,6 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/amplify/*
                   - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/amplify/*:*
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource
-                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource:*
               - Sid: DescribeAmplifyLogs
                 Effect: Allow
                 Action: logs:DescribeLogGroups
