@@ -1,4 +1,4 @@
-import diloretoCoatOfArmsGenoaImage from "~/assets/images/family-history/heraldry/diloreto-coat-of-arms-genoa.gif?responsive";
+import diloretoCoatOfArmsGenoaImage from "@/assets/images/family-history/heraldry/diloreto-coat-of-arms-genoa.gif?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

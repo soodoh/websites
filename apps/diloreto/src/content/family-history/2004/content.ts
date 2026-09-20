@@ -1,10 +1,10 @@
-import alfedenaAncientRuinsImage from "~/assets/images/family-history/2004-alfedena/alfedena-ancient-ruins-src-img-0340.jpg?responsive";
-import alfedenaBridgeAndGardenImage from "~/assets/images/family-history/2004-alfedena/alfedena-bridge-and-garden-src-img-0339.jpg?responsive";
-import alfedenaMetaRangePanoramaImage from "~/assets/images/family-history/2004-alfedena/alfedena-meta-range-panorama-src-img-0364.jpg?responsive";
-import alfedenaMountainStreamImage from "~/assets/images/family-history/2004-alfedena/alfedena-mountain-stream-src-img-0346.jpg?responsive";
-import alfedenaPonteDAchillePostOfficeImage from "~/assets/images/family-history/2004-alfedena/alfedena-ponte-dachille-post-office-src-img-0347.jpg?responsive";
-import alfedenaChurchPortalImage from "~/assets/images/family-history/2004-alfedena/alfedena-saints-peter-and-paul-church-portal-src-img-0349.jpg?responsive";
-import alfedenaViaCasiliHistoricHomesImage from "~/assets/images/family-history/2004-alfedena/alfedena-via-casili-historic-homes-src-img-0341.jpg?responsive";
+import alfedenaAncientRuinsImage from "@/assets/images/family-history/2004-alfedena/alfedena-ancient-ruins-src-img-0340.jpg?responsive";
+import alfedenaBridgeAndGardenImage from "@/assets/images/family-history/2004-alfedena/alfedena-bridge-and-garden-src-img-0339.jpg?responsive";
+import alfedenaMetaRangePanoramaImage from "@/assets/images/family-history/2004-alfedena/alfedena-meta-range-panorama-src-img-0364.jpg?responsive";
+import alfedenaMountainStreamImage from "@/assets/images/family-history/2004-alfedena/alfedena-mountain-stream-src-img-0346.jpg?responsive";
+import alfedenaPonteDAchillePostOfficeImage from "@/assets/images/family-history/2004-alfedena/alfedena-ponte-dachille-post-office-src-img-0347.jpg?responsive";
+import alfedenaChurchPortalImage from "@/assets/images/family-history/2004-alfedena/alfedena-saints-peter-and-paul-church-portal-src-img-0349.jpg?responsive";
+import alfedenaViaCasiliHistoricHomesImage from "@/assets/images/family-history/2004-alfedena/alfedena-via-casili-historic-homes-src-img-0341.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

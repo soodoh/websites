@@ -1,9 +1,9 @@
-import { expect, test } from "@/tests/playwright";
+import { expect, test } from "@tests/playwright";
 import {
 	expectDarkSurfaceFocus,
 	expectFullPageScreenshot,
 	settleVisualPage,
-} from "@/tests/visual-helpers";
+} from "@tests/visual-helpers";
 
 test.describe("Route recovery", () => {
 	test("retries a failed route loader", {

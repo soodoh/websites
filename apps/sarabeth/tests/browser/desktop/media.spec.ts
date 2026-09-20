@@ -1,6 +1,6 @@
-import { expect, type Locator, type Page, test } from "@/tests/playwright";
-import { getContrastRatio } from "@/tests/support/contrast";
-import { youtubePlaylistFixture } from "@/tests/support/youtube-playlist-route";
+import { expect, type Locator, type Page, test } from "@tests/playwright";
+import { getContrastRatio } from "@tests/support/contrast";
+import { youtubePlaylistFixture } from "@tests/support/youtube-playlist-route";
 
 const expectActiveImage = async (
 	gallery: Locator,

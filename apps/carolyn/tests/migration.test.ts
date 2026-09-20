@@ -1,4 +1,4 @@
-import { expect, test } from "@/tests/playwright";
+import { expect, test } from "@tests/playwright";
 
 test.describe("TanStack Start migration behavior", () => {
 	test("navigates through an internal link without a document reload", async ({

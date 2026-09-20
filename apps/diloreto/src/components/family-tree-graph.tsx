@@ -13,7 +13,7 @@ import {
 	type ReactFlowInstance,
 } from "@xyflow/react";
 import { memo, useCallback, useMemo, useRef } from "react";
-import type { GenealogyData, GenealogyPerson } from "~/content/genealogy";
+import type { GenealogyData, GenealogyPerson } from "@/content/genealogy";
 import "@xyflow/react/dist/style.css";
 
 type RelationshipToFocus =

@@ -1,50 +1,25 @@
-# Repository Guidelines
+# Carolyn portfolio
 
-## Project Structure & Module Organization
+Apply the workspace rules in `../../AGENTS.md` together with this app-specific overlay.
 
-- `src/routes/` contains TanStack Start file-based routes (for example, `projects.$slug.tsx`); `src/routes/__root.tsx` defines the document shell.
-- `components/` holds reusable React UI, grouped by feature (`Header/`, `Projects/`, `PhotographyContent/`, `ui/`). Most component folders export from `index.tsx`.
-- `lib/` includes data fetching and shared utilities (`fetch-*.ts`, Contentful helpers, image utilities, type definitions).
-- `tests/` contains Playwright specs and visual baselines (`*.test.ts` and `*-snapshots/`).
-- `scripts/` stores build-time tasks, including `generate-auth-manifest.ts`.
-- `infra/` retains the AWS CDK v2 source/layout for Amplify, IAM, Route 53, monitoring, and budgets. Its tools now belong to this app's manifest; run `infra:typecheck`, `infra:test`, and offline `infra:synth` from this app.
-- `public/` is for static assets. `lib/project-auth-manifest.json` is generated and must stay uncommitted.
+## Architecture
 
-## Build, Test, and Development Commands
+- `src/routes/` contains TanStack Start file routes; `src/routes/__root.tsx` defines the document shell.
+- `src/components/` contains reusable React UI; `src/lib/` contains Contentful access, authorization, image helpers, and shared types.
+- `tests/` contains Playwright behavior/visual coverage and focused Bun tests under `tests/unit/`.
+- `infra/` contains the retained AWS CDK application and its tests.
+- Treat `src/routeTree.gen.ts` and `src/lib/project-auth-manifest.json` as generated files. The auth manifest must remain uncommitted.
 
-- Run `bun install --frozen-lockfile` at the workspace root, not in this app or infra. See root AGENTS.md for migration boundaries and root verification commands.
-- `bun dev`: generate auth manifest, then start local dev server (`http://localhost:3000`).
-- `bun run build`: generate auth data, prerender public pages, and emit the cleaned AWS Amplify Hosting bundle under `.amplify-hosting/`.
-- `bun run typecheck`: generate fixture build artifacts, then run TypeScript.
-- `bun run validate`: run lint, unit tests, type checking, fixture build, and prerender-output checks.
-- `bun run lint`: run Biome lint and format checks.
-- `bun run test:unit`: run focused Bun unit tests.
-- `bun run test:amplify`: run deployed production smoke tests against `AMPLIFY_BASE_URL`.
-- `bun run lint:fix`: apply automatic Biome lint and format fixes.
-- `bun run test:visual`: run all end-to-end/visual tests in the canonical container.
-- `bun run test:visual -- tests/home.test.ts`: run one spec file in the canonical container.
-- `bun run test:visual:update`: update canonical visual snapshots after reviewing the intended changes.
+## Workflows
 
-## Coding Style & Naming Conventions
+- `bun run validate`: app lint, unit tests, type checking, fixture builds, and artifact checks.
+- `bun run test:unit`: focused Bun unit tests.
+- `bun run test:visual -- tests/home.test.ts`: one canonical Playwright spec; run `bun run test:visual` for the full suite.
+- `bun run test:visual:update`: update canonical screenshots only after reviewing the intended visual change.
+- `bun run infra:typecheck`, `bun run infra:test`, and offline `bun run infra:synth`: validate retained CDK code.
 
-- Use TypeScript and functional React components.
-- Follow Biome rules in `biome.json`; run lint before opening a PR.
-- Prefer `@/` alias imports for cross-directory references; relative imports are only allowed within the same folder.
-- Keep imports grouped and alphabetized per configured `import/order` and `sort-imports` rules.
-- Use `PascalCase` for component names/folders and descriptive lowercase names for utilities (example: `fetch-projects.ts`).
+`bun run build` refreshes auth data, prerenders public pages, and emits the cleaned Amplify bundle under `.amplify-hosting/`. Keep protected project details and secrets out of public output.
 
-## Testing Guidelines
+## Conventions
 
-- Playwright (`@playwright/test`) covers end-to-end and visual regression behavior; Bun covers focused unit tests under `tests/unit/`.
-- Name Playwright files `*.test.ts`; use `*.unit.ts` for Bun tests so Playwright does not collect them.
-- Review screenshot diffs before updating snapshots to avoid accepting accidental UI regressions.
-- For UI work, run the changed spec first, then the full Playwright suite.
-
-## Commit & Pull Request Guidelines
-
-- Root Lefthook/commitlint require Conventional Commits with one approved scope:
-  `carolyn`, `paul`, `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`.
-- Use this app's scope for app-specific changes (example: `fix(carolyn): handle missing data`).
-- Keep changes focused, with passing lint/tests; include screenshots only for intended UI changes.
-- Install at the workspace root; this app lives at `apps/carolyn`.
-- For deployment changes, use the root workflow and read `../../docs/deployment.md`.
+Use TypeScript and functional React components. Prefer the `@/` alias for cross-directory imports and relative imports within one folder. Follow `biome.json` for formatting and import organization.

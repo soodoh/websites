@@ -18,7 +18,7 @@ import {
 	removeStaleFixtureLock,
 	replaceFixtureOutputs,
 	withFixtureOutputLock,
-} from "@/scripts/fixture-output-transaction";
+} from "@scripts/fixture-output-transaction";
 
 const temporaryDirectories: string[] = [];
 

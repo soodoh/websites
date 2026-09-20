@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { ContentImage } from "~/content/image";
+import type { ContentImage } from "@/content/image";
 import ResponsiveImage from "./responsive-image";
 
 export type OpenPhoto = (

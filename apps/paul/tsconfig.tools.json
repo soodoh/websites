@@ -7,7 +7,7 @@
 	},
 	"include": [
 		"commitlint.config.ts",
-		"e2e/**/*.ts",
+		"tests/**/*.ts",
 		"playwright.config.ts",
 		"scripts/*.mjs"
 	]

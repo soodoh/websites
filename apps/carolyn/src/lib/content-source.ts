@@ -54,7 +54,7 @@ export function createLiveShapedFixture(
 
 export async function getContentSource(): Promise<ContentSource> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		const { contentfulFixture } = await import("@/tests/fixtures/contentful");
+		const { contentfulFixture } = await import("@tests/fixtures/contentful");
 		return {
 			kind: "fixture",
 			content:

@@ -6,7 +6,7 @@ import { expect, test } from "@playwright/test";
 import {
 	getYouTubePlaylistRequest,
 	methodNotAllowedRequest,
-} from "@/src/routes/api.youtube-playlist";
+} from "@/routes/api.youtube-playlist";
 import {
 	createYouTubeApiKeyReader,
 	fetchYouTubePlaylist,

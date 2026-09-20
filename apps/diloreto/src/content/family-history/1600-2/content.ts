@@ -1,6 +1,6 @@
-import damicoFamilyTreeImage from "~/assets/images/family-history/family-trees/damico-family-tree.jpg?responsive";
-import diloretoFamilyTree1797Image from "~/assets/images/family-history/family-trees/diloreto-family-tree-1797-1938.gif?responsive";
-import diloretoFamilyTree1600sImage from "~/assets/images/family-history/family-trees/diloreto-family-tree-mid-1600s.gif?responsive";
+import damicoFamilyTreeImage from "@/assets/images/family-history/family-trees/damico-family-tree.jpg?responsive";
+import diloretoFamilyTree1797Image from "@/assets/images/family-history/family-trees/diloreto-family-tree-1797-1938.gif?responsive";
+import diloretoFamilyTree1600sImage from "@/assets/images/family-history/family-trees/diloreto-family-tree-mid-1600s.gif?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

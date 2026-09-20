@@ -7,11 +7,12 @@
 	"author": "Paul DiLoreto <soodohh@pm.me>",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/soodoh/portfolio-website/issues"
+		"url": "https://github.com/soodoh/websites/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/soodoh/portfolio-website.git"
+		"url": "git+https://github.com/soodoh/websites.git",
+		"directory": "apps/paul"
 	},
 	"keywords": [
 		"portfolio",
@@ -31,7 +32,7 @@
 		"test:e2e:container": "playwright test",
 		"test:e2e:local": "playwright test",
 		"lint": "biome check .",
-		"lint:fix": "biome check --fix .",
+		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tools.json",
 		"preview": "bun scripts/serve-static.mjs",
 		"test:static": "bun scripts/assert-static-output.mjs",

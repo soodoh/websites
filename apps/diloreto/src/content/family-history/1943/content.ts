@@ -1,4 +1,4 @@
-import remoDiloretoFreePressProfileImage from "~/assets/images/family-history/people-and-events/remo-diloreto-detroit-free-press-profile-1943.jpg?responsive";
+import remoDiloretoFreePressProfileImage from "@/assets/images/family-history/people-and-events/remo-diloreto-detroit-free-press-profile-1943.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

@@ -1,4 +1,4 @@
-import diloretoChildrenCirca1919Image from "~/assets/images/family-history/people-and-events/diloreto-children-circa-1919.jpg?responsive";
+import diloretoChildrenCirca1919Image from "@/assets/images/family-history/people-and-events/diloreto-children-circa-1919.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

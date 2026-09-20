@@ -1,10 +1,10 @@
-import { expect, test } from "@/tests/playwright";
+import { expect, test } from "@tests/playwright";
 import {
 	expectCurrentPath,
 	expectFullPageScreenshot,
 	expectStickyFilterBelowHeader,
 	settleVisualPage,
-} from "@/tests/visual-helpers";
+} from "@tests/visual-helpers";
 
 test.describe("Home page visual states", () => {
 	test.beforeEach(async ({ page }) => {

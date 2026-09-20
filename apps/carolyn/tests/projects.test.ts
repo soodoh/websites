@@ -1,4 +1,4 @@
-import { expect, test } from "@/tests/playwright";
+import { expect, test } from "@tests/playwright";
 import {
 	expectCurrentPath,
 	expectDesktopFilterIndicator,
@@ -9,7 +9,7 @@ import {
 	settleVisualPage,
 	tabToTarget,
 	waitForHydration,
-} from "@/tests/visual-helpers";
+} from "@tests/visual-helpers";
 
 const projectFilters = ["All", "Design", "Interactive", "Film"] as const;
 const projectFilterExpectations = {

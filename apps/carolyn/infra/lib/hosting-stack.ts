@@ -30,18 +30,17 @@ import {
 	ServicePrincipal,
 	WebIdentityPrincipal,
 } from "aws-cdk-lib/aws-iam";
-import { Alias, Key } from "aws-cdk-lib/aws-kms";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import type { Construct } from "constructs";
-import { getCleanUrlRules } from "../../lib/amplify-artifact";
+import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
 import {
 	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
 	PRODUCTION_SECRET_PARAMETERS,
 	PROJECT_AUTH_SECRET_PARAMETER,
-} from "../../lib/deployment-parameters";
+} from "../../src/lib/deployment-parameters";
 import { PRODUCTION_AWS_ACCOUNT, PRODUCTION_AWS_REGION } from "./environment";
 
 const DOMAIN_NAME = "carolyndiloreto.com";
@@ -96,6 +95,7 @@ export class HostingStack extends Stack {
 				default: "",
 				description:
 					"Temporary Secrets Manager ARN containing a token field for initial GitHub App authorization",
+				noEcho: true,
 				type: "String",
 			},
 		);
@@ -139,16 +139,6 @@ export class HostingStack extends Stack {
 			},
 		);
 
-		const secretKey = new Key(this, "ProductionSecretKey", {
-			description: "Encrypts Carolyn Portfolio production SecureStrings",
-			enableKeyRotation: true,
-			removalPolicy: RemovalPolicy.RETAIN,
-		});
-		new Alias(this, "ProductionSecretKeyAlias", {
-			aliasName: "alias/carolyn-portfolio-prod-secrets",
-			targetKey: secretKey,
-		});
-
 		const productionSecretParameterArns = PRODUCTION_SECRET_PARAMETERS.map(
 			(parameterName) => this.parameterArn(parameterName),
 		);
@@ -174,18 +164,6 @@ export class HostingStack extends Stack {
 			new PolicyStatement({
 				actions: ["ssm:GetParameter"],
 				resources: productionSecretParameterArns,
-			}),
-		);
-		amplifyServiceRole.addToPolicy(
-			new PolicyStatement({
-				actions: ["kms:Decrypt"],
-				conditions: {
-					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN":
-							productionSecretParameterArns,
-					},
-				},
-				resources: [secretKey.keyArn],
 			}),
 		);
 		amplifyServiceRole.addToPolicy(
@@ -272,19 +250,6 @@ export class HostingStack extends Stack {
 				resources: productionSecretParameterArns,
 			}),
 		);
-		amplifyComputeRole.addToPolicy(
-			new PolicyStatement({
-				actions: ["kms:Decrypt"],
-				conditions: {
-					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN":
-							productionSecretParameterArns,
-					},
-				},
-				resources: [secretKey.keyArn],
-			}),
-		);
-
 		const branchProperties = {
 			appId: amplifyApp.attrAppId,
 			computeRoleArn: amplifyComputeRole.roleArn,
@@ -481,7 +446,6 @@ export class HostingStack extends Stack {
 		new CfnOutput(this, "GitHubDeploymentRoleArn", {
 			value: deploymentRole.roleArn,
 		});
-		new CfnOutput(this, "SecretKmsKeyArn", { value: secretKey.keyArn });
 		new CfnOutput(this, "ContentfulAccessTokenParameter", {
 			value: CONTENTFUL_ACCESS_TOKEN_PARAMETER,
 		});

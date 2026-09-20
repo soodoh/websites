@@ -16,7 +16,10 @@ async function main(): Promise<void> {
 		deriveProjectAuthVersion,
 	);
 
-	const outPath = new URL("../lib/project-auth-manifest.json", import.meta.url);
+	const outPath = new URL(
+		"../src/lib/project-auth-manifest.json",
+		import.meta.url,
+	);
 	await writeFile(outPath.pathname, `${JSON.stringify(manifest, null, 2)}\n`);
 	process.stdout.write(
 		`Auth manifest written with ${Object.keys(manifest).length} project(s)\n`,

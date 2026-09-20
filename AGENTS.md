@@ -1,8 +1,11 @@
 # Websites workspace
 
+This file defines workspace-wide rules. For work under an app, apply it together with the
+nearest app `AGENTS.md`, which contains only that app's constraints.
+
 Install only at the repository root with Bun 1.4.0 and Node 24.20.0:
 `bun install --frozen-lockfile`. `bun.lock` is authoritative; Bun's isolated linker means
-apps must declare every dependency they import. Read an app's `AGENTS.md` before changing it.
+apps must declare every dependency they import.
 
 ## Commands
 
@@ -18,16 +21,18 @@ Carolyn browser fixtures require ARM64 Docker. Portfolio Lighthouse requires loc
 ## Deployment
 
 When changing GitHub Actions, AWS deployment, Amplify configuration, rollback behavior, or IaC,
-read `docs/deployment.md` and `docs/migration/README.md`. The deployment interface is one explicit
-workflow per site, with native path filters, GitHub Environments, OIDC, and site concurrency.
-Deployment jobs stay disabled until the site's repository enable variable is set during cutover.
+read `docs/deployment.md`. The deployment interface is one explicit workflow per site, with native
+path filters, GitHub Environments, OIDC, and site concurrency. Production releases require the
+matching protected GitHub Environment.
 
-Existing CloudFormation/CDK stacks remain resource owners during deployment migration. OpenTofu
-migration is a later import-based project. Obtain explicit approval before GitHub settings writes,
+Existing CloudFormation/CDK stacks remain resource owners. OpenTofu migration is a later
+import-based project. Obtain explicit approval before GitHub settings writes,
 AWS changes, workflow dispatch, source-writer shutdown, production HTTP tests, or deployment.
 
 ## Repository rules
 
 Root Lefthook/commitlint require Conventional Commits with one scope: `carolyn`, `paul`,
 `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`. Root Renovate owns dependency updates.
-Keep secrets, credentials, build output, auth manifests, reports, and generated evidence out of Git.
+Each app keeps source under `src/`, browser tests under `tests/`, retained IaC under `infra/`,
+and maps `@/` to `src/`. Keep secrets, credentials, build output, auth manifests, reports, and
+generated evidence out of Git.

@@ -1,4 +1,4 @@
-import diloretoSurnameDistributionMapImage from "~/assets/images/family-history/maps/diloreto-surname-distribution-italy.gif?responsive";
+import diloretoSurnameDistributionMapImage from "@/assets/images/family-history/maps/diloreto-surname-distribution-italy.gif?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

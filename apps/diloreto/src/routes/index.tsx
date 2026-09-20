@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { lazy, Suspense, useRef, useState } from "react";
-import Tile from "~/components/tile";
-import { contacts } from "~/content/contacts";
-import { type HomeTile, homeTiles } from "~/content/home";
+import Tile from "@/components/tile";
+import { contacts } from "@/content/contacts";
+import { type HomeTile, homeTiles } from "@/content/home";
 
-const ContactModal = lazy(() => import("~/components/contact-modal"));
-const PersonModal = lazy(() => import("~/components/person-modal"));
+const ContactModal = lazy(() => import("@/components/contact-modal"));
+const PersonModal = lazy(() => import("@/components/person-modal"));
 
 type PersonTile = Extract<HomeTile, { kind: "person" }>;
 

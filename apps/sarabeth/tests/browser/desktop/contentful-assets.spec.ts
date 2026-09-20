@@ -1,4 +1,4 @@
-import { expect, test } from "@/tests/playwright";
+import { expect, test } from "@tests/playwright";
 
 test("renders production-shaped transformed Contentful image URLs", async ({
 	page,

@@ -1,8 +1,8 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { createProductionRoutes } from "@/scripts/amplify-routing";
-import publicRoutes from "@/scripts/public-routes.json" with { type: "json" };
-import { resolveReleaseCommit } from "@/scripts/release-commit";
+import { createProductionRoutes } from "@scripts/amplify-routing";
+import publicRoutes from "@scripts/public-routes.json" with { type: "json" };
+import { resolveReleaseCommit } from "@scripts/release-commit";
 
 const manifestPath = join(".amplify-hosting", "deploy-manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));

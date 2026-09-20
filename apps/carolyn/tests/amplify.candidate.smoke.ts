@@ -2,8 +2,8 @@ import { type APIRequestContext, expect, test } from "@playwright/test";
 import {
 	candidateOrigin,
 	routeCandidateRequest,
-} from "@/tests/candidate-policy";
-import { selectFilter } from "@/tests/visual-helpers";
+} from "@tests/candidate-policy";
+import { selectFilter } from "@tests/visual-helpers";
 
 const canonicalOrigin = candidateOrigin(process.env);
 const publicProjectPath = "/projects/d23-membership-page";

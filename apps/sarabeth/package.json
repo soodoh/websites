@@ -7,11 +7,12 @@
 	"author": "Paul DiLoreto <soodohh@pm.me>",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/soodoh/sarabeth-portfolio/issues"
+		"url": "https://github.com/soodoh/websites/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/soodoh/sarabeth-studio.git"
+		"url": "git+https://github.com/soodoh/websites.git",
+		"directory": "apps/sarabeth"
 	},
 	"keywords": [
 		"tanstack-start",
@@ -43,7 +44,7 @@
 		"dev:workspace": "vite dev --port 3100",
 		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:release-commit && bun run test:container && bun run infra:lint",
 		"test:container": "bash scripts/playwright-docker.sh",
-		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infrastructure/cloudformation/*.yaml"
+		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infra/cloudformation/*.yaml"
 	},
 	"dependencies": {
 		"@aws-sdk/client-dynamodb": "3.1126.0",

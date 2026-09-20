@@ -1,5 +1,5 @@
-import { expect, test } from "@/tests/playwright";
-import { installContentfulRoutes } from "@/tests/support/contentful-routes";
+import { expect, test } from "@tests/playwright";
+import { installContentfulRoutes } from "@tests/support/contentful-routes";
 
 const selectedImageWidth = (source: string): number => {
 	const width = new URL(source).searchParams.get("w");

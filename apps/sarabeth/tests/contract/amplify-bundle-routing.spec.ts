@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 import {
 	createProductionRoutes,
 	resolveRouteTarget,
-} from "@/scripts/amplify-routing";
-import publicRoutes from "@/scripts/public-routes.json" with { type: "json" };
+} from "@scripts/amplify-routing";
+import publicRoutes from "@scripts/public-routes.json" with { type: "json" };
 
 const productionRoutes = createProductionRoutes(
 	[

@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { readdir } from "node:fs/promises";
+import { contentfulFixture } from "@tests/fixtures/contentful";
+import rawFixture from "@tests/fixtures/contentful.json";
 import { parseContentfulFixture } from "@/lib/contentful-fixture-types";
 import { normalizeVideoLink } from "@/lib/fetch-projects";
 import { decodeImage } from "@/lib/image-type";
 import manifest from "@/lib/project-auth-manifest.json";
 import type { IconType, ImageType } from "@/lib/types";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
-import rawFixture from "@/tests/fixtures/contentful.json";
 
 const authBySlug = new Map(Object.entries(manifest));
 

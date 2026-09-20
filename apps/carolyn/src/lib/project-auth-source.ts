@@ -18,7 +18,7 @@ type AuthProjectSkeleton = EntrySkeletonType<
 
 export async function getProjectAuthProjects(): Promise<ProjectAuthSource[]> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		const { contentfulFixture } = await import("@/tests/fixtures/contentful");
+		const { contentfulFixture } = await import("@tests/fixtures/contentful");
 		return Object.values(contentfulFixture.projectInfo).map(
 			({ password, slug }) => ({ password, slug }),
 		);

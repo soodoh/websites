@@ -5,8 +5,8 @@ import {
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
-} from "~/components/ui/dialog";
-import type { HomeTile } from "~/content/home";
+} from "@/components/ui/dialog";
+import type { HomeTile } from "@/content/home";
 
 type PersonTile = Extract<HomeTile, { kind: "person" }>;
 

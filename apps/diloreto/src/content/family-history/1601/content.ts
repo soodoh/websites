@@ -1,4 +1,4 @@
-import abruzzoRegionAlfedenaMapImage from "~/assets/images/family-history/maps/abruzzo-region-alfedena.jpg?responsive";
+import abruzzoRegionAlfedenaMapImage from "@/assets/images/family-history/maps/abruzzo-region-alfedena.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

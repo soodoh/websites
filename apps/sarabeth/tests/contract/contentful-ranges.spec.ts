@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { parseAudioRange } from "@/tests/support/contentful-routes";
+import { parseAudioRange } from "@tests/support/contentful-routes";
 
 const cases = [
 	{

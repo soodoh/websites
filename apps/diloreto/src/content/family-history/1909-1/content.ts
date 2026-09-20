@@ -1,5 +1,5 @@
-import panfiloEufrasiaPortraitImage from "~/assets/images/family-history/people-and-events/panfilo-diloreto-eufrasia-gigante-portrait.jpg?responsive";
-import remoDiloretoPortraitImage from "~/assets/images/family-history/people-and-events/remo-diloreto-portrait.jpg?responsive";
+import panfiloEufrasiaPortraitImage from "@/assets/images/family-history/people-and-events/panfilo-diloreto-eufrasia-gigante-portrait.jpg?responsive";
+import remoDiloretoPortraitImage from "@/assets/images/family-history/people-and-events/remo-diloreto-portrait.jpg?responsive";
 import type { HistoryRecordMetadata } from "../types";
 
 export default {

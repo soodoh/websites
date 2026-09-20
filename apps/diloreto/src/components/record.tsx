@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import { memo } from "react";
 import ReactMarkdown from "react-markdown";
-import type { HistoryRecord } from "~/content/family-history";
+import type { HistoryRecord } from "@/content/family-history";
 import HistoryGallery from "./history-gallery";
 import Photo, { type OpenPhoto } from "./photo";
 

@@ -58,9 +58,9 @@ copy_artifacts
 
 for argument in "$@"; do
 	if [[ "${argument}" == "--update-snapshots" && "${status}" -eq 0 ]]; then
-		staging_directory="$(mktemp -d e2e/.screenshots-staging.XXXXXX)"
-		backup_directory="e2e/.screenshots-backup"
-		docker cp "${container}:/work/apps/paul/e2e/__screenshots__/." "${staging_directory}"
+		staging_directory="$(mktemp -d tests/.screenshots-staging.XXXXXX)"
+		backup_directory="tests/.screenshots-backup"
+		docker cp "${container}:/work/apps/paul/tests/__screenshots__/." "${staging_directory}"
 		if ! find "${staging_directory}" -type f -name '*.png' -print -quit | grep -q .; then
 			echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
 			rm -rf "${staging_directory}"
@@ -68,11 +68,11 @@ for argument in "$@"; do
 		fi
 
 		rm -rf "${backup_directory}"
-		mv e2e/__screenshots__ "${backup_directory}"
-		if mv "${staging_directory}" e2e/__screenshots__; then
+		mv tests/__screenshots__ "${backup_directory}"
+		if mv "${staging_directory}" tests/__screenshots__; then
 			rm -rf "${backup_directory}"
 		else
-			mv "${backup_directory}" e2e/__screenshots__
+			mv "${backup_directory}" tests/__screenshots__
 			exit 1
 		fi
 		break
