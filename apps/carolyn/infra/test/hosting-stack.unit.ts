@@ -292,10 +292,8 @@ describe("HostingStack production resources", () => {
 					Condition: {
 						StringEquals: {
 							"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-							"token.actions.githubusercontent.com:sub": [
-								"repo:soodoh/carolyn-portfolio:environment:production",
+							"token.actions.githubusercontent.com:sub":
 								"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn",
-							],
 						},
 					},
 					Effect: "Allow",

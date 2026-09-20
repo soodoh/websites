@@ -2,12 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Static AWS Amplify Hosting, Route 53 DNS, and GitHub OIDC deployment access for pauldiloreto.com.
 
 Parameters:
-  MonorepoSubject:
-    Type: String
-    Default: ""
-    AllowedPattern: "^$|^[^*?\\s]+$"
-    AllowedValues: ["", "repo:soodoh@18269267/websites@1358469291:environment:production-portfolio"]
-    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
   AmplifyAppName:
     Type: String
     Default: pauldiloreto-portfolio
@@ -24,11 +18,6 @@ Parameters:
     Type: String
     Default: candidate
     Description: Amplify branch used to verify an artifact before production promotion.
-  GitHubRepository:
-    Type: String
-    Default: soodoh/portfolio-website
-    AllowedPattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
-    Description: GitHub owner/repository allowed to assume the deployment role.
   GitHubOidcProviderArn:
     Type: String
     NoEcho: true
@@ -43,7 +32,6 @@ Parameters:
     Description: Create the native Amplify domain association after the initial infrastructure bootstrap.
 
 Conditions:
-  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
   CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
 
 Resources:
@@ -179,9 +167,7 @@ Resources:
             Condition:
               StringEquals:
                 "token.actions.githubusercontent.com:aud": sts.amazonaws.com
-                "token.actions.githubusercontent.com:sub":
-                  - !Sub repo:${GitHubRepository}:environment:production
-                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
+                "token.actions.githubusercontent.com:sub": repo:soodoh@18269267/websites@1358469291:environment:production-portfolio
       Policies:
         - PolicyName: DeployVerifiedStaticArtifacts
           PolicyDocument:

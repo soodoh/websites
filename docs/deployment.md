@@ -26,33 +26,15 @@ Set these variables on each GitHub Environment:
 
 DiLoreto also needs `AMPLIFY_URL` for the direct Amplify origin.
 
-The OIDC role trust must name the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
-
-Set the following **repository-level** variable to `true` only when the corresponding legacy deployment writer is disabled and the monorepo workflow is ready:
-
-- `PAUL_DEPLOY_ENABLED`
-- `DILORETO_DEPLOY_ENABLED`
-- `CAROLYN_DEPLOY_ENABLED`
-- `SARABETH_DEPLOY_ENABLED`
-
-A missing variable disables deployment while still allowing validation to run.
+The OIDC role trust must name only the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
 
 For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic Amplify builds should remain off because GitHub Actions starts the release after validation.
 
-## Cutover checklist
+## Production operation
 
-Cut over one site at a time.
+All four sites are owned by this monorepo. Their legacy deployment writers are disabled and their AWS roles trust only the matching monorepo environment.
 
-1. Confirm the site's current production URL and a known-good legacy revision.
-2. Configure the GitHub Environment variables and OIDC trust.
-3. Connect the Amplify app/branch to the monorepo where required.
-4. Disable the legacy repository's deployment writer.
-5. Set the site's repository enable variable to `true`.
-6. Run the site's workflow manually from `main`.
-7. Verify the workflow's smoke check and the public site.
-8. Leave the legacy repository and infrastructure intact until the rollback window closes.
-
-Do not enable two repositories to deploy the same Amplify app at the same time.
+For an intentional deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. Approve the protected production environment, then verify the workflow smoke check and public site.
 
 ## Rollback
 

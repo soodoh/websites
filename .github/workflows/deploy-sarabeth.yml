@@ -25,7 +25,7 @@ jobs:
     uses: ./.github/workflows/_sarabeth-ci.yml
   deploy:
     needs: verify
-    if: github.ref == 'refs/heads/main' && vars.SARABETH_DEPLOY_ENABLED == 'true'
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     environment:

@@ -53,8 +53,6 @@ const MONOREPO_BUILD_SPEC = readFileSync(
 	"utf8",
 );
 const PRODUCTION_BRANCH = "main";
-const LEGACY_GITHUB_SUBJECT =
-	"repo:soodoh/carolyn-portfolio:environment:production";
 const MONOREPO_GITHUB_SUBJECT =
 	"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn";
 
@@ -433,10 +431,7 @@ export class HostingStack extends Stack {
 		const githubSubjectConditions = {
 			StringEquals: {
 				"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-				"token.actions.githubusercontent.com:sub": [
-					LEGACY_GITHUB_SUBJECT,
-					MONOREPO_GITHUB_SUBJECT,
-				],
+				"token.actions.githubusercontent.com:sub": MONOREPO_GITHUB_SUBJECT,
 			},
 		};
 		const deploymentRole = new Role(this, "GitHubDeploymentRole", {

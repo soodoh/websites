@@ -2,11 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: Static AWS Amplify Hosting, CloudFront delivery, DNS, and GitHub OIDC access for diloreto.com
 
 Parameters:
-  MonorepoSubject:
-    Type: String
-    Default: ""
-    AllowedPattern: "^$|^[^*?\\s]+$"
-    Description: Exact observed new environment OIDC subject; empty preserves only legacy trust.
   EnableCustomDomain:
     Type: String
     Default: "false"
@@ -40,14 +35,6 @@ Parameters:
     Default: ""
     AllowedPattern: "^$|^arn:[^:]+:iam::[0-9]{12}:oidc-provider/token\\.actions\\.githubusercontent\\.com$"
     Description: Existing GitHub Actions OIDC provider ARN. Leave empty to create it in this stack.
-  GitHubRepository:
-    Type: String
-    Default: soodoh/diloreto-website
-    AllowedPattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
-  GitHubEnvironment:
-    Type: String
-    Default: production
-    AllowedPattern: "^[A-Za-z0-9_.-]+$"
   BranchName:
     Type: String
     Default: main
@@ -84,7 +71,6 @@ Rules:
         AssertDescription: EnablePaulRedirect must be true when EnablePaulDnsCutover is true.
 
 Conditions:
-  HasMonorepoSubject: !Not [!Equals [!Ref MonorepoSubject, ""]]
   CreateGitHubOidcProvider: !Equals [!Ref ExistingGitHubOidcProviderArn, ""]
   CreateCustomDomain: !Equals [!Ref EnableCustomDomain, "true"]
   CreateDnsRecords: !And
@@ -454,9 +440,7 @@ Resources:
             Condition:
               StringEquals:
                 token.actions.githubusercontent.com:aud: sts.amazonaws.com
-                token.actions.githubusercontent.com:sub:
-                  - !Sub "repo:${GitHubRepository}:environment:${GitHubEnvironment}"
-                  - !If [HasMonorepoSubject, !Ref MonorepoSubject, !Ref AWS::NoValue]
+                token.actions.githubusercontent.com:sub: repo:soodoh@18269267/websites@1358469291:environment:production-diloreto
       Policies:
         - PolicyName: PublishAmplifyArtifacts
           PolicyDocument:
