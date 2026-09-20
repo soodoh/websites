@@ -21,12 +21,12 @@ Carolyn browser fixtures require ARM64 Docker. Portfolio Lighthouse requires loc
 ## Deployment
 
 When changing GitHub Actions, AWS deployment, Amplify configuration, rollback behavior, or IaC,
-read `docs/deployment.md` and `docs/migration/README.md`. The deployment interface is one explicit
-workflow per site, with native path filters, GitHub Environments, OIDC, and site concurrency.
-Deployment jobs stay disabled until the site's repository enable variable is set during cutover.
+read `docs/deployment.md`. The deployment interface is one explicit workflow per site, with native
+path filters, GitHub Environments, OIDC, and site concurrency. Production releases require the
+matching protected GitHub Environment.
 
-Existing CloudFormation/CDK stacks remain resource owners during deployment migration. OpenTofu
-migration is a later import-based project. Obtain explicit approval before GitHub settings writes,
+Existing CloudFormation/CDK stacks remain resource owners. OpenTofu migration is a later
+import-based project. Obtain explicit approval before GitHub settings writes,
 AWS changes, workflow dispatch, source-writer shutdown, production HTTP tests, or deployment.
 
 ## Repository rules

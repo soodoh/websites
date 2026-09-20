@@ -8,10 +8,11 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/soodoh/diloreto-website.git"
+		"url": "git+https://github.com/soodoh/websites.git",
+		"directory": "apps/diloreto"
 	},
 	"bugs": {
-		"url": "https://github.com/soodoh/diloreto-website/issues"
+		"url": "https://github.com/soodoh/websites/issues"
 	},
 	"scripts": {
 		"genealogy:build": "bun scripts/build-genealogy.ts",
@@ -20,7 +21,7 @@
 		"start": "serve dist/client --listen 4173",
 		"preview": "bun run start",
 		"lint": "biome check .",
-		"lint:fix": "biome check --fix .",
+		"lint:fix": "biome check --write .",
 		"typecheck": "tsc --noEmit",
 		"check:output": "bun scripts/assert-static-output.ts",
 		"test:playwright": "bash scripts/test-playwright-docker.sh",

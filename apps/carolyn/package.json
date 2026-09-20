@@ -7,11 +7,12 @@
 	"author": "Paul DiLoreto <soodohh@pm.me>",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/soodoh/carolyn-portfolio/issues"
+		"url": "https://github.com/soodoh/websites/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/soodoh/carolyn-portfolio.git"
+		"url": "git+https://github.com/soodoh/websites.git",
+		"directory": "apps/carolyn"
 	},
 	"keywords": [
 		"tanstack-start",

@@ -24,4 +24,4 @@ Pull requests run `.github/workflows/ci.yml`, which verifies the root and all fo
 
 Each deployment workflow uses native path filters, a site-specific GitHub Environment, AWS OIDC, and a non-canceling concurrency group. A merge to `main` that matches a site's paths validates and deploys that site; manual dispatches must also target `main`.
 
-See [deployment and rollback operations](docs/deployment.md) and the [current migration plan](docs/migration/README.md).
+See [deployment and rollback operations](docs/deployment.md).

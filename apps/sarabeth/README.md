@@ -1,44 +1,51 @@
-# sarabeth-studio
+# Sarabeth Studio
 
-> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
-> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
-> `apps/sarabeth`, or use root `bun run verify:sarabeth` for the complete fixture/offline
-> chain. See [root guidance](../../README.md). Standalone clone/install and deployment
-> examples below describe the original production-owner repository; they are not
-> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+Website for Sarabeth Belón's music studio, voice lessons, performances, media, booking, and contact form. It uses TanStack Start, React, Contentful, AWS Amplify Hosting, Amazon SES, and the YouTube Data API.
 
-Website for Sarabeth Belón's music studio, voice lessons, performances, media, Square booking, and SES-backed contact form.
+Production: [sarabethbelon.com](https://sarabethbelon.com)
 
-Powered by TanStack Start, React, Contentful, AWS Amplify Hosting, Amazon SES, and the YouTube Data API v3.
+## Workspace development
 
-## Local development
+Install once from the repository root with the pinned Bun and Node versions:
 
-Use the pinned Node and Bun versions from `.nvmrc` and `Dockerfile.playwright`:
-
-```bash
+```sh
 bun install --frozen-lockfile
-bun dev
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+The workspace dev command serves Sarabeth on `http://localhost:3100`. To run only this app, change to `apps/sarabeth` and run `bun run dev`; the app then uses port 3000.
 
-Contentful-backed production builds require server-only `CONTENTFUL_SPACE_ID` and `CONTENTFUL_ACCESS_TOKEN` values. The runtime YouTube playlist endpoint reads its key from the exact production SSM parameter in `us-west-2`; `YOUTUBE_API_KEY_PARAMETER` may name that same parameter explicitly, and local development may instead use the server-only `YOUTUBE_API_KEY` fallback. Local values can be loaded from an ignored `.env` file. Never prefix secrets with `VITE_`, expose them to browser code, log them, or commit them.
+Contentful and YouTube development values belong in an ignored `.env` file. Keep tokens server-only and never prefix them with `VITE_`.
 
-Normal local production builds use Nitro's Node server preset:
+## Architecture
 
-```bash
-bun run build
-bun run start
+- `src/routes/` contains page routes and server handlers.
+- `components/` contains shared React UI.
+- `utils/` contains Contentful fetchers, integrations, and data shaping.
+- `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
+- `infrastructure/` contains the retained CloudFormation templates.
+
+The media page calls a server-side YouTube endpoint after hydration. Contact and runtime integrations use the AWS SDK default credential provider chain; production credentials come from IAM roles and SSM rather than static AWS keys.
+
+## Verification
+
+From the repository root, run the complete app chain:
+
+```sh
+bun run verify:sarabeth
 ```
 
-To produce the AWS Amplify deployment bundle:
+Useful focused commands from `apps/sarabeth`:
 
-```bash
-NITRO_PRESET=aws-amplify bun run build
+```sh
+bun run lint
+bun run typecheck
+bun run test:container
+bun run validate:amplify
 ```
 
-The ignored output is written to `.amplify-hosting/`. Amplify receives only non-secret identifiers and parameter names as branch configuration. The build role retrieves the build-only Contentful token; runtime compute can retrieve only the exact YouTube key parameter and uses the AWS SDK default credential provider chain—not static AWS keys—for SSM, SES, and DynamoDB.
+Browser tests use checked-in fixtures and the pinned ARM64 Playwright container, so CI does not call Contentful, Google, or production services.
 
-`/media` remains prerendered and static. After hydration, its client wrapper calls `/api/youtube-playlist`; that compute route queries only the configured playlist and returns normalized public video metadata. The API key is never bundled into React or accepted from the browser. Playwright intercepts the endpoint with [`tests/fixtures/youtube-playlist.json`](tests/fixtures/youtube-playlist.json), so CI never calls Google or SSM.
+## Deployment
 
-See the workspace [`docs/deployment.md`](../../docs/deployment.md) for deployment and rollback operations. [`docs/privacy-policy.md`](docs/privacy-policy.md) records the owner-approved YouTube disclosure published at `/privacy`; it is not legal advice.
+Production deployments are owned by the monorepo workflow and protected GitHub Environment. See [`../../docs/deployment.md`](../../docs/deployment.md) for deployment, rollback, and infrastructure ownership rules. The published YouTube disclosure is recorded in [`docs/privacy-policy.md`](docs/privacy-policy.md).

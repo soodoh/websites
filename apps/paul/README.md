@@ -1,41 +1,50 @@
-# portfolio-website
+# Paul DiLoreto Portfolio
 
-> **Workspace entry point:** use Bun 1.4.0 / Node 24.20.0 and install only at the
-> workspace root with `bun install --frozen-lockfile`. Run this app's commands from
-> `apps/paul`, or use root `bun run verify:paul` for the complete fixture/offline
-> chain. See [root guidance](../../README.md). Standalone clone/install and deployment
-> examples below describe the original production-owner repository; they are not
-> authorized phase-1 migration commands. Source URLs/deployed identities are unchanged.
+A fully static software-engineering portfolio built with TanStack Start, React, Vite, and Tailwind CSS.
 
-My Portfolio website displaying various work and information about myself as a Software Engineer. Feel free to review my code and check out the [live website](https://pauldiloreto.com).
+Production: [pauldiloreto.com](https://pauldiloreto.com)
 
-The website is a fully static TanStack Start + React application hosted by AWS Amplify. The monorepo validates and deploys the prerendered `dist/client` artifact. See the workspace [deployment runbook](../../docs/deployment.md) for configuration, cutover, and rollback.
+## Workspace development
 
-## Local development
+Install once from the repository root with the pinned Bun and Node versions:
 
-Use the Bun version pinned in `.bun-version` and `package.json`.
-
-```bash
+```sh
 bun install --frozen-lockfile
 bun run dev
-
-# Build and serve the same static directory deployed to Amplify
-bun run typecheck
-bun run lint
-bun run build
-bun run start
 ```
 
-## End-to-end tests
+The workspace dev command serves Paul on `http://localhost:3101`. To run only this app, change to `apps/paul` and run `bun run dev`; the app then uses Vite's default port.
 
-Playwright runs in a pinned Docker image so Chromium, system fonts, and screenshot rendering are identical locally and in CI.
+## Architecture
 
-```bash
-# Run functional and visual tests against the committed baselines
+- `src/routes/` contains TanStack Start routes.
+- `src/components/` contains reusable UI and page components.
+- `src/content/` contains portfolio and social content.
+- `src/styles/` contains global styles.
+- `e2e/` contains Playwright behavior and visual coverage.
+- `infra/` contains the retained Amplify CloudFormation template.
+
+`bun run build` emits the deployable static site under `dist/client`; `bun run start` serves that exact directory.
+
+## Verification
+
+From the repository root, run the complete app chain:
+
+```sh
+bun run verify:paul
+```
+
+Useful focused commands from `apps/paul`:
+
+```sh
+bun run test:static
 bun run test:e2e
-
-# Regenerate visual baselines after an intentional UI change
-bun run test:e2e:update
+bun run test:e2e:static
+bun run test:e2e:update   # intentional, reviewed screenshot changes only
 ```
 
-The update command copies screenshots generated inside the container back to `e2e/__screenshots__`. Commit those baseline images with the related UI change. `bun run test:e2e:local` is available for debugging, but local output must not be used to update committed screenshots.
+Canonical screenshots come from the pinned Docker environment. Use `test:e2e:local` only for debugging, not for committed baseline updates.
+
+## Deployment
+
+Production deployments are owned by the monorepo workflow and protected GitHub Environment. See [`../../docs/deployment.md`](../../docs/deployment.md) for deployment, rollback, and infrastructure ownership rules.
