@@ -184,117 +184,137 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=4
+TOTAL_STAGES=7
 
 # The shared wizard template defines RED for scripts that need an error color.
 : "$RED"
 
-copy_secret_to_clipboard() {
-  local value="$1"
-  if command -v pbcopy >/dev/null 2>&1; then
-    printf '%s' "$value" | pbcopy
-  elif command -v wl-copy >/dev/null 2>&1; then
-    printf '%s' "$value" | wl-copy
-  elif command -v xclip >/dev/null 2>&1; then
-    printf '%s' "$value" | xclip -selection clipboard
-  elif command -v clip.exe >/dev/null 2>&1; then
-    printf '%s' "$value" | clip.exe
-  else
-    return 1
+set_environment_secret() {
+  local environment="$1" name="$2" value="$3"
+  if printf '%s' "$value" | gh secret set "$name" --env "$environment" >/dev/null 2>&1; then
+    WRITTEN_SECRET+=("$environment/$name")
+    printf '  %s✓ set%s %s secret %s\n' "$GREEN" "$RESET" "$environment" "$name"
+    return
+  fi
+  SKIPPED+=("$environment secret $name")
+  warn "could not set $environment secret $name"
+}
+
+set_environment_var() {
+  local environment="$1" name="$2" value="$3"
+  if gh variable set "$name" --env "$environment" --body "$value" >/dev/null 2>&1; then
+    printf '  %s✓ set%s %s variable %s\n' "$GREEN" "$RESET" "$environment" "$name"
+    return
+  fi
+  SKIPPED+=("$environment variable $name")
+  warn "could not set $environment variable $name"
+}
+
+require_value() {
+  local label="$1" value="$2"
+  if [[ -z "$value" ]]; then
+    warn "$label is required."
+    exit 1
   fi
 }
 
-clear_clipboard() {
-  copy_secret_to_clipboard "" || true
-}
+banner "Contentful → GitHub deployments"
 
-trigger_webhook() {
-  local url="$1"
-  printf 'url = "%s"\nrequest = "POST"\nsilent\nshow-error\nfail\n' "$url" |
-    curl --config - >/dev/null
-}
-
-trap clear_clipboard EXIT
-
-banner "Carolyn + Sarabeth Contentful build webhooks"
-
-stage "Collect webhook URLs and space IDs"
-say "Deploy the reviewed Carolyn stack update and ensure Sarabeth's existing hosting stack is current before continuing."
-warn "This wizard does not deploy infrastructure. The two webhook URLs are sensitive build triggers."
-step "Retrieve Carolyn's ContentfulWebhookUrl output from CarolynPortfolioHostingStack in us-west-2."
-note "aws cloudformation describe-stacks --stack-name CarolynPortfolioHostingStack --region us-west-2 --query \"Stacks[0].Outputs[?OutputKey=='ContentfulWebhookUrl'].OutputValue | [0]\" --output text"
-ask_secret CAROLYN_WEBHOOK_URL "Paste Carolyn's ContentfulWebhookUrl:"
-step "Retrieve Sarabeth's ContentfulWebhookUrl output from sarabeth-amplify-hosting in us-west-2."
-note "aws cloudformation describe-stacks --stack-name sarabeth-amplify-hosting --region us-west-2 --query \"Stacks[0].Outputs[?OutputKey=='ContentfulWebhookUrl'].OutputValue | [0]\" --output text"
-ask_secret SARABETH_WEBHOOK_URL "Paste Sarabeth's ContentfulWebhookUrl:"
-ask CAROLYN_CONTENTFUL_SPACE_ID "Carolyn Contentful space ID:"
-ask SARABETH_CONTENTFUL_SPACE_ID "Sarabeth Contentful space ID:"
-
-if [[ -z "$CAROLYN_WEBHOOK_URL" || -z "$SARABETH_WEBHOOK_URL" ]]; then
-  warn "Both Amplify webhook URLs are required."
-  exit 1
-fi
-if [[ "$CAROLYN_WEBHOOK_URL" == "$SARABETH_WEBHOOK_URL" ]]; then
-  warn "The sites must use distinct Amplify webhook URLs."
-  exit 1
-fi
-for webhook_url in "$CAROLYN_WEBHOOK_URL" "$SARABETH_WEBHOOK_URL"; do
-  if [[ ! "$webhook_url" =~ ^https:// ]]; then
-    warn "Amplify webhook URLs must use HTTPS."
+stage "Verify prerequisites"
+say "This wizard stores production credentials in the matching GitHub Environments, then dispatches the OpenTofu workflows."
+for command in gh aws; do
+  if ! command -v "$command" >/dev/null 2>&1; then
+    warn "$command is required."
     exit 1
   fi
 done
+if ! gh auth status >/dev/null 2>&1; then
+  warn "Authenticate GitHub CLI with 'gh auth login' before continuing."
+  exit 1
+fi
+for profile in carolyn-production sarabeth-production; do
+  if ! AWS_PROFILE="$profile" aws sts get-caller-identity >/dev/null 2>&1; then
+    step "Run: aws login --profile $profile"
+    pause "Press Enter after $profile is authenticated."
+    AWS_PROFILE="$profile" aws sts get-caller-identity >/dev/null
+  fi
+done
+ask CAROLYN_CONTENTFUL_SPACE_ID "Carolyn Contentful space ID:"
+ask SARABETH_CONTENTFUL_SPACE_ID "Sarabeth Contentful space ID:"
 for space_id in "$CAROLYN_CONTENTFUL_SPACE_ID" "$SARABETH_CONTENTFUL_SPACE_ID"; do
   if [[ ! "$space_id" =~ ^[A-Za-z0-9_-]+$ ]]; then
     warn "Contentful space IDs may contain only letters, numbers, underscores, and hyphens."
     exit 1
   fi
 done
+set_environment_var production-carolyn CONTENTFUL_SPACE_ID "$CAROLYN_CONTENTFUL_SPACE_ID"
+set_environment_var production-sarabeth CONTENTFUL_SPACE_ID "$SARABETH_CONTENTFUL_SPACE_ID"
 
-stage "Configure Carolyn in Contentful"
-say "Create a webhook that rebuilds only Carolyn from Carolyn's production content space."
-open_url "https://app.contentful.com/spaces/${CAROLYN_CONTENTFUL_SPACE_ID}/settings/webhooks"
-step "Edit 'Carolyn production Amplify rebuild' if it exists; otherwise choose Add webhook and use that name."
-if copy_secret_to_clipboard "$CAROLYN_WEBHOOK_URL"; then
-  step "Set the request method to POST and paste Carolyn's webhook URL from your clipboard."
-else
-  warn "Clipboard access is unavailable; retrieve Carolyn's ContentfulWebhookUrl again without printing it into shared logs."
-fi
-step "Select only Entry publish, Entry unpublish, Asset publish, and Asset unpublish."
-step "Add an environment filter: Environment ID equals master."
-step "Leave the webhook active, save it, and confirm its URL is masked in Contentful."
-pause "Carolyn's webhook is saved?"
+stage "Carolyn: Contentful token"
+say "Create a Contentful Management API token whose owner can manage webhooks in Carolyn's space."
+open_url "https://app.contentful.com/account/profile/cma_tokens"
+step "Choose Create personal access token, name it 'Carolyn GitHub deployment webhook', and copy it once."
+ask_secret CAROLYN_CONTENTFUL_TOKEN "Paste Carolyn's Contentful Management API token:"
+require_value "Carolyn Contentful token" "$CAROLYN_CONTENTFUL_TOKEN"
+set_environment_secret production-carolyn CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$CAROLYN_CONTENTFUL_TOKEN"
+unset CAROLYN_CONTENTFUL_TOKEN
 
-stage "Configure Sarabeth in Contentful"
-say "Create a separate webhook in Sarabeth's production content space."
-open_url "https://app.contentful.com/spaces/${SARABETH_CONTENTFUL_SPACE_ID}/settings/webhooks"
-step "Edit 'Sarabeth production Amplify rebuild' if it exists; otherwise choose Add webhook and use that name."
-if copy_secret_to_clipboard "$SARABETH_WEBHOOK_URL"; then
-  step "Set the request method to POST and paste Sarabeth's webhook URL from your clipboard."
-else
-  warn "Clipboard access is unavailable; retrieve Sarabeth's ContentfulWebhookUrl again without printing it into shared logs."
-fi
-step "Select only Entry publish, Entry unpublish, Asset publish, and Asset unpublish."
-step "Add an environment filter: Environment ID equals master."
-step "Leave the webhook active, save it, and confirm its URL is masked in Contentful."
-pause "Sarabeth's webhook is saved?"
+stage "Carolyn: GitHub token"
+say "Create a separate fine-grained token used only by Carolyn's Contentful webhook."
+open_url "https://github.com/settings/personal-access-tokens/new"
+step "Name it 'Carolyn Contentful workflow dispatch' and choose the soodoh resource owner."
+step "Limit repository access to only soodoh/websites."
+step "Under repository permissions, grant Actions: Read and write. Leave every other optional permission unset."
+step "Choose an appropriate expiration, generate the token, and copy it."
+ask_secret CAROLYN_GITHUB_TOKEN "Paste Carolyn's fine-grained GitHub token:"
+require_value "Carolyn GitHub token" "$CAROLYN_GITHUB_TOKEN"
+set_environment_secret production-carolyn CONTENTFUL_GITHUB_ACTIONS_TOKEN "$CAROLYN_GITHUB_TOKEN"
+unset CAROLYN_GITHUB_TOKEN
 
-stage "Optional controlled verification"
-warn "Each test below starts a real production Amplify build and deploy. It does not require a GitHub workflow dispatch."
-if confirm "Trigger one Carolyn production build now?"; then
-  trigger_webhook "$CAROLYN_WEBHOOK_URL"
-  open_url "https://us-west-2.console.aws.amazon.com/amplify/apps"
-  pause "Confirm a Carolyn webhook build appeared, then press Enter."
+stage "Sarabeth: Contentful token"
+say "Create a separate Contentful Management API token whose owner can manage webhooks in Sarabeth's space."
+open_url "https://app.contentful.com/account/profile/cma_tokens"
+step "Choose Create personal access token, name it 'Sarabeth GitHub deployment webhook', and copy it once."
+ask_secret SARABETH_CONTENTFUL_TOKEN "Paste Sarabeth's Contentful Management API token:"
+require_value "Sarabeth Contentful token" "$SARABETH_CONTENTFUL_TOKEN"
+set_environment_secret production-sarabeth CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$SARABETH_CONTENTFUL_TOKEN"
+unset SARABETH_CONTENTFUL_TOKEN
+
+stage "Sarabeth: GitHub token"
+say "Create a separate fine-grained token used only by Sarabeth's Contentful webhook."
+open_url "https://github.com/settings/personal-access-tokens/new"
+step "Name it 'Sarabeth Contentful workflow dispatch' and choose the soodoh resource owner."
+step "Limit repository access to only soodoh/websites."
+step "Under repository permissions, grant Actions: Read and write. Leave every other optional permission unset."
+step "Choose an appropriate expiration, generate the token, and copy it."
+ask_secret SARABETH_GITHUB_TOKEN "Paste Sarabeth's fine-grained GitHub token:"
+require_value "Sarabeth GitHub token" "$SARABETH_GITHUB_TOKEN"
+set_environment_secret production-sarabeth CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SARABETH_GITHUB_TOKEN"
+unset SARABETH_GITHUB_TOKEN
+
+stage "Apply Contentful configuration"
+say "The state buckets and configuration workflows must already exist on main."
+if confirm "Dispatch both production OpenTofu workflows now?"; then
+  gh workflow run configure-contentful-carolyn.yml --ref main
+  gh workflow run configure-contentful-sarabeth.yml --ref main
+  open_url "https://github.com/soodoh/websites/actions"
+  pause "Wait for both Configure Contentful workflows to succeed."
 else
-  SKIPPED+=("Carolyn webhook production-build verification")
+  SKIPPED+=("OpenTofu workflow dispatches")
 fi
-if confirm "Trigger one Sarabeth production build now?"; then
-  trigger_webhook "$SARABETH_WEBHOOK_URL"
-  open_url "https://us-west-2.console.aws.amazon.com/amplify/apps"
-  pause "Confirm a Sarabeth webhook build appeared, then press Enter."
+
+stage "Controlled verification"
+warn "Publishing or unpublishing production content starts a real GitHub workflow and production deployment."
+if confirm "Open both Contentful spaces for a controlled publish/unpublish test?"; then
+  open_url "https://app.contentful.com/spaces/${CAROLYN_CONTENTFUL_SPACE_ID}/home"
+  open_url "https://app.contentful.com/spaces/${SARABETH_CONTENTFUL_SPACE_ID}/home"
+  open_url "https://github.com/soodoh/websites/actions"
+  step "Perform one controlled publish or unpublish in each master environment."
+  step "Confirm each event creates the matching Deploy workflow with source 'contentful'."
+  step "Confirm verification, Amplify release, and production smoke test all succeed."
+  pause "Both production paths are verified?"
 else
-  SKIPPED+=("Sarabeth webhook production-build verification")
+  SKIPPED+=("controlled Contentful production deployment verification")
 fi
-clear_clipboard
 
 finish

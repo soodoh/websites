@@ -54,4 +54,4 @@ Canonical visual tests run in the pinned ARM64 Playwright container. Production 
 
 ## Deployment
 
-Production source deployments are owned by the monorepo workflow and protected GitHub Environment. Production Contentful publish/unpublish events use Carolyn's separate infrastructure-managed Amplify webhook. See [`../../docs/deployment.md`](../../docs/deployment.md) for webhook setup, deployment, rollback, and infrastructure ownership rules.
+Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. OpenTofu manages the Contentful-to-GitHub webhook, and AWS CDK continues to own Amplify Hosting and the encrypted OpenTofu state bucket. See [`../../docs/deployment.md`](../../docs/deployment.md) for setup, deployment, rollback, and infrastructure ownership rules.

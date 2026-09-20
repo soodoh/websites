@@ -25,6 +25,33 @@ test("allows SES sends only from the contact sender to the intended recipient", 
 	}
 });
 
+test("stores Contentful OpenTofu state without an Amplify webhook", () => {
+	const stateBucket = extractYamlBlock(
+		hostingTemplate,
+		"ContentfulOpenTofuStateBucket:",
+	);
+	const deploymentRole = extractYamlBlock(
+		hostingTemplate,
+		"RoutineDeploymentRole:",
+	);
+	const workloadBoundary = extractYamlBlock(
+		bootstrapTemplate,
+		"- Sid: ContentfulOpenTofuState",
+	);
+
+	expect(stateBucket).toContain("Type: AWS::S3::Bucket");
+	expect(stateBucket).toContain("DeletionPolicy: Retain");
+	expect(stateBucket).toContain(
+		"BucketName: websites-sarabeth-contentful-tofu-state-015989770400-us-west-2",
+	);
+	expect(stateBucket).toContain("SSEAlgorithm: AES256");
+	expect(stateBucket).toContain("Status: Enabled");
+	expect(deploymentRole).toContain("Action: s3:ListBucket");
+	expect(workloadBoundary).toContain("s3:DeleteObject");
+	expect(hostingTemplate).not.toContain("Custom::AmplifyWebhook");
+	expect(hostingTemplate).not.toContain("ContentfulWebhookUrl:");
+});
+
 test("connects the durable pre-SES rate-limit boundary", () => {
 	const table = extractYamlBlock(hostingTemplate, "EmailRateLimitTable:");
 	const computeRole = extractYamlBlock(hostingTemplate, "AmplifyComputeRole:");

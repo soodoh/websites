@@ -29,11 +29,6 @@ Parameters:
     Type: String
     MinLength: 1
     Description: Non-secret Contentful space identifier used during production builds.
-  WebhookRotationVersion:
-    Type: String
-    Default: "2"
-    Description: Increment only to rotate the CMS build webhook URL.
-
 Conditions:
   HasGitHubAccessToken: !Not [!Equals [!Ref GitHubAccessToken, ""]]
 
@@ -254,133 +249,46 @@ Resources:
         - Key: Environment
           Value: production
 
-  WebhookCustomResourceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: sarabeth-amplify-webhook-provider
-      PermissionsBoundary: !Ref WorkloadPermissionsBoundaryArn
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: ManageContentfulAmplifyWebhook
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - amplify:CreateWebhook
-                  - amplify:DeleteWebhook
-                  - amplify:GetWebhook
-                  - amplify:UpdateWebhook
-                Resource:
-                  - !GetAtt AmplifyApp.Arn
-                  - !Sub ${AmplifyApp.Arn}/*
-                  - !Sub arn:${AWS::Partition}:amplify:${AWS::Region}:${AWS::AccountId}:webhooks/*
-              - Effect: Allow
-                Action: logs:CreateLogGroup
-                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Resource: !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/sarabeth-amplify-webhook-custom-resource:*
-
-  WebhookCustomResourceFunction:
-    Type: AWS::Lambda::Function
-    DependsOn: WebhookCustomResourceLogGroup
-    Properties:
-      FunctionName: sarabeth-amplify-webhook-custom-resource
-      Description: CloudFormation provider for the Amplify CMS build webhook.
-      Runtime: python3.13
-      Handler: index.handler
-      Role: !GetAtt WebhookCustomResourceRole.Arn
-      Timeout: 60
-      Code:
-        ZipFile: |
-          import boto3
-          import json
-          import urllib.request
-
-          amplify = boto3.client("amplify")
-
-          def respond(event, context, status, physical_id, data, reason=None):
-              body = json.dumps({
-                  "Status": status,
-                  "Reason": reason or f"See CloudWatch log stream {context.log_stream_name}",
-                  "PhysicalResourceId": physical_id,
-                  "StackId": event["StackId"],
-                  "RequestId": event["RequestId"],
-                  "LogicalResourceId": event["LogicalResourceId"],
-                  "NoEcho": False,
-                  "Data": data,
-              }).encode()
-              request = urllib.request.Request(
-                  event["ResponseURL"],
-                  data=body,
-                  method="PUT",
-                  headers={"content-type": "", "content-length": str(len(body))},
-              )
-              urllib.request.urlopen(request).read()
-
-          def handler(event, context):
-              physical_id = event.get("PhysicalResourceId", context.log_stream_name)
-              try:
-                  properties = event["ResourceProperties"]
-                  request_type = event["RequestType"]
-                  if request_type == "Delete":
-                      if event.get("PhysicalResourceId"):
-                          try:
-                              amplify.delete_webhook(webhookId=event["PhysicalResourceId"])
-                          except amplify.exceptions.NotFoundException:
-                              pass
-                      respond(event, context, "SUCCESS", physical_id, {})
-                      return
-                  rotate = (
-                      request_type == "Update"
-                      and event.get("OldResourceProperties", {}).get("RotationVersion")
-                      != properties.get("RotationVersion")
-                  )
-                  if request_type == "Update" and event.get("PhysicalResourceId") and not rotate:
-                      result = amplify.update_webhook(
-                          webhookId=event["PhysicalResourceId"],
-                          branchName=properties["BranchName"],
-                          description=properties["Description"],
-                      )["webhook"]
-                  else:
-                      result = amplify.create_webhook(
-                          appId=properties["AppId"],
-                          branchName=properties["BranchName"],
-                          description=properties["Description"],
-                      )["webhook"]
-                  physical_id = result["webhookId"]
-                  respond(event, context, "SUCCESS", physical_id, {
-                      "WebhookUrl": result["webhookUrl"],
-                      "WebhookArn": result["webhookArn"],
-                  })
-              except Exception as error:
-                  respond(event, context, "FAILED", physical_id, {}, str(error))
-
-  WebhookCustomResourceLogGroup:
-    Type: AWS::Logs::LogGroup
-    DeletionPolicy: RetainExceptOnCreate
+  ContentfulOpenTofuStateBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      LogGroupName: /aws/lambda/sarabeth-amplify-webhook-custom-resource
-      RetentionInDays: 14
+      BucketName: websites-sarabeth-contentful-tofu-state-015989770400-us-west-2
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+        - Key: Environment
+          Value: production
 
-  ContentfulBuildWebhook:
-    Type: Custom::AmplifyWebhook
+  ContentfulOpenTofuStateBucketPolicy:
+    Type: AWS::S3::BucketPolicy
     Properties:
-      ServiceToken: !GetAtt WebhookCustomResourceFunction.Arn
-      AppId: !GetAtt AmplifyApp.AppId
-      BranchName: !GetAtt MainBranch.BranchName
-      Description: Contentful publish and unpublish production rebuilds.
-      RotationVersion: !Ref WebhookRotationVersion
+      Bucket: !Ref ContentfulOpenTofuStateBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyInsecureTransport
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource:
+              - !GetAtt ContentfulOpenTofuStateBucket.Arn
+              - !Sub ${ContentfulOpenTofuStateBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: false
 
   AmplifyComputeLogGroup:
     Type: AWS::Logs::LogGroup
@@ -484,6 +392,20 @@ Resources:
                   - amplify:GetJob
                   - amplify:StartJob
                 Resource: !Sub ${MainBranch.Arn}/jobs/*
+              - Effect: Allow
+                Action: s3:ListBucket
+                Resource: !GetAtt ContentfulOpenTofuStateBucket.Arn
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub ${ContentfulOpenTofuStateBucket.Arn}/contentful/terraform.tfstate
+              - Effect: Allow
+                Action:
+                  - s3:DeleteObject
+                  - s3:GetObject
+                  - s3:PutObject
+                Resource: !Sub ${ContentfulOpenTofuStateBucket.Arn}/contentful/terraform.tfstate.tflock
 
 Outputs:
   AmplifyAppId:
@@ -500,8 +422,8 @@ Outputs:
     Value: !GetAtt AmplifyComputeRole.Arn
   RoutineDeploymentRoleArn:
     Value: !GetAtt RoutineDeploymentRole.Arn
-  ContentfulWebhookUrl:
-    Value: !GetAtt ContentfulBuildWebhook.WebhookUrl
+  ContentfulOpenTofuStateBucketName:
+    Value: !Ref ContentfulOpenTofuStateBucket
   AlarmTopicArn:
     Value: !Ref AlarmTopic
   ComputeLogGroupName:

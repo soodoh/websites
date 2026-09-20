@@ -1,0 +1,54 @@
+name: Configure Sarabeth Contentful
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/sarabeth/infra/contentful/**
+      - .github/workflows/configure-contentful-sarabeth.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: contentful-sarabeth-configuration
+  cancel-in-progress: false
+jobs:
+  apply:
+    name: plan and apply
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: production-sarabeth
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      CONTENTFUL_MANAGEMENT_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_MANAGEMENT_ACCESS_TOKEN }}
+      TF_VAR_contentful_space_id: ${{ vars.CONTENTFUL_SPACE_ID }}
+      TF_VAR_github_actions_token: ${{ secrets.CONTENTFUL_GITHUB_ACTIONS_TOKEN }}
+    defaults:
+      run:
+        working-directory: apps/sarabeth/infra/contentful
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: opentofu/setup-opentofu@9d84900f3238fab8cd84ce47d658d25dd008be2f # v1
+        with:
+          tofu_version: 1.12.6
+          tofu_wrapper: false
+      - uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+          allowed-account-ids: ${{ vars.AWS_ACCOUNT_ID }}
+          unset-current-credentials: true
+      - name: Initialize
+        run: tofu init -input=false
+      - name: Validate
+        run: |
+          tofu fmt -check
+          tofu validate
+      - name: Plan
+        run: tofu plan -input=false -out=contentful.tfplan
+      - name: Apply
+        run: tofu apply -input=false -auto-approve contentful.tfplan

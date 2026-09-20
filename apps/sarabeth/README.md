@@ -46,6 +46,8 @@ bun run validate:amplify
 
 Browser tests use checked-in fixtures and the pinned ARM64 Playwright container, so CI does not call Contentful, Google, or production services.
 
+Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. OpenTofu manages the Contentful-to-GitHub webhook, and CloudFormation continues to own Amplify Hosting and the encrypted OpenTofu state bucket. See [`../../docs/deployment.md`](../../docs/deployment.md) for setup and operational guidance.
+
 ## Deployment
 
 Production deployments are owned by the monorepo workflow and protected GitHub Environment. See [`../../docs/deployment.md`](../../docs/deployment.md) for deployment, rollback, and infrastructure ownership rules. The published YouTube disclosure is recorded in [`docs/privacy-policy.md`](docs/privacy-policy.md).

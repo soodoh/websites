@@ -275,6 +275,11 @@ describe("HostingStack production resources", () => {
 			"AWS::IAM::Role",
 			"GitHubDeploymentRole",
 		);
+		const { logicalId: stateBucketLogicalId } = getResource(
+			template,
+			"AWS::S3::Bucket",
+			"ContentfulOpenTofuStateBucket",
+		);
 		expect(role.Properties.AssumeRolePolicyDocument).toEqual({
 			Statement: [
 				{
@@ -324,65 +329,67 @@ describe("HostingStack production resources", () => {
 						],
 					},
 				},
+				{
+					Action: "s3:ListBucket",
+					Effect: "Allow",
+					Resource: { "Fn::GetAtt": [stateBucketLogicalId, "Arn"] },
+				},
+				{
+					Action: ["s3:GetObject", "s3:PutObject"],
+					Effect: "Allow",
+					Resource: {
+						"Fn::Join": [
+							"",
+							[
+								{ "Fn::GetAtt": [stateBucketLogicalId, "Arn"] },
+								"/contentful/terraform.tfstate",
+							],
+						],
+					},
+				},
+				{
+					Action: ["s3:DeleteObject", "s3:GetObject", "s3:PutObject"],
+					Effect: "Allow",
+					Resource: {
+						"Fn::Join": [
+							"",
+							[
+								{ "Fn::GetAtt": [stateBucketLogicalId, "Arn"] },
+								"/contentful/terraform.tfstate.tflock",
+							],
+						],
+					},
+				},
 			],
 			Version: "2012-10-17",
 		});
 	});
 
-	test("manages a rotatable Contentful build webhook", () => {
+	test("stores Contentful OpenTofu state without an Amplify webhook", () => {
 		const template = createTemplate();
-		template.hasParameter("WebhookRotationVersion", {
-			Default: "2",
-			Type: "String",
-		});
-		template.resourceCountIs("AWS::Lambda::Function", 1);
-		template.hasResourceProperties("AWS::Lambda::Function", {
-			Description:
-				"CloudFormation provider for the Carolyn Contentful Amplify build webhook",
-			FunctionName: "carolyn-amplify-webhook-custom-resource",
-			Handler: "index.handler",
-			Runtime: "python3.13",
-			Timeout: 60,
-		});
-		template.hasResourceProperties("AWS::Logs::LogGroup", {
-			LogGroupName: "/aws/lambda/carolyn-amplify-webhook-custom-resource",
-			RetentionInDays: 14,
-		});
-		template.hasResourceProperties("AWS::IAM::Policy", {
-			PolicyDocument: {
-				Statement: [
-					{
-						Action: [
-							"amplify:CreateWebhook",
-							"amplify:DeleteWebhook",
-							"amplify:GetWebhook",
-							"amplify:UpdateWebhook",
-						],
-						Effect: "Allow",
-					},
-					{
-						Action: ["logs:CreateLogStream", "logs:PutLogEvents"],
-						Effect: "Allow",
-					},
+		template.hasResourceProperties("AWS::S3::Bucket", {
+			BucketEncryption: {
+				ServerSideEncryptionConfiguration: [
+					{ ServerSideEncryptionByDefault: { SSEAlgorithm: "AES256" } },
 				],
-				Version: "2012-10-17",
 			},
+			BucketName:
+				"websites-carolyn-contentful-tofu-state-725669362139-us-west-2",
+			PublicAccessBlockConfiguration: {
+				BlockPublicAcls: true,
+				BlockPublicPolicy: true,
+				IgnorePublicAcls: true,
+				RestrictPublicBuckets: true,
+			},
+			VersioningConfiguration: { Status: "Enabled" },
 		});
-
-		const { resource: webhook } = getResource(
-			template,
-			"Custom::AmplifyWebhook",
-		);
-		expect(webhook.Properties).toMatchObject({
-			AppId: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
-			BranchName: "main",
-			Description: "Contentful publish and unpublish production rebuilds",
-			RotationVersion: { Ref: "WebhookRotationVersion" },
-		});
-		expect(template.toJSON().Outputs.ContentfulWebhookUrl).toMatchObject({
-			Description:
-				"Sensitive Amplify incoming webhook URL for Carolyn Contentful production events",
-		});
+		template.resourceCountIs("AWS::Lambda::Function", 0);
+		template.resourceCountIs("Custom::AmplifyWebhook", 0);
+		expect(template.toJSON().Parameters.WebhookRotationVersion).toBeUndefined();
+		expect(template.toJSON().Outputs.ContentfulWebhookUrl).toBeUndefined();
+		expect(
+			template.toJSON().Outputs.ContentfulOpenTofuStateBucketName,
+		).toBeDefined();
 	});
 
 	test("pins domains, SNS alarm wiring, and both budget notifications", () => {

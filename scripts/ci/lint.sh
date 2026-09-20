@@ -6,6 +6,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
 
+tofu fmt -check -recursive apps/carolyn/infra/contentful apps/sarabeth/infra/contentful
+
 scripts=(
   scripts/ci/*.sh
   scripts/deploy/*.sh

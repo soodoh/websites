@@ -11,7 +11,7 @@ Every site owns one workflow. The workflow validates the current commit, then de
 | Carolyn | `deploy-carolyn.yml` | `production-carolyn` | repository-connected Amplify release |
 | Sarabeth | `deploy-sarabeth.yml` | `production-sarabeth` | repository-connected Amplify release |
 
-GitHub's environment protection is the approval seam for source releases. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate infrastructure-managed Contentful webhooks that rebuild the already-connected `main` revision after a production content publish; those content releases do not grant permission to select or change source code.
+Every deployment proceeds automatically after its workflow checks pass. GitHub Environments remain the site-specific trust and secret boundary, but they do not require a human reviewer. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate OpenTofu-managed Contentful webhooks that dispatch the corresponding GitHub deployment workflow against `main`; content and source releases therefore share the same verification, deployment, and smoke-test path.
 
 ## Required configuration
 
@@ -28,23 +28,29 @@ DiLoreto's public domain is a native Amplify domain association, so it does not 
 
 The OIDC role trust must name only the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
 
-For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic repository builds should remain off because GitHub Actions starts source releases after validation. The incoming Contentful webhooks are the only additional build triggers.
+For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic repository builds and Amplify incoming webhooks must remain disabled because GitHub Actions is the only production release writer.
 
-### Contentful build webhooks
+### Contentful deployment webhooks
 
-Carolyn and Sarabeth each own a distinct Amplify incoming webhook in their existing infrastructure stack. Both stacks expose its sensitive URL as `ContentfulWebhookUrl`. Never commit, log, or reuse these URLs between sites.
+OpenTofu owns one webhook in each production Contentful space under `apps/<site>/infra/contentful/`. Each webhook is restricted to the `master` environment and entry/asset publish and unpublish events. It calls GitHub's `workflow_dispatch` API for the matching deployment workflow with `ref: main` and `source: contentful`.
 
-After deploying reviewed infrastructure changes, run:
+The webhook authenticates with a site-specific, repository-scoped fine-grained token that grants only **Actions: write**. Contentful stores it as a secret `Authorization` header. OpenTofu still records the token in encrypted remote state, so state access is production-secret access. The Contentful Management API token is also supplied only through the matching GitHub Environment.
+
+Set these additional values on `production-carolyn` and `production-sarabeth`:
+
+- variable `CONTENTFUL_SPACE_ID`
+- secret `CONTENTFUL_MANAGEMENT_ACCESS_TOKEN`
+- secret `CONTENTFUL_GITHUB_ACTIONS_TOKEN`
+
+After the AWS stack has created the site's versioned, encrypted state bucket, run:
 
 ```sh
-scripts/setup-contentful-webhooks.sh
+scripts/setup-contentful-github-webhooks.sh
 ```
 
-The wizard configures one webhook in each site's Contentful space. Each webhook is restricted to the `master` environment and to entry/asset publish and unpublish events. The optional final wizard stage directly invokes each Amplify webhook, which starts a real production build and deploy; use that stage only with explicit production approval.
+The wizard captures separate Contentful and GitHub credentials for each site, writes them to the matching GitHub Environment, and dispatches the OpenTofu configuration workflows. Those workflows plan and apply with OpenTofu 1.12.6 and `registry.terraform.io/cysp/contentful` 0.0.67. Contentful then dispatches the normal site workflow, which validates the current `main` SHA, starts that exact Amplify release through AWS OIDC, waits for it, and smoke-tests production.
 
-A Contentful-triggered build checks out the repository-connected `main` branch and runs the root `amplify.yml`. It cannot choose a different source revision, but it also does not pass through the GitHub workflow or protected GitHub Environment. Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds.
-
-To rotate a compromised or exposed URL, increment `WebhookRotationVersion` for that site's stack and deploy the reviewed update. The custom resource creates the replacement before CloudFormation deletes the old webhook. Promptly replace the URL in Contentful, then verify one controlled build. Carolyn currently uses rotation version `2`; Sarabeth retains its independently managed version.
+Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds. Rotate either fine-grained GitHub token by updating its environment secret and rerunning the corresponding OpenTofu workflow.
 
 ### Carolyn repository authorization
 
@@ -69,9 +75,9 @@ Removing the key from CDK does not delete it because its removal policy is `RETA
 
 All four sites are owned by this monorepo. Their legacy deployment writers are disabled and their AWS roles trust only the matching monorepo environment.
 
-For an intentional source deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. Approve the protected production environment, then verify the workflow smoke check and public site.
+For an intentional source deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. After the checks pass, deployment proceeds automatically; verify the workflow smoke check and public site.
 
-For Carolyn or Sarabeth content-only changes, publish or unpublish through the configured production Contentful space. Confirm the corresponding Amplify webhook build succeeds before considering the content release complete. A failed content build leaves the previously successful deployment serving production.
+For Carolyn or Sarabeth content-only changes, publish or unpublish through the configured production Contentful space. Confirm the corresponding GitHub deployment workflow succeeds before considering the content release complete. A failed content build leaves the previously successful deployment serving production.
 
 ## Rollback
 
@@ -90,14 +96,13 @@ Paul deploys directly to its production Amplify branch. Its former candidate bra
 
 ## Infrastructure
 
-The current CloudFormation/CDK stacks remain the owners of existing resources during the deployment migration. Native Amplify domain associations and their service-managed DNS records remain owned through those stacks. Do not let a second IaC tool manage the same resource.
+The current CloudFormation/CDK stacks remain the owners of existing AWS resources. Native Amplify domain associations, service-managed DNS records, and the Contentful OpenTofu state buckets remain owned through those stacks. OpenTofu owns only the newly introduced Contentful webhook definitions; do not let a second IaC tool manage the same resource.
 
-OpenTofu is a separate follow-up:
+Migrating existing AWS resources to OpenTofu remains a separate import-based follow-up:
 
-1. create an encrypted remote S3 backend with locking;
-2. model one site's resources;
-3. import existing resources and verify a no-change plan;
-4. remove those resources from the old stack without deleting them;
-5. repeat site by site.
+1. model one site's existing resources;
+2. import them and verify a no-change plan;
+3. remove those resources from the old stack without deleting them;
+4. repeat site by site.
 
-This avoids combining deployment cutover risk with IaC state migration risk.
+This keeps the small Contentful automation roots independent from any later AWS ownership migration.
