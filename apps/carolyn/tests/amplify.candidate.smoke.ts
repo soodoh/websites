@@ -130,7 +130,7 @@ test.describe("Isolated Amplify candidate behavior", () => {
 		});
 		expect(new URL(missing.url()).origin).toBe(canonicalOrigin);
 		expect(missing.status()).toBe(404);
-		expect(await missing.text()).toContain("Page Not Found");
+		expect(await missing.text()).toBe("");
 
 		for (const accept of ["application/json", "text/event-stream"]) {
 			const staticMissing = await request.get("/not-a-real-amplify-route", {

@@ -40,10 +40,7 @@ import {
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import type { Construct } from "constructs";
-import {
-	getCleanUrlRules,
-	getStaticNotFoundRule,
-} from "../../src/lib/amplify-artifact";
+import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
 import {
 	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
 	PRODUCTION_SECRET_PARAMETERS,
@@ -240,7 +237,6 @@ export class HostingStack extends Stack {
 					target: `https://${DOMAIN_NAME}`,
 				},
 				...getCleanUrlRules(),
-				getStaticNotFoundRule(),
 			],
 			description: "Carolyn DiLoreto portfolio production hosting",
 			enableBranchAutoDeletion: false,
