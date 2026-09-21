@@ -1,7 +1,7 @@
 import {
 	type ContentfulDeliveryClient,
 	type ContentSourceLoader,
-	getContentSource,
+	getBuildContentSource,
 } from "@/lib/content-source";
 import type {
 	AboutSkeleton,
@@ -54,7 +54,7 @@ function getSocialMediaCache(client: ContentfulDeliveryClient) {
 }
 
 export async function getBackgroundImage(
-	loadSource: ContentSourceLoader = getContentSource,
+	loadSource: ContentSourceLoader = getBuildContentSource,
 ): Promise<ImageType> {
 	const source = await loadSource();
 	if (source.kind === "fixture") {
@@ -78,7 +78,7 @@ export async function getBackgroundImage(
 }
 
 export async function getSocialMedia(
-	loadSource: ContentSourceLoader = getContentSource,
+	loadSource: ContentSourceLoader = getBuildContentSource,
 ): Promise<SocialMedia[]> {
 	const source = await loadSource();
 	if (source.kind === "fixture") {

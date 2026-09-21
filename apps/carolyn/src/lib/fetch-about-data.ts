@@ -2,7 +2,7 @@ import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import {
 	type ContentfulDeliveryClient,
 	type ContentSourceLoader,
-	getContentSource,
+	getBuildContentSource,
 } from "@/lib/content-source";
 import type { AboutSkeleton } from "@/lib/contentful-types";
 import { isContentfulAssetUrl } from "@/lib/contentful-url-policy";
@@ -74,7 +74,7 @@ export function getAboutContent(): Promise<{
 	aboutData: AboutData;
 	resumeUrl: string;
 }> {
-	return getAboutContentFromSource(getContentSource);
+	return getAboutContentFromSource(getBuildContentSource);
 }
 
 export async function getAboutContentFromSource(
@@ -104,7 +104,7 @@ export function getAboutPageData(): Promise<{
 	backgroundImage: ImageType;
 	aboutData: AboutData;
 }> {
-	return getAboutPageDataFromSource(getContentSource);
+	return getAboutPageDataFromSource(getBuildContentSource);
 }
 
 export async function getAboutPageDataFromSource(
@@ -128,7 +128,7 @@ export async function getAboutPageDataFromSource(
 }
 
 export function getResumeUrl(): Promise<string> {
-	return getResumeUrlFromSource(getContentSource);
+	return getResumeUrlFromSource(getBuildContentSource);
 }
 
 export async function getResumeUrlFromSource(

@@ -58,14 +58,14 @@ The existing Carolyn Amplify app uses its installed GitHub App connection; routi
 
 For disaster recovery, create a short-lived Secrets Manager secret with a `token` field using secure input, pass its ARN only for the replacement app's initial stack deployment, then redeploy with `GitHubAccessTokenSecretArn` empty and delete the temporary secret. Never put the token in an Amplify environment variable, shell argument, repository file, or deployment log. Confirm a repository-connected build succeeds before removing the temporary secret.
 
-### Carolyn runtime secrets
+### Carolyn build and runtime secrets
 
-Carolyn reads exactly these Standard-tier SSM `SecureString` parameters:
+Carolyn stores these Standard-tier SSM `SecureString` parameters:
 
 - `/carolyn-portfolio/prod/contentful-access-token`
 - `/carolyn-portfolio/prod/project-auth-secret`
 
-They use the AWS-managed `alias/aws/ssm` key. The Amplify build/service role and SSR compute role receive `ssm:GetParameter` only for those two parameter ARNs; they do not need an explicit `kms:Decrypt` grant for the AWS-managed SSM key.
+They use the AWS-managed `alias/aws/ssm` key. The Amplify build/service role can read both parameters. The build exports the Contentful token only while capturing the release snapshot. The SSR compute role can read only the project-auth secret; production compute has no permission or code path for the Contentful token. Neither role needs an explicit `kms:Decrypt` grant for the AWS-managed SSM key.
 
 Before the first deployment of the infrastructure definition that removes Carolyn's dedicated KMS key, update both parameters in place to `alias/aws/ssm` without writing plaintext to disk, arguments, or logs. Verify parameter metadata, a repository-connected Amplify build, and runtime secret retrieval first. Keep the old key enabled during verification. If retrieval fails before the stack update, update both parameters back to the old key through the same in-memory/pipe-only process.
 

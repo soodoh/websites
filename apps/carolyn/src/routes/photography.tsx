@@ -1,16 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import PhotographyContent from "@/components/photography-content";
-import { getInitialPhotographyData } from "@/lib/fetch-photos";
+import { getStaticPhotographyContent } from "@/lib/release-server-functions";
 import { containerClass } from "@/lib/utils";
 
-const getPhotographyPageData = createServerFn().handler(
-	getInitialPhotographyData,
-);
-
 export const Route = createFileRoute("/photography")({
-	loader: () => getPhotographyPageData(),
+	loader: () => getStaticPhotographyContent(),
 	head: () => ({
 		meta: [
 			{ title: "CD Photography" },
@@ -25,11 +20,15 @@ export const Route = createFileRoute("/photography")({
 });
 
 function PhotographyPage(): JSX.Element {
-	const { albumNames, initialAlbum } = Route.useLoaderData();
+	const { albumNames, albumSources, initialAlbum } = Route.useLoaderData();
 	return (
 		<div className={containerClass}>
 			<h1 className="sr-only">Photography</h1>
-			<PhotographyContent albumNames={albumNames} initialAlbum={initialAlbum} />
+			<PhotographyContent
+				albumNames={albumNames}
+				albumSources={albumSources}
+				initialAlbum={initialAlbum}
+			/>
 		</div>
 	);
 }

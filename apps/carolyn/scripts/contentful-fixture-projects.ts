@@ -1,13 +1,12 @@
 import {
 	type ContentSourceLoader,
-	getContentSource,
+	getBuildContentSource,
 } from "@/lib/content-source";
 import {
 	getProjectPageSnapshotFromSource,
 	getProjectsFromSource,
 } from "@/lib/fetch-projects";
 import type { ProjectAuthSource } from "@/lib/project-auth-manifest-builder";
-import { fetchContentfulAuthProjects } from "@/lib/project-auth-source";
 import type { Project, ProjectInfo } from "@/lib/types";
 
 type FixtureProjectRecords = {
@@ -43,21 +42,21 @@ export function assertFixtureProjectSlugCorrespondence(
 }
 
 export async function loadContentfulFixtureProjects(
-	loadSource: ContentSourceLoader = getContentSource,
-	loadAuthProjects: () => Promise<
-		ProjectAuthSource[]
-	> = fetchContentfulAuthProjects,
+	loadSource: ContentSourceLoader = getBuildContentSource,
 ): Promise<FixtureProjectRecords> {
-	const [projects, authProjects] = await Promise.all([
-		getProjectsFromSource(loadSource),
-		loadAuthProjects(),
-	]);
+	const source = await loadSource();
+	const sameSource = async () => source;
+	const projects = await getProjectsFromSource(sameSource);
 	const projectSnapshots = await Promise.all(
 		projects.map((project) =>
-			getProjectPageSnapshotFromSource(project.slug, loadSource),
+			getProjectPageSnapshotFromSource(project.slug, sameSource),
 		),
 	);
 	const projectInfos = projectSnapshots.map((snapshot) => snapshot.projectInfo);
+	const authProjects = projectSnapshots.map(({ password, projectInfo }) => ({
+		password,
+		slug: projectInfo.slug,
+	}));
 	assertFixtureProjectSlugCorrespondence(projects, projectInfos, authProjects);
 	return { authProjects, projectInfos, projects };
 }

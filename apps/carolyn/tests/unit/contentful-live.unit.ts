@@ -11,12 +11,10 @@ import {
 	getInitialPhotographyDataFromSource,
 } from "@/lib/fetch-photos";
 import {
-	getProjectAuthorizationSnapshotFromSource,
 	getProjectInfoFromSource,
 	getProjectPageSnapshotFromSource,
 	getProjectsFromSource,
 } from "@/lib/fetch-projects";
-import { fetchContentfulAuthProjects } from "@/lib/project-auth-source";
 
 function entry(id: string, fields: Record<string, unknown>): unknown {
 	return { sys: { id }, fields };
@@ -307,30 +305,6 @@ describe("live Contentful contracts", () => {
 		expect(requireQuery(queries[1])).toMatchObject({ skip: 1 });
 	});
 
-	test("queries only authorization fields before project detail", async () => {
-		const { client, queries } = createFakeClient([
-			collection([
-				entry("project-authorization", {
-					slug: "project-detail",
-					password: "protected",
-				}),
-			]),
-		]);
-
-		await expect(
-			getProjectAuthorizationSnapshotFromSource(
-				"project-detail",
-				liveSource(client),
-			),
-		).resolves.toEqual({ password: "protected" });
-		expect(requireQuery(queries[0])).toEqual({
-			content_type: "project",
-			"fields.slug": "project-detail",
-			limit: 2,
-			select: ["fields.slug", "fields.password"],
-		});
-	});
-
 	test("filters post-release projects before mapping list details", async () => {
 		const releasedProject = entry("released", {
 			title: "Released project",
@@ -421,36 +395,16 @@ describe("live Contentful contracts", () => {
 		});
 	});
 
-	test("fails closed when exact project queries are not singular", async () => {
+	test("fails closed when exact project detail queries are not singular", async () => {
 		const duplicateItems = [
 			entry("first", { slug: "duplicate" }),
 			entry("second", { slug: "duplicate" }),
 		];
-		const { client: authorizationClient } = createFakeClient([
-			collection(duplicateItems),
-		]);
-		await expect(
-			getProjectAuthorizationSnapshotFromSource(
-				"duplicate",
-				liveSource(authorizationClient),
-			),
-		).rejects.toThrow("did not return exactly one project");
-
 		const { client: detailClient } = createFakeClient([
 			collection(duplicateItems),
 		]);
 		await expect(
 			getProjectInfoFromSource("duplicate", liveSource(detailClient)),
-		).rejects.toThrow("did not return exactly one project");
-
-		const { client: inexactClient } = createFakeClient([
-			collection([entry("other", { slug: "other" })]),
-		]);
-		await expect(
-			getProjectAuthorizationSnapshotFromSource(
-				"requested",
-				liveSource(inexactClient),
-			),
 		).rejects.toThrow("did not return exactly one project");
 	});
 
@@ -703,49 +657,6 @@ describe("live Contentful contracts", () => {
 		}
 	});
 
-	test("paginates and maps project authorization fields", async () => {
-		const { client, queries } = createFakeClient([
-			collection([entry("first", { slug: "first", password: "secret" })], 2),
-			collection([entry("second", { slug: "second" })], 2),
-		]);
-
-		expect(await fetchContentfulAuthProjects(client)).toEqual([
-			{ slug: "first", password: "secret" },
-			{ slug: "second", password: undefined },
-		]);
-		expect(requireQuery(queries[0])).toMatchObject({
-			content_type: "project",
-			limit: 1000,
-			skip: 0,
-			select: ["fields.slug", "fields.password"],
-		});
-		expect(requireQuery(queries[1])).toMatchObject({ skip: 1 });
-	});
-
-	test("rejects malformed project passwords instead of making them public", async () => {
-		for (const password of [null, 42, {}, [], true]) {
-			const { client } = createFakeClient([
-				collection([entry("malformed", { slug: "malformed", password })]),
-			]);
-			await expect(fetchContentfulAuthProjects(client)).rejects.toThrow(
-				"malformed password field",
-			);
-		}
-	});
-
-	test("permits absent and explicitly empty project passwords", async () => {
-		const { client } = createFakeClient([
-			collection([
-				entry("absent", { slug: "absent" }),
-				entry("empty", { slug: "empty", password: "" }),
-			]),
-		]);
-		expect(await fetchContentfulAuthProjects(client)).toEqual([
-			{ slug: "absent", password: undefined },
-			{ slug: "empty", password: undefined },
-		]);
-	});
-
 	test("rejects malformed collection responses in every live branch", async () => {
 		const malformedResponse = { items: "not-an-array", total: 1 };
 		for (const load of [
@@ -765,19 +676,8 @@ describe("live Contentful contracts", () => {
 				const { client } = createFakeClient([malformedResponse]);
 				await getSocialMedia(liveSource(client));
 			},
-			async () => {
-				const { client } = createFakeClient([malformedResponse]);
-				await fetchContentfulAuthProjects(client);
-			},
 		]) {
 			await expect(load()).rejects.toThrow("malformed Contentful response");
 		}
-	});
-
-	test("rejects incomplete auth pagination instead of looping", async () => {
-		const { client } = createFakeClient([collection([], 1)]);
-		await expect(fetchContentfulAuthProjects(client)).rejects.toThrow(
-			"incomplete page",
-		);
 	});
 });

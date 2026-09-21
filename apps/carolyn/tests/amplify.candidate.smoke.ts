@@ -89,23 +89,20 @@ test.describe("Isolated Amplify candidate behavior", () => {
 		).toBeVisible();
 	});
 
-	test("loads photography albums through a server function", async ({
+	test("loads photography albums from immutable static output", async ({
 		page,
 	}) => {
 		const initialResponse = await page.goto("/photography");
 		expect(initialResponse?.status()).toBe(200);
 		await page.locator("html[data-hydrated='true']").waitFor();
-		const responsePromise = page.waitForResponse((response) => {
-			const request = response.request();
-			return (
-				request.method() === "POST" &&
-				response.url().includes("/_serverFn/") &&
-				request.postData()?.includes("Portraits") === true
-			);
-		});
+		const responsePromise = page.waitForResponse((response) =>
+			new URL(response.url()).pathname.startsWith("/__release/albums/"),
+		);
 		await selectFilter(page, "Dance", "Portraits");
 		const albumResponse = await responsePromise;
 		expect(albumResponse.ok()).toBe(true);
+		expect(albumResponse.request().method()).toBe("GET");
+		expect(albumResponse.headers()["cache-control"]).toContain("immutable");
 		expect(await albumResponse.text()).toContain("Portraits");
 		const firstPortrait = page
 			.locator(".masonry-grid")
@@ -136,22 +133,13 @@ test.describe("Isolated Amplify candidate behavior", () => {
 		expect(await missing.text()).toContain("Page Not Found");
 
 		for (const accept of ["application/json", "text/event-stream"]) {
-			const unacceptable = await request.get("/not-a-real-amplify-route", {
+			const staticMissing = await request.get("/not-a-real-amplify-route", {
 				headers: { Accept: accept },
 				maxRedirects: 0,
 			});
-			expect(new URL(unacceptable.url()).origin, accept).toBe(canonicalOrigin);
-			expect(unacceptable.status(), accept).toBe(406);
-			expect(unacceptable.headers().vary).toBe("Accept");
+			expect(new URL(staticMissing.url()).origin, accept).toBe(canonicalOrigin);
+			expect(staticMissing.status(), accept).toBe(404);
 		}
-
-		const unacceptablePost = await request.post("/not-a-real-amplify-route", {
-			data: {},
-			headers: { Accept: "application/json" },
-			maxRedirects: 0,
-		});
-		expect(new URL(unacceptablePost.url()).origin).toBe(canonicalOrigin);
-		expect(unacceptablePost.status()).toBe(406);
 	});
 
 	test("serves the exact candidate root release without production requests", async ({

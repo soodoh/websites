@@ -1,22 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import Background from "@/components/background";
 import HomePageContent from "@/components/home-page-content";
 import Projects from "@/components/projects";
-import { getBackgroundImage } from "@/lib/fetch-home-data";
-import { getProjects } from "@/lib/fetch-projects";
-
-const getHomePageData = createServerFn().handler(async () => {
-	const [backgroundImage, projects] = await Promise.all([
-		getBackgroundImage(),
-		getProjects(),
-	]);
-	return { backgroundImage, projects };
-});
+import { getStaticHomeContent } from "@/lib/release-server-functions";
 
 export const Route = createFileRoute("/")({
-	loader: () => getHomePageData(),
+	loader: () => getStaticHomeContent(),
 	head: () => ({
 		meta: [
 			{ title: "CD Portfolio" },

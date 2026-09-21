@@ -4,35 +4,26 @@ import { createServerSecretLoader } from "@/lib/server-secrets.server";
 const emptyEnvironment: Readonly<Record<string, string | undefined>> = {};
 
 describe("server secret loading", () => {
-	test("uses local environment values without querying Parameter Store", async () => {
+	test("uses the local project auth secret without querying Parameter Store", async () => {
 		let parameterCalls = 0;
 		const loader = createServerSecretLoader({
-			environment: {
-				CONTENTFUL_ACCESS_TOKEN: "local-contentful-token",
-				PROJECT_AUTH_SECRET: "local-project-secret",
-			},
+			environment: { PROJECT_AUTH_SECRET: "local-project-secret" },
 			getParameter: async () => {
 				parameterCalls += 1;
 				return undefined;
 			},
 		});
 
-		expect(await loader.getContentfulAccessToken()).toBe(
-			"local-contentful-token",
-		);
 		expect(await loader.getProjectAuthSecret()).toBe("local-project-secret");
 		expect(parameterCalls).toBe(0);
 	});
 
-	test("fails closed when required parameters are missing", async () => {
+	test("fails closed when the project auth secret is missing", async () => {
 		const loader = createServerSecretLoader({
 			environment: emptyEnvironment,
 			getParameter: async () => undefined,
 		});
 
-		await expect(loader.getContentfulAccessToken()).rejects.toThrow(
-			"Missing CONTENTFUL_ACCESS_TOKEN",
-		);
 		await expect(loader.getProjectAuthSecret()).rejects.toThrow(
 			"Missing PROJECT_AUTH_SECRET",
 		);
@@ -49,8 +40,8 @@ describe("server secret loading", () => {
 		});
 
 		const values = await Promise.all([
-			loader.getContentfulAccessToken(),
-			loader.getContentfulAccessToken(),
+			loader.getProjectAuthSecret(),
+			loader.getProjectAuthSecret(),
 		]);
 		expect(values).toEqual(["cached-secret", "cached-secret"]);
 		expect(parameterCalls).toBe(1);

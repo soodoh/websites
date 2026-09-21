@@ -4,7 +4,7 @@ import {
 	parseContentfulFixture,
 } from "@/lib/contentful-fixture-types";
 import {
-	getContentfulClient,
+	createContentfulBuildClient,
 	getContentfulPlaceholder,
 } from "@/lib/contentful-utils";
 import { decodeImage } from "@/lib/image-type";
@@ -52,16 +52,25 @@ export function createLiveShapedFixture(
 	return parseContentfulFixture(replaceFixtureImageUrls(fixture));
 }
 
-export async function getContentSource(): Promise<ContentSource> {
-	if (process.env.PLAYWRIGHT_TEST === "true") {
+export async function getBuildContentSource(
+	environment: Readonly<Record<string, string | undefined>> = process.env,
+): Promise<ContentSource> {
+	if (environment.PLAYWRIGHT_TEST === "true") {
 		const { contentfulFixture } = await import("@tests/fixtures/contentful");
 		return {
 			kind: "fixture",
 			content:
-				process.env.HERMETIC_PRODUCTION_BUILD === "true"
+				environment.HERMETIC_PRODUCTION_BUILD === "true"
 					? createLiveShapedFixture(contentfulFixture)
 					: contentfulFixture,
 		};
 	}
-	return { kind: "live", client: await getContentfulClient() };
+
+	return {
+		kind: "live",
+		client: createContentfulBuildClient({
+			accessToken: environment.CONTENTFUL_ACCESS_TOKEN ?? "",
+			space: environment.CONTENTFUL_SPACE_ID ?? "",
+		}),
+	};
 }

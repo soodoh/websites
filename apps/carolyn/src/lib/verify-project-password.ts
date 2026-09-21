@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { setCookie } from "@tanstack/react-start/server";
 import { compare } from "bcryptjs";
 import { COOKIE_MAX_AGE, signToken } from "@/lib/password-utils";
-import { getProjectAuth } from "@/lib/project-auth";
+import { getProjectAuth } from "@/lib/project-auth.server";
 import { validateProjectPasswordInput } from "@/lib/server-function-inputs";
 
 export const verifyProjectPassword = createServerFn({ method: "POST" })

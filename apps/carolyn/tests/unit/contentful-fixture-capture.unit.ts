@@ -5,7 +5,7 @@ import {
 } from "@scripts/contentful-fixture-projects";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import type { ContentSourceLoader } from "@/lib/content-source";
-import manifest from "@/lib/project-auth-manifest.json";
+import manifest from "@/lib/generated-release/project-auth-manifest.server.json";
 
 function requireFixtureProject() {
 	const project = contentfulFixture.projects[0];
@@ -29,19 +29,8 @@ describe("Contentful fixture project capture", () => {
 			kind: "fixture",
 			content: fixture,
 		});
-		const loadAuthProjects = async () =>
-			Object.values(fixture.projectInfo).map(
-				({ password, slug: authSlug }) => ({
-					password,
-					slug: authSlug,
-				}),
-			);
-
 		expect(Object.hasOwn(manifest, slug)).toBe(false);
-		const records = await loadContentfulFixtureProjects(
-			loadSource,
-			loadAuthProjects,
-		);
+		const records = await loadContentfulFixtureProjects(loadSource);
 		expect(records.projects.map((item) => item.slug)).toContain(slug);
 		expect(records.projectInfos.map((item) => item.slug)).toContain(slug);
 		expect(records.authProjects.map((item) => item.slug)).toContain(slug);

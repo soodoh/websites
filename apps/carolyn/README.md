@@ -15,23 +15,25 @@ bun run dev
 
 The workspace dev command serves Carolyn on `http://localhost:3102`. To run only this app, change to `apps/carolyn` and run `bun run dev`; the app then uses port 3000.
 
-Local Contentful and protected-project development uses ignored `.env` values:
+Local builds use ignored `.env` values:
 
 - `CONTENTFUL_SPACE_ID`
 - `CONTENTFUL_ACCESS_TOKEN`
 - `PROJECT_AUTH_SECRET`
 
-Keep these values server-only. The predev/build steps generate the ignored `src/lib/project-auth-manifest.json`.
+`CONTENTFUL_ACCESS_TOKEN` is build-only. The predev/build step captures and validates one Contentful release, then atomically writes ignored files under `src/lib/generated-release/`: public content, server-only protected details, content-addressed photography album JSON, project route inventory, and the password-hash/auth-version manifest. Plaintext project passwords are discarded before generated files are written.
 
 ## Architecture
 
 - `src/routes/` contains TanStack Start routes.
 - `src/components/` contains shared React UI.
-- `src/lib/` contains Contentful access, project authorization, image helpers, and shared types.
+- `src/lib/` contains the build-only Contentful adapter, release-content module, project authorization, image helpers, and shared types.
 - `tests/` contains Playwright behavior/visual tests and focused Bun unit tests.
 - `infra/` contains the retained AWS CDK infrastructure.
 
-Public index pages are prerendered. Protected project details, `/resume`, server functions, unknown routes, and missing assets remain compute-backed. `bun run build` emits the deployment contract under `.amplify-hosting/`.
+Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. Unknown routes and missing assets terminate in static 404 handling.
+
+Production compute reads only the generated protected-project snapshot, generated auth manifest, generated common content, and `PROJECT_AUTH_SECRET`. It has no Contentful client or token-loading path. Amplify retrieves `CONTENTFUL_ACCESS_TOKEN` from SSM only for the build. `bun run build` emits the deployment contract under `.amplify-hosting/`.
 
 ## Verification
 

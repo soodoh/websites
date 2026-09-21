@@ -1,4 +1,4 @@
-import type { Locator, Page } from "@playwright/test";
+import type { APIResponse, Locator, Page, Route } from "@playwright/test";
 import { expect, fetchRoutedResponse, test } from "@tests/playwright";
 import {
 	expectControlContrast,
@@ -20,6 +20,22 @@ const dancePhotoIds = ["3sRYLFv2ZA04TM8XjdhAp6", "5NTTQtmygIfQAxLnvyyCSN"];
 const dancePhotoCount = 80;
 const serializedPlaceholderPattern =
 	/data:image\/jpg;base64,[A-Za-z0-9+/=]+|https:\/\/images\.ctfassets\.net\/hermetic-build\/[^"?]+\/fixture\.jpg\?w=25&q=30&fm=jpg/g;
+
+async function fetchAlbumRoute(
+	route: Route,
+): Promise<{ albumName: string; body: string; response: APIResponse }> {
+	const response = await fetchRoutedResponse(route);
+	const body = await response.text();
+	const album: unknown = JSON.parse(body);
+	const albumName =
+		typeof album === "object" &&
+		album !== null &&
+		"name" in album &&
+		typeof album.name === "string"
+			? album.name
+			: "";
+	return { albumName, body, response };
+}
 
 async function expectGalleryState(
 	dialog: Locator,
@@ -265,18 +281,18 @@ test.describe("Photography album loading", () => {
 				await route.fallback();
 			},
 		);
-		await page.route("**/_serverFn/**", async (route) => {
-			if (!route.request().postData()?.includes("Portraits")) {
-				await route.continue();
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			if (albumName !== "Portraits") {
+				await route.fulfill({ response, body });
 				return;
 			}
-			const response = await fetchRoutedResponse(route);
-			const body = (await response.text()).replace(
+			const replacedBody = body.replace(
 				serializedPlaceholderPattern,
 				remotePlaceholder,
 			);
-			expect(body).toContain(remotePlaceholder);
-			await route.fulfill({ response, body });
+			expect(replacedBody).toContain(remotePlaceholder);
+			await route.fulfill({ response, body: replacedBody });
 		});
 		await page.goto("/photography");
 		await page.locator("html[data-hydrated='true']").waitFor();
@@ -305,14 +321,10 @@ test.describe("Photography album loading", () => {
 		tag: "@desktop-only",
 	}, async ({ page }) => {
 		let portraitRequests = 0;
-		page.on("request", (request) => {
-			if (
-				request.method() === "POST" &&
-				request.url().includes("/_serverFn/") &&
-				request.postData()?.includes("Portraits")
-			) {
-				portraitRequests += 1;
-			}
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			if (albumName === "Portraits") portraitRequests += 1;
+			await route.fulfill({ response, body });
 		});
 		await page.goto("/photography");
 		await page.locator("html[data-hydrated='true']").waitFor();
@@ -383,16 +395,16 @@ test.describe("Photography album loading", () => {
 		const delayedPortraits = new Promise<void>((resolve) => {
 			releasePortraits = resolve;
 		});
-		await page.route("**/_serverFn/**", async (route) => {
-			if (!route.request().postData()?.includes("Portraits")) {
-				await route.continue();
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			if (albumName !== "Portraits") {
+				await route.fulfill({ response, body });
 				return;
 			}
 			portraitRequests += 1;
 			markPortraitsStarted();
 			await delayedPortraits;
-			const response = await fetchRoutedResponse(route);
-			await route.fulfill({ response });
+			await route.fulfill({ response, body });
 		});
 		await page.goto("/photography");
 		await page.locator("html[data-hydrated='true']").waitFor();
@@ -423,9 +435,10 @@ test.describe("Photography album loading", () => {
 		tag: "@desktop-only",
 	}, async ({ page }) => {
 		let portraitRequests = 0;
-		await page.route("**/_serverFn/**", async (route) => {
-			if (!route.request().postData()?.includes("Portraits")) {
-				await route.continue();
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			if (albumName !== "Portraits") {
+				await route.fulfill({ response, body });
 				return;
 			}
 			portraitRequests += 1;
@@ -433,7 +446,7 @@ test.describe("Photography album loading", () => {
 				await route.fulfill({ status: 503, body: "temporary failure" });
 				return;
 			}
-			await route.continue();
+			await route.fulfill({ response, body });
 		});
 		await page.goto("/photography");
 		await page.locator("html[data-hydrated='true']").waitFor();
@@ -469,15 +482,15 @@ test.describe("Photography album loading", () => {
 		const requestFinished = new Promise<void>((resolve) => {
 			markRequestFinished = resolve;
 		});
-		await page.route("**/_serverFn/**", async (route) => {
-			if (!route.request().postData()?.includes("Portraits")) {
-				await route.continue();
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			if (albumName !== "Portraits") {
+				await route.fulfill({ response, body });
 				return;
 			}
 			markRequestStarted();
 			await delayedRequest;
-			const response = await fetchRoutedResponse(route);
-			await route.fulfill({ response });
+			await route.fulfill({ response, body });
 			markRequestFinished();
 		});
 		await page.goto("/photography");
@@ -725,17 +738,15 @@ test.describe("Photography gallery navigation", () => {
 				await route.fulfill({ path: "public/favicon.png", status: 200 });
 			},
 		);
-		await page.route("**/_serverFn/**", async (route) => {
-			if (!route.request().postData()?.includes("Portraits")) {
-				await route.continue();
-				return;
-			}
-			const response = await fetchRoutedResponse(route);
-			const body = (await response.text()).replace(
-				serializedPlaceholderPattern,
-				remotePlaceholder,
-			);
-			await route.fulfill({ response, body });
+		await page.route("**/__release/albums/*.json", async (route) => {
+			const { albumName, body, response } = await fetchAlbumRoute(route);
+			await route.fulfill({
+				response,
+				body:
+					albumName === "Portraits"
+						? body.replace(serializedPlaceholderPattern, remotePlaceholder)
+						: body,
+			});
 		});
 		page.on("request", (request) => {
 			const url = request.url();

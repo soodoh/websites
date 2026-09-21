@@ -4,6 +4,7 @@
 **/.env
 **/.env.*
 **/lib/project-auth-manifest.json
+**/lib/generated-release
 **/.test-assets-staging
 **/.test-assets-backup
 **/*.tmp

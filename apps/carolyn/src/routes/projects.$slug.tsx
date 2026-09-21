@@ -4,65 +4,37 @@ import { getCookie, setResponseHeader } from "@tanstack/react-start/server";
 import type { JSX } from "react";
 import PasswordForm from "@/components/password-form";
 import ProjectInfoPage from "@/components/project-info-page";
-import {
-	getProjectAuthorizationSnapshot,
-	getProjectPageSnapshot,
-	ProjectNotFoundError,
-} from "@/lib/fetch-projects";
-import { deriveProjectAuthVersion, verifyToken } from "@/lib/password-utils";
-import { getProjectAuth } from "@/lib/project-auth";
-import {
-	loadProjectAfterAuthorization,
-	ProjectAuthorizationDriftError,
-} from "@/lib/project-authorization";
+import { verifyToken } from "@/lib/password-utils";
+import { getProjectAuth } from "@/lib/project-auth.server";
+import { getProtectedReleaseProject } from "@/lib/protected-release-content.server";
+import { getReleaseProjectRoute } from "@/lib/release-project-routes";
+import { getStaticPublicProject } from "@/lib/release-server-functions";
 import {
 	isValidProjectSlug,
 	validateProjectSlug,
 } from "@/lib/server-function-inputs";
 
-const getProjectPageData = createServerFn({ method: "POST" })
+const getProtectedProjectPageData = createServerFn({ method: "POST" })
 	.validator(validateProjectSlug)
 	.handler(async ({ data: slug }) => {
+		setResponseHeader("Cache-Control", "private, no-store");
 		const auth = getProjectAuth(slug);
-		if (!auth) {
+		if (!auth?.passwordHash || !auth.authVersion) {
 			return { notFound: true as const };
 		}
-		try {
-			if (auth.passwordHash) {
-				setResponseHeader("Cache-Control", "private, no-store");
-			}
-			const result = await loadProjectAfterAuthorization(
-				slug,
-				auth,
-				() => getProjectAuthorizationSnapshot(slug),
-				async () => {
-					const token = getCookie(`project-auth-${slug}`);
-					return Boolean(
-						auth.authVersion &&
-							token &&
-							(await verifyToken(token, slug, auth.authVersion)),
-					);
-				},
-				() => getProjectPageSnapshot(slug),
-				deriveProjectAuthVersion,
-			);
-			if (!result.authorized) {
-				return { authorized: false as const, slug };
-			}
-			return {
-				authorized: true as const,
-				projectInfo: result.projectInfo,
-				protected: Boolean(auth.passwordHash),
-			};
-		} catch (error) {
-			if (error instanceof ProjectNotFoundError) {
-				return { notFound: true as const };
-			}
-			if (error instanceof ProjectAuthorizationDriftError) {
-				setResponseHeader("Cache-Control", "private, no-store");
-			}
-			throw error;
+		const token = getCookie(`project-auth-${slug}`);
+		if (!token || !(await verifyToken(token, slug, auth.authVersion))) {
+			return { authorized: false as const, slug };
 		}
+		const projectInfo = getProtectedReleaseProject(slug);
+		if (!projectInfo) {
+			throw new Error(`Protected project is missing from release: ${slug}`);
+		}
+		return {
+			authorized: true as const,
+			projectInfo,
+			protected: true as const,
+		};
 	});
 
 export const Route = createFileRoute("/projects/$slug")({
@@ -70,7 +42,18 @@ export const Route = createFileRoute("/projects/$slug")({
 		if (!isValidProjectSlug(slug)) {
 			throw notFound();
 		}
-		const data = await getProjectPageData({ data: slug });
+		const route = getReleaseProjectRoute(slug);
+		if (!route) {
+			throw notFound();
+		}
+		if (route === "public") {
+			return {
+				authorized: true as const,
+				projectInfo: await getStaticPublicProject({ data: slug }),
+				protected: false as const,
+			};
+		}
+		const data = await getProtectedProjectPageData({ data: slug });
 		if ("notFound" in data) {
 			throw notFound();
 		}

@@ -13,6 +13,7 @@ applications:
         build:
           commands:
             - |
+              export CONTENTFUL_ACCESS_TOKEN="$(aws ssm get-parameter --name /carolyn-portfolio/prod/contentful-access-token --with-decryption --query Parameter.Value --output text)"
               cd apps/carolyn
               RELEASE_COMMIT="$AWS_COMMIT_ID" AMPLIFY_ARTIFACT_MODE=production bun run build
               RELEASE_COMMIT="$AWS_COMMIT_ID" AMPLIFY_ARTIFACT_MODE=production VERIFY_DEPLOYMENT_SECRETS=true bun run verify:prerender

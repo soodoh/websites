@@ -1,18 +1,7 @@
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
-import {
-	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
-	PROJECT_AUTH_SECRET_PARAMETER,
-} from "@/lib/deployment-parameters";
+import { PROJECT_AUTH_SECRET_PARAMETER } from "@/lib/deployment-parameters";
 
-export {
-	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
-	PROJECT_AUTH_SECRET_PARAMETER,
-} from "@/lib/deployment-parameters";
-
-interface SecretDefinition {
-	environmentName: string;
-	parameterName: string;
-}
+export { PROJECT_AUTH_SECRET_PARAMETER } from "@/lib/deployment-parameters";
 
 interface ServerSecretLoaderOptions {
 	environment: Readonly<Record<string, string | undefined>>;
@@ -20,70 +9,51 @@ interface ServerSecretLoaderOptions {
 }
 
 export interface ServerSecretLoader {
-	getContentfulAccessToken: () => Promise<string>;
 	getProjectAuthSecret: () => Promise<string>;
 }
-
-const contentfulAccessTokenDefinition: SecretDefinition = {
-	environmentName: "CONTENTFUL_ACCESS_TOKEN",
-	parameterName: CONTENTFUL_ACCESS_TOKEN_PARAMETER,
-};
-const projectAuthSecretDefinition: SecretDefinition = {
-	environmentName: "PROJECT_AUTH_SECRET",
-	parameterName: PROJECT_AUTH_SECRET_PARAMETER,
-};
 
 export function createServerSecretLoader({
 	environment,
 	getParameter,
 }: ServerSecretLoaderOptions): ServerSecretLoader {
-	function createCachedSecretGetter(
-		definition: SecretDefinition,
-	): () => Promise<string> {
-		let initialization: Promise<string> | undefined;
+	let initialization: Promise<string> | undefined;
 
-		return () => {
-			if (!initialization) {
-				const pendingInitialization = loadSecret(definition);
-				initialization = pendingInitialization;
-				void pendingInitialization.catch(() => {
-					if (initialization === pendingInitialization) {
-						initialization = undefined;
-					}
-				});
-			}
-			return initialization;
-		};
+	function getProjectAuthSecret(): Promise<string> {
+		if (!initialization) {
+			const pendingInitialization = loadProjectAuthSecret();
+			initialization = pendingInitialization;
+			void pendingInitialization.catch(() => {
+				if (initialization === pendingInitialization) {
+					initialization = undefined;
+				}
+			});
+		}
+		return initialization;
 	}
 
-	async function loadSecret(definition: SecretDefinition): Promise<string> {
-		const localValue = environment[definition.environmentName];
+	async function loadProjectAuthSecret(): Promise<string> {
+		const localValue = environment.PROJECT_AUTH_SECRET;
 		if (localValue) {
 			return localValue;
 		}
 
 		let parameterValue: string | undefined;
 		try {
-			parameterValue = await getParameter(definition.parameterName);
+			parameterValue = await getParameter(PROJECT_AUTH_SECRET_PARAMETER);
 		} catch {
 			throw new Error(
-				`Failed to initialize ${definition.environmentName} from AWS Systems Manager Parameter Store`,
+				"Failed to initialize PROJECT_AUTH_SECRET from AWS Systems Manager Parameter Store",
 			);
 		}
 		if (!parameterValue) {
 			throw new Error(
-				`Missing ${definition.environmentName}; set it locally or create ${definition.parameterName}`,
+				`Missing PROJECT_AUTH_SECRET; set it locally or create ${PROJECT_AUTH_SECRET_PARAMETER}`,
 			);
 		}
 		return parameterValue;
 	}
 
-	return {
-		getContentfulAccessToken: createCachedSecretGetter(
-			contentfulAccessTokenDefinition,
-		),
-		getProjectAuthSecret: createCachedSecretGetter(projectAuthSecretDefinition),
-	};
+	return { getProjectAuthSecret };
 }
 
 const ssmClient = new SSMClient({
@@ -99,5 +69,4 @@ const serverSecrets = createServerSecretLoader({
 	},
 });
 
-export const getContentfulAccessToken = serverSecrets.getContentfulAccessToken;
 export const getProjectAuthSecret = serverSecrets.getProjectAuthSecret;

@@ -58,6 +58,7 @@
 		"@contentful/rich-text-types": "17.2.7",
 		"@tanstack/react-router": "1.170.32",
 		"@tanstack/react-start": "1.168.49",
+		"@tanstack/start-static-server-functions": "1.167.32",
 		"@unpic/react": "1.0.2",
 		"bcryptjs": "3.0.3",
 		"class-variance-authority": "0.7.1",

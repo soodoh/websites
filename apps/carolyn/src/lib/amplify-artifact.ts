@@ -1,21 +1,29 @@
-import { readFile, rm, writeFile } from "node:fs/promises";
+import {
+	copyFile,
+	readFile,
+	rename,
+	rm,
+	stat,
+	writeFile,
+} from "node:fs/promises";
 import { join } from "node:path";
 
 export type AmplifyArtifactMode = "fixture" | "production";
 
 export type AmplifyCustomRule = {
 	source: string;
-	status: "200" | "301";
+	status: "301";
 	target: string;
 };
 
 const artifactModeMarker = ".artifact-mode";
-const persistentStaticPublicPaths = [
+const fixedStaticPublicPaths = [
 	"/",
 	"/about",
 	"/photography",
 	"/projects",
 ] as const;
+export const maximumAmplifyRouteCount = 25;
 
 export type AmplifyRouteTarget = Record<string, unknown> & {
 	kind: string;
@@ -83,8 +91,13 @@ export async function readAmplifyArtifactMode(
 	return mode;
 }
 
-export function getStaticPublicPaths(): string[] {
-	return [...persistentStaticPublicPaths];
+export function getStaticPublicPaths(
+	publicProjectSlugs: readonly string[] = [],
+): string[] {
+	return [
+		...fixedStaticPublicPaths,
+		...publicProjectSlugs.map((slug) => `/projects/${slug}`),
+	];
 }
 
 export function getStaticFilePath(publicPath: string): string {
@@ -92,22 +105,17 @@ export function getStaticFilePath(publicPath: string): string {
 }
 
 export function getCleanUrlRules(): AmplifyCustomRule[] {
-	const rules: AmplifyCustomRule[] = [];
-	for (const publicPath of persistentStaticPublicPaths) {
-		if (publicPath !== "/") {
-			rules.push({
-				source: `${publicPath}/`,
-				status: "301",
-				target: publicPath,
-			});
-		}
-		rules.push({
-			source: publicPath,
-			status: "200",
-			target: getStaticFilePath(publicPath),
-		});
-	}
-	return rules;
+	return fixedStaticPublicPaths.flatMap((publicPath) =>
+		publicPath === "/"
+			? []
+			: [
+					{
+						source: `${publicPath}/`,
+						status: "301" as const,
+						target: publicPath,
+					},
+				],
+	);
 }
 
 export function matchesAmplifyRoute(
@@ -135,36 +143,106 @@ export function matchesAmplifyRoute(
 	return last !== undefined && pathname.slice(cursor).endsWith(last);
 }
 
+export function createProductionRoutes(
+	protectedProjectSlugs: readonly string[],
+): AmplifyRoute[] {
+	const staticTarget = { kind: "Static" };
+	const computeTarget = { kind: "Compute", src: "default" };
+	const routes: AmplifyRoute[] = [
+		...fixedStaticPublicPaths.map((path) => ({ path, target: staticTarget })),
+		{
+			path: "/__tsr/staticServerFnCache/*",
+			target: {
+				kind: "Static",
+				cacheControl: "public, max-age=31536000, immutable",
+			},
+		},
+		{
+			path: "/__release/albums/*",
+			target: {
+				kind: "Static",
+				cacheControl: "public, max-age=31536000, immutable",
+			},
+		},
+		...protectedProjectSlugs.map((slug) => ({
+			path: `/projects/${slug}`,
+			target: computeTarget,
+		})),
+		{ path: "/resume", target: computeTarget },
+		{ path: "/_serverFn/*", target: computeTarget },
+		{ path: "/projects/*", target: staticTarget },
+		{ path: "/*.*", target: staticTarget },
+		{ path: "/*", target: staticTarget },
+	];
+	if (routes.length > maximumAmplifyRouteCount) {
+		throw new Error(
+			`Amplify deployment exceeds the ${maximumAmplifyRouteCount}-route limit.`,
+		);
+	}
+	return routes;
+}
+
+async function emitHtmlAliases(
+	amplifyRoot: string,
+	publicPaths: readonly string[],
+): Promise<void> {
+	for (const publicPath of publicPaths) {
+		if (publicPath === "/") continue;
+		const source = join(
+			amplifyRoot,
+			"static",
+			publicPath.slice(1),
+			"index.html",
+		);
+		await copyFile(
+			source,
+			join(amplifyRoot, "static", `${publicPath.slice(1)}.html`),
+		);
+	}
+}
+
+async function emitCustomNotFoundPage(amplifyRoot: string): Promise<void> {
+	const source = join(
+		amplifyRoot,
+		"static",
+		"__static-not-found",
+		"index.html",
+	);
+	try {
+		await stat(source);
+	} catch (error) {
+		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+			throw new Error("Vite did not prerender the static custom 404 page.");
+		}
+		throw error;
+	}
+	await rename(source, join(amplifyRoot, "static", "404.html"));
+	await rm(join(amplifyRoot, "static", "__static-not-found"), {
+		force: true,
+		recursive: true,
+	});
+}
+
 export async function prepareAmplifyArtifact(
 	amplifyRoot: string,
 	mode: AmplifyArtifactMode,
+	projectRoutes: Readonly<Record<string, "protected" | "public">>,
 ): Promise<void> {
 	const manifestPath = join(amplifyRoot, "deploy-manifest.json");
 	const generatedManifest = await readAmplifyDeployManifest(amplifyRoot);
-	const assetRoute = generatedManifest.routes.find(
-		(route) => route.path === "/*.*",
+	const publicProjectSlugs = Object.entries(projectRoutes).flatMap(
+		([slug, route]) => (route === "public" ? [slug] : []),
 	);
-	const catchAllRoute = generatedManifest.routes.find(
-		(route) => route.path === "/*",
+	const protectedProjectSlugs = Object.entries(projectRoutes).flatMap(
+		([slug, route]) => (route === "protected" ? [slug] : []),
 	);
-	if (!assetRoute || !catchAllRoute) {
-		throw new Error("Amplify manifest is missing generated fallback routes.");
-	}
-
-	const staticRoutes: AmplifyRoute[] = getStaticPublicPaths().map(
-		(publicPath) => ({
-			path: getStaticFilePath(publicPath),
-			target: { kind: "Static" },
-		}),
-	);
-	generatedManifest.routes = [...staticRoutes, assetRoute, catchAllRoute];
-	if (generatedManifest.routes.length > 25) {
-		throw new Error("Amplify deployment exceeds the 25-route limit.");
-	}
+	generatedManifest.routes = createProductionRoutes(protectedProjectSlugs);
 	await writeFile(
 		manifestPath,
 		`${JSON.stringify(generatedManifest, null, 2)}\n`,
 	);
+	await emitHtmlAliases(amplifyRoot, getStaticPublicPaths(publicProjectSlugs));
+	await emitCustomNotFoundPage(amplifyRoot);
 
 	const fixtureAssets = join(amplifyRoot, "static", "test-assets");
 	if (mode === "production") {

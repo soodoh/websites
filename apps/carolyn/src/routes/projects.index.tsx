@@ -1,13 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import Projects from "@/components/projects";
-import { getProjects } from "@/lib/fetch-projects";
-
-const getProjectsPageData = createServerFn().handler(getProjects);
+import { getStaticProjects } from "@/lib/release-server-functions";
 
 export const Route = createFileRoute("/projects/")({
-	loader: () => getProjectsPageData(),
+	loader: () => getStaticProjects(),
 	head: () => ({
 		meta: [
 			{ title: "CD Projects" },

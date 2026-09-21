@@ -14,13 +14,15 @@ function partitionArn(suffix: string) {
 	};
 }
 
+const contentfulAccessTokenParameterArn = partitionArn(
+	":ssm:us-west-2:725669362139:parameter/carolyn-portfolio/prod/contentful-access-token",
+);
+const projectAuthSecretParameterArn = partitionArn(
+	":ssm:us-west-2:725669362139:parameter/carolyn-portfolio/prod/project-auth-secret",
+);
 const secretParameterArns = [
-	partitionArn(
-		":ssm:us-west-2:725669362139:parameter/carolyn-portfolio/prod/contentful-access-token",
-	),
-	partitionArn(
-		":ssm:us-west-2:725669362139:parameter/carolyn-portfolio/prod/project-auth-secret",
-	),
+	contentfulAccessTokenParameterArn,
+	projectAuthSecretParameterArn,
 ];
 
 function createProductionStack(): HostingStack {
@@ -56,6 +58,7 @@ function getResource(
 function expectSecretPolicy(
 	template: Template,
 	roleLogicalIdFragment: string,
+	parameterArns: unknown[],
 	expectedLogStatements: unknown[] = [],
 ): void {
 	const { logicalId: roleLogicalId } = getResource(
@@ -74,7 +77,7 @@ function expectSecretPolicy(
 			{
 				Action: "ssm:GetParameter",
 				Effect: "Allow",
-				Resource: secretParameterArns,
+				Resource: parameterArns.length === 1 ? parameterArns[0] : parameterArns,
 			},
 			...expectedLogStatements,
 		],
@@ -148,28 +151,35 @@ describe("HostingStack production resources", () => {
 			Stage: "PRODUCTION",
 		});
 
-		expectSecretPolicy(template, "AmplifyServiceAndLoggingRole", [
-			{
-				Action: "logs:CreateLogGroup",
-				Effect: "Allow",
-				Resource: partitionArn(
-					":logs:us-west-2:725669362139:log-group:/aws/amplify/*",
-				),
-			},
-			{
-				Action: ["logs:CreateLogStream", "logs:PutLogEvents"],
-				Effect: "Allow",
-				Resource: partitionArn(
-					":logs:us-west-2:725669362139:log-group:/aws/amplify/*:log-stream:*",
-				),
-			},
-			{
-				Action: "logs:DescribeLogGroups",
-				Effect: "Allow",
-				Resource: "*",
-			},
+		expectSecretPolicy(
+			template,
+			"AmplifyServiceAndLoggingRole",
+			secretParameterArns,
+			[
+				{
+					Action: "logs:CreateLogGroup",
+					Effect: "Allow",
+					Resource: partitionArn(
+						":logs:us-west-2:725669362139:log-group:/aws/amplify/*",
+					),
+				},
+				{
+					Action: ["logs:CreateLogStream", "logs:PutLogEvents"],
+					Effect: "Allow",
+					Resource: partitionArn(
+						":logs:us-west-2:725669362139:log-group:/aws/amplify/*:log-stream:*",
+					),
+				},
+				{
+					Action: "logs:DescribeLogGroups",
+					Effect: "Allow",
+					Resource: "*",
+				},
+			],
+		);
+		expectSecretPolicy(template, "AmplifySsrComputeRole", [
+			projectAuthSecretParameterArn,
 		]);
-		expectSecretPolicy(template, "AmplifySsrComputeRole");
 	});
 
 	test("pins Amplify trust boundaries and the branch compute role", () => {

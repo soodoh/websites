@@ -27,7 +27,7 @@ import {
 	DialogDescription,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { getPhotographyAlbum } from "@/lib/photography-server-functions";
+import { fetchGeneratedAlbum } from "@/lib/generated-album";
 import type { Album } from "@/lib/types";
 import { cn, darkSurfaceFocusClass } from "@/lib/utils";
 
@@ -85,9 +85,11 @@ type GalleryNavigationIntent = "next" | "previous";
 
 const PhotographyContent = ({
 	albumNames,
+	albumSources,
 	initialAlbum,
 }: {
 	albumNames: string[];
+	albumSources: Record<string, string>;
 	initialAlbum: Album;
 }): JSX.Element => {
 	const [galleryOpen, setGalleryOpen] = useState(false);
@@ -127,7 +129,11 @@ const PhotographyContent = ({
 			try {
 				let albumRequest = albumRequests.current.get(albumName);
 				if (!albumRequest) {
-					albumRequest = getPhotographyAlbum({ data: albumName });
+					const albumSource = albumSources[albumName];
+					if (!albumSource) {
+						throw new Error(`Album source is missing: ${albumName}`);
+					}
+					albumRequest = fetchGeneratedAlbum(albumSource);
 					albumRequests.current.set(albumName, albumRequest);
 					const evictRequest = () => {
 						if (albumRequests.current.get(albumName) === albumRequest) {

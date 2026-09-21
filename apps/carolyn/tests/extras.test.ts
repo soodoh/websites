@@ -12,7 +12,7 @@ test.describe("Route recovery", () => {
 		let loaderRequests = 0;
 		await page.goto("/");
 		await page.locator("html[data-hydrated='true']").waitFor();
-		await page.route("**/_serverFn/**", async (route) => {
+		await page.route("**/__tsr/staticServerFnCache/**", async (route) => {
 			loaderRequests += 1;
 			if (loaderRequests === 1) {
 				await route.fulfill({
@@ -88,7 +88,7 @@ test.describe("Header route state", () => {
 	test("renders a home route error with an opaque header", async ({ page }) => {
 		await page.goto("/about");
 		await page.locator("html[data-hydrated='true']").waitFor();
-		await page.route("**/_serverFn/**", (route) =>
+		await page.route("**/__tsr/staticServerFnCache/**", (route) =>
 			route.fulfill({
 				status: 503,
 				contentType: "application/json",

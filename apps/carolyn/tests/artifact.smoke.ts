@@ -1,11 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { selectFilter } from "@tests/visual-helpers";
 
-const staticProjectPath = "/projects/d23-membership-page";
+const publicProjectPath = "/projects/d23-membership-page";
+const protectedProjectPath = "/projects/magnolia-app";
 const artifactMode = process.env.EXPECTED_ARTIFACT_MODE;
 if (artifactMode !== "fixture" && artifactMode !== "production") {
 	throw new Error("EXPECTED_ARTIFACT_MODE must be fixture or production");
 }
+
 function expectArtifactTarget(
 	response: { headers: () => Record<string, string> },
 	target: "compute" | "static",
@@ -14,50 +16,57 @@ function expectArtifactTarget(
 }
 
 test.describe("emitted Amplify artifact", () => {
-	test("applies persistent clean URLs and preserves emitted routes", async ({
+	test("serves fixed and public project pages statically", async ({
 		page,
 		request,
 	}) => {
-		const about = await request.get("/about", { maxRedirects: 0 });
-		expect(about.status()).toBe(200);
-		expectArtifactTarget(about, "static");
-		expect(about.headers()["x-amplify-artifact-route"]).toBe(
-			"/about/index.html",
-		);
-		const aboutSlash = await request.get("/about/?canonical=1", {
-			maxRedirects: 0,
+		for (const path of [
+			"/",
+			"/about",
+			"/photography",
+			"/projects",
+			publicProjectPath,
+		]) {
+			const response = await request.get(path, { maxRedirects: 0 });
+			expect(response.status(), path).toBe(200);
+			expectArtifactTarget(response, "static");
+		}
+
+		const dataRequests: string[] = [];
+		page.on("request", (request) => {
+			const pathname = new URL(request.url()).pathname;
+			if (
+				pathname.includes("/_serverFn/") ||
+				pathname.includes("/staticServerFnCache/")
+			) {
+				dataRequests.push(pathname);
+			}
 		});
-		expect(aboutSlash.status()).toBe(301);
-		expect(aboutSlash.headers().location).toBe("/about?canonical=1");
-
-		const home = await request.get("/", { maxRedirects: 0 });
-		expect(home.status()).toBe(200);
-		expectArtifactTarget(home, "static");
-		expect(await home.text()).toContain('data-header-appearance="transparent"');
-
-		const project = await request.get(staticProjectPath, { maxRedirects: 0 });
-		expect(project.status()).toBe(200);
-		expectArtifactTarget(project, "compute");
-
-		await page.goto(staticProjectPath);
+		await page.goto("/projects");
 		await page.locator("html[data-hydrated='true']").waitFor();
+		await page.getByRole("link", { name: /D23 Membership Page/ }).click();
 		await expect(
 			page.getByRole("heading", { name: "D23 Membership Page" }),
 		).toBeVisible();
-
-		const asset = await request.get("/favicon.png", { maxRedirects: 0 });
-		expect(asset.status()).toBe(200);
-		expectArtifactTarget(asset, "static");
-		expect(asset.headers()["x-amplify-artifact-route"]).toBe("/favicon.png");
+		expect(
+			dataRequests.some((path) => path.includes("/staticServerFnCache/")),
+		).toBe(true);
+		expect(dataRequests.some((path) => path.includes("/_serverFn/"))).toBe(
+			false,
+		);
 	});
 
-	test("runs photography server functions through compute with healthy images", async ({
+	test("switches every photography album through immutable static JSON", async ({
 		page,
 	}) => {
-		const imageResponses = new Map<string, number>();
+		const albumResponses: string[] = [];
 		page.on("response", (response) => {
-			if (response.request().resourceType() === "image") {
-				imageResponses.set(response.url(), response.status());
+			if (new URL(response.url()).pathname.startsWith("/__release/albums/")) {
+				albumResponses.push(response.url());
+				expectArtifactTarget(response, "static");
+				expect(response.headers()["cache-control"]).toBe(
+					"public, max-age=31536000, immutable",
+				);
 			}
 		});
 		if (artifactMode === "production") {
@@ -65,65 +74,62 @@ test.describe("emitted Amplify artifact", () => {
 				route.fulfill({ path: "public/favicon.png", status: 200 }),
 			);
 		}
-
-		const initial = await page.goto("/photography");
-		if (initial) {
-			expectArtifactTarget(initial, "static");
-		}
+		await page.goto("/photography");
 		await page.locator("html[data-hydrated='true']").waitFor();
-		const responsePromise = page.waitForResponse(
-			(response) =>
-				response.url().includes("/_serverFn/") &&
-				response.request().method() === "POST" &&
-				response.request().postData()?.includes("Portraits") === true,
-		);
 		await selectFilter(page, "Dance", "Portraits");
-		const response = await responsePromise;
-		expect(response.ok()).toBe(true);
-		expect(response.headers()["x-amplify-artifact-target"]).toBe("compute");
-		const thumbnails = page
-			.locator(".masonry-grid")
-			.getByRole("button", { name: /View fullscreen photo/ });
-		await expect(thumbnails).toHaveCount(54);
-		const representativeImage = thumbnails.first().locator("img");
-		await representativeImage.scrollIntoViewIfNeeded();
-		await expect
-			.poll(() =>
-				representativeImage.evaluate(
-					(image: HTMLImageElement) =>
-						image.complete && image.naturalWidth > 0 && image.naturalHeight > 0,
-				),
-			)
-			.toBe(true);
-		await representativeImage.evaluate((image: HTMLImageElement) =>
-			image.decode(),
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Portraits",
 		);
-		const imageSelection = await representativeImage.evaluate(
-			(image: HTMLImageElement) => ({
-				intrinsicWidth: Number(image.getAttribute("width")),
-				srcsetWidths: image.srcset
-					.split(",")
-					.map((candidate) => Number(candidate.trim().match(/ (\d+)w$/)?.[1]))
-					.filter((candidate) => Number.isFinite(candidate)),
-				url: image.currentSrc,
-			}),
+		await selectFilter(page, "Portraits", "Spaces");
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Spaces",
 		);
-		expect(Math.max(...imageSelection.srcsetWidths)).toBeLessThanOrEqual(
-			imageSelection.intrinsicWidth,
-		);
-		const imageUrl = imageSelection.url;
-		const parsedImageUrl = new URL(imageUrl);
-		if (artifactMode === "fixture") {
-			expect(parsedImageUrl.origin).toBe(new URL(page.url()).origin);
-			expect(parsedImageUrl.pathname).toMatch(/^\/test-assets\//);
-		} else {
-			expect(parsedImageUrl.hostname).toBe("images.ctfassets.net");
-			expect(parsedImageUrl.pathname).not.toContain("test-assets");
-		}
-		expect(imageResponses.get(imageUrl)).toBe(200);
+		expect(albumResponses).toHaveLength(2);
 	});
 
-	test("preserves compute redirect and client error semantics", async ({
+	test("keeps protected details behind the secure authorization cookie", async ({
+		page,
+	}) => {
+		const gate = await page.goto(protectedProjectPath);
+		if (!gate) throw new Error("Protected project returned no response");
+		expectArtifactTarget(gate, "compute");
+		const gateBody = await gate.text();
+		expect(gateBody).not.toContain(
+			"On July 15, 2021, we launched the Magnolia App",
+		);
+		await expect(
+			page.getByRole("heading", { name: "Password Protected" }),
+		).toBeVisible();
+
+		await page
+			.getByLabel("Password", { exact: true })
+			.fill("playwright-password");
+		await page.getByRole("button", { name: "Submit password" }).click();
+		await expect(
+			page.getByRole("heading", { name: "Magnolia App" }),
+		).toBeVisible();
+		const cookie = (await page.context().cookies()).find(
+			(candidate) => candidate.name === "project-auth-magnolia-app",
+		);
+		expect(cookie).toMatchObject({
+			httpOnly: true,
+			path: "/",
+			sameSite: "Strict",
+			secure: true,
+		});
+
+		await page.reload();
+		await expect(
+			page.getByRole("heading", { name: "Magnolia App" }),
+		).toBeVisible();
+		await expect(
+			page.getByText(/On July 15, 2021, we launched the Magnolia App/),
+		).toBeVisible();
+	});
+
+	test("preserves the resume redirect and keeps unknown paths off compute", async ({
 		request,
 	}) => {
 		const resume = await request.get("/resume", { maxRedirects: 0 });
@@ -133,33 +139,17 @@ test.describe("emitted Amplify artifact", () => {
 			/^https:\/\/[^/]+\.ctfassets\.net\//,
 		);
 
-		const missing = await request.get("/not-an-artifact-route", {
+		const missingRoute = await request.get("/not-an-artifact-route", {
 			maxRedirects: 0,
 		});
-		expect(missing.status()).toBe(404);
-		expectArtifactTarget(missing, "compute");
-		expect(await missing.text()).toContain("Page Not Found");
+		expect(missingRoute.status()).toBe(404);
+		expectArtifactTarget(missingRoute, "static");
+		expect(await missingRoute.text()).toContain("Page not found");
 
-		const malformed = await request.get("/%c0%afapp", { maxRedirects: 0 });
-		expect(malformed.status()).toBe(400);
-		expectArtifactTarget(malformed, "compute");
-
-		for (const accept of ["application/json", "text/event-stream"]) {
-			const unacceptable = await request.get("/not-an-artifact-route", {
-				headers: { Accept: accept },
-				maxRedirects: 0,
-			});
-			expect(unacceptable.status(), accept).toBe(406);
-			expectArtifactTarget(unacceptable, "compute");
-			expect(unacceptable.headers().vary).toBe("Accept");
-		}
-
-		const unacceptablePost = await request.post("/not-an-artifact-route", {
-			data: {},
-			headers: { Accept: "application/json" },
+		const missingAsset = await request.get("/missing-asset.png", {
 			maxRedirects: 0,
 		});
-		expect(unacceptablePost.status()).toBe(406);
-		expectArtifactTarget(unacceptablePost, "compute");
+		expect(missingAsset.status()).toBe(404);
+		expectArtifactTarget(missingAsset, "static");
 	});
 });

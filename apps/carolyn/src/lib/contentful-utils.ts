@@ -1,7 +1,6 @@
 import { createClient } from "contentful";
 import { requireContentfulImageUrl } from "@/lib/contentful-url-policy";
 import { isPositiveSafeInteger } from "@/lib/image-type";
-import { getContentfulAccessToken } from "@/lib/server-secrets.server";
 import type { Asset, ImagePlaceholder, ImageType } from "@/lib/types";
 
 export type ContentfulEntry = {
@@ -103,31 +102,19 @@ export async function getAllContentfulEntries(
 	return items;
 }
 
-let contentfulClient: Promise<ReturnType<typeof createClient>> | undefined;
-
-export function getContentfulClient(): Promise<
-	ReturnType<typeof createClient>
-> {
-	if (!contentfulClient) {
-		const pendingClient = createContentfulClient();
-		contentfulClient = pendingClient;
-		void pendingClient.catch(() => {
-			if (contentfulClient === pendingClient) {
-				contentfulClient = undefined;
-			}
-		});
-	}
-	return contentfulClient;
-}
-
-async function createContentfulClient(): Promise<
-	ReturnType<typeof createClient>
-> {
-	const space = process.env.CONTENTFUL_SPACE_ID;
+export function createContentfulBuildClient({
+	accessToken,
+	space,
+}: {
+	accessToken: string;
+	space: string;
+}): ReturnType<typeof createClient> {
 	if (!space) {
 		throw new Error("Missing CONTENTFUL_SPACE_ID environment variable");
 	}
-	const accessToken = await getContentfulAccessToken();
+	if (!accessToken) {
+		throw new Error("Missing CONTENTFUL_ACCESS_TOKEN environment variable");
+	}
 	return createClient({ space, accessToken });
 }
 

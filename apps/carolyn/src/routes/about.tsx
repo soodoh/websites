@@ -1,16 +1,13 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import Background from "@/components/background";
 import ImageWrapper from "@/components/image-wrapper";
-import { getAboutPageData } from "@/lib/fetch-about-data";
+import { getStaticAboutContent } from "@/lib/release-server-functions";
 import { containerClass } from "@/lib/utils";
 
-const getAboutRouteData = createServerFn().handler(getAboutPageData);
-
 export const Route = createFileRoute("/about")({
-	loader: () => getAboutRouteData(),
+	loader: () => getStaticAboutContent(),
 	head: () => ({
 		meta: [
 			{ title: "About Carolyn" },

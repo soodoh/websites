@@ -87,9 +87,19 @@ async function waitForCompute(): Promise<void> {
 	throw new Error("Timed out waiting for the Amplify compute server to start.");
 }
 
-function staticFileForPath(pathname: string): string | undefined {
-	const path = normalize(join(staticRoot, pathname.slice(1)));
-	return path.startsWith(`${staticRoot}/`) ? path : undefined;
+function staticFilesForPath(pathname: string): string[] {
+	const relativePath = pathname.slice(1);
+	const candidates =
+		pathname === "/"
+			? ["index.html"]
+			: [
+					relativePath,
+					`${relativePath}.html`,
+					join(relativePath, "index.html"),
+				];
+	return candidates
+		.map((candidate) => normalize(join(staticRoot, candidate)))
+		.filter((candidate) => candidate.startsWith(`${staticRoot}/`));
 }
 
 function targetForPath(pathname: string): AmplifyRouteTarget | undefined {
@@ -104,9 +114,6 @@ function cleanUrlResponse(requestUrl: URL): Response | string {
 	);
 	if (!rule) {
 		return requestUrl.pathname;
-	}
-	if (rule.status === "200") {
-		return rule.target;
 	}
 	return new Response(null, {
 		headers: { location: `${rule.target}${requestUrl.search}` },
@@ -152,12 +159,14 @@ const server = Bun.serve({
 
 		const target = targetForPath(cleanUrlResult);
 		if (target?.kind === "Static") {
-			const staticPath = staticFileForPath(cleanUrlResult);
-			if (staticPath) {
+			for (const staticPath of staticFilesForPath(cleanUrlResult)) {
 				const file = Bun.file(staticPath);
 				if (await file.exists()) {
 					return new Response(file, {
 						headers: {
+							...(typeof target.cacheControl === "string"
+								? { "cache-control": target.cacheControl }
+								: {}),
 							"content-type": file.type,
 							"x-amplify-artifact-route": cleanUrlResult,
 							"x-amplify-artifact-target": "static",
@@ -165,12 +174,20 @@ const server = Bun.serve({
 					});
 				}
 			}
-			const matchedRoute = deployManifest.routes.find((route) =>
-				matchesAmplifyRoute(cleanUrlResult, route.path),
-			);
-			if (matchedRoute?.fallback?.kind !== "Compute") {
-				return new Response("Not Found", { status: 404 });
+			if (/\/[^/]*\.[^/]+$/.test(cleanUrlResult)) {
+				return new Response("Not Found", {
+					headers: { "x-amplify-artifact-target": "static" },
+					status: 404,
+				});
 			}
+			const notFound = Bun.file(join(staticRoot, "404.html"));
+			return new Response(notFound, {
+				headers: {
+					"content-type": "text/html; charset=utf-8",
+					"x-amplify-artifact-target": "static",
+				},
+				status: 404,
+			});
 		}
 
 		requestUrl.pathname = cleanUrlResult;

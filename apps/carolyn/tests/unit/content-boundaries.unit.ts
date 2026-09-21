@@ -1,12 +1,12 @@
-import { afterAll, describe, expect, test } from "bun:test";
+import { describe, expect, test } from "bun:test";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import type { Asset as ContentfulAsset } from "contentful";
 import { createLiveShapedFixture } from "@/lib/content-source";
 import {
+	createContentfulBuildClient,
 	formatUrl,
 	getAllContentfulEntries,
 	getContentfulAssetId,
-	getContentfulClient,
 	getContentfulPlaceholder,
 	getImageAssetFromRichTextNode,
 	parseExactContentfulEntry,
@@ -20,23 +20,6 @@ import {
 } from "@/lib/fetch-projects";
 import { decodeImage, isImagePlaceholder } from "@/lib/image-type";
 import type { SocialMedia } from "@/lib/types";
-
-const originalEnvironment = {
-	contentfulAccessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
-	contentfulSpaceId: process.env.CONTENTFUL_SPACE_ID,
-	playwrightTest: process.env.PLAYWRIGHT_TEST,
-};
-
-function restoreEnvironmentValue(
-	name: string,
-	value: string | undefined,
-): void {
-	if (value === undefined) {
-		delete process.env[name];
-	} else {
-		process.env[name] = value;
-	}
-}
 
 function createContentfulImageAsset(id: string): ContentfulAsset<undefined> {
 	return {
@@ -66,38 +49,26 @@ function createContentfulImageAsset(id: string): ContentfulAsset<undefined> {
 	};
 }
 
-function restoreEnvironment(): void {
-	restoreEnvironmentValue(
-		"CONTENTFUL_ACCESS_TOKEN",
-		originalEnvironment.contentfulAccessToken,
-	);
-	restoreEnvironmentValue(
-		"CONTENTFUL_SPACE_ID",
-		originalEnvironment.contentfulSpaceId,
-	);
-	restoreEnvironmentValue(
-		"PLAYWRIGHT_TEST",
-		originalEnvironment.playwrightTest,
-	);
-}
-
-afterAll(() => {
-	restoreEnvironment();
-});
-
 describe("Contentful boundaries", () => {
-	test("evicts a rejected Contentful client initialization", async () => {
-		delete process.env.CONTENTFUL_SPACE_ID;
-		process.env.CONTENTFUL_ACCESS_TOKEN = "unit-test-token";
-		await expect(getContentfulClient()).rejects.toThrow(
-			"Missing CONTENTFUL_SPACE_ID",
-		);
-
-		process.env.CONTENTFUL_SPACE_ID = "unit-test-space";
-		const first = getContentfulClient();
-		const second = getContentfulClient();
-		expect(first).toBe(second);
-		expect(await first).toBe(await second);
+	test("requires explicit build-only Contentful credentials", () => {
+		expect(() =>
+			createContentfulBuildClient({
+				accessToken: "unit-test-token",
+				space: "",
+			}),
+		).toThrow("Missing CONTENTFUL_SPACE_ID");
+		expect(() =>
+			createContentfulBuildClient({
+				accessToken: "",
+				space: "unit-test-space",
+			}),
+		).toThrow("Missing CONTENTFUL_ACCESS_TOKEN");
+		expect(
+			createContentfulBuildClient({
+				accessToken: "unit-test-token",
+				space: "unit-test-space",
+			}),
+		).toBeDefined();
 	});
 
 	test("rejects pagination total drift", async () => {

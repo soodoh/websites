@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getResumeUrl } from "@/lib/fetch-about-data";
+import { getReleaseResumeUrl } from "@/lib/release-content";
 
-const getResumePageUrl = createServerFn().handler(getResumeUrl);
+const getResumePageUrl = createServerFn().handler(getReleaseResumeUrl);
 
 export const Route = createFileRoute("/resume")({
 	loader: async () => {

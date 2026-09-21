@@ -150,6 +150,9 @@ export class HostingStack extends Stack {
 		const productionSecretParameterArns = PRODUCTION_SECRET_PARAMETERS.map(
 			(parameterName) => this.parameterArn(parameterName),
 		);
+		const projectAuthSecretParameterArn = this.parameterArn(
+			PROJECT_AUTH_SECRET_PARAMETER,
+		);
 
 		const amplifySourceArn = this.formatArn({
 			arnFormat: ArnFormat.SLASH_RESOURCE_NAME,
@@ -250,12 +253,12 @@ export class HostingStack extends Stack {
 				StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
 			}),
 			description:
-				"App-scoped SSR role for the two Carolyn Portfolio production SecureStrings",
+				"App-scoped SSR role for the Carolyn Portfolio project authorization secret",
 		});
 		amplifyComputeRole.addToPolicy(
 			new PolicyStatement({
 				actions: ["ssm:GetParameter"],
-				resources: productionSecretParameterArns,
+				resources: [projectAuthSecretParameterArn],
 			}),
 		);
 		const branchProperties = {

@@ -2,7 +2,7 @@ import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { BLOCKS } from "@contentful/rich-text-types";
 import {
 	type ContentSourceLoader,
-	getContentSource,
+	getBuildContentSource,
 } from "@/lib/content-source";
 import type { ProjectSkeleton } from "@/lib/contentful-types";
 import {
@@ -13,8 +13,6 @@ import {
 	parseContentfulEntries,
 	requireContentfulAsset,
 } from "@/lib/contentful-utils";
-import { isReleasedProjectSlug } from "@/lib/project-auth";
-import type { ProjectAuthorizationSnapshot } from "@/lib/project-authorization";
 import {
 	isProjectType,
 	type Project,
@@ -123,7 +121,7 @@ function formatBaseProject(item: ContentfulEntry): Project {
 }
 
 export function getProjects(): Promise<Project[]> {
-	return getProjectsFromSource(getContentSource, isReleasedProjectSlug);
+	return getProjectsFromSource(getBuildContentSource);
 }
 
 function requireUniqueProjectSlugs(projects: Project[]): Project[] {
@@ -139,7 +137,7 @@ function requireUniqueProjectSlugs(projects: Project[]): Project[] {
 
 export function filterProjectsToRelease(
 	projects: Project[],
-	isReleased: (slug: string) => boolean = isReleasedProjectSlug,
+	isReleased: (slug: string) => boolean = () => true,
 ): Project[] {
 	return requireUniqueProjectSlugs(
 		projects.filter((project) => isReleased(project.slug)),
@@ -183,7 +181,8 @@ export async function getProjectsFromSource(
 	);
 }
 
-export type ProjectPageSnapshot = ProjectAuthorizationSnapshot & {
+export type ProjectPageSnapshot = {
+	password?: string;
 	projectInfo: ProjectInfo;
 };
 
@@ -221,43 +220,6 @@ function getProjectPassword(projectItem: ContentfulEntry): string | undefined {
 	return password || undefined;
 }
 
-export function getProjectAuthorizationSnapshot(
-	slug: string,
-): Promise<ProjectAuthorizationSnapshot> {
-	return getProjectAuthorizationSnapshotFromSource(slug, getContentSource);
-}
-
-export async function getProjectAuthorizationSnapshotFromSource(
-	slug: string,
-	loadSource: ContentSourceLoader,
-): Promise<ProjectAuthorizationSnapshot> {
-	const source = await loadSource();
-	if (source.kind === "fixture") {
-		const project = source.content.projectInfo[slug];
-		if (!Object.hasOwn(source.content.projectInfo, slug) || !project) {
-			throw new ProjectNotFoundError(slug);
-		}
-		if (project.slug !== slug) {
-			throw new Error(
-				`Project authorization query did not return exactly one project for slug ${slug}.`,
-			);
-		}
-		return { password: project.password || undefined };
-	}
-
-	const projectItem = getExactProject(
-		await source.client.getEntries<ProjectSkeleton>({
-			content_type: "project",
-			"fields.slug": slug,
-			limit: 2,
-			select: ["fields.slug", "fields.password"],
-		}),
-		slug,
-		"Project authorization query",
-	);
-	return { password: getProjectPassword(projectItem) };
-}
-
 export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 	return (await getProjectPageSnapshot(slug)).projectInfo;
 }
@@ -272,7 +234,7 @@ export async function getProjectInfoFromSource(
 export function getProjectPageSnapshot(
 	slug: string,
 ): Promise<ProjectPageSnapshot> {
-	return getProjectPageSnapshotFromSource(slug, getContentSource);
+	return getProjectPageSnapshotFromSource(slug, getBuildContentSource);
 }
 
 export async function getProjectPageSnapshotFromSource(

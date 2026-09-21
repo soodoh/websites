@@ -44,7 +44,8 @@ bun-debug.log*
 # Local Netlify folder
 .netlify
 
-# Generated auth manifest
+# Generated release content and authorization data
+src/lib/generated-release/
 src/lib/project-auth-manifest.json
 
 # Fixture/build transaction recovery artifacts

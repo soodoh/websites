@@ -1,6 +1,6 @@
 import {
 	type ContentSourceLoader,
-	getContentSource,
+	getBuildContentSource,
 } from "@/lib/content-source";
 import type { PhotosSkeleton } from "@/lib/contentful-types";
 import {
@@ -75,7 +75,7 @@ export function getInitialPhotographyData(): Promise<{
 	albumNames: string[];
 	initialAlbum: Album;
 }> {
-	return getInitialPhotographyDataFromSource(getContentSource);
+	return getInitialPhotographyDataFromSource(getBuildContentSource);
 }
 
 export async function getInitialPhotographyDataFromSource(
@@ -127,7 +127,7 @@ export async function getInitialPhotographyDataFromSource(
 }
 
 export function getAlbum(albumName: string): Promise<Album> {
-	return getAlbumFromSource(albumName, getContentSource);
+	return getAlbumFromSource(albumName, getBuildContentSource);
 }
 
 export async function getAlbumFromSource(
@@ -169,7 +169,7 @@ export async function getAlbumFromSource(
 }
 
 export default function getAlbums(): Promise<Album[]> {
-	return getAlbumsFromSource(getContentSource);
+	return getAlbumsFromSource(getBuildContentSource);
 }
 
 export async function getAlbumsFromSource(
