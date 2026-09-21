@@ -59,14 +59,51 @@ variable "amplify_5xx_alarm_name" {
 }
 
 variable "amplify_latency_alarm_name" {
-  description = "Physical name of the existing CDK-created latency alarm."
+  description = "Physical name of the latency alarm."
   type        = string
+  default     = "carolyn-amplify-production-latency"
+}
+
+variable "enable_custom_headers" {
+  description = "Apply the target Amplify custom-header policy after ownership handoff."
+  type        = bool
+  default     = true
+}
+
+variable "enable_latency_alarm" {
+  description = "Create the target latency alarm after ownership handoff."
+  type        = bool
+  default     = true
+}
+
+variable "enable_branch_environment_updates" {
+  description = "Allow release workflows to update branch environment metadata after ownership handoff."
+  type        = bool
+  default     = true
+}
+
+variable "use_legacy_5xx_alarm_contract" {
+  description = "Preserve the imported CDK metric-math alarm until ownership handoff."
+  type        = bool
+  default     = false
+}
+
+variable "resource_tags" {
+  description = "Optional import-only override for exact existing tags; leave null in the active configuration."
+  type        = map(string)
+  default     = null
+}
+
+variable "log_retention_days" {
+  description = "Amplify compute log retention. Keep the imported value through handoff, then select the target value."
+  type        = number
+  default     = 30
 }
 
 variable "managed_by" {
-  description = "Keep CDK through the no-change import, then change to OpenTofu after handoff."
+  description = "Ownership tag for Carolyn resources. Override with CDK only during a legacy import."
   type        = string
-  default     = "CDK"
+  default     = "OpenTofu"
 
   validation {
     condition     = contains(["CDK", "OpenTofu"], var.managed_by)
@@ -98,11 +135,12 @@ locals {
   contentful_parameter_arn = "arn:${data.aws_partition.current.partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter${local.contentful_parameter}"
   project_auth_arn         = "arn:${data.aws_partition.current.partition}:ssm:${var.aws_region}:${var.aws_account_id}:parameter${local.project_auth_parameter}"
 
-  tags = {
+  target_tags = {
     Project     = "carolyn-portfolio"
     Environment = "production"
     ManagedBy   = var.managed_by
   }
+  tags = var.resource_tags == null ? local.target_tags : var.resource_tags
 
   # Amplify preserves this JSON's key order, so load the canonical read form to keep plans stable.
   custom_headers = chomp(file("${path.module}/custom-headers.json.tftpl"))
@@ -178,7 +216,7 @@ resource "aws_amplify_app" "production" {
   enable_branch_auto_deletion = false
   iam_service_role_arn        = aws_iam_role.amplify_service.arn
   build_spec                  = file("${path.root}/../../../../amplify.yml")
-  custom_headers              = local.custom_headers
+  custom_headers              = var.enable_custom_headers ? local.custom_headers : null
 
   cache_config {
     type = "AMPLIFY_MANAGED"
@@ -269,12 +307,12 @@ resource "awscc_amplify_branch" "production" {
 
   environment_variables = [
     {
-      name  = "CONTENTFUL_SPACE_ID"
-      value = var.contentful_space_id
-    },
-    {
       name  = "AMPLIFY_MONOREPO_APP_ROOT"
       value = "apps/carolyn"
+    },
+    {
+      name  = "CONTENTFUL_SPACE_ID"
+      value = var.contentful_space_id
     },
   ]
 
@@ -282,12 +320,18 @@ resource "awscc_amplify_branch" "production" {
     key   = key
     value = value
   }]
+
+  # Cloud Control returns CloudFormation's immutable aws:* system tags.
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_amplify_domain_association" "production" {
   app_id                 = aws_amplify_app.production.id
   domain_name            = local.domain_name
   enable_auto_sub_domain = false
+  wait_for_verification  = false
 
   sub_domain {
     branch_name = awscc_amplify_branch.production.branch_name
@@ -308,6 +352,7 @@ resource "aws_amplify_domain_association" "legacy" {
   app_id                 = aws_amplify_app.production.id
   domain_name            = local.legacy_domain_name
   enable_auto_sub_domain = false
+  wait_for_verification  = false
 
   sub_domain {
     branch_name = awscc_amplify_branch.production.branch_name
@@ -321,7 +366,7 @@ resource "aws_amplify_domain_association" "legacy" {
 
 resource "aws_cloudwatch_log_group" "amplify_compute" {
   name              = "/aws/amplify/${aws_amplify_app.production.id}"
-  retention_in_days = 30
+  retention_in_days = var.log_retention_days
   tags              = local.tags
 
   lifecycle {
@@ -330,24 +375,75 @@ resource "aws_cloudwatch_log_group" "amplify_compute" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_5xx" {
-  alarm_name          = var.amplify_5xx_alarm_name
-  alarm_description   = "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods"
-  namespace           = "AWS/AmplifyHosting"
-  metric_name         = "5xxErrors"
-  statistic           = "Sum"
-  period              = 300
+  alarm_name = var.amplify_5xx_alarm_name
+  alarm_description = var.use_legacy_5xx_alarm_contract ? (
+    "Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods"
+  ) : "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods"
+  namespace           = var.use_legacy_5xx_alarm_contract ? null : "AWS/AmplifyHosting"
+  metric_name         = var.use_legacy_5xx_alarm_contract ? null : "5xxErrors"
+  statistic           = var.use_legacy_5xx_alarm_contract ? null : "Sum"
+  period              = var.use_legacy_5xx_alarm_contract ? null : 300
   evaluation_periods  = 3
   datapoints_to_alarm = 2
   threshold           = 2
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.operational_alarm_topic_arn]
-  ok_actions          = [var.operational_alarm_topic_arn]
-  dimensions          = { App = aws_amplify_app.production.id }
-  tags                = local.tags
+  ok_actions          = var.use_legacy_5xx_alarm_contract ? [] : [var.operational_alarm_topic_arn]
+  dimensions = var.use_legacy_5xx_alarm_contract ? null : {
+    App = aws_amplify_app.production.id
+  }
+  tags = local.tags
+
+  dynamic "metric_query" {
+    for_each = var.use_legacy_5xx_alarm_contract ? [1] : []
+
+    content {
+      id          = "expr_1"
+      expression  = "IF(requests >= 20, 100 * errors / requests, 0)"
+      label       = "Amplify Hosting 5xx error rate (%)"
+      return_data = true
+    }
+  }
+
+  dynamic "metric_query" {
+    for_each = var.use_legacy_5xx_alarm_contract ? [1] : []
+
+    content {
+      id          = "errors"
+      return_data = false
+
+      metric {
+        namespace   = "AWS/AmplifyHosting"
+        metric_name = "5xxErrors"
+        dimensions  = { App = aws_amplify_app.production.id }
+        period      = 300
+        stat        = "Sum"
+      }
+    }
+  }
+
+  dynamic "metric_query" {
+    for_each = var.use_legacy_5xx_alarm_contract ? [1] : []
+
+    content {
+      id          = "requests"
+      return_data = false
+
+      metric {
+        namespace   = "AWS/AmplifyHosting"
+        metric_name = "Requests"
+        dimensions  = { App = aws_amplify_app.production.id }
+        period      = 300
+        stat        = "Sum"
+      }
+    }
+  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
+  count = var.enable_latency_alarm ? 1 : 0
+
   alarm_name          = var.amplify_latency_alarm_name
   alarm_description   = "Amplify Hosting average time to first byte exceeded five seconds in two of three five-minute periods"
   namespace           = "AWS/AmplifyHosting"
@@ -410,7 +506,7 @@ data "aws_iam_policy_document" "contentful_state_bucket" {
     ]
 
     principals {
-      type        = "*"
+      type        = "AWS"
       identifiers = ["*"]
     }
 
@@ -465,7 +561,10 @@ data "aws_iam_policy_document" "github_deployment" {
   }
 
   statement {
-    actions   = ["amplify:GetBranch", "amplify:UpdateBranch"]
+    actions = var.enable_branch_environment_updates ? [
+      "amplify:GetBranch",
+      "amplify:UpdateBranch",
+    ] : ["amplify:GetBranch"]
     resources = [awscc_amplify_branch.production.arn]
   }
 

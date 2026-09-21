@@ -36,6 +36,30 @@ variable "resource_name_prefix" {
   }
 }
 
+variable "operational_alarm_topic_name" {
+  description = "Physical SNS topic name. Set this during adoption when a legacy stack generated the name."
+  type        = string
+  default     = null
+}
+
+variable "operational_alarm_topic_display_name" {
+  description = "SNS display name. Set this during adoption when the existing value differs from the standard."
+  type        = string
+  default     = "Websites production alarms"
+}
+
+variable "operational_alarm_topic_tags" {
+  description = "Exact existing SNS topic tags during import. Leave null when they match the foundation tags."
+  type        = map(string)
+  default     = null
+}
+
+variable "monthly_budget_name" {
+  description = "Physical monthly budget name. Set this during adoption when it differs from the standard name."
+  type        = string
+  default     = null
+}
+
 variable "manage_github_oidc_provider" {
   description = "Whether this root owns the account GitHub Actions OIDC provider. Keep false while a legacy site stack owns it."
   type        = bool
@@ -76,9 +100,9 @@ variable "state_bucket_name" {
 }
 
 variable "managed_by" {
-  description = "Ownership tag. Keep CloudFormation through the no-change import, then change to OpenTofu after handoff."
+  description = "Ownership tag for foundation resources. Override with CloudFormation only during a legacy import."
   type        = string
-  default     = "CloudFormation"
+  default     = "OpenTofu"
 
   validation {
     condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)
@@ -178,9 +202,12 @@ resource "aws_s3_bucket_policy" "tofu_state" {
 }
 
 resource "aws_sns_topic" "operational_alarms" {
-  name         = "${var.resource_name_prefix}-alarms"
-  display_name = "Websites production alarms"
-  tags         = local.tags
+  name = coalesce(
+    var.operational_alarm_topic_name,
+    "${var.resource_name_prefix}-alarms",
+  )
+  display_name = var.operational_alarm_topic_display_name
+  tags         = var.operational_alarm_topic_tags == null ? local.tags : var.operational_alarm_topic_tags
 }
 
 resource "aws_sns_topic_subscription" "operational_alarm_email" {
@@ -190,7 +217,10 @@ resource "aws_sns_topic_subscription" "operational_alarm_email" {
 }
 
 resource "aws_budgets_budget" "monthly_account" {
-  name         = "${var.resource_name_prefix}-account-monthly"
+  name = coalesce(
+    var.monthly_budget_name,
+    "${var.resource_name_prefix}-account-monthly",
+  )
   budget_type  = "COST"
   limit_amount = tostring(var.monthly_budget_amount)
   limit_unit   = "USD"

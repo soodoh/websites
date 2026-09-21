@@ -41,9 +41,9 @@ variable "deployment_marker_path" {
 }
 
 variable "managed_by" {
-  description = "Keep CloudFormation through the no-change import, then change to OpenTofu after handoff."
+  description = "Ownership tag for DiLoreto resources. Override with CloudFormation only during a legacy import."
   type        = string
-  default     = "CloudFormation"
+  default     = "OpenTofu"
 
   validation {
     condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)

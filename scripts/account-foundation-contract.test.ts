@@ -49,11 +49,11 @@ describe("AWS account foundation", () => {
 			expect(configuration).toContain(
 				'variable "operational_alarm_topic_arn"',
 			);
-			expect(configuration).toContain('metric_name         = "5xxErrors"');
+			expect(configuration).toMatch(/metric_name\s+= .*"5xxErrors"/);
 			expect(configuration).toContain("evaluation_periods  = 3");
 			expect(configuration).toContain("datapoints_to_alarm = 2");
-			expect(configuration).toContain(
-				"ok_actions          = [var.operational_alarm_topic_arn]",
+			expect(configuration).toMatch(
+				/ok_actions\s+= .*\[var\.operational_alarm_topic_arn\]/,
 			);
 			expect(configuration).not.toContain(
 				'resource "aws_budgets_budget"',

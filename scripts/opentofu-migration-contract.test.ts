@@ -52,6 +52,8 @@ describe("OpenTofu AWS migration", () => {
 			expect(foundation).toContain(resource);
 		}
 		expect(foundation).toContain("prevent_destroy = true");
+		expect(foundation).toContain('variable "operational_alarm_topic_name"');
+		expect(foundation).toContain('variable "monthly_budget_name"');
 	});
 
 	test("models every site without creating a second account OIDC provider", () => {
