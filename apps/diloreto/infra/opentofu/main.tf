@@ -28,6 +28,18 @@ variable "operational_alarm_topic_arn" {
   type        = string
 }
 
+variable "enable_operational_alarm" {
+  description = "Create the 5xx alarm wired to the shared operational topic."
+  type        = bool
+  default     = true
+}
+
+variable "deployment_marker_path" {
+  description = "Deployment marker path that must receive the no-store cache policy."
+  type        = string
+  default     = "/__deployment.json"
+}
+
 variable "managed_by" {
   description = "Keep CloudFormation through the no-change import, then change to OpenTofu after handoff."
   type        = string
@@ -53,53 +65,12 @@ locals {
     Environment = "production"
   })
 
-  custom_headers = <<-YAML
-    customHeaders:
-      - pattern: '**'
-        headers:
-          - key: 'Strict-Transport-Security'
-            value: 'max-age=63072000; includeSubDomains'
-          - key: 'X-Content-Type-Options'
-            value: 'nosniff'
-          - key: 'X-Frame-Options'
-            value: 'DENY'
-          - key: 'Referrer-Policy'
-            value: 'strict-origin-when-cross-origin'
-          - key: 'Permissions-Policy'
-            value: 'camera=(), geolocation=(), microphone=()'
-      - pattern: '**/*.html'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/areyou*'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/assets/*'
-        headers:
-          - key: 'Cache-Control'
-            value: 'public, max-age=31536000, immutable'
-      - pattern: '/robots.txt'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/favicon.png'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/apple-touch-icon.png'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-      - pattern: '/__deployment.json'
-        headers:
-          - key: 'Cache-Control'
-            value: 'no-cache, no-store, must-revalidate'
-  YAML
+  # Amplify preserves this JSON's key order, so load the canonical read form to keep plans stable.
+  custom_headers = replace(
+    chomp(file("${path.module}/custom-headers.json.tftpl")),
+    "$DEPLOYMENT_MARKER_PATH",
+    var.deployment_marker_path,
+  )
 }
 
 resource "aws_amplify_app" "production" {
@@ -149,6 +120,7 @@ resource "aws_amplify_domain_association" "production" {
   app_id                 = aws_amplify_app.production.id
   domain_name            = var.domain_name
   enable_auto_sub_domain = false
+  wait_for_verification  = false
 
   sub_domain {
     branch_name = aws_amplify_branch.production.branch_name
@@ -171,6 +143,8 @@ resource "aws_amplify_domain_association" "production" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_5xx" {
+  count = var.enable_operational_alarm ? 1 : 0
+
   alarm_name          = "diloreto-amplify-production-5xx"
   alarm_description   = "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods."
   namespace           = "AWS/AmplifyHosting"

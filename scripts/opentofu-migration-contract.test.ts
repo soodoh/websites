@@ -69,17 +69,22 @@ describe("OpenTofu AWS migration", () => {
 		}
 	});
 
-	test("keeps Paul's Amplify headers in the canonical read form", () => {
-		const configuration = read("apps/paul/infra/opentofu/main.tf");
-		const customHeaders = JSON.parse(
-			read("apps/paul/infra/opentofu/custom-headers.json.tftpl"),
-		) as Array<Record<string, unknown>>;
+	test("keeps standard-provider Amplify headers in the canonical read form", () => {
+		for (const site of ["paul", "diloreto"]) {
+			const configuration = read(`apps/${site}/infra/opentofu/main.tf`);
+			const customHeaders = JSON.parse(
+				read(`apps/${site}/infra/opentofu/custom-headers.json.tftpl`),
+			) as Array<Record<string, unknown>>;
 
-		expect(configuration).toContain(
-			'file("${path.module}/custom-headers.json.tftpl")',
-		);
-		expect(Object.keys(customHeaders[0] ?? {})).toEqual(["headers", "pattern"]);
-		expect(customHeaders.at(-1)?.pattern).toBe("$DEPLOYMENT_MARKER_PATH");
+			expect(configuration).toContain(
+				'file("${path.module}/custom-headers.json.tftpl")',
+			);
+			expect(Object.keys(customHeaders[0] ?? {}).sort()).toEqual([
+				"headers",
+				"pattern",
+			]);
+			expect(customHeaders.at(-1)?.pattern).toBe("$DEPLOYMENT_MARKER_PATH");
+		}
 	});
 
 	test("uses AWS Cloud Control for branch-scoped compute roles", () => {
