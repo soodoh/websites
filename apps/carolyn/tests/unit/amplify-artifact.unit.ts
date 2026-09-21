@@ -12,6 +12,7 @@ import { join } from "node:path";
 import {
 	createProductionRoutes,
 	getCleanUrlRules,
+	getStaticNotFoundRule,
 	getStaticPublicPaths,
 	matchesAmplifyRoute,
 	maximumAmplifyRouteCount,
@@ -143,6 +144,11 @@ describe("Amplify artifact preparation", () => {
 		expect(getStaticPublicPaths(["public-project"])).toContain(
 			"/projects/public-project",
 		);
+		expect(getStaticNotFoundRule()).toEqual({
+			source: "/<*>",
+			status: "404-200",
+			target: "/404.html",
+		});
 	});
 
 	test("matches emitted manifest route patterns in traversal order", () => {

@@ -31,7 +31,7 @@ Local builds use ignored `.env` values:
 - `tests/` contains Playwright behavior/visual tests and focused Bun unit tests.
 - `infra/` contains the retained AWS CDK infrastructure.
 
-Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. Unknown routes and missing assets terminate in static 404 handling.
+Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. An Amplify `404-200` rewrite serves the emitted static `404.html` with an HTTP 404 status, so unknown routes and missing assets never invoke compute.
 
 Production compute reads only the generated protected-project snapshot, generated auth manifest, generated common content, and `PROJECT_AUTH_SECRET`. It has no Contentful client or token-loading path. Amplify retrieves `CONTENTFUL_ACCESS_TOKEN` from SSM only for the build. `bun run build` emits the deployment contract under `.amplify-hosting/`.
 

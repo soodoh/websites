@@ -12,7 +12,7 @@ export type AmplifyArtifactMode = "fixture" | "production";
 
 export type AmplifyCustomRule = {
 	source: string;
-	status: "301";
+	status: "301" | "404-200";
 	target: string;
 };
 
@@ -116,6 +116,14 @@ export function getCleanUrlRules(): AmplifyCustomRule[] {
 					},
 				],
 	);
+}
+
+export function getStaticNotFoundRule(): AmplifyCustomRule {
+	return {
+		source: "/<*>",
+		status: "404-200",
+		target: "/404.html",
+	};
 }
 
 export function matchesAmplifyRoute(

@@ -1,7 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { App } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
-import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
+import {
+	getCleanUrlRules,
+	getStaticNotFoundRule,
+} from "../../src/lib/amplify-artifact";
 import {
 	PRODUCTION_AWS_ACCOUNT,
 	PRODUCTION_AWS_REGION,
@@ -260,7 +263,7 @@ describe("HostingStack production resources", () => {
 					Status: "301",
 					Target: "https://carolyndiloreto.com",
 				},
-				...getCleanUrlRules().map((rule) => ({
+				...[...getCleanUrlRules(), getStaticNotFoundRule()].map((rule) => ({
 					Source: rule.source,
 					Status: rule.status,
 					Target: rule.target,
