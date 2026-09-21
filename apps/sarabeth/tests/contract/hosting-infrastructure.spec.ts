@@ -1,6 +1,5 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { extractYamlBlock } from "@tests/support/yaml-block";
 
 const hostingTemplate = readFileSync(
 	new URL("../../infra/cloudformation/hosting.yaml", import.meta.url),
@@ -10,37 +9,40 @@ const dnsTemplate = readFileSync(
 	new URL("../../infra/cloudformation/dns.yaml", import.meta.url),
 	"utf8",
 );
-const bootstrapTemplate = readFileSync(
-	new URL("../../infra/cloudformation/bootstrap.yaml", import.meta.url),
-	"utf8",
-);
 const rootBuildSpec = readFileSync(
 	new URL("../../../../amplify.yml", import.meta.url),
 	"utf8",
 );
+const opentofuConfiguration = readFileSync(
+	new URL("../../infra/opentofu/main.tf", import.meta.url),
+	"utf8",
+);
+const targetHeaders = JSON.parse(
+	readFileSync(
+		new URL("../../infra/opentofu/custom-headers.json.tftpl", import.meta.url),
+		"utf8",
+	),
+) as Array<{ headers: Array<{ key: string }>; pattern: string }>;
 
-test("uses the root build specification and secret-backed replacement authorization", () => {
-	expect(hostingTemplate).not.toContain("      BuildSpec: |");
+test("preserves the deployed build during handoff and defines the target release contract", () => {
+	expect(hostingTemplate).toContain("      BuildSpec: |");
 	expect(rootBuildSpec).toContain("appRoot: apps/sarabeth");
+	expect(opentofuConfiguration).not.toContain("build_spec");
 	expect(hostingTemplate).toContain("GitHubAccessTokenSecretArn:");
 	expect(hostingTemplate).toContain("resolve:secretsmanager:");
 	expect(hostingTemplate).toContain("{GitHubAccessTokenSecretArn}");
 	expect(hostingTemplate).toContain(":SecretString:token}}");
 	expect(hostingTemplate).not.toContain("  GitHubAccessToken:\n");
-	expect(bootstrapTemplate).toContain("Action: secretsmanager:GetSecretValue");
-	expect(bootstrapTemplate).toContain("secret:sarabeth-amplify-github-*");
-	expect(hostingTemplate).toContain("- amplify:UpdateBranch");
+	expect(opentofuConfiguration).toContain(
+		'variable "enable_branch_environment_updates"',
+	);
+	expect(opentofuConfiguration).toContain('"amplify:UpdateBranch"');
 });
 
-test("applies the shared security, cache, alarm, and log contracts", () => {
-	const app = extractYamlBlock(hostingTemplate, "AmplifyApp:");
-	const errorAlarm = extractYamlBlock(hostingTemplate, "Amplify5xxAlarm:");
-	const latencyAlarm = extractYamlBlock(
-		hostingTemplate,
-		"AmplifyLatencyAlarm:",
+test("defines the target security, cache, alarm, and log contracts in OpenTofu", () => {
+	const headerNames = targetHeaders.flatMap(({ headers }) =>
+		headers.map(({ key }) => key),
 	);
-	const logGroup = extractYamlBlock(hostingTemplate, "AmplifyComputeLogGroup:");
-
 	for (const header of [
 		"Strict-Transport-Security",
 		"X-Content-Type-Options",
@@ -48,23 +50,43 @@ test("applies the shared security, cache, alarm, and log contracts", () => {
 		"X-Frame-Options",
 		"Permissions-Policy",
 	]) {
-		expect(app).toContain(header);
+		expect(headerNames).toContain(header);
 	}
-	expect(app).toContain('pattern: "/__tsr/staticServerFnCache/*"');
-	expect(app).toContain('pattern: "/__deployment.json"');
-	for (const alarm of [errorAlarm, latencyAlarm]) {
-		expect(alarm).toContain("DatapointsToAlarm: 2");
-		expect(alarm).toContain("EvaluationPeriods: 3");
-		expect(alarm).toContain("!Ref OperationalAlarmTopicArn");
-		expect(alarm).toContain("OKActions:");
+	for (const pattern of [
+		"/__tsr/staticServerFnCache/*",
+		"/__deployment.json",
+	]) {
+		expect(targetHeaders.map((header) => header.pattern)).toContain(pattern);
 	}
-	expect(logGroup).toContain("RetentionInDays: 30");
-	expect(hostingTemplate).not.toContain("Type: AWS::SNS::Topic");
+	expect(opentofuConfiguration).toContain(
+		"evaluation_periods  = var.use_legacy_alarm_contract ? 1 : 3",
+	);
+	expect(opentofuConfiguration).toContain(
+		"datapoints_to_alarm = var.use_legacy_alarm_contract ? 1 : 2",
+	);
+	expect(opentofuConfiguration).toContain(
+		"evaluation_periods  = var.use_legacy_alarm_contract ? 2 : 3",
+	);
+	expect(opentofuConfiguration).toContain(
+		"ok_actions          = [var.operational_alarm_topic_arn]",
+	);
+	expect(opentofuConfiguration).toContain("retention_in_days = 30");
+	expect(opentofuConfiguration).not.toContain('resource "aws_sns_topic"');
 });
 
-test("keeps only the final native Amplify DNS target", () => {
-	expect(dnsTemplate).not.toContain("Netlify");
-	expect(dnsTemplate).not.toContain("WebTarget");
-	expect(dnsTemplate).toContain("DNSName: !Ref AmplifyCloudFrontTarget");
-	expect(dnsTemplate).toContain("AmplifyCertificateValidation:");
+test("preserves legacy DNS during handoff and defines only Amplify targets in OpenTofu", () => {
+	expect(dnsTemplate).toContain("Netlify");
+	expect(dnsTemplate).toContain("WebTarget");
+	expect(opentofuConfiguration).not.toContain("Netlify");
+	for (const record of ["apex_ipv4", "apex_ipv6", "www_ipv4", "www_ipv6"]) {
+		expect(opentofuConfiguration).toContain(
+			`resource "aws_route53_record" "${record}"`,
+		);
+	}
+	expect(opentofuConfiguration).toContain(
+		"name                   = var.amplify_cloudfront_target",
+	);
+	expect(opentofuConfiguration).toContain(
+		'resource "aws_route53_record" "amplify_certificate_validation"',
+	);
 });

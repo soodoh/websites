@@ -6,3 +6,13 @@ amplify_cloudfront_target          = "<amplify-cloudfront-hostname>"
 amplify_certificate_record_name   = "<certificate-record-name>"
 amplify_certificate_record_value  = "<certificate-record-value>"
 managed_by                         = "CloudFormation"
+resource_tags = {
+  Project     = "sarabeth-studio"
+  Environment = "production"
+}
+alarm_tags                         = {}
+use_legacy_custom_headers          = true
+write_target_custom_headers        = false
+use_legacy_alarm_contract          = true
+enable_branch_environment_updates  = false
+use_legacy_infrastructure_policy   = true

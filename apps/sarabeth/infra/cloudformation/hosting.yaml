@@ -23,10 +23,9 @@ Parameters:
     Default: ""
     AllowedPattern: "^$|^arn:[^:]+:secretsmanager:[^:]+:[0-9]{12}:secret:sarabeth-amplify-github-[A-Za-z0-9/_+=.@-]+$"
     Description: Temporary Secrets Manager ARN named sarabeth-amplify-github-* containing a token field, used only when creating a replacement Amplify GitHub App connection.
-  OperationalAlarmTopicArn:
+  NotificationEmail:
     Type: String
-    AllowedPattern: "^arn:[^:]+:sns:[^:]+:[0-9]{12}:[A-Za-z0-9_-]+$"
-    Description: SNS topic ARN output from the account-foundation stack.
+    Default: paul@diloreto.com
   ContentfulSpaceId:
     Type: String
     MinLength: 1
@@ -106,8 +105,6 @@ Resources:
           Value: sarabeth-studio
         - Key: Environment
           Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
 
   AmplifyComputeRole:
     Type: AWS::IAM::Role
@@ -160,6 +157,30 @@ Resources:
       Name: sarabeth-studio-production
       Description: Production TanStack Start application for sarabethbelon.com.
       Repository: !Sub https://github.com/${GitHubOwner}/${GitHubRepository}
+      BuildSpec: |
+        version: 1
+        applications:
+          - appRoot: apps/sarabeth
+            frontend:
+              buildPath: /
+              phases:
+                preBuild:
+                  commands:
+                    - nvm install 24.20.0
+                    - nvm use 24.20.0
+                    - npm install --global bun@1.4.0
+                    - bun install --frozen-lockfile --ignore-scripts
+                build:
+                  commands:
+                    - |
+                      export CONTENTFUL_ACCESS_TOKEN="$(aws ssm get-parameter --name /sarabeth-studio/production/contentful/access-token --with-decryption --query Parameter.Value --output text)"
+                      cd apps/sarabeth
+                      RELEASE_COMMIT="$AWS_COMMIT_ID" NITRO_PRESET=aws-amplify bun run build
+                      RELEASE_COMMIT="$AWS_COMMIT_ID" bun run prepare:amplify
+                      RELEASE_COMMIT="$AWS_COMMIT_ID" bun run validate:amplify
+              artifacts:
+                baseDirectory: apps/sarabeth/.amplify-hosting
+                files: ["**/*"]
       AccessToken: !If
         - HasGitHubAccessToken
         - !Sub "{{resolve:secretsmanager:${GitHubAccessTokenSecretArn}:SecretString:token}}"
@@ -172,35 +193,11 @@ Resources:
           - pattern: "**/*"
             headers:
               - key: "Strict-Transport-Security"
-                value: "max-age=63072000; includeSubDomains"
+                value: "max-age=31536000"
               - key: "X-Content-Type-Options"
                 value: "nosniff"
               - key: "Referrer-Policy"
                 value: "strict-origin-when-cross-origin"
-              - key: "X-Frame-Options"
-                value: "DENY"
-              - key: "Permissions-Policy"
-                value: "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
-          - pattern: "**/*.html"
-            headers:
-              - key: "Cache-Control"
-                value: "no-cache, no-store, must-revalidate"
-          - pattern: "/"
-            headers:
-              - key: "Cache-Control"
-                value: "no-cache, no-store, must-revalidate"
-          - pattern: "/assets/*"
-            headers:
-              - key: "Cache-Control"
-                value: "public, max-age=31536000, immutable"
-          - pattern: "/__tsr/staticServerFnCache/*"
-            headers:
-              - key: "Cache-Control"
-                value: "public, max-age=31536000, immutable"
-          - pattern: "/__deployment.json"
-            headers:
-              - key: "Cache-Control"
-                value: "no-cache, no-store, must-revalidate"
       CustomRules:
         - Source: https://www.sarabethbelon.com
           Target: https://sarabethbelon.com
@@ -228,8 +225,6 @@ Resources:
           Value: sarabeth-studio
         - Key: Environment
           Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
 
   MainBranch:
     Type: AWS::Amplify::Branch
@@ -262,8 +257,6 @@ Resources:
           Value: sarabeth-studio
         - Key: Environment
           Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
 
   ContentfulOpenTofuStateBucket:
     Type: AWS::S3::Bucket
@@ -287,8 +280,6 @@ Resources:
           Value: sarabeth-studio
         - Key: Environment
           Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
 
   ContentfulOpenTofuStateBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -322,8 +313,26 @@ Resources:
           Value: sarabeth-studio
         - Key: Environment
           Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
+
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TopicName: sarabeth-amplify-production-alarms
+      DisplayName: Sarabeth Amplify production alarms
+      Tags:
+        - Key: Project
+          Value: sarabeth-studio
+
+  AlarmEmailSubscription:
+    Type: AWS::SNS::Subscription
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      TopicArn: !Ref AlarmTopic
+      Protocol: email
+      Endpoint: !Ref NotificationEmail
 
   Amplify5xxAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -331,7 +340,7 @@ Resources:
     UpdateReplacePolicy: Retain
     Properties:
       AlarmName: sarabeth-amplify-production-5xx
-      AlarmDescription: Amplify Hosting returned at least two 5xx responses in two of three five-minute periods.
+      AlarmDescription: Amplify Hosting returned one or more 5xx responses in five minutes.
       Namespace: AWS/AmplifyHosting
       MetricName: 5xxErrors
       Dimensions:
@@ -339,22 +348,15 @@ Resources:
           Value: !GetAtt AmplifyApp.AppId
       Statistic: Sum
       Period: 300
-      EvaluationPeriods: 3
-      DatapointsToAlarm: 2
-      Threshold: 2
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
       ComparisonOperator: GreaterThanOrEqualToThreshold
       TreatMissingData: notBreaching
       AlarmActions:
-        - !Ref OperationalAlarmTopicArn
+        - !Ref AlarmTopic
       OKActions:
-        - !Ref OperationalAlarmTopicArn
-      Tags:
-        - Key: Project
-          Value: sarabeth-studio
-        - Key: Environment
-          Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
+        - !Ref AlarmTopic
 
   AmplifyLatencyAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -371,22 +373,15 @@ Resources:
       Statistic: Average
       Unit: Seconds
       Period: 300
-      EvaluationPeriods: 3
+      EvaluationPeriods: 2
       DatapointsToAlarm: 2
       Threshold: 5
       ComparisonOperator: GreaterThanThreshold
       TreatMissingData: notBreaching
       AlarmActions:
-        - !Ref OperationalAlarmTopicArn
+        - !Ref AlarmTopic
       OKActions:
-        - !Ref OperationalAlarmTopicArn
-      Tags:
-        - Key: Project
-          Value: sarabeth-studio
-        - Key: Environment
-          Value: production
-        - Key: ManagedBy
-          Value: CloudFormation
+        - !Ref AlarmTopic
 
   RoutineDeploymentRole:
     Type: AWS::IAM::Role
@@ -413,11 +408,6 @@ Resources:
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              - Effect: Allow
-                Action:
-                  - amplify:GetBranch
-                  - amplify:UpdateBranch
-                Resource: !GetAtt MainBranch.Arn
               - Effect: Allow
                 Action:
                   - amplify:GetJob
@@ -455,5 +445,7 @@ Outputs:
     Value: !GetAtt RoutineDeploymentRole.Arn
   ContentfulOpenTofuStateBucketName:
     Value: !Ref ContentfulOpenTofuStateBucket
+  AlarmTopicArn:
+    Value: !Ref AlarmTopic
   ComputeLogGroupName:
     Value: !Ref AmplifyComputeLogGroup

@@ -173,7 +173,11 @@ Import the hosting, domain, DNS, and retained bootstrap resources into the singl
 - hosted zone by zone ID;
 - every Route 53 record as `<zone-id>_<record-name>_<type>`.
 
-The account OIDC provider belongs in the account-foundation root. The CloudFormation execution role is migration scaffolding and must be retained until all Sarabeth stacks have relinquished ownership, then deleted in a separate reviewed cleanup. The infrastructure role is intentionally repurposed from CloudFormation to OpenTofu; its inline policy change is expected and must be reviewed as a control-plane change.
+The account OIDC provider belongs in the account-foundation root. Adopt the existing `sarabeth-amplify-production-alarms` topic and confirmed subscription there with their exact name, display name, tags, and physical subscription ARN. The account budget and protected state bucket are new foundation resources in this account.
+
+During the site import, copy `migration.tfvars.example` and preserve the live tag sets, legacy custom headers, alarm thresholds, deployment permissions, workload boundary, and CloudFormation infrastructure policy. The resulting imported site plan must be no-change. After all four legacy stacks relinquish ownership, remove those compatibility overrides and use the one-time target-header write mode for the reviewed target apply; return to the canonical header read form before requiring the final no-change plan.
+
+The CloudFormation execution role is migration scaffolding and must be retained until all Sarabeth stacks have relinquished ownership, then deleted in a separate reviewed cleanup. The infrastructure role is intentionally repurposed from CloudFormation to OpenTofu; its inline policy replacement and the branch metadata permissions are expected and must be reviewed as control-plane changes.
 
 ## Legacy ownership handoff
 

@@ -214,6 +214,11 @@ resource "aws_sns_topic_subscription" "operational_alarm_email" {
   topic_arn = aws_sns_topic.operational_alarms.arn
   protocol  = "email"
   endpoint  = var.notification_email
+
+  # AWS does not return these provider-side defaults for imported email subscriptions.
+  lifecycle {
+    ignore_changes = [confirmation_timeout_in_minutes, endpoint_auto_confirms]
+  }
 }
 
 resource "aws_budgets_budget" "monthly_account" {

@@ -171,7 +171,7 @@ test("keeps dark accent surfaces at normal-text contrast", async ({ page }) => {
 
 	const submit = page.getByRole("button", { name: "Submit" });
 	await submit.hover();
-	expect(await getContrastRatio(submit)).toBeGreaterThanOrEqual(4.5);
+	await expect.poll(() => getContrastRatio(submit)).toBeGreaterThanOrEqual(4.5);
 });
 
 test("disables sheet motion when reduced motion is requested", async ({

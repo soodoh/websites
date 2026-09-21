@@ -65,6 +65,48 @@ variable "amplify_certificate_record_value" {
   type        = string
 }
 
+variable "resource_tags" {
+  description = "Optional import-only override for exact existing resource tags; leave null after handoff."
+  type        = map(string)
+  default     = null
+}
+
+variable "alarm_tags" {
+  description = "Optional import-only override for exact existing alarm tags; leave null after handoff."
+  type        = map(string)
+  default     = null
+}
+
+variable "use_legacy_custom_headers" {
+  description = "Preserve the imported Amplify custom-header policy until ownership handoff."
+  type        = bool
+  default     = false
+}
+
+variable "write_target_custom_headers" {
+  description = "Use Amplify's required top-level YAML only for the reviewed target-header update."
+  type        = bool
+  default     = false
+}
+
+variable "use_legacy_alarm_contract" {
+  description = "Preserve the imported alarm thresholds until ownership handoff."
+  type        = bool
+  default     = false
+}
+
+variable "enable_branch_environment_updates" {
+  description = "Allow release workflows to read and temporarily update branch environment metadata after handoff."
+  type        = bool
+  default     = true
+}
+
+variable "use_legacy_infrastructure_policy" {
+  description = "Preserve the CloudFormation deployment policy until all legacy stacks relinquish ownership."
+  type        = bool
+  default     = false
+}
+
 variable "managed_by" {
   description = "Keep CloudFormation through the no-change import, then change to OpenTofu after handoff."
   type        = string
@@ -92,13 +134,18 @@ locals {
   contentful_state_bucket = "websites-sarabeth-contentful-tofu-state-${var.aws_account_id}-${var.aws_region}"
   contentful_state_key    = "contentful/terraform.tfstate"
 
-  tags = {
+  target_tags = {
     Project     = "sarabeth-studio"
     Environment = "production"
     ManagedBy   = var.managed_by
   }
+  tags       = var.resource_tags == null ? local.target_tags : var.resource_tags
+  alarm_tags = var.alarm_tags == null ? local.target_tags : var.alarm_tags
 
-  custom_headers = <<-YAML
+  legacy_custom_headers = chomp(file("${path.module}/custom-headers-legacy.json.tftpl"))
+  target_custom_headers = chomp(file("${path.module}/custom-headers.json.tftpl"))
+
+  target_custom_headers_write = <<-YAML
     customHeaders:
       - pattern: "**/*"
         headers:
@@ -133,21 +180,27 @@ locals {
           - key: "Cache-Control"
             value: "no-cache, no-store, must-revalidate"
   YAML
+
+  custom_headers = var.use_legacy_custom_headers ? local.legacy_custom_headers : (
+    var.write_target_custom_headers ? local.target_custom_headers_write : local.target_custom_headers
+  )
 }
 
 data "aws_iam_policy_document" "workload_boundary" {
   statement {
     sid    = "AmplifyJobs"
     effect = "Allow"
-    actions = [
-      "amplify:GetApp",
-      "amplify:GetBranch",
-      "amplify:GetJob",
-      "amplify:ListJobs",
-      "amplify:StartJob",
-      "amplify:StopJob",
-      "amplify:UpdateBranch",
-    ]
+    actions = concat(
+      [
+        "amplify:GetApp",
+        "amplify:GetBranch",
+        "amplify:GetJob",
+        "amplify:ListJobs",
+        "amplify:StartJob",
+        "amplify:StopJob",
+      ],
+      var.enable_branch_environment_updates ? ["amplify:UpdateBranch"] : [],
+    )
     resources = ["*"]
   }
 
@@ -441,20 +494,20 @@ resource "awscc_amplify_branch" "production" {
       value = "apps/sarabeth"
     },
     {
-      name  = "CONTENTFUL_SPACE_ID"
-      value = var.contentful_space_id
-    },
-    {
       name  = "CONTENTFUL_ACCESS_TOKEN_PARAMETER"
       value = "/sarabeth-studio/production/contentful/access-token"
     },
     {
-      name  = "YOUTUBE_API_KEY_PARAMETER"
-      value = "/sarabeth-studio/production/youtube/api-key"
+      name  = "CONTENTFUL_SPACE_ID"
+      value = var.contentful_space_id
     },
     {
       name  = "EMAIL_RATE_LIMIT_TABLE"
       value = aws_dynamodb_table.email_rate_limit.name
+    },
+    {
+      name  = "YOUTUBE_API_KEY_PARAMETER"
+      value = "/sarabeth-studio/production/youtube/api-key"
     },
   ]
 
@@ -462,6 +515,11 @@ resource "awscc_amplify_branch" "production" {
     key   = key
     value = value
   }]
+
+  # Cloud Control returns CloudFormation's immutable aws:* system tags.
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_s3_bucket" "contentful_state" {
@@ -538,21 +596,23 @@ resource "aws_cloudwatch_log_group" "amplify_compute" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_5xx" {
-  alarm_name          = "sarabeth-amplify-production-5xx"
-  alarm_description   = "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods."
+  alarm_name = "sarabeth-amplify-production-5xx"
+  alarm_description = var.use_legacy_alarm_contract ? (
+    "Amplify Hosting returned one or more 5xx responses in five minutes."
+  ) : "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods."
   namespace           = "AWS/AmplifyHosting"
   metric_name         = "5xxErrors"
   statistic           = "Sum"
   period              = 300
-  evaluation_periods  = 3
-  datapoints_to_alarm = 2
-  threshold           = 2
+  evaluation_periods  = var.use_legacy_alarm_contract ? 1 : 3
+  datapoints_to_alarm = var.use_legacy_alarm_contract ? 1 : 2
+  threshold           = var.use_legacy_alarm_contract ? 1 : 2
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.operational_alarm_topic_arn]
   ok_actions          = [var.operational_alarm_topic_arn]
   dimensions          = { App = aws_amplify_app.production.id }
-  tags                = local.tags
+  tags                = local.alarm_tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
@@ -563,7 +623,7 @@ resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
   statistic           = "Average"
   unit                = "Seconds"
   period              = 300
-  evaluation_periods  = 3
+  evaluation_periods  = var.use_legacy_alarm_contract ? 2 : 3
   datapoints_to_alarm = 2
   threshold           = 5
   comparison_operator = "GreaterThanThreshold"
@@ -571,7 +631,7 @@ resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
   alarm_actions       = [var.operational_alarm_topic_arn]
   ok_actions          = [var.operational_alarm_topic_arn]
   dimensions          = { App = aws_amplify_app.production.id }
-  tags                = local.tags
+  tags                = local.alarm_tags
 }
 
 data "aws_iam_policy_document" "routine_deployment_assume_role" {
@@ -607,10 +667,14 @@ resource "aws_iam_role" "routine_deployment" {
 }
 
 data "aws_iam_policy_document" "routine_deployment" {
-  statement {
-    effect    = "Allow"
-    actions   = ["amplify:GetBranch", "amplify:UpdateBranch"]
-    resources = [awscc_amplify_branch.production.arn]
+  dynamic "statement" {
+    for_each = var.enable_branch_environment_updates ? [1] : []
+
+    content {
+      effect    = "Allow"
+      actions   = ["amplify:GetBranch", "amplify:UpdateBranch"]
+      resources = [awscc_amplify_branch.production.arn]
+    }
   }
 
   statement {
@@ -648,6 +712,7 @@ resource "aws_amplify_domain_association" "production" {
   app_id                 = aws_amplify_app.production.id
   domain_name            = var.domain_name
   enable_auto_sub_domain = false
+  wait_for_verification  = false
 
   sub_domain {
     branch_name = awscc_amplify_branch.production.branch_name
@@ -743,7 +808,7 @@ resource "aws_route53_record" "mail_from_spf" {
   name    = "mail.${var.domain_name}"
   type    = "TXT"
   ttl     = 3600
-  records = ["\"v=spf1 include:amazonses.com ~all\""]
+  records = ["v=spf1 include:amazonses.com ~all"]
 }
 
 resource "aws_route53_record" "dkim_one" {
@@ -795,10 +860,78 @@ data "aws_iam_policy_document" "infrastructure_assume_role" {
 }
 
 resource "aws_iam_role" "infrastructure" {
-  name                 = "sarabeth-amplify-infrastructure-github"
-  description          = "Protected GitHub Actions role for sarabeth-studio OpenTofu changes."
+  name = "sarabeth-amplify-infrastructure-github"
+  description = var.use_legacy_infrastructure_policy ? (
+    "Protected GitHub Actions role for sarabeth-studio CloudFormation changes."
+  ) : "Protected GitHub Actions role for sarabeth-studio OpenTofu changes."
   max_session_duration = 14400
   assume_role_policy   = data.aws_iam_policy_document.infrastructure_assume_role.json
+}
+
+data "aws_iam_policy_document" "infrastructure_legacy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "cloudformation:ContinueUpdateRollback",
+      "cloudformation:CreateChangeSet",
+      "cloudformation:DeleteChangeSet",
+      "cloudformation:DescribeChangeSet",
+      "cloudformation:DescribeStackEvents",
+      "cloudformation:DescribeStackResources",
+      "cloudformation:DescribeStacks",
+      "cloudformation:ExecuteChangeSet",
+      "cloudformation:GetTemplate",
+      "cloudformation:GetTemplateSummary",
+      "cloudformation:ListChangeSets",
+      "cloudformation:UpdateTerminationProtection",
+      "cloudformation:ValidateTemplate",
+    ]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-*/*",
+      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:aws:transform/*",
+    ]
+  }
+
+  statement {
+    sid     = "CancelTimedOutDomainOrDnsUpdate"
+    effect  = "Allow"
+    actions = ["cloudformation:CancelUpdateStack"]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-domain/*",
+      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-dns/*",
+    ]
+  }
+
+  statement {
+    sid       = "DeleteFailedDomainStack"
+    effect    = "Allow"
+    actions   = ["cloudformation:DeleteStack"]
+    resources = ["arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-domain/*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["cloudformation:DescribeStacks", "cloudformation:ValidateTemplate"]
+    resources = ["*"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["amplify:GetDomainAssociation"]
+    resources = ["arn:${data.aws_partition.current.partition}:amplify:${var.aws_region}:${var.aws_account_id}:apps/*/domains/${var.domain_name}"]
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["iam:PassRole"]
+    resources = ["arn:${data.aws_partition.current.partition}:iam::${var.aws_account_id}:role/sarabeth-amplify-cloudformation-execution"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["cloudformation.amazonaws.com"]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "infrastructure" {
@@ -913,9 +1046,13 @@ data "aws_iam_policy_document" "infrastructure" {
 }
 
 resource "aws_iam_role_policy" "infrastructure" {
-  name   = "ManageSarabethOpenTofu"
-  role   = aws_iam_role.infrastructure.id
-  policy = data.aws_iam_policy_document.infrastructure.json
+  name = var.use_legacy_infrastructure_policy ? (
+    "DeploySarabethCloudFormation"
+  ) : "ManageSarabethOpenTofu"
+  role = aws_iam_role.infrastructure.id
+  policy = var.use_legacy_infrastructure_policy ? (
+    data.aws_iam_policy_document.infrastructure_legacy.json
+  ) : data.aws_iam_policy_document.infrastructure.json
 }
 
 output "amplify_app_id" {

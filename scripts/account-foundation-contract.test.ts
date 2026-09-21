@@ -50,8 +50,12 @@ describe("AWS account foundation", () => {
 				'variable "operational_alarm_topic_arn"',
 			);
 			expect(configuration).toMatch(/metric_name\s+= .*"5xxErrors"/);
-			expect(configuration).toContain("evaluation_periods  = 3");
-			expect(configuration).toContain("datapoints_to_alarm = 2");
+			expect(configuration).toMatch(
+				/evaluation_periods\s+= (?:3|var\.[^\n]+\? \d+ : 3)/,
+			);
+			expect(configuration).toMatch(
+				/datapoints_to_alarm\s+= (?:2|var\.[^\n]+\? \d+ : 2)/,
+			);
 			expect(configuration).toMatch(
 				/ok_actions\s+= .*\[var\.operational_alarm_topic_arn\]/,
 			);

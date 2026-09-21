@@ -72,7 +72,7 @@ describe("OpenTofu AWS migration", () => {
 	});
 
 	test("keeps standard-provider Amplify headers in the canonical read form", () => {
-		for (const site of ["paul", "diloreto"]) {
+		for (const site of ["paul", "diloreto", "carolyn", "sarabeth"]) {
 			const configuration = read(`apps/${site}/infra/opentofu/main.tf`);
 			const customHeaders = JSON.parse(
 				read(`apps/${site}/infra/opentofu/custom-headers.json.tftpl`),
@@ -85,7 +85,11 @@ describe("OpenTofu AWS migration", () => {
 				"headers",
 				"pattern",
 			]);
-			expect(customHeaders.at(-1)?.pattern).toBe("$DEPLOYMENT_MARKER_PATH");
+			expect(customHeaders.at(-1)?.pattern).toBe(
+				site === "paul" || site === "diloreto"
+					? "$DEPLOYMENT_MARKER_PATH"
+					: "/__deployment.json",
+			);
 		}
 	});
 
