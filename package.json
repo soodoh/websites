@@ -26,7 +26,7 @@
     "verify:paul": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
     "verify:carolyn": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
     "verify:diloreto": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
-    "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts scripts/commit-policy.test.ts"
+    "test:workspace": "bun test scripts/workspace-contract.test.ts scripts/docker-wrapper-contract.test.ts scripts/commit-policy.test.ts scripts/account-foundation-contract.test.ts scripts/release-marker-contract.test.ts"
   },
   "devDependencies": {
     "turbo": "2.10.12",

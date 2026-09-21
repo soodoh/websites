@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Approval-gated Amplify production domain association for sarabethbelon.com.
+Description: Native Amplify production domain association for sarabethbelon.com.
 
 Parameters:
   AmplifyAppId:

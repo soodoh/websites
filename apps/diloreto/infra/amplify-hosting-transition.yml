@@ -184,7 +184,7 @@ Resources:
             headers:
               - key: 'Cache-Control'
                 value: 'no-cache, no-store, must-revalidate'
-          - pattern: '/release.json'
+          - pattern: '/__deployment.json'
             headers:
               - key: 'Cache-Control'
                 value: 'no-cache, no-store, must-revalidate'

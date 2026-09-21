@@ -18,7 +18,11 @@ Parameters:
     Type: String
     NoEcho: true
     AllowedPattern: "^arn:[^:]+:iam::[0-9]{12}:oidc-provider/token\\.actions\\.githubusercontent\\.com$"
-    Description: ARN of the existing account-level GitHub Actions OIDC provider.
+    Description: ARN output from the account-foundation stack.
+  OperationalAlarmTopicArn:
+    Type: String
+    AllowedPattern: "^arn:[^:]+:sns:[^:]+:[0-9]{12}:[A-Za-z0-9_-]+$"
+    Description: SNS topic ARN output from the account-foundation stack.
   EnableCustomDomain:
     Type: String
     Default: "false"
@@ -37,6 +41,13 @@ Resources:
       Name: !Ref DomainName
       HostedZoneConfig:
         Comment: !Sub Authoritative DNS for ${DomainName}, managed by the ${AWS::StackName} stack.
+      HostedZoneTags:
+        - Key: Project
+          Value: paul-portfolio
+        - Key: Environment
+          Value: production
+        - Key: ManagedBy
+          Value: CloudFormation
 
   AmplifyApp:
     Type: AWS::Amplify::App
@@ -52,6 +63,13 @@ Resources:
         - Source: /<*>
           Target: /404.html
           Status: "404-200"
+      Tags:
+        - Key: Project
+          Value: paul-portfolio
+        - Key: Environment
+          Value: production
+        - Key: ManagedBy
+          Value: CloudFormation
       CustomHeaders: |
         customHeaders:
           - pattern: "**/*"
@@ -86,7 +104,7 @@ Resources:
             headers:
               - key: "Cache-Control"
                 value: "public, max-age=86400, must-revalidate"
-          - pattern: "/release.json"
+          - pattern: "/__deployment.json"
             headers:
               - key: "Cache-Control"
                 value: "no-cache, no-store, must-revalidate"
@@ -102,6 +120,13 @@ Resources:
       EnablePullRequestPreview: false
       Framework: TanStack Start (static)
       Stage: PRODUCTION
+      Tags:
+        - Key: Project
+          Value: paul-portfolio
+        - Key: Environment
+          Value: production
+        - Key: ManagedBy
+          Value: CloudFormation
 
   AmplifyDomain:
     Type: AWS::Amplify::Domain
@@ -117,6 +142,35 @@ Resources:
           BranchName: !Ref ProductionBranchName
         - Prefix: www
           BranchName: !Ref ProductionBranchName
+
+  Amplify5xxAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: paul-amplify-production-5xx
+      AlarmDescription: Amplify Hosting returned at least two 5xx responses in two of three five-minute periods.
+      Namespace: AWS/AmplifyHosting
+      MetricName: 5xxErrors
+      Dimensions:
+        - Name: App
+          Value: !GetAtt AmplifyApp.AppId
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 3
+      DatapointsToAlarm: 2
+      Threshold: 2
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !Ref OperationalAlarmTopicArn
+      OKActions:
+        - !Ref OperationalAlarmTopicArn
+      Tags:
+        - Key: Project
+          Value: paul-portfolio
+        - Key: Environment
+          Value: production
+        - Key: ManagedBy
+          Value: CloudFormation
 
   GitHubDeploymentRole:
     Type: AWS::IAM::Role
@@ -163,6 +217,13 @@ Resources:
                   - amplify:GetJob
                   - amplify:StopJob
                 Resource: !Sub ${ProductionBranch.Arn}/jobs/*
+      Tags:
+        - Key: Project
+          Value: paul-portfolio
+        - Key: Environment
+          Value: production
+        - Key: ManagedBy
+          Value: CloudFormation
 
 Outputs:
   AmplifyAppId:

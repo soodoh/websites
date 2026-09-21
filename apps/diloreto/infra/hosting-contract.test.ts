@@ -248,7 +248,7 @@ describe("native Amplify hosting contract", () => {
 			"/robots.txt",
 			"/favicon.png",
 			"/apple-touch-icon.png",
-			"/release.json",
+			"/__deployment.json",
 		]) {
 			const cacheControl = headersFor(pattern).get("cache-control") ?? "";
 			expect(cacheControl).toContain("no-store");
@@ -274,7 +274,7 @@ describe("native Amplify hosting contract", () => {
 		expect(workflow).toContain("apps/diloreto/scripts/hosting-smoke.mjs");
 		expect(workflow).toContain(`HOSTING_EXPECT_COMMIT: ${githubShaExpression}`);
 		expect(workflow).not.toContain("AMPLIFY_URL");
-		expect(smoke).toContain('new URL("/release.json", baseUrl)');
+		expect(smoke).toContain('new URL("/__deployment.json", baseUrl)');
 		expect(smoke).toContain("Release marker commit");
 	});
 });

@@ -114,7 +114,7 @@ for (const { path, amplifyCanonicalPath } of [
 }
 
 if (expectedCommit) {
-	const releaseUrl = new URL("/release.json", baseUrl);
+	const releaseUrl = new URL("/__deployment.json", baseUrl);
 	releaseUrl.searchParams.set("expectedCommit", expectedCommit);
 	const release = await request(releaseUrl);
 	assert(
@@ -122,6 +122,11 @@ if (expectedCommit) {
 		`Release marker returned ${release.response.status}`,
 	);
 	const releaseIdentity = JSON.parse(release.body);
+	assert(
+		/^\d+$/.test(releaseIdentity.runId) &&
+			/^\d+$/.test(releaseIdentity.runAttempt),
+		"Release marker is missing its workflow run identity",
+	);
 	assert(
 		releaseIdentity.commit === expectedCommit,
 		`Release marker commit ${releaseIdentity.commit} does not match ${expectedCommit}`,

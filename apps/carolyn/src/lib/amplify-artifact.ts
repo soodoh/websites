@@ -149,6 +149,10 @@ export function createProductionRoutes(
 	const staticTarget = { kind: "Static" };
 	const computeTarget = { kind: "Compute", src: "default" };
 	const routes: AmplifyRoute[] = [
+		{
+			path: "/__deployment.json",
+			target: { kind: "Static", cacheControl: "no-store" },
+		},
 		...fixedStaticPublicPaths.map((path) => ({ path, target: staticTarget })),
 		{
 			path: "/__tsr/staticServerFnCache/*",
@@ -201,6 +205,30 @@ async function emitHtmlAliases(
 	}
 }
 
+function resolveDeploymentMetadata(
+	environment: NodeJS.ProcessEnv = process.env,
+): { commit: string; runAttempt: string; runId: string } {
+	const commit =
+		environment.RELEASE_COMMIT ??
+		environment.AWS_COMMIT_ID ??
+		environment.GITHUB_SHA ??
+		"local";
+	if (commit !== "local" && !/^[a-f0-9]{40}$/.test(commit)) {
+		throw new Error("Release commit must be a 40-character hexadecimal SHA.");
+	}
+	const runId = environment.RELEASE_RUN_ID ?? "local";
+	const runAttempt = environment.RELEASE_RUN_ATTEMPT ?? "local";
+	if (
+		commit !== "local" &&
+		(!/^\d+$/.test(runId) || !/^\d+$/.test(runAttempt))
+	) {
+		throw new Error(
+			"Production release metadata requires a numeric run identity.",
+		);
+	}
+	return { commit, runAttempt, runId };
+}
+
 async function emitCustomNotFoundPage(amplifyRoot: string): Promise<void> {
 	const source = join(
 		amplifyRoot,
@@ -243,6 +271,10 @@ export async function prepareAmplifyArtifact(
 	);
 	await emitHtmlAliases(amplifyRoot, getStaticPublicPaths(publicProjectSlugs));
 	await emitCustomNotFoundPage(amplifyRoot);
+	await writeFile(
+		join(amplifyRoot, "static", "__deployment.json"),
+		`${JSON.stringify(resolveDeploymentMetadata())}\n`,
+	);
 
 	const fixtureAssets = join(amplifyRoot, "static", "test-assets");
 	if (mode === "production") {

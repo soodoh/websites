@@ -18,7 +18,7 @@ export const sharedViteConfig = {
 		tsconfigPaths: true,
 	},
 	build: {
-		sourcemap: true,
+		sourcemap: false,
 	},
 	plugins: [
 		tanstackStart({

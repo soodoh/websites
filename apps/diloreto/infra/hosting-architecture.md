@@ -21,7 +21,7 @@ This conclusion is based on AWS's documented behavior and the offline contract t
 | `www.diloreto.com` redirect | Domain-only `301` rule to `https://diloreto.com`. Amplify appends the original path. |
 | `paul.diloreto.com` redirect | Domain-only `301` rule to `https://pauldiloreto.com`. Amplify appends the original path. |
 | Redirect query strings | Amplify forwards all query parameters for `301` and `302` rules when the source does not match a specific query and the target has no query. Both DiLoreto rules meet those conditions. |
-| Asset and document caching | Amplify custom headers make `/assets/*` immutable for one year and make HTML, public non-fingerprinted files, and `release.json` non-storing and revalidating. AWS states that custom `Cache-Control` applies only to successful `200` responses, preventing a shared cached error response. |
+| Asset and document caching | Amplify custom headers make `/assets/*` immutable for one year and make HTML, public non-fingerprinted files, and `__deployment.json` non-storing and revalidating. AWS states that custom `Cache-Control` applies only to successful `200` responses, preventing a shared cached error response. |
 | Security headers | Amplify custom headers apply HSTS, `nosniff`, frame denial, referrer policy, and permissions policy to `**`. |
 | TLS | Amplify provisions and renews its managed certificate for the associated apex and subdomains. |
 | Route 53 aliases | The `AWS::Amplify::Domain` association manages only the apex, `www`, and `paul` mappings listed in `SubDomainSettings`; the hosted zone and unrelated records are not declared or replaced by the final template. |

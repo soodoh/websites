@@ -24,6 +24,7 @@ export const createProductionRoutes = (
 	const replacedPaths = new Set([
 		...prerenderedRoutes,
 		"/__deployment.json",
+		"/__tsr/staticServerFnCache/*",
 		...productionComputePaths,
 		"/*",
 	]);
@@ -41,6 +42,13 @@ export const createProductionRoutes = (
 			target: { kind: "Static", cacheControl: "no-store" },
 		},
 		...prerenderedRoutes.map((path) => ({ path, target: staticTarget })),
+		{
+			path: "/__tsr/staticServerFnCache/*",
+			target: {
+				kind: "Static",
+				cacheControl: "public, max-age=31536000, immutable",
+			},
+		},
 		...productionComputePaths.map((path) => ({ path, target: computeTarget })),
 		...remainingRoutes,
 		{ path: "/*", target: staticTarget },

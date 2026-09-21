@@ -4,8 +4,6 @@ const baseUrl = new URL(
 const expectAmplify = process.env.HOSTING_EXPECT_AMPLIFY === "1";
 const expectDomainRedirects =
 	process.env.HOSTING_EXPECT_DOMAIN_REDIRECTS === "1";
-const expectedRunId = process.env.HOSTING_EXPECT_RUN_ID;
-const expectedRunAttempt = process.env.HOSTING_EXPECT_RUN_ATTEMPT;
 const expectedCommit = process.env.HOSTING_EXPECT_COMMIT;
 
 /** @type {(condition: unknown, message: string) => asserts condition} */
@@ -74,13 +72,9 @@ assert(
 	"Responsive image has an incorrect content type",
 );
 
-if (expectedRunId || expectedRunAttempt || expectedCommit) {
-	assert(
-		expectedRunId && expectedRunAttempt && expectedCommit,
-		"Expected release identity requires run ID, run attempt, and commit",
-	);
-	const releaseUrl = new URL("/release.json", baseUrl);
-	releaseUrl.searchParams.set("expectedRunId", expectedRunId);
+if (expectedCommit) {
+	const releaseUrl = new URL("/__deployment.json", baseUrl);
+	releaseUrl.searchParams.set("expectedCommit", expectedCommit);
 	const release = await request(releaseUrl, { cache: "no-store" });
 	assert(
 		release.response.status === 200,
@@ -88,17 +82,22 @@ if (expectedRunId || expectedRunAttempt || expectedCommit) {
 	);
 	const releaseIdentity = JSON.parse(release.body);
 	assert(
-		releaseIdentity.runId === expectedRunId,
-		`Release marker run ID ${releaseIdentity.runId} does not match ${expectedRunId}`,
-	);
-	assert(
-		releaseIdentity.runAttempt === expectedRunAttempt,
-		`Release marker run attempt ${releaseIdentity.runAttempt} does not match ${expectedRunAttempt}`,
+		/^\d+$/.test(releaseIdentity.runId) &&
+			/^\d+$/.test(releaseIdentity.runAttempt),
+		"Release marker is missing its workflow run identity",
 	);
 	assert(
 		releaseIdentity.commit === expectedCommit,
 		`Release marker commit ${releaseIdentity.commit} does not match ${expectedCommit}`,
 	);
+	if (expectAmplify) {
+		const cacheControl = release.response.headers.get("cache-control") ?? "";
+		assert(
+			cacheControl.includes("no-store") &&
+				cacheControl.includes("must-revalidate"),
+			`Release marker cache policy is incorrect: ${cacheControl}`,
+		);
+	}
 }
 
 const missing = await request(

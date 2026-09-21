@@ -55,8 +55,14 @@ jobs:
         env:
           AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
           AMPLIFY_BRANCH: ${{ vars.AMPLIFY_BRANCH }}
-        run: scripts/deploy/amplify-release.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" "$GITHUB_SHA"
+        run: scripts/deploy/amplify-release.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+      - name: Verify deployed commit
+        env:
+          PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
+        run: scripts/deploy/verify-release.sh "$PRODUCTION_URL" "$GITHUB_SHA" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
       - name: Smoke test production
         env:
           PRODUCTION_URL: ${{ vars.PRODUCTION_URL }}
-        run: curl --fail --silent --show-error --location --output /dev/null "$PRODUCTION_URL"
+        run: |
+          curl --fail --silent --show-error --location --output /dev/null "$PRODUCTION_URL"
+          test "$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' "${PRODUCTION_URL%/}/api/email")" = 405

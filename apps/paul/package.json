@@ -36,6 +36,8 @@
 		"typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tools.json",
 		"preview": "bun scripts/serve-static.mjs",
 		"test:static": "bun scripts/assert-static-output.mjs",
+		"test:artifact": "bun run build && bun run test:static",
+		"test:browser": "bun run test:e2e:static",
 		"test:hosting": "bun scripts/hosting-smoke.mjs",
 		"test:e2e:static": "bun run build && bun run test:e2e:static:prebuilt",
 		"test:e2e:static:prebuilt": "PLAYWRIGHT_STATIC=1 PLAYWRIGHT_EXPECT_STATIC_404=1 ./scripts/playwright-docker.sh",

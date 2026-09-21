@@ -34,7 +34,12 @@ jobs:
       - run: bun run verify:diloreto
       - name: Package static site
         run: |
-          jq -n --arg commit "$GITHUB_SHA" '{commit: $commit}' > apps/diloreto/dist/client/release.json
+          jq -n \
+            --arg commit "$GITHUB_SHA" \
+            --arg runId "$GITHUB_RUN_ID" \
+            --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
+            '{commit: $commit, runId: $runId, runAttempt: $runAttempt}' \
+            > apps/diloreto/dist/client/__deployment.json
           cd apps/diloreto/dist/client
           zip -q -r "$RUNNER_TEMP/site.zip" .
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

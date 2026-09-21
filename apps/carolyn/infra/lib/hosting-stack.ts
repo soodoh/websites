@@ -10,14 +10,13 @@ import {
 	Fn,
 	RemovalPolicy,
 	Stack,
+	Tags,
 	Token,
 } from "aws-cdk-lib";
 import { CfnApp, CfnBranch, CfnDomain } from "aws-cdk-lib/aws-amplify";
-import { CfnBudget } from "aws-cdk-lib/aws-budgets";
 import {
 	Alarm,
 	ComparisonOperator,
-	MathExpression,
 	Metric,
 	TreatMissingData,
 } from "aws-cdk-lib/aws-cloudwatch";
@@ -38,7 +37,6 @@ import {
 	BucketEncryption,
 } from "aws-cdk-lib/aws-s3";
 import { Topic } from "aws-cdk-lib/aws-sns";
-import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import type { Construct } from "constructs";
 import { getCleanUrlRules } from "../../src/lib/amplify-artifact";
 import {
@@ -57,6 +55,44 @@ const MONOREPO_BUILD_SPEC = readFileSync(
 	"utf8",
 );
 const PRODUCTION_BRANCH = "main";
+const AMPLIFY_CUSTOM_HEADERS = `customHeaders:
+  - pattern: "**/*"
+    headers:
+      - key: "Strict-Transport-Security"
+        value: "max-age=63072000; includeSubDomains"
+      - key: "X-Content-Type-Options"
+        value: "nosniff"
+      - key: "Referrer-Policy"
+        value: "strict-origin-when-cross-origin"
+      - key: "X-Frame-Options"
+        value: "DENY"
+      - key: "Permissions-Policy"
+        value: "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
+  - pattern: "**/*.html"
+    headers:
+      - key: "Cache-Control"
+        value: "no-cache, no-store, must-revalidate"
+  - pattern: "/"
+    headers:
+      - key: "Cache-Control"
+        value: "no-cache, no-store, must-revalidate"
+  - pattern: "/assets/*"
+    headers:
+      - key: "Cache-Control"
+        value: "public, max-age=31536000, immutable"
+  - pattern: "/__tsr/staticServerFnCache/*"
+    headers:
+      - key: "Cache-Control"
+        value: "public, max-age=31536000, immutable"
+  - pattern: "/__release/albums/*"
+    headers:
+      - key: "Cache-Control"
+        value: "public, max-age=31536000, immutable"
+  - pattern: "/__deployment.json"
+    headers:
+      - key: "Cache-Control"
+        value: "no-cache, no-store, must-revalidate"
+`;
 const MONOREPO_GITHUB_SUBJECT =
 	"repo:soodoh@18269267/websites@1358469291:environment:production-carolyn";
 const CONTENTFUL_STATE_BUCKET_NAME =
@@ -87,15 +123,35 @@ export class HostingStack extends Stack {
 				`This stack must be deployed in ${PRODUCTION_AWS_REGION}`,
 			);
 		}
+		Tags.of(this).add("Project", "carolyn-portfolio");
+		Tags.of(this).add("Environment", "production");
+		Tags.of(this).add("ManagedBy", "CDK");
 
 		const contentfulSpaceId = new CfnParameter(this, "ContentfulSpaceId", {
 			description: "Non-secret Contentful space identifier",
 			type: "String",
 		});
-		const notificationEmail = new CfnParameter(this, "NotificationEmail", {
-			description: "Email address for the AWS budget and 5xx alarm",
-			type: "String",
-		});
+		const operationalAlarmTopicArn = new CfnParameter(
+			this,
+			"OperationalAlarmTopicArn",
+			{
+				allowedPattern: "^arn:[^:]+:sns:[^:]+:[0-9]{12}:[A-Za-z0-9_-]+$",
+				description: "SNS topic ARN output from the account-foundation stack",
+				type: "String",
+			},
+		);
+		const githubOidcProviderArn = new CfnParameter(
+			this,
+			"GitHubOidcProviderArn",
+			{
+				allowedPattern:
+					"^$|^arn:[^:]+:iam::[0-9]{12}:oidc-provider/token\\.actions\\.githubusercontent\\.com$",
+				default: "",
+				description:
+					"GitHub Actions OIDC provider ARN from the account-foundation stack; empty retains staged legacy ownership",
+				type: "String",
+			},
+		);
 		const githubAccessTokenSecretArn = new CfnParameter(
 			this,
 			"GitHubAccessTokenSecretArn",
@@ -116,6 +172,22 @@ export class HostingStack extends Stack {
 				description:
 					"Create the validated production and legacy Amplify domain associations",
 				type: "String",
+			},
+		);
+		const hasExternalGitHubOidcProvider = new CfnCondition(
+			this,
+			"HasExternalGitHubOidcProvider",
+			{
+				expression: Fn.conditionNot(
+					Fn.conditionEquals(githubOidcProviderArn.valueAsString, ""),
+				),
+			},
+		);
+		const createGitHubOidcProvider = new CfnCondition(
+			this,
+			"CreateGitHubOidcProvider",
+			{
+				expression: Fn.conditionEquals(githubOidcProviderArn.valueAsString, ""),
 			},
 		);
 		const hasGitHubAccessToken = new CfnCondition(
@@ -225,6 +297,7 @@ export class HostingStack extends Stack {
 			accessToken: githubAccessToken,
 			buildSpec: MONOREPO_BUILD_SPEC,
 			cacheConfig: { type: "AMPLIFY_MANAGED" },
+			customHeaders: AMPLIFY_CUSTOM_HEADERS,
 			customRules: [
 				{
 					source: `https://www.${DOMAIN_NAME}`,
@@ -316,85 +389,62 @@ export class HostingStack extends Stack {
 		new LogGroup(this, "AmplifySsrLogGroup", {
 			logGroupName: `/aws/amplify/${amplifyApp.attrAppId}`,
 			removalPolicy: RemovalPolicy.RETAIN,
-			retention: RetentionDays.TWO_WEEKS,
+			retention: RetentionDays.ONE_MONTH,
 		});
 
-		const alarmTopic = new Topic(this, "OperationalAlarmTopic", {
-			displayName: "Carolyn Portfolio production alarms",
-		});
-		alarmTopic.addSubscription(
-			new EmailSubscription(notificationEmail.valueAsString),
+		const alarmTopic = Topic.fromTopicArn(
+			this,
+			"OperationalAlarmTopic",
+			operationalAlarmTopicArn.valueAsString,
 		);
+		const alarmTags = {
+			Environment: "production",
+			ManagedBy: "CDK",
+			Project: "carolyn-portfolio",
+		};
 		const serverErrorAlarm = new Alarm(this, "Amplify5xxAlarm", {
 			alarmDescription:
-				"Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods",
+				"Amplify Hosting returned at least two 5xx responses in two of three five-minute periods",
 			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
 			datapointsToAlarm: 2,
 			evaluationPeriods: 3,
-			metric: new MathExpression({
-				expression: "IF(requests >= 20, 100 * errors / requests, 0)",
-				label: "Amplify Hosting 5xx error rate (%)",
+			metric: new Metric({
+				dimensionsMap: { App: amplifyApp.attrAppId },
+				metricName: "5xxErrors",
+				namespace: "AWS/AmplifyHosting",
 				period: Duration.minutes(5),
-				usingMetrics: {
-					errors: new Metric({
-						dimensionsMap: { App: amplifyApp.attrAppId },
-						metricName: "5xxErrors",
-						namespace: "AWS/AmplifyHosting",
-						period: Duration.minutes(5),
-						statistic: "Sum",
-					}),
-					requests: new Metric({
-						dimensionsMap: { App: amplifyApp.attrAppId },
-						metricName: "Requests",
-						namespace: "AWS/AmplifyHosting",
-						period: Duration.minutes(5),
-						statistic: "Sum",
-					}),
-				},
+				statistic: "Sum",
 			}),
 			threshold: 2,
 			treatMissingData: TreatMissingData.NOT_BREACHING,
 		});
 		serverErrorAlarm.addAlarmAction(new SnsAction(alarmTopic));
+		serverErrorAlarm.addOkAction(new SnsAction(alarmTopic));
+		for (const [key, value] of Object.entries(alarmTags)) {
+			Tags.of(serverErrorAlarm).add(key, value);
+		}
 
-		new CfnBudget(this, "MonthlyBudget", {
-			budget: {
-				budgetLimit: { amount: 5, unit: "USD" },
-				budgetName: "carolyn-portfolio-account-monthly",
-				budgetType: "COST",
-				timeUnit: "MONTHLY",
-			},
-			notificationsWithSubscribers: [
-				{
-					notification: {
-						comparisonOperator: "GREATER_THAN",
-						notificationType: "FORECASTED",
-						threshold: 100,
-						thresholdType: "PERCENTAGE",
-					},
-					subscribers: [
-						{
-							address: notificationEmail.valueAsString,
-							subscriptionType: "EMAIL",
-						},
-					],
-				},
-				{
-					notification: {
-						comparisonOperator: "GREATER_THAN",
-						notificationType: "ACTUAL",
-						threshold: 100,
-						thresholdType: "PERCENTAGE",
-					},
-					subscribers: [
-						{
-							address: notificationEmail.valueAsString,
-							subscriptionType: "EMAIL",
-						},
-					],
-				},
-			],
+		const latencyAlarm = new Alarm(this, "AmplifyLatencyAlarm", {
+			alarmDescription:
+				"Amplify Hosting average time to first byte exceeded five seconds in two of three five-minute periods",
+			comparisonOperator: ComparisonOperator.GREATER_THAN_THRESHOLD,
+			datapointsToAlarm: 2,
+			evaluationPeriods: 3,
+			metric: new Metric({
+				dimensionsMap: { App: amplifyApp.attrAppId },
+				metricName: "Latency",
+				namespace: "AWS/AmplifyHosting",
+				period: Duration.minutes(5),
+				statistic: "Average",
+			}),
+			threshold: 5,
+			treatMissingData: TreatMissingData.NOT_BREACHING,
 		});
+		latencyAlarm.addAlarmAction(new SnsAction(alarmTopic));
+		latencyAlarm.addOkAction(new SnsAction(alarmTopic));
+		for (const [key, value] of Object.entries(alarmTags)) {
+			Tags.of(latencyAlarm).add(key, value);
+		}
 
 		const githubOidcProvider = new CfnOIDCProvider(
 			this,
@@ -404,6 +454,8 @@ export class HostingStack extends Stack {
 				url: "https://token.actions.githubusercontent.com",
 			},
 		);
+		githubOidcProvider.cfnOptions.condition = createGitHubOidcProvider;
+		githubOidcProvider.applyRemovalPolicy(RemovalPolicy.RETAIN);
 		const githubSubjectConditions = {
 			StringEquals: {
 				"token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
@@ -424,7 +476,13 @@ export class HostingStack extends Stack {
 		);
 		const deploymentRole = new Role(this, "GitHubDeploymentRole", {
 			assumedBy: new WebIdentityPrincipal(
-				githubOidcProvider.ref,
+				Token.asString(
+					Fn.conditionIf(
+						hasExternalGitHubOidcProvider.logicalId,
+						githubOidcProviderArn.valueAsString,
+						githubOidcProvider.ref,
+					),
+				),
 				githubSubjectConditions,
 			),
 			description:
@@ -439,7 +497,7 @@ export class HostingStack extends Stack {
 		);
 		deploymentRole.addToPolicy(
 			new PolicyStatement({
-				actions: ["amplify:GetBranch"],
+				actions: ["amplify:GetBranch", "amplify:UpdateBranch"],
 				effect: Effect.ALLOW,
 				resources: [branch.attrArn],
 			}),

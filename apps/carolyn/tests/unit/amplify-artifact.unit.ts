@@ -71,6 +71,7 @@ describe("Amplify artifact preparation", () => {
 	test("orders bounded static and compute routes without compute fallbacks", () => {
 		const routes = createProductionRoutes(["protected-project"]);
 		expect(routes.map(({ path }) => path)).toEqual([
+			"/__deployment.json",
 			"/",
 			"/about",
 			"/photography",
@@ -84,7 +85,7 @@ describe("Amplify artifact preparation", () => {
 			"/*.*",
 			"/*",
 		]);
-		expect(routes).toHaveLength(12);
+		expect(routes).toHaveLength(13);
 		expect(routes.length).toBeLessThanOrEqual(maximumAmplifyRouteCount);
 		expect(routes.every((route) => route.fallback === undefined)).toBe(true);
 		expect(routes.at(-2)?.target.kind).toBe("Static");
@@ -119,6 +120,11 @@ describe("Amplify artifact preparation", () => {
 		expect(await readFile(join(root, "static", "404.html"), "utf8")).toContain(
 			"__static-not-found",
 		);
+		expect(
+			JSON.parse(
+				await readFile(join(root, "static", "__deployment.json"), "utf8"),
+			),
+		).toEqual({ commit: "local", runAttempt: "local", runId: "local" });
 		await expect(
 			stat(join(root, "static", "projects", "protected-project.html")),
 		).rejects.toMatchObject({ code: "ENOENT" });

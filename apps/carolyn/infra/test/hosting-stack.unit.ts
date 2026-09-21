@@ -135,6 +135,13 @@ describe("HostingStack production resources", () => {
 			Repository: "https://github.com/soodoh/websites",
 		});
 		const { resource: app } = getResource(template, "AWS::Amplify::App");
+		expect(app.Properties.CustomHeaders).toContain(
+			'key: "Strict-Transport-Security"',
+		);
+		expect(app.Properties.CustomHeaders).toContain('key: "X-Frame-Options"');
+		expect(app.Properties.CustomHeaders).toContain(
+			'pattern: "/__deployment.json"',
+		);
 		expect(app.Properties.BuildSpec).toContain("appRoot: apps/carolyn");
 		expect(app.Properties.BuildSpec).toContain("appRoot: apps/sarabeth");
 		template.resourceCountIs("AWS::Amplify::Branch", 1);
@@ -275,9 +282,14 @@ describe("HostingStack production resources", () => {
 			template,
 			"AWS::IAM::OIDCProvider",
 		);
-		expect(provider.Properties).toEqual({
-			ClientIdList: ["sts.amazonaws.com"],
-			Url: "https://token.actions.githubusercontent.com",
+		expect(provider).toMatchObject({
+			Condition: "CreateGitHubOidcProvider",
+			DeletionPolicy: "Retain",
+			Properties: {
+				ClientIdList: ["sts.amazonaws.com"],
+				Url: "https://token.actions.githubusercontent.com",
+			},
+			UpdateReplacePolicy: "Retain",
 		});
 
 		const { logicalId: roleLogicalId, resource: role } = getResource(
@@ -302,7 +314,15 @@ describe("HostingStack production resources", () => {
 						},
 					},
 					Effect: "Allow",
-					Principal: { Federated: { Ref: providerLogicalId } },
+					Principal: {
+						Federated: {
+							"Fn::If": [
+								"HasExternalGitHubOidcProvider",
+								{ Ref: "GitHubOidcProviderArn" },
+								{ Ref: providerLogicalId },
+							],
+						},
+					},
 				},
 			],
 			Version: "2012-10-17",
@@ -322,7 +342,7 @@ describe("HostingStack production resources", () => {
 					Resource: { "Fn::GetAtt": ["AmplifyApp", "Arn"] },
 				},
 				{
-					Action: "amplify:GetBranch",
+					Action: ["amplify:GetBranch", "amplify:UpdateBranch"],
 					Effect: "Allow",
 					Resource: { "Fn::GetAtt": ["MonorepoProductionBranch", "Arn"] },
 				},
@@ -402,7 +422,7 @@ describe("HostingStack production resources", () => {
 		).toBeDefined();
 	});
 
-	test("pins domains, SNS alarm wiring, and both budget notifications", () => {
+	test("pins domains and shared operational alarm wiring", () => {
 		const template = createTemplate();
 		template.resourceCountIs("AWS::Amplify::Domain", 2);
 		template.hasResourceProperties("AWS::Amplify::Domain", {
@@ -419,114 +439,38 @@ describe("HostingStack production resources", () => {
 			SubDomainSettings: [{ BranchName: "main", Prefix: "carolyn" }],
 		});
 
-		const { logicalId: topicLogicalId } = getResource(
-			template,
-			"AWS::SNS::Topic",
-			"OperationalAlarmTopic",
-		);
-		const { resource: subscription } = getResource(
-			template,
-			"AWS::SNS::Subscription",
-		);
-		expect(subscription.Properties).toEqual({
-			Endpoint: { Ref: "NotificationEmail" },
-			Protocol: "email",
-			TopicArn: { Ref: topicLogicalId },
-		});
-		const { resource: alarm } = getResource(template, "AWS::CloudWatch::Alarm");
-		expect(alarm.Properties).toEqual({
-			AlarmActions: [{ Ref: topicLogicalId }],
-			AlarmDescription:
-				"Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods",
-			ComparisonOperator: "GreaterThanOrEqualToThreshold",
+		template.resourceCountIs("AWS::SNS::Topic", 0);
+		template.resourceCountIs("AWS::SNS::Subscription", 0);
+		template.resourceCountIs("AWS::Budgets::Budget", 0);
+		template.resourceCountIs("AWS::CloudWatch::Alarm", 2);
+		const commonAlarmProperties = {
+			AlarmActions: [{ Ref: "OperationalAlarmTopicArn" }],
 			DatapointsToAlarm: 2,
+			Dimensions: [
+				{
+					Name: "App",
+					Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
+				},
+			],
 			EvaluationPeriods: 3,
-			Metrics: [
-				{
-					Expression: "IF(requests >= 20, 100 * errors / requests, 0)",
-					Id: "expr_1",
-					Label: "Amplify Hosting 5xx error rate (%)",
-					ReturnData: true,
-				},
-				{
-					Id: "errors",
-					MetricStat: {
-						Metric: {
-							Dimensions: [
-								{
-									Name: "App",
-									Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
-								},
-							],
-							MetricName: "5xxErrors",
-							Namespace: "AWS/AmplifyHosting",
-						},
-						Period: 300,
-						Stat: "Sum",
-					},
-					ReturnData: false,
-				},
-				{
-					Id: "requests",
-					MetricStat: {
-						Metric: {
-							Dimensions: [
-								{
-									Name: "App",
-									Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
-								},
-							],
-							MetricName: "Requests",
-							Namespace: "AWS/AmplifyHosting",
-						},
-						Period: 300,
-						Stat: "Sum",
-					},
-					ReturnData: false,
-				},
-			],
-			Threshold: 2,
+			Namespace: "AWS/AmplifyHosting",
+			OKActions: [{ Ref: "OperationalAlarmTopicArn" }],
+			Period: 300,
 			TreatMissingData: "notBreaching",
+		};
+		template.hasResourceProperties("AWS::CloudWatch::Alarm", {
+			...commonAlarmProperties,
+			ComparisonOperator: "GreaterThanOrEqualToThreshold",
+			MetricName: "5xxErrors",
+			Statistic: "Sum",
+			Threshold: 2,
 		});
-
-		const { resource: budget } = getResource(template, "AWS::Budgets::Budget");
-		expect(budget.Properties).toEqual({
-			Budget: {
-				BudgetLimit: { Amount: 5, Unit: "USD" },
-				BudgetName: "carolyn-portfolio-account-monthly",
-				BudgetType: "COST",
-				TimeUnit: "MONTHLY",
-			},
-			NotificationsWithSubscribers: [
-				{
-					Notification: {
-						ComparisonOperator: "GREATER_THAN",
-						NotificationType: "FORECASTED",
-						Threshold: 100,
-						ThresholdType: "PERCENTAGE",
-					},
-					Subscribers: [
-						{
-							Address: { Ref: "NotificationEmail" },
-							SubscriptionType: "EMAIL",
-						},
-					],
-				},
-				{
-					Notification: {
-						ComparisonOperator: "GREATER_THAN",
-						NotificationType: "ACTUAL",
-						Threshold: 100,
-						ThresholdType: "PERCENTAGE",
-					},
-					Subscribers: [
-						{
-							Address: { Ref: "NotificationEmail" },
-							SubscriptionType: "EMAIL",
-						},
-					],
-				},
-			],
+		template.hasResourceProperties("AWS::CloudWatch::Alarm", {
+			...commonAlarmProperties,
+			ComparisonOperator: "GreaterThanThreshold",
+			MetricName: "Latency",
+			Statistic: "Average",
+			Threshold: 5,
 		});
 	});
 
@@ -539,7 +483,7 @@ describe("HostingStack production resources", () => {
 		);
 		expect(logGroup).toMatchObject({
 			DeletionPolicy: "Retain",
-			Properties: { RetentionInDays: 14 },
+			Properties: { RetentionInDays: 30 },
 			UpdateReplacePolicy: "Retain",
 		});
 		template.resourceCountIs("AWS::KMS::Key", 0);

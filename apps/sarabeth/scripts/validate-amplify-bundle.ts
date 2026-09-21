@@ -25,6 +25,12 @@ assert(
 	"Deployment metadata must identify the exact Git commit built by Amplify",
 );
 assert(
+	deploymentMetadata.runId === (process.env.RELEASE_RUN_ID ?? "local") &&
+		deploymentMetadata.runAttempt ===
+			(process.env.RELEASE_RUN_ATTEMPT ?? "local"),
+	"Deployment metadata must identify the release workflow run",
+);
+assert(
 	manifest.computeResources?.length === 1,
 	"Amplify bundle must contain one compute resource",
 );
@@ -45,6 +51,16 @@ assert(
 		staticAssetRoute?.target?.kind === "Static" &&
 		staticAssetRoute.fallback === undefined,
 	"Static asset routing must not fall through to compute",
+);
+const staticCacheRoute = manifest.routes.find(
+	(route: { path?: string }) => route.path === "/__tsr/staticServerFnCache/*",
+);
+assert(
+	staticCacheRoute?.target?.kind === "Static" &&
+		staticCacheRoute.target.cacheControl ===
+			"public, max-age=31536000, immutable" &&
+		staticCacheRoute.fallback === undefined,
+	"Static server-function cache files must use immutable caching",
 );
 const deploymentMetadataRouteIndex = manifest.routes.findIndex(
 	(route: { path?: string }) => route.path === "/__deployment.json",
@@ -140,6 +156,10 @@ for (const entry of artifactEntries) {
 	const path = join(outputDirectory, entry);
 	if ((await stat(path)).isFile()) artifactFiles.push(path);
 }
+assert(
+	artifactFiles.every((file) => !file.endsWith(".map")),
+	"Production artifacts must not publish source maps",
+);
 for (const environmentName of secretEnvironmentNames) {
 	const value = process.env[environmentName];
 	if (!value) continue;

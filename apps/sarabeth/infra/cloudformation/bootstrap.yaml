@@ -39,6 +39,7 @@ Resources:
               - amplify:ListJobs
               - amplify:StartJob
               - amplify:StopJob
+              - amplify:UpdateBranch
             Resource: "*"
           - Sid: ContentfulBuildParameter
             Effect: Allow
@@ -106,6 +107,10 @@ Resources:
                 Resource:
                   - !Sub arn:${AWS::Partition}:s3:::websites-sarabeth-contentful-tofu-state-${AWS::AccountId}-${AWS::Region}
                   - !Sub arn:${AWS::Partition}:s3:::websites-sarabeth-contentful-tofu-state-${AWS::AccountId}-${AWS::Region}/*
+              - Sid: ReplacementRepositoryAuthorization
+                Effect: Allow
+                Action: secretsmanager:GetSecretValue
+                Resource: !Sub arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:sarabeth-amplify-github-*
               - Sid: GitHubOidcProvider
                 Effect: Allow
                 Action:
@@ -231,19 +236,6 @@ Resources:
                   - cloudwatch:TagResource
                   - cloudwatch:UntagResource
                 Resource: !Sub arn:${AWS::Partition}:cloudwatch:${AWS::Region}:${AWS::AccountId}:alarm:sarabeth-amplify-*
-              - Sid: Sns
-                Effect: Allow
-                Action:
-                  - sns:CreateTopic
-                  - sns:DeleteTopic
-                  - sns:GetTopicAttributes
-                  - sns:SetTopicAttributes
-                  - sns:Subscribe
-                  - sns:Unsubscribe
-                  - sns:TagResource
-                  - sns:UntagResource
-                  - sns:ListSubscriptionsByTopic
-                Resource: !Sub arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:sarabeth-amplify-*
               - Sid: Route53AccountDiscovery
                 Effect: Allow
                 Action:

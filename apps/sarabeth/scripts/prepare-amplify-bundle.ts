@@ -15,9 +15,17 @@ for (const path of publicRoutes.filter((path) => path !== "/")) {
 	await writeFile(`${outputPath}.html`, html);
 }
 const commit = await resolveReleaseCommit();
+const runId = process.env.RELEASE_RUN_ID ?? "local";
+const runAttempt = process.env.RELEASE_RUN_ATTEMPT ?? "local";
+if (
+	(runId !== "local" && !/^\d+$/.test(runId)) ||
+	(runAttempt !== "local" && !/^\d+$/.test(runAttempt))
+) {
+	throw new Error("Release run identity must be numeric or local.");
+}
 await writeFile(
 	join(".amplify-hosting", "static", "__deployment.json"),
-	`${JSON.stringify({ commit })}\n`,
+	`${JSON.stringify({ commit, runAttempt, runId })}\n`,
 );
 console.log(
 	`Prepared Amplify bundle for ${commit} with ${publicRoutes.length} static-first page routes`,

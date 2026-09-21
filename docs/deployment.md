@@ -28,7 +28,17 @@ DiLoreto's public domain is a native Amplify domain association, so it does not 
 
 The OIDC role trust must name only the monorepo repository and the matching environment. Keep each role scoped to its site's resources.
 
+### AWS account foundation
+
+Deploy `infra/aws-account-foundation.yaml` once in each AWS account's production region before updating a site stack to the shared operational contract. The foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, and one account-wide monthly budget. Pass its `GitHubOidcProviderArn` and `OperationalAlarmTopicArn` outputs to the site stacks. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting stack or name it as though it measures only one Amplify app.
+
+Existing OIDC providers require a staged ownership migration. First deploy the foundation with `ExistingGitHubOidcProviderArn` set to the retained provider ARN. Then update site stacks to consume that output. Import the provider into the foundation only in a separate reviewed change after a no-change plan; never let two stacks create or delete the same account-level provider. Carolyn and DiLoreto retain their legacy provider resources during this transition.
+
+Every site creates a low-volume 5xx alarm that sends both alarm and recovery notifications to the shared topic. Carolyn and Sarabeth also create latency alarms and retain Amplify compute logs for 30 days. Confirm the SNS email subscription after creating a foundation stack.
+
 For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic repository builds and Amplify incoming webhooks must remain disabled because GitHub Actions is the only production release writer.
+
+Before enabling the updated deployment workflows, apply the Carolyn site stack and the Sarabeth bootstrap then hosting stacks so their deployment roles can temporarily stamp `RELEASE_RUN_ID` and `RELEASE_RUN_ATTEMPT` onto the Amplify branch build environment. The release script restores the prior branch environment after Amplify finishes.
 
 ### Contentful deployment webhooks
 
@@ -52,11 +62,11 @@ The wizard captures one shared Contentful token and one shared GitHub token, wri
 
 Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds. Rotate the shared fine-grained GitHub token by updating both environment secrets and rerunning both OpenTofu workflows.
 
-### Carolyn repository authorization
+### Repository authorization
 
-The existing Carolyn Amplify app uses its installed GitHub App connection; routine builds and stack updates do not need a GitHub token. `GitHubAccessTokenSecretArn` is an optional CDK parameter only for creating a replacement repository-connected app. AWS documents that the access token authorizes the GitHub App during app creation and is not stored by Amplify.
+The existing Carolyn and Sarabeth Amplify apps use their installed GitHub App connections; routine builds and stack updates do not need a GitHub token. `GitHubAccessTokenSecretArn` is an optional hosting-stack parameter only for creating a replacement repository-connected app. AWS documents that the access token authorizes the GitHub App during app creation and is not stored by Amplify.
 
-For disaster recovery, create a short-lived Secrets Manager secret with a `token` field using secure input, pass its ARN only for the replacement app's initial stack deployment, then redeploy with `GitHubAccessTokenSecretArn` empty and delete the temporary secret. Never put the token in an Amplify environment variable, shell argument, repository file, or deployment log. Confirm a repository-connected build succeeds before removing the temporary secret.
+For disaster recovery, create a short-lived Secrets Manager secret with a `token` field using secure input (`sarabeth-amplify-github-*` for Sarabeth), pass its ARN only for the replacement app's initial stack deployment, then redeploy with `GitHubAccessTokenSecretArn` empty and delete the temporary secret. Never put the token in a CloudFormation plaintext parameter, an Amplify environment variable, shell argument, repository file, or deployment log. Confirm a repository-connected build succeeds before removing the temporary secret.
 
 ### Carolyn build and runtime secrets
 
@@ -75,7 +85,7 @@ Removing the key from CDK does not delete it because its removal policy is `RETA
 
 All four sites are owned by this monorepo. Their legacy deployment writers are disabled and their AWS roles trust only the matching monorepo environment.
 
-For an intentional source deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. After the checks pass, deployment proceeds automatically; verify the workflow smoke check and public site.
+For an intentional source deployment, merge a reviewed change whose paths select the site or manually dispatch the site's workflow from `main`. After the checks pass, deployment proceeds automatically. Every workflow verifies the exact commit through the uncached `/__deployment.json` release marker (`{"commit":"<sha>","runId":"<GitHub run>","runAttempt":"<attempt>"}`) and then exercises representative hosting behavior; verify those checks and the public site.
 
 For Carolyn or Sarabeth content-only changes, publish or unpublish through the configured production Contentful space. Confirm the corresponding GitHub deployment workflow succeeds before considering the content release complete. A failed content build leaves the previously successful deployment serving production.
 
@@ -96,7 +106,9 @@ Paul deploys directly to its production Amplify branch. Its former candidate bra
 
 ## Infrastructure
 
-The current CloudFormation/CDK stacks remain the owners of existing AWS resources. Native Amplify domain associations, service-managed DNS records, and the Contentful OpenTofu state buckets remain owned through those stacks. OpenTofu owns only the newly introduced Contentful webhook definitions; do not let a second IaC tool manage the same resource.
+The current CloudFormation/CDK stacks remain the owners of existing AWS resources. Native Amplify domain associations, service-managed DNS records, and the Contentful OpenTofu state buckets remain owned through those stacks. The account-foundation template is the target owner for account-level OIDC, notification, and budget resources, but existing providers must follow the staged retain-and-import process above. OpenTofu owns only the Contentful webhook definitions; do not let a second IaC tool manage the same resource.
+
+Sarabeth's final DNS template now models only the native Amplify aliases and retained mail/verification records; the former Netlify cutover switches are no longer part of the desired state. Its domain association remains in a separate stack until a later import-based ownership change can move it without replacement. The root `amplify.yml` is the sole repository build specification for both connected Amplify apps; do not duplicate Sarabeth's commands in CloudFormation.
 
 Migrating existing AWS resources to OpenTofu remains a separate import-based follow-up:
 
