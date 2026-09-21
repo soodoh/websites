@@ -65,57 +65,10 @@ variable "amplify_certificate_record_value" {
   type        = string
 }
 
-variable "resource_tags" {
-  description = "Optional import-only override for exact existing resource tags; leave null after handoff."
-  type        = map(string)
-  default     = null
-}
-
-variable "alarm_tags" {
-  description = "Optional import-only override for exact existing alarm tags; leave null after handoff."
-  type        = map(string)
-  default     = null
-}
-
-variable "use_legacy_custom_headers" {
-  description = "Preserve the imported Amplify custom-header policy until ownership handoff."
-  type        = bool
-  default     = false
-}
-
 variable "write_target_custom_headers" {
-  description = "Use Amplify's required top-level YAML only for the reviewed target-header update."
+  description = "Use Amplify's required top-level YAML only for a reviewed header update, then return to canonical JSON."
   type        = bool
   default     = false
-}
-
-variable "use_legacy_alarm_contract" {
-  description = "Preserve the imported alarm thresholds until ownership handoff."
-  type        = bool
-  default     = false
-}
-
-variable "enable_branch_environment_updates" {
-  description = "Allow release workflows to read and temporarily update branch environment metadata after handoff."
-  type        = bool
-  default     = true
-}
-
-variable "use_legacy_infrastructure_policy" {
-  description = "Preserve the CloudFormation deployment policy until all legacy stacks relinquish ownership."
-  type        = bool
-  default     = false
-}
-
-variable "managed_by" {
-  description = "Keep CloudFormation through the no-change import, then change to OpenTofu after handoff."
-  type        = string
-  default     = "CloudFormation"
-
-  validation {
-    condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)
-    error_message = "managed_by must be CloudFormation or OpenTofu."
-  }
 }
 
 provider "aws" {
@@ -134,15 +87,12 @@ locals {
   contentful_state_bucket = "websites-sarabeth-contentful-tofu-state-${var.aws_account_id}-${var.aws_region}"
   contentful_state_key    = "contentful/terraform.tfstate"
 
-  target_tags = {
+  tags = {
     Project     = "sarabeth-studio"
     Environment = "production"
-    ManagedBy   = var.managed_by
+    ManagedBy   = "OpenTofu"
   }
-  tags       = var.resource_tags == null ? local.target_tags : var.resource_tags
-  alarm_tags = var.alarm_tags == null ? local.target_tags : var.alarm_tags
 
-  legacy_custom_headers = chomp(file("${path.module}/custom-headers-legacy.json.tftpl"))
   target_custom_headers = chomp(file("${path.module}/custom-headers.json.tftpl"))
 
   target_custom_headers_write = <<-YAML
@@ -181,26 +131,22 @@ locals {
             value: "no-cache, no-store, must-revalidate"
   YAML
 
-  custom_headers = var.use_legacy_custom_headers ? local.legacy_custom_headers : (
-    var.write_target_custom_headers ? local.target_custom_headers_write : local.target_custom_headers
-  )
+  custom_headers = var.write_target_custom_headers ? local.target_custom_headers_write : local.target_custom_headers
 }
 
 data "aws_iam_policy_document" "workload_boundary" {
   statement {
     sid    = "AmplifyJobs"
     effect = "Allow"
-    actions = concat(
-      [
-        "amplify:GetApp",
-        "amplify:GetBranch",
-        "amplify:GetJob",
-        "amplify:ListJobs",
-        "amplify:StartJob",
-        "amplify:StopJob",
-      ],
-      var.enable_branch_environment_updates ? ["amplify:UpdateBranch"] : [],
-    )
+    actions = [
+      "amplify:GetApp",
+      "amplify:GetBranch",
+      "amplify:GetJob",
+      "amplify:ListJobs",
+      "amplify:StartJob",
+      "amplify:StopJob",
+      "amplify:UpdateBranch",
+    ]
     resources = ["*"]
   }
 
@@ -596,23 +542,21 @@ resource "aws_cloudwatch_log_group" "amplify_compute" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_5xx" {
-  alarm_name = "sarabeth-amplify-production-5xx"
-  alarm_description = var.use_legacy_alarm_contract ? (
-    "Amplify Hosting returned one or more 5xx responses in five minutes."
-  ) : "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods."
+  alarm_name          = "sarabeth-amplify-production-5xx"
+  alarm_description   = "Amplify Hosting returned at least two 5xx responses in two of three five-minute periods."
   namespace           = "AWS/AmplifyHosting"
   metric_name         = "5xxErrors"
   statistic           = "Sum"
   period              = 300
-  evaluation_periods  = var.use_legacy_alarm_contract ? 1 : 3
-  datapoints_to_alarm = var.use_legacy_alarm_contract ? 1 : 2
-  threshold           = var.use_legacy_alarm_contract ? 1 : 2
+  evaluation_periods  = 3
+  datapoints_to_alarm = 2
+  threshold           = 2
   comparison_operator = "GreaterThanOrEqualToThreshold"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.operational_alarm_topic_arn]
   ok_actions          = [var.operational_alarm_topic_arn]
   dimensions          = { App = aws_amplify_app.production.id }
-  tags                = local.alarm_tags
+  tags                = local.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
@@ -623,7 +567,7 @@ resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
   statistic           = "Average"
   unit                = "Seconds"
   period              = 300
-  evaluation_periods  = var.use_legacy_alarm_contract ? 2 : 3
+  evaluation_periods  = 3
   datapoints_to_alarm = 2
   threshold           = 5
   comparison_operator = "GreaterThanThreshold"
@@ -631,7 +575,7 @@ resource "aws_cloudwatch_metric_alarm" "amplify_latency" {
   alarm_actions       = [var.operational_alarm_topic_arn]
   ok_actions          = [var.operational_alarm_topic_arn]
   dimensions          = { App = aws_amplify_app.production.id }
-  tags                = local.alarm_tags
+  tags                = local.tags
 }
 
 data "aws_iam_policy_document" "routine_deployment_assume_role" {
@@ -667,14 +611,10 @@ resource "aws_iam_role" "routine_deployment" {
 }
 
 data "aws_iam_policy_document" "routine_deployment" {
-  dynamic "statement" {
-    for_each = var.enable_branch_environment_updates ? [1] : []
-
-    content {
-      effect    = "Allow"
-      actions   = ["amplify:GetBranch", "amplify:UpdateBranch"]
-      resources = [awscc_amplify_branch.production.arn]
-    }
+  statement {
+    effect    = "Allow"
+    actions   = ["amplify:GetBranch", "amplify:UpdateBranch"]
+    resources = [awscc_amplify_branch.production.arn]
   }
 
   statement {
@@ -731,7 +671,7 @@ resource "aws_amplify_domain_association" "production" {
 
 resource "aws_route53_zone" "production" {
   name    = var.domain_name
-  comment = var.managed_by == "CloudFormation" ? "Production authoritative zone managed by sarabeth-studio CloudFormation." : "Production authoritative zone managed by sarabeth-studio OpenTofu."
+  comment = "Production authoritative zone managed by sarabeth-studio OpenTofu."
   tags    = local.tags
 
   lifecycle {
@@ -860,78 +800,10 @@ data "aws_iam_policy_document" "infrastructure_assume_role" {
 }
 
 resource "aws_iam_role" "infrastructure" {
-  name = "sarabeth-amplify-infrastructure-github"
-  description = var.use_legacy_infrastructure_policy ? (
-    "Protected GitHub Actions role for sarabeth-studio CloudFormation changes."
-  ) : "Protected GitHub Actions role for sarabeth-studio OpenTofu changes."
+  name                 = "sarabeth-amplify-infrastructure-github"
+  description          = "Protected GitHub Actions role for sarabeth-studio OpenTofu changes."
   max_session_duration = 14400
   assume_role_policy   = data.aws_iam_policy_document.infrastructure_assume_role.json
-}
-
-data "aws_iam_policy_document" "infrastructure_legacy" {
-  statement {
-    effect = "Allow"
-    actions = [
-      "cloudformation:ContinueUpdateRollback",
-      "cloudformation:CreateChangeSet",
-      "cloudformation:DeleteChangeSet",
-      "cloudformation:DescribeChangeSet",
-      "cloudformation:DescribeStackEvents",
-      "cloudformation:DescribeStackResources",
-      "cloudformation:DescribeStacks",
-      "cloudformation:ExecuteChangeSet",
-      "cloudformation:GetTemplate",
-      "cloudformation:GetTemplateSummary",
-      "cloudformation:ListChangeSets",
-      "cloudformation:UpdateTerminationProtection",
-      "cloudformation:ValidateTemplate",
-    ]
-    resources = [
-      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-*/*",
-      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:aws:transform/*",
-    ]
-  }
-
-  statement {
-    sid     = "CancelTimedOutDomainOrDnsUpdate"
-    effect  = "Allow"
-    actions = ["cloudformation:CancelUpdateStack"]
-    resources = [
-      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-domain/*",
-      "arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-dns/*",
-    ]
-  }
-
-  statement {
-    sid       = "DeleteFailedDomainStack"
-    effect    = "Allow"
-    actions   = ["cloudformation:DeleteStack"]
-    resources = ["arn:${data.aws_partition.current.partition}:cloudformation:${var.aws_region}:${var.aws_account_id}:stack/sarabeth-amplify-domain/*"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["cloudformation:DescribeStacks", "cloudformation:ValidateTemplate"]
-    resources = ["*"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["amplify:GetDomainAssociation"]
-    resources = ["arn:${data.aws_partition.current.partition}:amplify:${var.aws_region}:${var.aws_account_id}:apps/*/domains/${var.domain_name}"]
-  }
-
-  statement {
-    effect    = "Allow"
-    actions   = ["iam:PassRole"]
-    resources = ["arn:${data.aws_partition.current.partition}:iam::${var.aws_account_id}:role/sarabeth-amplify-cloudformation-execution"]
-
-    condition {
-      test     = "StringEquals"
-      variable = "iam:PassedToService"
-      values   = ["cloudformation.amazonaws.com"]
-    }
-  }
 }
 
 data "aws_iam_policy_document" "infrastructure" {
@@ -1046,13 +918,9 @@ data "aws_iam_policy_document" "infrastructure" {
 }
 
 resource "aws_iam_role_policy" "infrastructure" {
-  name = var.use_legacy_infrastructure_policy ? (
-    "DeploySarabethCloudFormation"
-  ) : "ManageSarabethOpenTofu"
-  role = aws_iam_role.infrastructure.id
-  policy = var.use_legacy_infrastructure_policy ? (
-    data.aws_iam_policy_document.infrastructure_legacy.json
-  ) : data.aws_iam_policy_document.infrastructure.json
+  name   = "ManageSarabethOpenTofu"
+  role   = aws_iam_role.infrastructure.id
+  policy = data.aws_iam_policy_document.infrastructure.json
 }
 
 output "amplify_app_id" {

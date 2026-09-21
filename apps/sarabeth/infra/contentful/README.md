@@ -1,6 +1,6 @@
 # Sarabeth Contentful deployment webhook
 
-OpenTofu owns the Contentful webhook that dispatches the existing Sarabeth GitHub Actions deployment workflow. The separate AWS OpenTofu root is the target owner of Amplify Hosting and this root's encrypted S3 state bucket; CloudFormation remains the live owner until its staged import handoff completes.
+OpenTofu owns the Contentful webhook that dispatches the Sarabeth GitHub Actions deployment workflow. The separate AWS OpenTofu root owns Amplify Hosting and this root's encrypted S3 state bucket.
 
 The webhook listens only for entry/asset publish and unpublish events in the `master` Contentful environment. GitHub Actions verifies `main`, assumes the production AWS role with OIDC, starts an exact-SHA Amplify release, waits for it, and smoke-tests production.
 

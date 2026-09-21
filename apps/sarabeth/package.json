@@ -48,7 +48,7 @@
 		"dev:workspace": "vite dev --port 3100",
 		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:release-commit && bun run test:container && bun run infra:lint",
 		"test:container": "bash scripts/playwright-docker.sh",
-		"infra:lint": "uv tool run --from cfn-lint==1.53.0 cfn-lint infra/cloudformation/*.yaml && ../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
+		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
 	"dependencies": {
 		"@aws-sdk/client-dynamodb": "3.1126.0",
@@ -84,7 +84,6 @@
 		"@vitejs/plugin-react": "6.1.1",
 		"tailwindcss": "4.3.3",
 		"typescript": "7.0.2",
-		"vite": "8.2.2",
-		"yaml": "2.9.0"
+		"vite": "8.2.2"
 	}
 }

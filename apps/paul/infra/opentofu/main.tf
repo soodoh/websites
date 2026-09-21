@@ -50,26 +50,9 @@ variable "deployment_marker_path" {
   default     = "/__deployment.json"
 }
 
-variable "resource_tags" {
-  description = "Optional import-only override for exact existing tags; leave null in the active configuration."
-  type        = map(string)
-  default     = null
-}
-
 variable "github_deployment_role_name" {
   description = "Physical name of the imported GitHub deployment role."
   type        = string
-}
-
-variable "managed_by" {
-  description = "Infrastructure owner recorded in resource tags. CloudFormation is valid only during an import handoff."
-  type        = string
-  default     = "OpenTofu"
-
-  validation {
-    condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)
-    error_message = "managed_by must be CloudFormation or OpenTofu."
-  }
 }
 
 provider "aws" {
@@ -77,12 +60,11 @@ provider "aws" {
 }
 
 locals {
-  target_tags = {
+  tags = {
     Project     = "paul-portfolio"
     Environment = "production"
-    ManagedBy   = var.managed_by
+    ManagedBy   = "OpenTofu"
   }
-  tags = var.resource_tags == null ? local.target_tags : var.resource_tags
 
   arn_partition = split(":", var.github_oidc_provider_arn)[1]
   aws_account   = split(":", var.github_oidc_provider_arn)[4]

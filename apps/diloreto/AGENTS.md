@@ -9,7 +9,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/content/` contains typed static content; imported images live under `src/assets/images/`.
 - `src/styles/app.css` contains Tailwind v4 and shadcn theme tokens.
 - `tests/` contains Playwright interaction, smoke, and visual coverage.
-- `infra/opentofu/` is the target AWS definition; the adjacent CloudFormation templates remain only until the live import handoff.
+- `infra/opentofu/` is the AWS definition and sole infrastructure state owner.
 - Treat `src/routeTree.gen.ts` and `src/content/genealogy/generated.json` as generated files. Regenerate genealogy data with `bun run genealogy:build`.
 
 ## Workflows

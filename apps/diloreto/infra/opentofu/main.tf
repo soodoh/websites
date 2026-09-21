@@ -40,17 +40,6 @@ variable "deployment_marker_path" {
   default     = "/__deployment.json"
 }
 
-variable "managed_by" {
-  description = "Ownership tag for DiLoreto resources. Override with CloudFormation only during a legacy import."
-  type        = string
-  default     = "OpenTofu"
-
-  validation {
-    condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)
-    error_message = "managed_by must be CloudFormation or OpenTofu."
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
@@ -58,7 +47,7 @@ provider "aws" {
 locals {
   base_tags = {
     Project   = "diloreto-website"
-    ManagedBy = var.managed_by
+    ManagedBy = "OpenTofu"
   }
 
   alarm_tags = merge(local.base_tags, {

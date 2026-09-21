@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 
 const root = resolve(import.meta.dir, "..");
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
+const modulePath = `$${"{path.module}"}`;
 
 const awsRoots = [
 	"infra/account-foundation",
@@ -12,18 +13,19 @@ const awsRoots = [
 	"apps/carolyn/infra/opentofu",
 	"apps/sarabeth/infra/opentofu",
 ];
-
 const siteRoots = awsRoots.slice(1);
-const retainedLegacyTemplates = [
+const retiredSources = [
 	"infra/aws-account-foundation.yaml",
 	"apps/diloreto/infra/amplify-hosting.yml",
-	"apps/sarabeth/infra/cloudformation/bootstrap.yaml",
-	"apps/sarabeth/infra/cloudformation/dns.yaml",
-	"apps/sarabeth/infra/cloudformation/domain.yaml",
-	"apps/sarabeth/infra/cloudformation/hosting.yaml",
+	"apps/diloreto/infra/amplify-hosting-transition.yml",
+	"apps/carolyn/infra/cdk.json",
+	"apps/carolyn/infra/bin",
+	"apps/carolyn/infra/lib",
+	"apps/carolyn/infra/test",
+	"apps/sarabeth/infra/cloudformation",
 ];
 
-describe("OpenTofu AWS migration", () => {
+describe("OpenTofu AWS ownership", () => {
 	test("pins every isolated root and uses encrypted S3 native locking", () => {
 		for (const directory of awsRoots) {
 			const versions = read(`${directory}/versions.tf`);
@@ -32,9 +34,12 @@ describe("OpenTofu AWS migration", () => {
 			expect(versions).toContain('backend "s3"');
 			expect(versions).toContain("encrypt      = true");
 			expect(versions).toContain("use_lockfile = true");
-			expect(existsSync(resolve(root, `${directory}/.terraform.lock.hcl`))).toBe(
-				true,
-			);
+			expect(
+				existsSync(resolve(root, `${directory}/.terraform.lock.hcl`)),
+			).toBe(true);
+			expect(
+				existsSync(resolve(root, `${directory}/terraform.tfvars.example`)),
+			).toBe(true);
 		}
 	});
 
@@ -52,15 +57,16 @@ describe("OpenTofu AWS migration", () => {
 			expect(foundation).toContain(resource);
 		}
 		expect(foundation).toContain("prevent_destroy = true");
-		expect(foundation).toContain('variable "operational_alarm_topic_name"');
-		expect(foundation).toContain('variable "monthly_budget_name"');
+		expect(foundation).toMatch(/ManagedBy\s+= "OpenTofu"/);
 	});
 
 	test("models every site without creating a second account OIDC provider", () => {
 		for (const directory of siteRoots) {
 			const configuration = read(`${directory}/main.tf`);
 			expect(configuration).toContain('variable "github_oidc_provider_arn"');
-			expect(configuration).toContain('resource "aws_amplify_app" "production"');
+			expect(configuration).toContain(
+				'resource "aws_amplify_app" "production"',
+			);
 			expect(configuration).toContain(
 				'resource "aws_cloudwatch_metric_alarm" "amplify_5xx"',
 			);
@@ -68,10 +74,11 @@ describe("OpenTofu AWS migration", () => {
 				'resource "aws_iam_openid_connect_provider"',
 			);
 			expect(configuration).toContain("prevent_destroy = true");
+			expect(configuration).toMatch(/ManagedBy\s+= "OpenTofu"/);
 		}
 	});
 
-	test("keeps standard-provider Amplify headers in the canonical read form", () => {
+	test("keeps standard-provider Amplify headers in canonical read form", () => {
 		for (const site of ["paul", "diloreto", "carolyn", "sarabeth"]) {
 			const configuration = read(`apps/${site}/infra/opentofu/main.tf`);
 			const customHeaders = JSON.parse(
@@ -79,7 +86,7 @@ describe("OpenTofu AWS migration", () => {
 			) as Array<Record<string, unknown>>;
 
 			expect(configuration).toContain(
-				'file("${path.module}/custom-headers.json.tftpl")',
+				`file("${modulePath}/custom-headers.json.tftpl")`,
 			);
 			expect(Object.keys(customHeaders[0] ?? {}).sort()).toEqual([
 				"headers",
@@ -105,43 +112,14 @@ describe("OpenTofu AWS migration", () => {
 		}
 	});
 
-	test("makes every active legacy resource retention-safe", () => {
-		for (const path of retainedLegacyTemplates) {
-			const source = read(path);
-			const resources = source
-				.split("\nResources:\n")[1]
-				?.split("\nOutputs:\n")[0];
-			expect(resources).toBeDefined();
-			if (!resources) continue;
-
-			const starts = [...resources.matchAll(/^  [A-Za-z0-9]+:\n/g)].map(
-				(match) => match.index,
-			);
-			expect(starts.length).toBeGreaterThan(0);
-			for (const [index, start] of starts.entries()) {
-				const end = starts[index + 1] ?? resources.length;
-				const resource = resources.slice(start, end);
-				expect(resource).toContain("DeletionPolicy: Retain");
-				expect(resource).toContain("UpdateReplacePolicy: Retain");
-			}
+	test("removes retired CloudFormation and CDK desired state", () => {
+		for (const path of retiredSources) {
+			expect(existsSync(resolve(root, path))).toBe(false);
 		}
-	});
-
-	test("keeps only active legacy owners during the staged import window", () => {
-		for (const path of [
-			"infra/aws-account-foundation.yaml",
-			"apps/diloreto/infra/amplify-hosting.yml",
-			"apps/carolyn/infra/lib/hosting-stack.ts",
-			"apps/sarabeth/infra/cloudformation/hosting.yaml",
-		]) {
-			expect(existsSync(resolve(root, path))).toBe(true);
-		}
-		expect(
-			existsSync(resolve(root, "apps/paul/infra/amplify-hosting.yaml")),
-		).toBe(false);
 		const runbook = read("docs/opentofu-migration.md");
-		expect(runbook).toContain("Import while CloudFormation/CDK still owns");
-		expect(runbook).toContain("do not apply from both tools");
-		expect(runbook).toContain("DeletionPolicy: Retain");
+		expect(runbook).toContain(
+			"All account and site ownership handoffs are complete",
+		);
+		expect(runbook).toContain("OpenTofu is the sole active AWS desired state");
 	});
 });

@@ -99,17 +99,6 @@ variable "state_bucket_name" {
   }
 }
 
-variable "managed_by" {
-  description = "Ownership tag for foundation resources. Override with CloudFormation only during a legacy import."
-  type        = string
-  default     = "OpenTofu"
-
-  validation {
-    condition     = contains(["CloudFormation", "OpenTofu"], var.managed_by)
-    error_message = "managed_by must be CloudFormation or OpenTofu."
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
@@ -118,7 +107,7 @@ locals {
   tags = {
     Project     = "websites"
     Environment = "production"
-    ManagedBy   = var.managed_by
+    ManagedBy   = "OpenTofu"
   }
 }
 

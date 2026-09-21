@@ -30,15 +30,15 @@ The OIDC role trust must name only the monorepo repository and the matching envi
 
 ### AWS account foundation
 
-The account foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, one account-wide monthly budget, and the versioned OpenTofu state bucket. Existing accounts still use `infra/aws-account-foundation.yaml` until their live ownership handoff; the target definition is `infra/account-foundation`. Pass its `github_oidc_provider_arn` and `operational_alarm_topic_arn` outputs to the site roots. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting root or name it as though it measures only one Amplify app.
+The OpenTofu account foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, one account-wide monthly budget, and the versioned state bucket. Pass its `github_oidc_provider_arn` and `operational_alarm_topic_arn` outputs to the site roots. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting root or name it as though it measures only one Amplify app.
 
-Existing OIDC providers require a staged ownership migration. Import the provider into the account-foundation root and prove a no-change plan before removing it from any site or legacy foundation stack. Never let two states create, update, or delete the same account-level provider. Carolyn and DiLoreto retain their legacy provider resources until this handoff.
+Each resource has one state owner. Plan an explicit import and state transfer before moving an account-level provider or shared resource between roots.
 
 Every site creates a low-volume 5xx alarm that sends both alarm and recovery notifications to the shared topic. Carolyn and Sarabeth also create latency alarms and retain Amplify compute logs for 30 days. Confirm the SNS email subscription after creating a foundation stack.
 
 For Carolyn and Sarabeth, configure the existing Amplify app to use this repository, the intended monorepo branch, the root `amplify.yml`, and the matching `AMPLIFY_MONOREPO_APP_ROOT` (`apps/carolyn` or `apps/sarabeth`). Automatic repository builds and Amplify incoming webhooks must remain disabled because GitHub Actions is the only production release writer.
 
-Before enabling the updated deployment workflows, apply the Carolyn site stack and the Sarabeth bootstrap then hosting stacks so their deployment roles can temporarily stamp `RELEASE_RUN_ID` and `RELEASE_RUN_ATTEMPT` onto the Amplify branch build environment. The release script restores the prior branch environment after Amplify finishes.
+Carolyn and Sarabeth deployment roles can temporarily stamp `RELEASE_RUN_ID` and `RELEASE_RUN_ATTEMPT` onto the Amplify branch build environment. The release script restores the prior branch environment after Amplify finishes.
 
 ### Contentful deployment webhooks
 
@@ -64,9 +64,9 @@ Treat publishing production Contentful content as a production deployment action
 
 ### Repository authorization
 
-The existing Carolyn and Sarabeth Amplify apps use their installed GitHub App connections; routine builds and stack updates do not need a GitHub token. `GitHubAccessTokenSecretArn` is an optional hosting-stack parameter only for creating a replacement repository-connected app. AWS documents that the access token authorizes the GitHub App during app creation and is not stored by Amplify.
+The existing Carolyn and Sarabeth Amplify apps use their installed GitHub App connections; routine builds and OpenTofu updates do not need a GitHub token. AWS documents that a short-lived access token used to authorize the GitHub App during replacement-app creation is not stored by Amplify.
 
-For disaster recovery, create a short-lived Secrets Manager secret with a `token` field using secure input (`sarabeth-amplify-github-*` for Sarabeth), pass its ARN only for the replacement app's initial stack deployment, then redeploy with `GitHubAccessTokenSecretArn` empty and delete the temporary secret. Never put the token in a CloudFormation plaintext parameter, an Amplify environment variable, shell argument, repository file, or deployment log. Confirm a repository-connected build succeeds before removing the temporary secret.
+For disaster recovery, authorize a replacement repository-connected app with a short-lived credential supplied through the provider's secure input path, then remove it after the connection succeeds. Never put the credential in an OpenTofu variable file, Amplify environment variable, shell argument, repository file, state, or deployment log. Confirm a repository-connected build succeeds before removing the temporary credential.
 
 ### Carolyn build and runtime secrets
 
@@ -79,7 +79,7 @@ They use the AWS-managed `alias/aws/ssm` key. The Amplify build/service role can
 
 Before the first deployment of the infrastructure definition that removes Carolyn's dedicated KMS key, update both parameters in place to `alias/aws/ssm` without writing plaintext to disk, arguments, or logs. Verify parameter metadata, a repository-connected Amplify build, and runtime secret retrieval first. Keep the old key enabled during verification. If retrieval fails before the stack update, update both parameters back to the old key through the same in-memory/pipe-only process.
 
-Removing the key from CDK does not delete it because its removal policy is `RETAIN`; it only removes the key from stack ownership and deletes the stack-owned alias. If rollback is needed after that update, do not restore the old `Key` construct, which would create a replacement key. Temporarily import the retained key by ARN, restore the two parameter-scoped decrypt statements, deploy, and then re-encrypt the parameters back to that key. Scheduling the retained key for deletion is a separate destructive operation. Do it only with explicit approval after confirming no resources use the key, and use a safe waiting period.
+The completed migration re-encrypted both parameters with `alias/aws/ssm`, removed the former key's alias, and scheduled the disabled dedicated key for deletion on 2026-10-20. If rollback unexpectedly requires that key before deletion, stop and review cancellation, import, policy restoration, and re-encryption as one recovery plan.
 
 ## Production operation
 
@@ -100,13 +100,13 @@ Rollback is source-driven:
 
 Static workflows package and deploy the output built in that workflow run. GitHub artifacts are diagnostics and handoff between jobs, not a permanent release store. If byte-for-byte long-term static rollback is required later, use an AWS-native versioned S3 release bucket rather than committed repository evidence.
 
-DiLoreto production uses the Amplify-managed apex, `www`, and `paul` mappings. Its deployment smoke checks the public release marker, clean paths, custom 404 status/body, caching, security headers, and domain redirects. When Amplify's native `301` clean-URL canonicalization is observed, it also validates the canonical location and final custom `404`. The approved migration and final cleanup are complete; `apps/diloreto/infra/amplify-hosting.yml` is the active stack template, and the former custom CloudFront distribution and supporting resources no longer exist. The slower post-cleanup rollback procedure remains documented in [`../apps/diloreto/infra/hosting-architecture.md`](../apps/diloreto/infra/hosting-architecture.md).
+DiLoreto production uses the Amplify-managed apex, `www`, and `paul` mappings. Its deployment smoke checks the public release marker, clean paths, custom 404 status/body, caching, security headers, and domain redirects. When Amplify's native `301` clean-URL canonicalization is observed, it also validates the canonical location and final custom `404`. The former custom CloudFront distribution and supporting resources no longer exist. The completed hosting transition remains documented in [`../apps/diloreto/infra/hosting-architecture.md`](../apps/diloreto/infra/hosting-architecture.md).
 
-Paul deploys directly to its production Amplify branch. Its former candidate branch and verified-release bucket are not part of the deployment path. Removing those resources from the CloudFormation template deletes the candidate branch, but the bucket's retain policy leaves the bucket and all versions outside stack ownership. Emptying and deleting that retained bucket is a separate approval-gated operation. Production deployment and rollback remain source-driven.
+Paul deploys directly to its production Amplify branch. Its former candidate branch and verified-release bucket are gone and are not part of the deployment path. Production deployment and rollback remain source-driven. The separate `paul.diloreto.backups` bucket belongs to home-lab recovery, not this repository.
 
 ## Infrastructure
 
-OpenTofu is the target AWS definition. It is split into one account-foundation root and one root per site:
+OpenTofu is the sole active AWS definition. It is split into one account-foundation root and one root per site:
 
 - `infra/account-foundation`
 - `apps/paul/infra/opentofu`
@@ -114,10 +114,8 @@ OpenTofu is the target AWS definition. It is split into one account-foundation r
 - `apps/carolyn/infra/opentofu`
 - `apps/sarabeth/infra/opentofu`
 
-CloudFormation/CDK stacks remain the live owners until each root completes the staged import and retention handoff. Do not apply an imported OpenTofu root while its legacy stack still owns the same resources. Paul's retained handoff is complete and its OpenTofu state is the sole infrastructure owner; its empty CloudFormation migration shell owns no resources. Other legacy sources remain in the repository only for their migration windows and must be removed site by site after each live handoff, not in advance.
-
 The AWS roots use separate state keys in a versioned, encrypted account state bucket owned by the account-foundation root. The Contentful roots and their existing state keys remain independent. OpenTofu must never manage one resource from two states.
 
-Sarabeth's target root combines its retained bootstrap, hosting, domain, and DNS resources into one state. Carolyn and Sarabeth use the AWS Cloud Control provider for Amplify branches because branch-scoped compute roles are not represented by the standard AWS provider. The root `amplify.yml` remains the sole repository build specification for both connected Amplify apps.
+Sarabeth's root combines its former bootstrap, hosting, domain, and DNS boundaries into one state. Carolyn and Sarabeth use the AWS Cloud Control provider for Amplify branches because branch-scoped compute roles are not represented by the standard AWS provider. The root `amplify.yml` remains the sole repository build specification for both connected Amplify apps.
 
-Follow [`opentofu-migration.md`](opentofu-migration.md) for backend bootstrap, import IDs, required no-change plans, retention-first CloudFormation/CDK removal, rollback, and the final `ManagedBy=OpenTofu` handoff. Every live import, AWS write, legacy stack update, and apply remains approval-gated.
+Follow [`opentofu-migration.md`](opentofu-migration.md) for state boundaries, planning, safety invariants, and recovery. Every AWS write, import, state mutation, apply, and destroy remains approval-gated.

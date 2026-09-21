@@ -1,0 +1,8 @@
+aws_region                         = "us-west-2"
+notification_email                 = "operator@example.com"
+state_bucket_name                  = "websites-production-tofu-state-123456789012-us-west-2"
+monthly_budget_amount              = 5
+monthly_budget_name                = "websites-production-account-monthly"
+operational_alarm_topic_name       = "websites-production-alarms"
+operational_alarm_topic_display_name = "Websites production alarms"
+manage_github_oidc_provider        = true

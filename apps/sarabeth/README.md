@@ -23,7 +23,7 @@ Contentful and YouTube development values belong in an ignored `.env` file. Keep
 - `src/components/` contains shared React UI.
 - `src/utils/` contains Contentful fetchers, integrations, and data shaping.
 - `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
-- `infra/opentofu/` contains the target AWS definition; `infra/cloudformation/` is retained only for the staged live handoff.
+- `infra/opentofu/` contains the active AWS definition and state boundary.
 
 The media page calls a server-side YouTube endpoint after hydration. Contact and runtime integrations use the AWS SDK default credential provider chain; production credentials come from IAM roles and SSM rather than static AWS keys.
 
@@ -46,7 +46,7 @@ bun run validate:amplify
 
 Browser tests use checked-in fixtures and the pinned ARM64 Playwright container, so CI does not call Contentful, Google, or production services.
 
-Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. The Contentful webhook is already OpenTofu-managed; AWS resources move from CloudFormation to the separate AWS OpenTofu root through the staged import handoff. See [`../../docs/deployment.md`](../../docs/deployment.md) and [`../../docs/opentofu-migration.md`](../../docs/opentofu-migration.md).
+Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. OpenTofu manages both the AWS root and the separately stateful Contentful webhook root. See [`../../docs/deployment.md`](../../docs/deployment.md) and [`../../docs/opentofu-migration.md`](../../docs/opentofu-migration.md).
 
 ## Deployment
 

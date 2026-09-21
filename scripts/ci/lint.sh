@@ -8,7 +8,6 @@ go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 .github/workflows/*.yml
 
 tofu fmt -check -recursive infra apps
 scripts/infra/validate-opentofu.sh
-uv tool run --from cfn-lint==1.53.0 cfn-lint infra/aws-account-foundation.yaml
 
 scripts=(
   scripts/ci/*.sh

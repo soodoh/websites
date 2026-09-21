@@ -1,10 +1,8 @@
-# AWS OpenTofu migration
+# AWS OpenTofu ownership
 
 ## Status
 
-The repository contains the target OpenTofu configuration for the shared account foundation and each site. Existing CloudFormation and CDK definitions remain in place while they still own live resources. Every active legacy resource is configured for retention during handoff, but those retention-only stack changes require separately reviewed deployments.
-
-The portfolio and Carolyn account foundations are bootstrapped with isolated remote S3 state, confirmed notifications, monthly budgets, and retained GitHub OIDC providers. Paul, DiLoreto, and Carolyn have completed retention-first ownership handoff: their legacy stacks own no resources, OpenTofu target state is applied without changing imported physical IDs, and each root returns a no-change plan. Their post-handoff production workflows, release-marker checks, and smoke tests succeeded. Sarabeth remains under CloudFormation ownership until its separately reviewed import and handoff.
+All account and site ownership handoffs are complete. OpenTofu is the sole active AWS desired state for the account foundations and all four sites. The retired CloudFormation/CDK stacks and Sarabeth CloudFormation execution role have been deleted. Production deployments, exact release-marker checks, and smoke tests succeeded after each handoff.
 
 | Boundary | OpenTofu root | State key |
 | --- | --- | --- |
@@ -14,190 +12,63 @@ The portfolio and Carolyn account foundations are bootstrapped with isolated rem
 | Carolyn | `apps/carolyn/infra/opentofu` | `sites/carolyn/terraform.tfstate` |
 | Sarabeth | `apps/sarabeth/infra/opentofu` | `sites/sarabeth/terraform.tfstate` |
 
-Contentful remains in its existing independent roots and state files. Never combine Contentful state with an AWS root.
+Each AWS account has its own versioned, encrypted S3 state bucket. Contentful remains in the independent roots under `apps/carolyn/infra/contentful` and `apps/sarabeth/infra/contentful`; never combine Contentful and AWS state.
 
 ## Safety invariants
 
-1. Migrate one AWS account and one root at a time.
-2. Import while CloudFormation/CDK still owns the resources, but do not apply from both tools.
-3. Require a reviewed no-change plan before relinquishing legacy ownership. The only expected pre-handoff additions are the new account state bucket and the documented Sarabeth infrastructure-role policy change.
-4. Deploy `DeletionPolicy: Retain` and `UpdateReplacePolicy: Retain` (or CDK `RemovalPolicy.RETAIN`) before removing any resource from a legacy stack. Verify the change set contains no physical resource mutation. If the checked-in legacy definition has drifted ahead of the deployed template, first align it to the live template plus retention metadata only.
-5. Remove retained resources from the legacy stack in a separate deployment. Confirm that AWS did not replace or delete them.
-6. Only then apply OpenTofu and change `managed_by` from `CloudFormation`/`CDK` to `OpenTofu`.
-7. Keep state versioned, encrypted, private, and access-controlled. State contains infrastructure metadata and can contain secrets.
-8. Never use `tofu apply`, `tofu destroy`, CloudFormation stack updates, or AWS writes without explicit approval and a saved plan.
+1. Select the correct AWS profile, account, region, backend bucket, and state key before planning.
+2. Run and review a saved plan before every apply. Proceed only when replacements and destroys are explicitly intended.
+3. Obtain explicit approval before an AWS write, GitHub settings write, workflow dispatch, production HTTP test, apply, destroy, import, or state mutation.
+4. Keep state versioned, encrypted, private, and access-controlled. State contains infrastructure metadata and can contain secrets.
+5. Manage each resource from exactly one state. Use `tofu state mv` or an import plan for ownership changes rather than creating a second owner.
+6. Preserve `prevent_destroy` on durable production resources unless a separately reviewed deletion requires changing it.
+7. Treat a changed physical ID as a replacement and stop unless the reviewed plan explicitly authorizes it.
 
-## Validate locally
+## Validation
 
 ```sh
 bun run infra:validate
 ```
 
-This initializes every root with `-backend=false`, verifies the pinned providers, and runs `tofu validate`. Formatting is checked by `scripts/ci/lint.sh`.
+This initializes every root with `-backend=false`, verifies the pinned providers, and runs `tofu validate`. `scripts/ci/lint.sh` also enforces formatting.
 
-## Backend bootstrap
+## Planning a production root
 
-Each AWS account gets one account-foundation-managed S3 bucket. State remains isolated by the keys in the table above.
-
-Create an ignored variable file in `infra/account-foundation`, for example:
-
-```hcl
-aws_region           = "us-west-2"
-notification_email   = "operator@example.com"
-state_bucket_name    = "websites-production-tofu-state-123456789012-us-west-2"
-monthly_budget_amount              = 5
-monthly_budget_name                = "<existing-budget-name>"
-operational_alarm_topic_name         = "<existing-topic-name>"
-operational_alarm_topic_display_name = "<existing-display-name>"
-operational_alarm_topic_tags = {
-  Project   = "<existing-project-tag>"
-  ManagedBy = "<existing-managed-by-tag>"
-}
-managed_by                         = "CloudFormation"
-manage_github_oidc_provider        = false
-existing_github_oidc_provider_arn = "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com"
-oidc_provider_tags = {
-  Project   = "<existing-project-tag>"
-  ManagedBy = "<existing-managed-by-tag>"
-}
-```
-
-Keep `manage_github_oidc_provider = false` while a legacy site stack owns the account provider. This allows the foundation to create state, notifications, and budget resources without introducing a second OIDC owner. After the legacy stack retains and relinquishes the provider, set the flag to `true`, import it at `aws_iam_openid_connect_provider.github_actions[0]`, and plan again.
-
-When adopting an existing account topic or budget whose physical name was generated by a legacy stack, set `operational_alarm_topic_name`, `operational_alarm_topic_display_name`, and `monthly_budget_name` to those exact values. Set `operational_alarm_topic_tags` to the topic's exact current tags through the import and handoff, then remove the override when OpenTofu takes ownership.
-
-Set `oidc_provider_tags` to the provider's exact current tags, omitting keys that are not present. This avoids disguising a tag takeover as part of the import; switch to the foundation tags only after legacy ownership is removed.
-
-Start the foundation with local state because its remote bucket does not exist yet:
+Copy the root's `terraform.tfvars.example` to an ignored `.tfvars` file and supply the real non-secret identifiers. Initialize against the account's existing state bucket and the boundary's key:
 
 ```sh
-tofu -chdir=infra/account-foundation init -backend=false
-```
-
-Import the existing foundation resources into that local state. After the reviewed handoff, apply the plan that creates the state bucket, then move state into it:
-
-```sh
-tofu -chdir=infra/account-foundation init -migrate-state \
-  -backend-config='bucket=websites-production-tofu-state-123456789012-us-west-2' \
-  -backend-config='key=account-foundation/terraform.tfstate' \
-  -backend-config='region=us-west-2'
-```
-
-Initialize each site root against the same account bucket with its own key:
-
-```sh
-tofu -chdir=apps/paul/infra/opentofu init \
+tofu -chdir=apps/<site>/infra/opentofu init \
   -backend-config='bucket=<account-state-bucket>' \
-  -backend-config='key=sites/paul/terraform.tfstate' \
+  -backend-config='key=sites/<site>/terraform.tfstate' \
   -backend-config='region=<aws-region>'
+
+tofu -chdir=apps/<site>/infra/opentofu plan \
+  -var-file=<ignored-production.tfvars>
 ```
 
-Use the matching site key for the other roots. Do not commit backend arguments or production `.tfvars` files.
+Use `account-foundation/terraform.tfstate` for the foundation root. Backend arguments and production `.tfvars` files remain uncommitted.
 
-## Import procedure
+The account foundation owns the GitHub Actions OIDC provider, shared alarm topic and confirmed subscription, monthly budget, and protected state bucket. Site roots consume the foundation's OIDC and alarm-topic outputs.
 
-For each root:
+Carolyn and Sarabeth use the AWS Cloud Control provider for Amplify branches because branch-scoped compute roles are not represented by the standard AWS provider. Their Contentful webhook roots retain separate providers, credentials, and state.
 
-1. Copy the required values into an ignored `migration.auto.tfvars` file.
-2. Initialize the correct backend.
-3. Record the legacy stack template, parameters, outputs, and physical resource IDs.
-4. Import every resource listed below.
-5. Run `tofu plan -refresh-only` and review provider normalization.
-6. Run a normal `tofu plan`. Resolve every unexpected change in configuration; do not hide differences with `ignore_changes`.
-7. Save the clean plan and evidence before changing legacy ownership.
+## Amplify custom headers
 
-Useful discovery commands:
+AWS provider 6.65.0 returns Amplify custom headers as a nested JSON list, while `UpdateApp` requires top-level YAML. The committed `custom-headers.json.tftpl` files are the canonical read form used for stable plans.
 
-```sh
-aws cloudformation describe-stack-resources --stack-name <stack> --region <region>
-aws cloudformation describe-stacks --stack-name <stack> --region <region>
-aws amplify get-app --app-id <app-id> --region <region>
-aws amplify get-domain-association --app-id <app-id> --domain-name <domain> --region <region>
-aws iam list-role-policies --role-name <role>
-```
+For an intentional Carolyn header change, temporarily express the reviewed write payload required by that root, apply it once, then restore canonical JSON and require a no-change plan. For Sarabeth, set `write_target_custom_headers = true` only for the reviewed update apply, return it to `false`, and require a no-change plan.
 
-### Account foundation
+## Completed handoff record
 
-| OpenTofu address | Import ID |
-| --- | --- |
-| `aws_iam_openid_connect_provider.github_actions[0]` | OIDC provider ARN, only after enabling foundation ownership |
-| `aws_sns_topic.operational_alarms` | topic ARN |
-| `aws_sns_topic_subscription.operational_alarm_email` | confirmed subscription ARN |
-| `aws_budgets_budget.monthly_account` | `<account-id>:<budget-name>` |
+The migration used a retention-first sequence for every legacy owner:
 
-The S3 state resources are new and are not imported on the first account migration. On later recovery or adoption, import the bucket name into all five S3 addresses (`aws_s3_bucket`, versioning, encryption, public-access block, and bucket policy).
+1. Import resources and prove a no-change plan while the legacy stack still owned them.
+2. Apply retention policies without changing physical resources.
+3. Remove legacy ownership and verify `DELETE_SKIPPED` or the equivalent retained result.
+4. Apply the OpenTofu target contract and verify physical IDs.
+5. Deploy production, verify the exact release marker, and require final no-change plans.
+6. Delete the empty legacy stacks and retired source definitions.
 
-### Paul and DiLoreto
+Do not restore a retired CloudFormation/CDK definition as active desired state. Recovery is a forward OpenTofu change or an explicitly planned ownership transfer with imports. A normal legacy stack update against existing resources can create replacements.
 
-| Resource | Import ID |
-| --- | --- |
-| Amplify app | app ID |
-| `aws_amplify_branch.production` | `<app-id>/<branch-name>` |
-| Amplify domain association | `<app-id>/<domain-name>` |
-| CloudWatch alarm | alarm name |
-| IAM role | role name |
-| IAM inline role policy | `<role-name>:<policy-name>` |
-| Paul Route 53 zone | hosted zone ID |
-
-Paul's generated deployment role name, Amplify app ID, and exact hosted-zone comment must be copied from the existing stack into its migration variables. When live resources predate the target contract, set `resource_tags` to the exact current tags, `deployment_marker_path` to the current header path, `managed_by = "CloudFormation"`, and `enable_operational_alarm = false`. After ownership handoff, remove the tag override, select `/__deployment.json`, set `managed_by = "OpenTofu"`, and enable the alarm in one reviewed target-state plan.
-
-AWS provider 6.65.0 exposes an Amplify custom-header read/write asymmetry: the read API returns the nested JSON list, while `UpdateApp` requires YAML with a top-level `customHeaders` map. Keep `custom-headers.json.tftpl` in the canonical read form for stable plans. For an intentional future header change, use the top-level YAML form only for the reviewed update apply, then restore the canonical read form and require a no-change plan. Applying a changed nested-list payload directly fails AWS validation.
-
-DiLoreto's historical transition template is not imported; only resources in the final active stack are migrated.
-
-### Carolyn
-
-Use `CarolynPortfolioHostingStack` and its synthesized template to map logical IDs to physical IDs. Import:
-
-- the three IAM roles and their three inline policies;
-- the Amplify app;
-- `awscc_amplify_branch.production` by branch ARN;
-- both Amplify domain associations as `<app-id>/<domain-name>`;
-- the Amplify log group and two alarms;
-- the Contentful state bucket into the bucket, versioning, encryption, public-access-block, and policy addresses.
-
-The registrar-created Route 53 zone remains referenced, not owned. Import the stack-owned OIDC provider into the account-foundation root, not the Carolyn root. Do not import `AWS::CDK::Metadata`.
-
-### Sarabeth
-
-Import the hosting, domain, DNS, and retained bootstrap resources into the single Sarabeth state:
-
-- workload boundary managed policy by ARN;
-- service, compute, routine-deployment, and infrastructure roles by name;
-- each inline policy as `<role-name>:<policy-name>`;
-- DynamoDB table by table name;
-- Amplify app by app ID and `awscc_amplify_branch.production` by branch ARN;
-- Contentful state bucket into all five S3 addresses;
-- log group and alarms by name;
-- Amplify domain association as `<app-id>/<domain-name>`;
-- hosted zone by zone ID;
-- every Route 53 record as `<zone-id>_<record-name>_<type>`.
-
-The account OIDC provider belongs in the account-foundation root. Adopt the existing `sarabeth-amplify-production-alarms` topic and confirmed subscription there with their exact name, display name, tags, and physical subscription ARN. The account budget and protected state bucket are new foundation resources in this account.
-
-During the site import, copy `migration.tfvars.example` and preserve the live tag sets, legacy custom headers, alarm thresholds, deployment permissions, workload boundary, and CloudFormation infrastructure policy. The resulting imported site plan must be no-change. After all four legacy stacks relinquish ownership, remove those compatibility overrides and use the one-time target-header write mode for the reviewed target apply; return to the canonical header read form before requiring the final no-change plan.
-
-The CloudFormation execution role is migration scaffolding and must be retained until all Sarabeth stacks have relinquished ownership, then deleted in a separate reviewed cleanup. The infrastructure role is intentionally repurposed from CloudFormation to OpenTofu; its inline policy replacement and the branch metadata permissions are expected and must be reviewed as control-plane changes.
-
-## Legacy ownership handoff
-
-For each legacy stack:
-
-1. Deploy retention policies only.
-2. Re-run the OpenTofu no-change plan.
-3. Remove the imported resources from the CloudFormation/CDK definition and deploy that removal.
-4. Confirm all physical IDs are unchanged and the application deployment workflow still succeeds.
-5. Change `managed_by = "OpenTofu"` and apply the reviewed tag/control-plane plan.
-6. Archive or delete that legacy source only after the state, plan, and production verification evidence have been reviewed.
-
-The retained templates under `apps/*/infra` and `infra/aws-account-foundation.yaml` must not be treated as active desired state after handoff. Remove them site by site, never all at once.
-
-## Rollback
-
-Before legacy ownership is removed, rollback by removing the imported objects from OpenTofu state only; do not destroy them:
-
-```sh
-tofu state rm <address>
-```
-
-After ownership is removed from a legacy stack, rollback requires the reverse import into CloudFormation/CDK or a forward OpenTofu fix. Never re-add an existing resource to a legacy template without an explicit resource-import plan, because a normal stack update can create a replacement.
+The post-migration audit confirmed that Paul's former verified-release bucket no longer exists. The separate `paul.diloreto.backups` bucket belongs to the home-lab recovery boundary and is not website infrastructure.

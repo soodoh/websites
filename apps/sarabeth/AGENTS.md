@@ -8,7 +8,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/router.tsx` creates the router; treat `src/routeTree.gen.ts` as generated.
 - `src/components/`, `src/utils/`, `src/styles/`, and `src/lib/` contain shared UI, integrations/data shaping, global styles, and small helpers.
 - `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
-- `infra/opentofu/` is the target AWS definition; `infra/cloudformation/` remains only until the live import handoff.
+- `infra/opentofu/` is the AWS definition and sole infrastructure state owner.
 
 ## Workflows
 
@@ -16,7 +16,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `bun run test:container`: canonical Docker-pinned browser tests.
 - `bun run build:playwright:unchecked`: fixture browser build used by the verification chain.
 - `bun run build:amplify:fixture`, `bun run prepare:amplify`, and `bun run validate:amplify`: build and validate the fixture Amplify artifact.
-- Root `bun run infra:validate` validates OpenTofu; `infra:lint` protects the retained CloudFormation owner during migration.
+- Root `bun run infra:validate` validates OpenTofu; `infra:lint` runs the app-specific OpenTofu validation.
 
 Add contract tests under `tests/contract/` and page/visual coverage under `tests/visual/`. Update browser snapshots only for reviewed UI changes.
 
