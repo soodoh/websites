@@ -104,45 +104,8 @@ locals {
     ManagedBy   = var.managed_by
   }
 
-  custom_headers = <<-YAML
-    customHeaders:
-      - pattern: "**/*"
-        headers:
-          - key: "Strict-Transport-Security"
-            value: "max-age=63072000; includeSubDomains"
-          - key: "X-Content-Type-Options"
-            value: "nosniff"
-          - key: "Referrer-Policy"
-            value: "strict-origin-when-cross-origin"
-          - key: "X-Frame-Options"
-            value: "DENY"
-          - key: "Permissions-Policy"
-            value: "camera=(), geolocation=(), microphone=(), payment=(), usb=()"
-      - pattern: "**/*.html"
-        headers:
-          - key: "Cache-Control"
-            value: "no-cache, no-store, must-revalidate"
-      - pattern: "/"
-        headers:
-          - key: "Cache-Control"
-            value: "no-cache, no-store, must-revalidate"
-      - pattern: "/assets/*"
-        headers:
-          - key: "Cache-Control"
-            value: "public, max-age=31536000, immutable"
-      - pattern: "/__tsr/staticServerFnCache/*"
-        headers:
-          - key: "Cache-Control"
-            value: "public, max-age=31536000, immutable"
-      - pattern: "/__release/albums/*"
-        headers:
-          - key: "Cache-Control"
-            value: "public, max-age=31536000, immutable"
-      - pattern: "/__deployment.json"
-        headers:
-          - key: "Cache-Control"
-            value: "no-cache, no-store, must-revalidate"
-  YAML
+  # Amplify preserves this JSON's key order, so load the canonical read form to keep plans stable.
+  custom_headers = chomp(file("${path.module}/custom-headers.json.tftpl"))
 }
 
 data "aws_iam_policy_document" "amplify_service_assume_role" {
