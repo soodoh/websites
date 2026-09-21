@@ -184,7 +184,7 @@ finish() {
 # Replace the example below. Set TOTAL_STAGES to match the stages you write.
 # ──────────────────────────────────────────────────────────────────────────
 
-TOTAL_STAGES=7
+TOTAL_STAGES=5
 
 # The shared wizard template defines RED for scripts that need an error color.
 : "$RED"
@@ -250,47 +250,28 @@ done
 set_environment_var production-carolyn CONTENTFUL_SPACE_ID "$CAROLYN_CONTENTFUL_SPACE_ID"
 set_environment_var production-sarabeth CONTENTFUL_SPACE_ID "$SARABETH_CONTENTFUL_SPACE_ID"
 
-stage "Carolyn: Contentful token"
-say "Create a Contentful Management API token whose owner can manage webhooks in Carolyn's space."
+stage "Shared Contentful token"
+say "Create one Contentful Management API token whose owner can manage webhooks in both production spaces."
 open_url "https://app.contentful.com/account/profile/cma_tokens"
-step "Choose Create personal access token, name it 'Carolyn GitHub deployment webhook', and copy it once."
-ask_secret CAROLYN_CONTENTFUL_TOKEN "Paste Carolyn's Contentful Management API token:"
-require_value "Carolyn Contentful token" "$CAROLYN_CONTENTFUL_TOKEN"
-set_environment_secret production-carolyn CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$CAROLYN_CONTENTFUL_TOKEN"
-unset CAROLYN_CONTENTFUL_TOKEN
+step "Choose Create personal access token, name it 'Websites GitHub deployment webhooks', and copy it once."
+ask_secret CONTENTFUL_TOKEN "Paste the shared Contentful Management API token:"
+require_value "Contentful token" "$CONTENTFUL_TOKEN"
+set_environment_secret production-carolyn CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$CONTENTFUL_TOKEN"
+set_environment_secret production-sarabeth CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$CONTENTFUL_TOKEN"
+unset CONTENTFUL_TOKEN
 
-stage "Carolyn: GitHub token"
-say "Create a separate fine-grained token used only by Carolyn's Contentful webhook."
+stage "Shared GitHub token"
+say "Create one fine-grained token used by both Contentful webhooks."
 open_url "https://github.com/settings/personal-access-tokens/new"
-step "Name it 'Carolyn Contentful workflow dispatch' and choose the soodoh resource owner."
+step "Name it 'Contentful workflow dispatch' and choose the soodoh resource owner."
 step "Limit repository access to only soodoh/websites."
 step "Under repository permissions, grant Actions: Read and write. Leave every other optional permission unset."
 step "Choose an appropriate expiration, generate the token, and copy it."
-ask_secret CAROLYN_GITHUB_TOKEN "Paste Carolyn's fine-grained GitHub token:"
-require_value "Carolyn GitHub token" "$CAROLYN_GITHUB_TOKEN"
-set_environment_secret production-carolyn CONTENTFUL_GITHUB_ACTIONS_TOKEN "$CAROLYN_GITHUB_TOKEN"
-unset CAROLYN_GITHUB_TOKEN
-
-stage "Sarabeth: Contentful token"
-say "Create a separate Contentful Management API token whose owner can manage webhooks in Sarabeth's space."
-open_url "https://app.contentful.com/account/profile/cma_tokens"
-step "Choose Create personal access token, name it 'Sarabeth GitHub deployment webhook', and copy it once."
-ask_secret SARABETH_CONTENTFUL_TOKEN "Paste Sarabeth's Contentful Management API token:"
-require_value "Sarabeth Contentful token" "$SARABETH_CONTENTFUL_TOKEN"
-set_environment_secret production-sarabeth CONTENTFUL_MANAGEMENT_ACCESS_TOKEN "$SARABETH_CONTENTFUL_TOKEN"
-unset SARABETH_CONTENTFUL_TOKEN
-
-stage "Sarabeth: GitHub token"
-say "Create a separate fine-grained token used only by Sarabeth's Contentful webhook."
-open_url "https://github.com/settings/personal-access-tokens/new"
-step "Name it 'Sarabeth Contentful workflow dispatch' and choose the soodoh resource owner."
-step "Limit repository access to only soodoh/websites."
-step "Under repository permissions, grant Actions: Read and write. Leave every other optional permission unset."
-step "Choose an appropriate expiration, generate the token, and copy it."
-ask_secret SARABETH_GITHUB_TOKEN "Paste Sarabeth's fine-grained GitHub token:"
-require_value "Sarabeth GitHub token" "$SARABETH_GITHUB_TOKEN"
-set_environment_secret production-sarabeth CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SARABETH_GITHUB_TOKEN"
-unset SARABETH_GITHUB_TOKEN
+ask_secret SHARED_GITHUB_TOKEN "Paste the shared fine-grained GitHub token:"
+require_value "GitHub token" "$SHARED_GITHUB_TOKEN"
+set_environment_secret production-carolyn CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SHARED_GITHUB_TOKEN"
+set_environment_secret production-sarabeth CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SHARED_GITHUB_TOKEN"
+unset SHARED_GITHUB_TOKEN
 
 stage "Apply Contentful configuration"
 say "The state buckets and configuration workflows must already exist on main."

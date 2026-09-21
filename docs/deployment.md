@@ -34,7 +34,7 @@ For Carolyn and Sarabeth, configure the existing Amplify app to use this reposit
 
 OpenTofu owns one webhook in each production Contentful space under `apps/<site>/infra/contentful/`. Each webhook is restricted to the `master` environment and entry/asset publish and unpublish events. It calls GitHub's `workflow_dispatch` API for the matching deployment workflow with `ref: main` and `source: contentful`.
 
-The webhook authenticates with a site-specific, repository-scoped fine-grained token that grants only **Actions: write**. Contentful stores it as a secret `Authorization` header. OpenTofu still records the token in encrypted remote state, so state access is production-secret access. The Contentful Management API token is also supplied only through the matching GitHub Environment.
+The webhooks share one repository-scoped fine-grained token that grants only **Actions: write**. Contentful stores it as a secret `Authorization` header. Each OpenTofu state records that token, so state access is production-secret access. One Contentful Management API token whose owner can manage both spaces is likewise mirrored into the two GitHub Environments.
 
 Set these additional values on `production-carolyn` and `production-sarabeth`:
 
@@ -48,9 +48,9 @@ After the AWS stack has created the site's versioned, encrypted state bucket, ru
 scripts/setup-contentful-github-webhooks.sh
 ```
 
-The wizard captures separate Contentful and GitHub credentials for each site, writes them to the matching GitHub Environment, and dispatches the OpenTofu configuration workflows. Those workflows plan and apply with OpenTofu 1.12.6 and `registry.terraform.io/cysp/contentful` 0.0.67. Contentful then dispatches the normal site workflow, which validates the current `main` SHA, starts that exact Amplify release through AWS OIDC, waits for it, and smoke-tests production.
+The wizard captures one shared Contentful token and one shared GitHub token, writes the same values to both GitHub Environments, and dispatches the OpenTofu configuration workflows. Those workflows plan and apply with OpenTofu 1.12.6 and `registry.terraform.io/cysp/contentful` 0.0.67. Contentful then dispatches the normal site workflow, which validates the current `main` SHA, starts that exact Amplify release through AWS OIDC, waits for it, and smoke-tests production.
 
-Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds. Rotate either fine-grained GitHub token by updating its environment secret and rerunning the corresponding OpenTofu workflow.
+Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds. Rotate the shared fine-grained GitHub token by updating both environment secrets and rerunning both OpenTofu workflows.
 
 ### Carolyn repository authorization
 
