@@ -29,7 +29,7 @@ Local builds use ignored `.env` values:
 - `src/components/` contains shared React UI.
 - `src/lib/` contains the build-only Contentful adapter, release-content module, project authorization, image helpers, and shared types.
 - `tests/` contains Playwright behavior/visual tests and focused Bun unit tests.
-- `infra/` contains the retained AWS CDK infrastructure.
+- `infra/opentofu/` contains the target AWS definition; the CDK application is retained only for the staged live handoff.
 
 Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. Unknown routes and missing assets terminate at Amplify's static target with an edge-generated HTTP 404 and never invoke compute.
 
@@ -56,4 +56,4 @@ Canonical visual tests run in the pinned ARM64 Playwright container. Production 
 
 ## Deployment
 
-Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. OpenTofu manages the Contentful-to-GitHub webhook, and AWS CDK continues to own Amplify Hosting and the encrypted OpenTofu state bucket. See [`../../docs/deployment.md`](../../docs/deployment.md) for setup, deployment, rollback, and infrastructure ownership rules.
+Production source and Contentful-triggered deployments use the same monorepo GitHub workflow. The Contentful webhook is already OpenTofu-managed; AWS resources move from CDK to the separate AWS OpenTofu root through the staged import handoff. See [`../../docs/deployment.md`](../../docs/deployment.md) and [`../../docs/opentofu-migration.md`](../../docs/opentofu-migration.md).

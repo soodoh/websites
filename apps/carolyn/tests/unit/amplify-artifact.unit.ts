@@ -17,6 +17,7 @@ import {
 	maximumAmplifyRouteCount,
 	prepareAmplifyArtifact,
 	readAmplifyArtifactMode,
+	resolveDeploymentMetadata,
 } from "@/lib/amplify-artifact";
 
 const temporaryDirectories: string[] = [];
@@ -68,6 +69,14 @@ async function createArtifact(): Promise<string> {
 }
 
 describe("Amplify artifact preparation", () => {
+	test("ignores ambient GitHub CI metadata without release identity", () => {
+		expect(resolveDeploymentMetadata({ GITHUB_SHA: "a".repeat(40) })).toEqual({
+			commit: "local",
+			runAttempt: "local",
+			runId: "local",
+		});
+	});
+
 	test("orders bounded static and compute routes without compute fallbacks", () => {
 		const routes = createProductionRoutes(["protected-project"]);
 		expect(routes.map(({ path }) => path)).toEqual([

@@ -8,6 +8,7 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/components/` contains reusable UI and page components; shadcn primitives live under `src/components/ui/`.
 - `src/content/` contains static portfolio data; `src/styles/globals.css` contains global styles.
 - `tests/` contains Playwright functional and visual coverage.
+- `infra/opentofu/` is the AWS definition and sole infrastructure state owner; the former CloudFormation resources completed their retained ownership handoff.
 - Treat `src/routeTree.gen.ts` and `dist/` as generated output.
 
 This app is fully static. `bun run build` emits the deployable artifact under `dist/client`, and `bun run start` serves that exact directory.

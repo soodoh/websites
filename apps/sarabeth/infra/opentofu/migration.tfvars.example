@@ -1,0 +1,8 @@
+github_oidc_provider_arn           = "arn:aws:iam::015989770400:oidc-provider/token.actions.githubusercontent.com"
+account_state_bucket_name          = "websites-production-tofu-state-015989770400-us-west-2"
+operational_alarm_topic_arn        = "arn:aws:sns:us-west-2:015989770400:websites-production-alarms"
+contentful_space_id                = "<contentful-space-id>"
+amplify_cloudfront_target          = "<amplify-cloudfront-hostname>"
+amplify_certificate_record_name   = "<certificate-record-name>"
+amplify_certificate_record_value  = "<certificate-record-value>"
+managed_by                         = "CloudFormation"

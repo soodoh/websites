@@ -8,7 +8,7 @@ Use native AWS Amplify Hosting for the final DiLoreto delivery path:
 Route 53 → Amplify domain association → Amplify WEB app/main branch
 ```
 
-The custom CloudFront distribution is not required for the final architecture. The final-state CloudFormation template keeps the existing Amplify app, branch, GitHub OIDC role, and manual static deployment path; adds an `AWS::Amplify::Domain`; and removes the custom CloudFront distribution, function, cache policy, certificate, and stack-owned alias records.
+The custom CloudFront distribution is not required for the final architecture. The migration was completed with the final-state CloudFormation template; `infra/opentofu/` now models the same Amplify app, branch, native domain association, deployment role, and manual static deployment path as the target owner. The CloudFormation templates remain only for the staged OpenTofu ownership handoff.
 
 This conclusion is based on AWS's documented behavior and the offline contract tests. It is **not** authorization to deploy the template. Candidate-domain checks and an approval-gated staged migration are still required.
 

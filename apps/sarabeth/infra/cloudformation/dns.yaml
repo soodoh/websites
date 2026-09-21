@@ -21,6 +21,8 @@ Parameters:
 Resources:
   ProductionHostedZone:
     Type: AWS::Route53::HostedZone
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       Name: !Ref DomainName
       HostedZoneConfig:
@@ -35,6 +37,8 @@ Resources:
 
   ApexIPv4:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Ref DomainName
@@ -46,6 +50,8 @@ Resources:
 
   ApexIPv6:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Ref DomainName
@@ -57,6 +63,8 @@ Resources:
 
   WwwIPv4:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub www.${DomainName}
@@ -68,6 +76,8 @@ Resources:
 
   WwwIPv6:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub www.${DomainName}
@@ -79,6 +89,8 @@ Resources:
 
   AmplifyCertificateValidation:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Ref AmplifyCertificateRecordName
@@ -89,6 +101,8 @@ Resources:
 
   MailFromMx:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub mail.${DomainName}
@@ -99,6 +113,8 @@ Resources:
 
   MailFromSpf:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub mail.${DomainName}
@@ -109,6 +125,8 @@ Resources:
 
   DkimOne:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub cdvixypkuk3bhikurkjjlpzhtdyvkxlu._domainkey.${DomainName}
@@ -119,6 +137,8 @@ Resources:
 
   DkimTwo:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub f53nvk4kwn642ycmamvoee6qw4ukhofb._domainkey.${DomainName}
@@ -129,6 +149,8 @@ Resources:
 
   DkimThree:
     Type: AWS::Route53::RecordSet
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       HostedZoneId: !Ref ProductionHostedZone
       Name: !Sub y7w6a6ou2nzlwdzd4dfkci5wxmkydzir._domainkey.${DomainName}

@@ -30,9 +30,9 @@ The OIDC role trust must name only the monorepo repository and the matching envi
 
 ### AWS account foundation
 
-Deploy `infra/aws-account-foundation.yaml` once in each AWS account's production region before updating a site stack to the shared operational contract. The foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, and one account-wide monthly budget. Pass its `GitHubOidcProviderArn` and `OperationalAlarmTopicArn` outputs to the site stacks. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting stack or name it as though it measures only one Amplify app.
+The account foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, one account-wide monthly budget, and the versioned OpenTofu state bucket. Existing accounts still use `infra/aws-account-foundation.yaml` until their live ownership handoff; the target definition is `infra/account-foundation`. Pass its `github_oidc_provider_arn` and `operational_alarm_topic_arn` outputs to the site roots. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting root or name it as though it measures only one Amplify app.
 
-Existing OIDC providers require a staged ownership migration. First deploy the foundation with `ExistingGitHubOidcProviderArn` set to the retained provider ARN. Then update site stacks to consume that output. Import the provider into the foundation only in a separate reviewed change after a no-change plan; never let two stacks create or delete the same account-level provider. Carolyn and DiLoreto retain their legacy provider resources during this transition.
+Existing OIDC providers require a staged ownership migration. Import the provider into the account-foundation root and prove a no-change plan before removing it from any site or legacy foundation stack. Never let two states create, update, or delete the same account-level provider. Carolyn and DiLoreto retain their legacy provider resources until this handoff.
 
 Every site creates a low-volume 5xx alarm that sends both alarm and recovery notifications to the shared topic. Carolyn and Sarabeth also create latency alarms and retain Amplify compute logs for 30 days. Confirm the SNS email subscription after creating a foundation stack.
 
@@ -106,15 +106,18 @@ Paul deploys directly to its production Amplify branch. Its former candidate bra
 
 ## Infrastructure
 
-The current CloudFormation/CDK stacks remain the owners of existing AWS resources. Native Amplify domain associations, service-managed DNS records, and the Contentful OpenTofu state buckets remain owned through those stacks. The account-foundation template is the target owner for account-level OIDC, notification, and budget resources, but existing providers must follow the staged retain-and-import process above. OpenTofu owns only the Contentful webhook definitions; do not let a second IaC tool manage the same resource.
+OpenTofu is the target AWS definition. It is split into one account-foundation root and one root per site:
 
-Sarabeth's final DNS template now models only the native Amplify aliases and retained mail/verification records; the former Netlify cutover switches are no longer part of the desired state. Its domain association remains in a separate stack until a later import-based ownership change can move it without replacement. The root `amplify.yml` is the sole repository build specification for both connected Amplify apps; do not duplicate Sarabeth's commands in CloudFormation.
+- `infra/account-foundation`
+- `apps/paul/infra/opentofu`
+- `apps/diloreto/infra/opentofu`
+- `apps/carolyn/infra/opentofu`
+- `apps/sarabeth/infra/opentofu`
 
-Migrating existing AWS resources to OpenTofu remains a separate import-based follow-up:
+CloudFormation/CDK stacks remain the live owners until each root completes the staged import and retention handoff. Do not apply an imported OpenTofu root while its legacy stack still owns the same resources. Paul's retained handoff is complete and its OpenTofu state is the sole infrastructure owner; its empty CloudFormation migration shell owns no resources. Other legacy sources remain in the repository only for their migration windows and must be removed site by site after each live handoff, not in advance.
 
-1. model one site's existing resources;
-2. import them and verify a no-change plan;
-3. remove those resources from the old stack without deleting them;
-4. repeat site by site.
+The AWS roots use separate state keys in a versioned, encrypted account state bucket owned by the account-foundation root. The Contentful roots and their existing state keys remain independent. OpenTofu must never manage one resource from two states.
 
-This keeps the small Contentful automation roots independent from any later AWS ownership migration.
+Sarabeth's target root combines its retained bootstrap, hosting, domain, and DNS resources into one state. Carolyn and Sarabeth use the AWS Cloud Control provider for Amplify branches because branch-scoped compute roles are not represented by the standard AWS provider. The root `amplify.yml` remains the sole repository build specification for both connected Amplify apps.
+
+Follow [`opentofu-migration.md`](opentofu-migration.md) for backend bootstrap, import IDs, required no-change plans, retention-first CloudFormation/CDK removal, rollback, and the final `ManagedBy=OpenTofu` handoff. Every live import, AWS write, legacy stack update, and apply remains approval-gated.

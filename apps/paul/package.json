@@ -45,7 +45,7 @@
 		"dev:workspace": "vite dev --port 3101",
 		"ci:verify": "bun run lint && bun run typecheck && bun run lint:shell && bun run infra:lint && bun run build && bun run test:static && bun run test:e2e:static:prebuilt && bun run lighthouse",
 		"lint:shell": "bash -c 'for script in scripts/*.sh; do bash -n \"$script\" || exit; done' && shellcheck scripts/*.sh",
-		"infra:lint": "uv tool run --from cfn-lint==1.42.0 cfn-lint infra/amplify-hosting.yaml"
+		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/paul/infra/opentofu"
 	},
 	"dependencies": {
 		"@fontsource/fjalla-one": "5.3.0",

@@ -22,7 +22,7 @@ The workspace dev command serves Paul on `http://localhost:3101`. To run only th
 - `src/content/` contains portfolio and social content.
 - `src/styles/` contains global styles.
 - `tests/` contains Playwright behavior and visual coverage.
-- `infra/` contains the retained Amplify CloudFormation template.
+- `infra/opentofu/` contains the active AWS definition; the retained CloudFormation ownership handoff is complete.
 
 `bun run build` emits the deployable static site under `dist/client`; `bun run start` serves that exact directory.
 

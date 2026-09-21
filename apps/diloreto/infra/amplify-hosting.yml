@@ -38,6 +38,8 @@ Conditions:
 Resources:
   AmplifyApp:
     Type: AWS::Amplify::App
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       Name: diloreto-website
       Description: Static site for diloreto.com, deployed by GitHub Actions and served directly by Amplify Hosting.
@@ -107,6 +109,8 @@ Resources:
 
   AmplifyBranch:
     Type: AWS::Amplify::Branch
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: !Ref BranchName
@@ -123,6 +127,8 @@ Resources:
 
   AmplifyDomain:
     Type: AWS::Amplify::Domain
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Condition: CreateAmplifyDomain
     DependsOn:
       - AmplifyBranch
@@ -140,6 +146,8 @@ Resources:
 
   Amplify5xxAlarm:
     Type: AWS::CloudWatch::Alarm
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       AlarmName: diloreto-amplify-production-5xx
       AlarmDescription: Amplify Hosting returned at least two 5xx responses in two of three five-minute periods.
@@ -184,6 +192,8 @@ Resources:
 
   GitHubDeploymentRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       RoleName: !Ref DeploymentRoleName
       Description: Publishes validated static artifacts to the diloreto-website Amplify main branch.

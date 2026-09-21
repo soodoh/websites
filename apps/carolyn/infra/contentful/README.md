@@ -1,6 +1,6 @@
 # Carolyn Contentful deployment webhook
 
-OpenTofu owns the Contentful webhook that dispatches the existing Carolyn GitHub Actions deployment workflow. AWS CDK continues to own Amplify Hosting and the encrypted S3 state bucket.
+OpenTofu owns the Contentful webhook that dispatches the existing Carolyn GitHub Actions deployment workflow. The separate AWS OpenTofu root is the target owner of Amplify Hosting and this root's encrypted S3 state bucket; CDK remains the live owner until its staged import handoff completes.
 
 The webhook listens only for entry/asset publish and unpublish events in the `master` Contentful environment. GitHub Actions verifies `main`, assumes the production AWS role with OIDC, starts an exact-SHA Amplify release, waits for it, and smoke-tests production.
 

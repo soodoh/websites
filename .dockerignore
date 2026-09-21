@@ -13,6 +13,11 @@
 **/*.key
 **/.aws
 **/.aws-migration
+**/.terraform
+**/*.auto.tfvars
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfplan
 **/.pi*
 **/.playwright*
 **/playwright-report

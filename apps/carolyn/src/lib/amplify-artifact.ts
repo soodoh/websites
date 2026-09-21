@@ -205,14 +205,11 @@ async function emitHtmlAliases(
 	}
 }
 
-function resolveDeploymentMetadata(
+export function resolveDeploymentMetadata(
 	environment: NodeJS.ProcessEnv = process.env,
 ): { commit: string; runAttempt: string; runId: string } {
 	const commit =
-		environment.RELEASE_COMMIT ??
-		environment.AWS_COMMIT_ID ??
-		environment.GITHUB_SHA ??
-		"local";
+		environment.RELEASE_COMMIT ?? environment.AWS_COMMIT_ID ?? "local";
 	if (commit !== "local" && !/^[a-f0-9]{40}$/.test(commit)) {
 		throw new Error("Release commit must be a 40-character hexadecimal SHA.");
 	}

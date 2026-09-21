@@ -474,6 +474,22 @@ describe("HostingStack production resources", () => {
 		});
 	});
 
+	test("retains every physical resource during the OpenTofu handoff", () => {
+		const resources = createTemplate().toJSON().Resources as Record<
+			string,
+			{
+				DeletionPolicy?: string;
+				Type: string;
+				UpdateReplacePolicy?: string;
+			}
+		>;
+		for (const resource of Object.values(resources)) {
+			if (resource.Type === "AWS::CDK::Metadata") continue;
+			expect(resource.DeletionPolicy).toBe("Retain");
+			expect(resource.UpdateReplacePolicy).toBe("Retain");
+		}
+	});
+
 	test("retains logs and relies on the AWS-managed SSM key", () => {
 		const template = createTemplate();
 		const { resource: logGroup } = getResource(

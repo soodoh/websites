@@ -62,8 +62,8 @@ test("connects the durable pre-SES rate-limit boundary", () => {
 	);
 
 	expect(table).toContain("Type: AWS::DynamoDB::Table");
-	expect(table).toContain("DeletionPolicy: Delete");
-	expect(table).toContain("UpdateReplacePolicy: Delete");
+	expect(table).toContain("DeletionPolicy: Retain");
+	expect(table).toContain("UpdateReplacePolicy: Retain");
 	expect(table).toContain("TableName: sarabeth-contact-email-rate-limit");
 	expect(computeRole).toContain(
 		"Action: dynamodb:UpdateItem\n                Resource: !GetAtt EmailRateLimitTable.Arn",

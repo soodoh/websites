@@ -25,8 +25,9 @@ read `docs/deployment.md`. The deployment interface is one explicit workflow per
 path filters, GitHub Environments, OIDC, and site concurrency. Production releases require the
 matching protected GitHub Environment.
 
-Existing CloudFormation/CDK stacks remain resource owners. OpenTofu migration is a later
-import-based project. Obtain explicit approval before GitHub settings writes,
+For AWS IaC or ownership changes, read `docs/opentofu-migration.md`. OpenTofu is the
+target definition, while existing CloudFormation/CDK stacks remain live owners until each
+retention-first import handoff completes. Obtain explicit approval before GitHub settings writes,
 AWS changes, workflow dispatch, source-writer shutdown, production HTTP tests, or deployment.
 
 ## Repository rules

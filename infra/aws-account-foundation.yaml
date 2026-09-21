@@ -43,6 +43,8 @@ Resources:
 
   OperationalAlarmTopic:
     Type: AWS::SNS::Topic
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       TopicName: !Sub ${ResourceNamePrefix}-alarms
       DisplayName: Websites production alarms
@@ -56,6 +58,8 @@ Resources:
 
   OperationalAlarmEmailSubscription:
     Type: AWS::SNS::Subscription
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       TopicArn: !Ref OperationalAlarmTopic
       Protocol: email
@@ -63,6 +67,8 @@ Resources:
 
   MonthlyAccountBudget:
     Type: AWS::Budgets::Budget
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       Budget:
         BudgetLimit:

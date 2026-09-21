@@ -37,6 +37,8 @@ Conditions:
 Resources:
   AmplifyServiceRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       RoleName: sarabeth-amplify-service
       Description: Allows Amplify builds to read the Contentful SSM parameter and deliver SSR logs.
@@ -83,8 +85,8 @@ Resources:
 
   EmailRateLimitTable:
     Type: AWS::DynamoDB::Table
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       TableName: sarabeth-contact-email-rate-limit
       BillingMode: PAY_PER_REQUEST
@@ -109,6 +111,8 @@ Resources:
 
   AmplifyComputeRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       RoleName: sarabeth-amplify-compute-main
       Description: Least-privilege contact email and YouTube playlist access for the production Amplify compute branch.
@@ -150,6 +154,8 @@ Resources:
 
   AmplifyApp:
     Type: AWS::Amplify::App
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       Name: sarabeth-studio-production
       Description: Production TanStack Start application for sarabethbelon.com.
@@ -227,6 +233,8 @@ Resources:
 
   MainBranch:
     Type: AWS::Amplify::Branch
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       AppId: !GetAtt AmplifyApp.AppId
       BranchName: !Ref GitHubBranch
@@ -284,6 +292,8 @@ Resources:
 
   ContentfulOpenTofuStateBucketPolicy:
     Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       Bucket: !Ref ContentfulOpenTofuStateBucket
       PolicyDocument:
@@ -302,7 +312,7 @@ Resources:
 
   AmplifyComputeLogGroup:
     Type: AWS::Logs::LogGroup
-    DeletionPolicy: RetainExceptOnCreate
+    DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
       LogGroupName: !Sub /aws/amplify/${AmplifyApp.AppId}
@@ -317,6 +327,8 @@ Resources:
 
   Amplify5xxAlarm:
     Type: AWS::CloudWatch::Alarm
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       AlarmName: sarabeth-amplify-production-5xx
       AlarmDescription: Amplify Hosting returned at least two 5xx responses in two of three five-minute periods.
@@ -346,6 +358,8 @@ Resources:
 
   AmplifyLatencyAlarm:
     Type: AWS::CloudWatch::Alarm
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       AlarmName: sarabeth-amplify-production-latency
       AlarmDescription: Amplify Hosting average time to first byte exceeded five seconds twice.
@@ -376,6 +390,8 @@ Resources:
 
   RoutineDeploymentRole:
     Type: AWS::IAM::Role
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       RoleName: sarabeth-amplify-deploy-main
       Description: GitHub Actions role restricted to production releases of this Amplify app.

@@ -14,6 +14,7 @@ cdk.out/
 *.tfstate
 *.tfstate.*
 *.tfplan
+*.tfbackend
 *.tfvars
 !*.tfvars.example
 coverage/

@@ -19,12 +19,12 @@ const foundation = Bun.YAML.parse(
 	>;
 };
 
-const siteTemplates = [
-	"apps/paul/infra/amplify-hosting.yaml",
-	"apps/diloreto/infra/amplify-hosting.yml",
-	"apps/sarabeth/infra/cloudformation/hosting.yaml",
+const siteConfigurations = [
+	"apps/paul/infra/opentofu/main.tf",
+	"apps/diloreto/infra/opentofu/main.tf",
+	"apps/carolyn/infra/opentofu/main.tf",
+	"apps/sarabeth/infra/opentofu/main.tf",
 ].map(read);
-const carolynStack = read("apps/carolyn/infra/lib/hosting-stack.ts");
 
 describe("AWS account foundation", () => {
 	test("owns retained OIDC, shared notifications, and the account budget", () => {
@@ -44,17 +44,23 @@ describe("AWS account foundation", () => {
 		expect(foundation.Outputs).toHaveProperty("OperationalAlarmTopicArn");
 	});
 
-	test("makes every site consume the shared alarm topic", () => {
-		for (const template of siteTemplates) {
-			expect(template).toContain("OperationalAlarmTopicArn:");
-			expect(template).toContain("MetricName: 5xxErrors");
-			expect(template).toContain("EvaluationPeriods: 3");
-			expect(template).toContain("DatapointsToAlarm: 2");
-			expect(template).toContain("OKActions:");
+	test("makes every target site consume the shared alarm topic", () => {
+		for (const configuration of siteConfigurations) {
+			expect(configuration).toContain(
+				'variable "operational_alarm_topic_arn"',
+			);
+			expect(configuration).toContain('metric_name         = "5xxErrors"');
+			expect(configuration).toContain("evaluation_periods  = 3");
+			expect(configuration).toContain("datapoints_to_alarm = 2");
+			expect(configuration).toContain(
+				"ok_actions          = [var.operational_alarm_topic_arn]",
+			);
+			expect(configuration).not.toContain(
+				'resource "aws_budgets_budget"',
+			);
+			expect(configuration).not.toContain(
+				'resource "aws_sns_topic_subscription"',
+			);
 		}
-		expect(carolynStack).toContain('"OperationalAlarmTopicArn"');
-		expect(carolynStack).toContain("addOkAction");
-		expect(carolynStack).not.toContain("new CfnBudget");
-		expect(carolynStack).not.toContain("new EmailSubscription");
 	});
 });

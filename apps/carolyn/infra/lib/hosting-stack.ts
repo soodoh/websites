@@ -6,6 +6,7 @@ import {
 	CfnCondition,
 	CfnOutput,
 	CfnParameter,
+	CfnResource,
 	Duration,
 	Fn,
 	RemovalPolicy,
@@ -559,6 +560,14 @@ export class HostingStack extends Stack {
 		new CfnOutput(this, "ContentfulOpenTofuStateBucketName", {
 			value: contentfulStateBucket.bucketName,
 		});
+
+		// The CDK stack remains the live owner only through the import handoff.
+		// Retain every physical resource when it relinquishes that ownership.
+		for (const resource of this.node.findAll()) {
+			if (resource instanceof CfnResource) {
+				resource.applyRemovalPolicy(RemovalPolicy.RETAIN);
+			}
+		}
 	}
 
 	private parameterArn(parameterName: string): string {

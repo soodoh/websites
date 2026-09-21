@@ -23,6 +23,8 @@ Conditions:
 Resources:
   ProductionDomainAssociation:
     Type: AWS::Amplify::Domain
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Condition: EnableDomainAssociation
     Properties:
       AppId: !Ref AmplifyAppId

@@ -1,0 +1,9 @@
+aws_region                     = "us-west-2"
+amplify_app_id                 = "<existing-app-id>"
+github_oidc_provider_arn       = "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com"
+operational_alarm_topic_arn    = "arn:aws:sns:us-west-2:123456789012:websites-production-alarms"
+enable_operational_alarm       = true
+deployment_marker_path         = "/__deployment.json"
+github_deployment_role_name    = "<physical-role-name>"
+hosted_zone_comment            = "<existing-hosted-zone-comment>"
+managed_by                     = "OpenTofu"

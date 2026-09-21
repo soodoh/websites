@@ -22,7 +22,7 @@ The workspace dev command serves DiLoreto on `http://localhost:3103`. To run onl
 - `src/content/` contains typed site and family-history content.
 - `src/assets/images/` contains build-managed images.
 - `tests/` contains desktop/mobile smoke, interaction, and visual coverage.
-- `infra/` contains the final-state CloudFormation template, the four-phase migration template, and the [native Amplify hosting decision](infra/hosting-architecture.md).
+- `infra/opentofu/` contains the target AWS definition. The CloudFormation templates remain only for the staged live handoff; the [native Amplify hosting decision](infra/hosting-architecture.md) records the prior hosting migration.
 
 The production delivery path is Route 53 to a native Amplify domain association. Amplify owns the production domain mappings, custom 404 rewrite, clean URLs, redirects, cache/security headers, and managed TLS. GitHub Actions uploads the verified `dist/client` artifact directly to the production branch. The former custom CloudFront resources were removed after the approved cutover and final cleanup.
 

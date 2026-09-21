@@ -17,10 +17,6 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/ci-tools
-      - uses: opentofu/setup-opentofu@a1320f892987e89d278cc92dc5adc984fb93aca4 # v2.0.2
-        with:
-          tofu_version: 1.12.6
-          tofu_wrapper: false
       - run: bun run test:workspace && bash scripts/ci/lint.sh
   sarabeth:
     uses: ./.github/workflows/_sarabeth-ci.yml
