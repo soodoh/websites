@@ -4,6 +4,11 @@
     "config:recommended",
     "group:allNonMajor"
   ],
+  "automerge": true,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": true,
+  "rebaseWhen": "behind-base-branch",
   "github-actions": {
     "managerFilePatterns": [
       "/apps/[^/]+/\\.github/workflows/[^/]+\\.ya?ml$/"
