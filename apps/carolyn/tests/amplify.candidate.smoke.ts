@@ -6,7 +6,7 @@ import {
 import { selectFilter } from "@tests/visual-helpers";
 
 const canonicalOrigin = candidateOrigin(process.env);
-const publicProjectPath = "/projects/d23-membership-page";
+const publicProjectPath = "/projects/the-voice-app-agt-app";
 const protectedSlug = "magnolia-app";
 const expectedReleaseCommit = process.env.AMPLIFY_EXPECTED_RELEASE_COMMIT;
 

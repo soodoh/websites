@@ -3,7 +3,7 @@ import { selectFilter } from "@tests/visual-helpers";
 
 const canonicalOrigin = "https://carolyndiloreto.com";
 const legacyOrigin = "https://carolyn.diloreto.com";
-const publicProjectPath = "/projects/d23-membership-page";
+const publicProjectPath = "/projects/the-voice-app-agt-app";
 const protectedSlug = "magnolia-app";
 const defaultOrigin = process.env.AMPLIFY_DEFAULT_ORIGIN;
 const expectedReleaseCommit = process.env.AMPLIFY_EXPECTED_RELEASE_COMMIT;

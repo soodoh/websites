@@ -1,23 +1,9 @@
-import path from "node:path";
-import { loadContentfulSnapshot } from "@/utils/contentful-snapshot";
+import { contentfulFixture } from "@tests/fixtures/contentful";
 import type { DataProvider } from "@/utils/data-provider";
 import type { ContentfulSnapshot } from "@/utils/types";
 
-const snapshotRoot = path.join(
-	process.cwd(),
-	"tests",
-	"fixtures",
-	"contentful",
-);
-let snapshotPromise: Promise<ContentfulSnapshot> | undefined;
-
-const snapshot = () => {
-	snapshotPromise ??= loadContentfulSnapshot(snapshotRoot);
-	return snapshotPromise;
-};
-
 const get = async <Key extends keyof ContentfulSnapshot>(key: Key) =>
-	(await snapshot())[key];
+	structuredClone(contentfulFixture[key]);
 
 export const dataProvider: DataProvider = {
 	getAboutData: () => get("about"),

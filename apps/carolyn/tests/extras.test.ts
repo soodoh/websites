@@ -36,7 +36,7 @@ test.describe("Route recovery", () => {
 			page
 				.locator(".masonry-grid")
 				.getByRole("button", { name: /View fullscreen photo/ }),
-		).toHaveCount(80);
+		).toHaveCount(12);
 		expect(loaderRequests).toBeGreaterThanOrEqual(2);
 	});
 });
@@ -153,7 +153,7 @@ test.describe("Reduced motion", () => {
 			});
 		});
 		await dialog.getByRole("button", { name: "Next slide" }).click();
-		await expect(dialog.getByText("2 / 80", { exact: true })).toBeVisible();
+		await expect(dialog.getByText("2 / 12", { exact: true })).toBeVisible();
 		await page.evaluate(
 			() =>
 				new Promise<void>((resolve) => {

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { selectFilter } from "@tests/visual-helpers";
 
-const publicProjectPath = "/projects/d23-membership-page";
+const publicProjectPath = "/projects/the-voice-app-agt-app";
 const protectedProjectPath = "/projects/magnolia-app";
 const artifactMode = process.env.EXPECTED_ARTIFACT_MODE;
 if (artifactMode !== "fixture" && artifactMode !== "production") {
@@ -44,9 +44,9 @@ test.describe("emitted Amplify artifact", () => {
 		});
 		await page.goto("/projects");
 		await page.locator("html[data-hydrated='true']").waitFor();
-		await page.getByRole("link", { name: /D23 Membership Page/ }).click();
+		await page.getByRole("link", { name: /The Voice App \/ AGT App/ }).click();
 		await expect(
-			page.getByRole("heading", { name: "D23 Membership Page" }),
+			page.getByRole("heading", { name: "The Voice App / AGT App" }),
 		).toBeVisible();
 		expect(
 			dataRequests.some((path) => path.includes("/staticServerFnCache/")),

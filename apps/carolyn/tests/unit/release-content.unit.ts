@@ -14,16 +14,16 @@ const loadFixture = async (content: ContentfulFixture = contentfulFixture) => ({
 describe("release content", () => {
 	test("captures one coherent project, authorization, and album inventory", async () => {
 		const snapshot = await captureReleaseContent(loadFixture);
-		expect(snapshot.projects).toHaveLength(15);
+		expect(snapshot.projects).toHaveLength(8);
 		expect(snapshot.projects.map(({ summary }) => summary.slug)).toEqual(
 			contentfulFixture.projects.map(({ slug }) => slug),
 		);
 		expect(
 			snapshot.albums.map(({ name, photos }) => [name, photos.length]),
 		).toEqual([
-			["Dance", 80],
-			["Portraits", 54],
-			["Spaces", 70],
+			["Dance", 12],
+			["Portraits", 12],
+			["Spaces", 12],
 		]);
 	});
 
@@ -52,7 +52,7 @@ describe("release content", () => {
 		);
 		expect(generated.protectedProjectDetails).toHaveProperty("magnolia-app");
 		expect(generated.protectedProjectDetails).not.toHaveProperty(
-			"d23-membership-page",
+			"the-voice-app-agt-app",
 		);
 		expect(Object.keys(generated.albumFiles)).toHaveLength(3);
 		for (const source of Object.values(

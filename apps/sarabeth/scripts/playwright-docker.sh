@@ -27,6 +27,17 @@ set -e
 rm -rf "${app_root:?}/test-results"
 docker cp "${container}:/work/apps/sarabeth/test-results" "${app_root}/test-results" >/dev/null 2>&1 || true
 if [[ "${status}" -eq 0 ]]; then
+	for argument in "$@"; do
+		if [[ "${argument}" == "test:e2e:update" || "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
+			staging=$(mktemp -d)
+			docker cp "${container}:/work/apps/sarabeth/tests/__screenshots__/." "${staging}"
+			rm -rf "${app_root:?}/tests/__screenshots__"
+			mkdir -p "${app_root}/tests/__screenshots__"
+			cp -R "${staging}/." "${app_root}/tests/__screenshots__/"
+			rm -rf "${staging}"
+			break
+		fi
+	done
 	mkdir -p "${app_root}/test-results"
 	# Read the actual successful container, not a second build or cached image.
 	if ! docker cp "${container}:/work/apps/sarabeth/.amplify-hosting/static/__deployment.json" "${app_root}/test-results/container-deployment.json"; then

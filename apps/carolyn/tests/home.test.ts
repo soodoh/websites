@@ -31,11 +31,7 @@ test.describe("Home page visual states", () => {
 		const header = page.locator("header");
 		const brandLogo = header.locator('a[aria-label="Home"]');
 		await expect(brandLogo).toBeHidden();
-		await page
-			.locator(".masonry-grid")
-			.getByRole("link")
-			.last()
-			.scrollIntoViewIfNeeded();
+		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 		await expect(brandLogo).toBeVisible();
 		await expect(header).toHaveCSS("background-color", "rgb(73, 79, 92)");
 		await expect.poll(async () => (await header.boundingBox())?.y).toBe(0);

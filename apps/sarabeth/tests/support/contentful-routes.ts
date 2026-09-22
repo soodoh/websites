@@ -1,20 +1,17 @@
 import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { BrowserContext, Route } from "@playwright/test";
+import { contentfulFixture } from "@tests/fixtures/contentful";
 import {
 	contentfulAssetHost,
 	contentfulDownloadHost,
 	contentfulImageHost,
 } from "@/utils/contentful-asset-url";
 import { getSnapshotAudio, getSnapshotImages } from "@/utils/contentful-data";
-import {
-	contentfulAssetFilename,
-	loadContentfulSnapshot,
-} from "@/utils/contentful-snapshot";
+import type { ImageType } from "@/utils/types";
 
 const fixtureRoot = fileURLToPath(
-	new URL("../fixtures/contentful/", import.meta.url),
+	new URL("../fixtures/media/", import.meta.url),
 );
 
 type AudioRange =
@@ -52,25 +49,29 @@ const baseUrl = (source: string): string => {
 	return `${url.origin}${url.pathname}`;
 };
 
+const imageVariant = (
+	image: ImageType,
+): "landscape" | "portrait" | "square" | "wide" => {
+	const ratio = image.width / image.height;
+	if (ratio >= 1.8) return "wide";
+	if (ratio > 1.05) return "landscape";
+	if (ratio <= 0.8) return "portrait";
+	return "square";
+};
+
 export const installContentfulRoutes = async (
 	context: BrowserContext,
 ): Promise<void> => {
-	const snapshot = await loadContentfulSnapshot(fixtureRoot);
-	const directory = fixtureRoot;
-	const imagePaths = new Map<string, string>();
-	const audioPaths = new Map<string, string>();
-	for (const image of getSnapshotImages(snapshot)) {
-		imagePaths.set(
+	const imagePaths = new Map(
+		getSnapshotImages(contentfulFixture).map((image) => [
 			baseUrl(image.url),
-			path.join(directory, contentfulAssetFilename(image, "image")),
-		);
-	}
-	for (const audio of getSnapshotAudio(snapshot)) {
-		audioPaths.set(
-			baseUrl(audio.url),
-			path.join(directory, contentfulAssetFilename(audio, "asset")),
-		);
-	}
+			`${fixtureRoot}${imageVariant(image)}.webp`,
+		]),
+	);
+	const audioUrls = new Set(
+		getSnapshotAudio(contentfulFixture).map((audio) => baseUrl(audio.url)),
+	);
+	const audioPath = `${fixtureRoot}audio.wav`;
 
 	await context.route(`https://${contentfulImageHost}/**`, async (route) => {
 		const filePath = imagePaths.get(baseUrl(route.request().url()));
@@ -85,12 +86,11 @@ export const installContentfulRoutes = async (
 	});
 
 	const fulfillAudio = async (route: Route): Promise<void> => {
-		const filePath = audioPaths.get(baseUrl(route.request().url()));
-		if (!filePath) {
+		if (!audioUrls.has(baseUrl(route.request().url()))) {
 			await route.abort("failed");
 			return;
 		}
-		const bytes = await readFile(filePath);
+		const bytes = await readFile(audioPath);
 		const range = parseAudioRange(
 			route.request().headers().range,
 			bytes.byteLength,

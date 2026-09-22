@@ -13,10 +13,10 @@ import {
 
 const projectFilters = ["All", "Design", "Interactive", "Film"] as const;
 const projectFilterExpectations = {
-	All: { count: 15, included: "Magnolia App" },
-	Design: { count: 10, included: "NBC App", excluded: "Em/body" },
-	Interactive: { count: 4, included: "Em/body", excluded: "NBC App" },
-	Film: { count: 3, included: "Shed", excluded: "Magnolia App" },
+	All: { count: 8, included: "Magnolia App" },
+	Design: { count: 5, included: "NBC App", excluded: "Em/body" },
+	Interactive: { count: 3, included: "Em/body", excluded: "NBC App" },
+	Film: { count: 2, included: "Shed", excluded: "Magnolia App" },
 } as const;
 
 test.describe("Projects visual states", () => {

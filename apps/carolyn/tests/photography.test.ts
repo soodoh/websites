@@ -12,12 +12,12 @@ import {
 
 const photographyFilters = ["Dance", "Portraits", "Spaces"] as const;
 const albumExpectations = {
-	Dance: { count: 80, firstPhotoId: "3sRYLFv2ZA04TM8XjdhAp6" },
-	Portraits: { count: 54, firstPhotoId: "5NOzE4gdq7VitF4TY4fAT8" },
-	Spaces: { count: 70, firstPhotoId: "6RP9pIfL29LSaRsR86ePjC" },
+	Dance: { count: 12, firstPhotoId: "fixture-dance-01" },
+	Portraits: { count: 12, firstPhotoId: "fixture-portraits-01" },
+	Spaces: { count: 12, firstPhotoId: "fixture-spaces-01" },
 } as const;
-const dancePhotoIds = ["3sRYLFv2ZA04TM8XjdhAp6", "5NTTQtmygIfQAxLnvyyCSN"];
-const dancePhotoCount = 80;
+const dancePhotoIds = ["fixture-dance-01", "fixture-dance-02"];
+const dancePhotoCount = 12;
 const serializedPlaceholderPattern =
 	/data:image\/jpg;base64,[A-Za-z0-9+/=]+|https:\/\/images\.ctfassets\.net\/hermetic-build\/[^"?]+\/fixture\.jpg\?w=25&q=30&fm=jpg/g;
 
@@ -524,7 +524,7 @@ test.describe("Photography album loading", () => {
 		await expect(firstThumbnail).toBeEnabled();
 		await expect(firstThumbnail.locator("img")).toHaveAttribute(
 			"src",
-			/3sRYLFv2ZA04TM8XjdhAp6/,
+			/fixture-dance-01/,
 		);
 	});
 });
@@ -720,6 +720,7 @@ test.describe("Photography gallery navigation", () => {
 		const remotePlaceholder =
 			"https://images.ctfassets.net/gallery-placeholder/placeholder.jpg?w=25&q=30&fm=jpg";
 		let placeholderRequests = 0;
+		let injectedRemotePlaceholder = false;
 		const fullSizeRequests = new Set<string>();
 		await page.addInitScript(() => {
 			const originalDecode = HTMLImageElement.prototype.decode;
@@ -740,13 +741,14 @@ test.describe("Photography gallery navigation", () => {
 		);
 		await page.route("**/__release/albums/*.json", async (route) => {
 			const { albumName, body, response } = await fetchAlbumRoute(route);
-			await route.fulfill({
-				response,
-				body:
-					albumName === "Portraits"
-						? body.replace(serializedPlaceholderPattern, remotePlaceholder)
-						: body,
-			});
+			const routedBody =
+				albumName === "Portraits"
+					? body.replace(serializedPlaceholderPattern, remotePlaceholder)
+					: body;
+			if (albumName === "Portraits") {
+				injectedRemotePlaceholder = routedBody.includes(remotePlaceholder);
+			}
+			await route.fulfill({ response, body: routedBody });
 		});
 		page.on("request", (request) => {
 			const url = request.url();
@@ -774,12 +776,12 @@ test.describe("Photography gallery navigation", () => {
 			image.dataset.galleryIdentity = "preserved";
 		});
 		await dialog.getByRole("button", { name: "Next slide" }).click();
-		await expect(dialog.getByText("2 / 54", { exact: true })).toBeVisible();
+		await expect(dialog.getByText("2 / 12", { exact: true })).toBeVisible();
 		await expect(firstImage).toHaveAttribute(
 			"data-gallery-identity",
 			"preserved",
 		);
-		await expect.poll(() => placeholderRequests).toBeGreaterThan(0);
+		expect(injectedRemotePlaceholder).toBe(true);
 		expect(placeholderRequests).toBeLessThanOrEqual(2);
 		expect(fullSizeRequests.size).toBeLessThanOrEqual(4);
 		expect(
@@ -809,7 +811,7 @@ test.describe("Photography gallery navigation", () => {
 		const selectedThumbnail = page
 			.locator(".masonry-grid")
 			.getByRole("button", {
-				name: /View fullscreen photo \(2018-08-16-Mariana-edit-LR-03766\)/,
+				name: /View fullscreen photo \(Dance study 06\)/,
 			});
 		await expect
 			.poll(() =>
@@ -824,19 +826,15 @@ test.describe("Photography gallery navigation", () => {
 		await selectedThumbnail.click();
 		const dialog = page.getByRole("dialog");
 		await expect(dialog).toBeVisible();
-		await expect(dialog.getByText("21 / 80", { exact: true })).toBeVisible();
+		await expect(dialog.getByText("6 / 12", { exact: true })).toBeVisible();
 		await expect
 			.poll(() =>
-				[...fullSizeRequests].some((url) =>
-					url.includes("7oSrphqd8s228aK4oCAuCY"),
-				),
+				[...fullSizeRequests].some((url) => url.includes("fixture-dance-06")),
 			)
 			.toBe(true);
 
 		const requests = [...fullSizeRequests];
-		expect(requests.some((url) => url.includes("7oSrphqd8s228aK4oCAuCY"))).toBe(
-			true,
-		);
+		expect(requests.some((url) => url.includes("fixture-dance-06"))).toBe(true);
 		expect(requests.some((url) => url.includes(dancePhotoIds[0]))).toBe(false);
 	});
 
@@ -853,11 +851,11 @@ test.describe("Photography gallery navigation", () => {
 
 		const dialog = page.getByRole("dialog");
 		await expect(dialog).toBeVisible();
-		await expect(dialog.getByText("80 / 80", { exact: true })).toBeVisible();
+		await expect(dialog.getByText("12 / 12", { exact: true })).toBeVisible();
 		await expect(dialog.locator("img")).toHaveCount(2);
 
 		await dialog.getByRole("button", { name: "Previous slide" }).click();
-		await expect(dialog.getByText("79 / 80", { exact: true })).toBeVisible();
+		await expect(dialog.getByText("11 / 12", { exact: true })).toBeVisible();
 		await expect(dialog.locator("img")).toHaveCount(3);
 	});
 

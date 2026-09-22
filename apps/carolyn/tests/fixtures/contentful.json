@@ -1,0 +1,3747 @@
+{
+	"backgroundImage": {
+		"id": "1xMVItqKxCU20KeGUIaAOg",
+		"title": "Background Image",
+		"description": "Background Image",
+		"url": "/test-assets/fixture-wide.jpg",
+		"width": 5184,
+		"height": 3456,
+		"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+	},
+	"socialMedia": [
+		{
+			"id": "ryvsukeA8KgO4YQ6MSQsI",
+			"title": "linkedin",
+			"link": "https://www.linkedin.com/in/cdiloreto/"
+		},
+		{
+			"id": "6q6VC2KuaWw8k6QYeAAISq",
+			"title": "instagram",
+			"link": "https://www.instagram.com/carodilophoto/"
+		}
+	],
+	"about": {
+		"profilePicture": {
+			"id": "4U5XYokpXuOlyEOxlVBgqY",
+			"title": "Caro_Headshot",
+			"description": "",
+			"url": "/test-assets/fixture-square.jpg",
+			"width": 1332,
+			"height": 1332,
+			"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+		},
+		"bio": {
+			"nodeType": "document",
+			"data": {},
+			"content": [
+				{
+					"nodeType": "paragraph",
+					"content": [
+						{
+							"nodeType": "text",
+							"value": "I am a Filipina-Italian-American multi-media artist from San Jose, CA. I am a graduate of the University of Southern California’s School of Cinematic Arts, majoring in ",
+							"marks": [],
+							"data": {}
+						},
+						{
+							"nodeType": "hyperlink",
+							"data": {
+								"uri": "http://cinema.usc.edu/imap/"
+							},
+							"content": [
+								{
+									"nodeType": "text",
+									"value": "Media Arts + Practice",
+									"marks": [],
+									"data": {}
+								}
+							]
+						},
+						{
+							"nodeType": "text",
+							"value": " with a double minor in Dance and Computer Programming. I am currently a Product Designer at Apple and take on freelance photography in both digital and film mediums (clients include: The Academy of Motion Picture Arts & Sciences, USC Kaufman School of Dance, BODYTRAFFIC).",
+							"marks": [],
+							"data": {}
+						}
+					],
+					"data": {}
+				},
+				{
+					"nodeType": "paragraph",
+					"content": [
+						{
+							"nodeType": "text",
+							"value": "Since I was little, I've had a passion for performing arts while simultaneously growing skills in media technologies. Through my studies and work experience, I have gained a rich knowledge of interaction design and storytelling techniques, retaining an earnest curiosity in combining areas of movement, media technologies, and design.",
+							"marks": [],
+							"data": {}
+						}
+					],
+					"data": {}
+				},
+				{
+					"nodeType": "paragraph",
+					"content": [
+						{
+							"nodeType": "text",
+							"value": "My wide-range of skills can be attributed to my insatiable desire to understand the world around us, and how technology can influence how we live. As a photographer, dancer, and designer, I have gained a strong visual understanding. I believe visual storytelling is the most effective way to impact others through unique and imaginative perspectives. I value play and take each project as an opportunity to creatively experiment different dimensions of storytelling – from user stories to stories of my own voice.",
+							"marks": [],
+							"data": {}
+						}
+					],
+					"data": {}
+				},
+				{
+					"nodeType": "paragraph",
+					"content": [
+						{
+							"nodeType": "text",
+							"value": "In all the work I do, I think about the potential impact on humanity as a whole, retaining a passionate awareness of underserved communities and the future of our planet. I am excited about the potential for experience design to solve humanity's problems in creative ways. I am always open to new opportunities and projects where I can gain new skills as well as apply my own. If you're interested in collaborating, hiring, or just chatting about life, feel free to send me an email!",
+							"marks": [],
+							"data": {}
+						}
+					],
+					"data": {}
+				}
+			]
+		},
+		"location": "Los Angeles",
+		"email": "carolyn@diloreto.com"
+	},
+	"resumeUrl": "https://assets.ctfassets.net/rcuybrzofove/6u310Qg8lGes28s0SoIiWy/ad71721b1109f4613a6a2682bbeb2403/2025_Carolyn_DiLoreto_Resume.pdf",
+	"projects": [
+		{
+			"id": "5vWRrIOpKuHVO1BTfjqphB",
+			"title": "Magnolia App",
+			"summary": "Multi-Platform App",
+			"slug": "magnolia-app",
+			"coverImage": {
+				"id": "4aaWC1RbXRgnIufDNe5TuT",
+				"title": "Magnolia Cover Image",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1920,
+				"height": 1080,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			]
+		},
+		{
+			"id": "3DyXS39ylePOS3b8ChlP34",
+			"title": "The Voice App  /  AGT App",
+			"summary": "Mobile Play-Along Show App",
+			"slug": "the-voice-app-agt-app",
+			"coverImage": {
+				"id": "3giZ2QBOFdjxtxyuFUrU02",
+				"title": "TheVoice-AGT",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1920,
+				"height": 1080,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			]
+		},
+		{
+			"id": "5BPMPxKTUdT4wxp8xj5kP6",
+			"title": "NBC App",
+			"summary": "Multi-Platform Entertainment App",
+			"slug": "nbc-app",
+			"coverImage": {
+				"id": "1MPQtnMohWbiX5QXmUMRv0",
+				"title": "NBC-OneApp",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1837,
+				"height": 1033,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			]
+		},
+		{
+			"id": "1JQwGGlqB2MC6gkqMwAkqQ",
+			"title": "Em/body",
+			"summary": "Interactive Installation",
+			"slug": "em-body",
+			"coverImage": {
+				"id": "7xiMZjncNauYm2sMeSwCSc",
+				"title": "EmBody",
+				"description": "",
+				"url": "/test-assets/fixture-portrait.jpg",
+				"width": 1000,
+				"height": 1500,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+			},
+			"projectType": [
+				"Interactive"
+			]
+		},
+		{
+			"id": "6wHBOi55KMYWakkEqkMUY0",
+			"title": "Shed",
+			"summary": "Dance Film",
+			"slug": "shed",
+			"coverImage": {
+				"id": "739iizsTZuIE2oqaU6A4WU",
+				"title": "shed laurels field",
+				"description": "",
+				"url": "/test-assets/fixture-landscape.jpg",
+				"width": 1500,
+				"height": 1000,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+			},
+			"projectType": [
+				"Film"
+			]
+		},
+		{
+			"id": "CAmzyAjRrUCAQiKkwsWwI",
+			"title": "Plantum",
+			"summary": "Mobile Game",
+			"slug": "plantum",
+			"coverImage": {
+				"id": "2n95GJb6ykYGGs2CWycEuc",
+				"title": "Plantum CoverImage",
+				"description": "",
+				"url": "/test-assets/fixture-square.jpg",
+				"width": 1200,
+				"height": 1200,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+			},
+			"projectType": [
+				"Design",
+				"Interactive"
+			]
+		},
+		{
+			"id": "2BYQetlY6MSaAQaA6GGG6w",
+			"title": "Green Dot",
+			"summary": "Mobile App UX/UI",
+			"slug": "green-dot",
+			"coverImage": {
+				"id": "7Fj64YMUSsI0emyMewWeci",
+				"title": "Green Dot Thumbnail",
+				"description": "",
+				"url": "/test-assets/fixture-square.jpg",
+				"width": 964,
+				"height": 935,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+			},
+			"projectType": [
+				"Design"
+			]
+		},
+		{
+			"id": "202A9jRCqo6Yi2CCAG22CG",
+			"title": "Huntress",
+			"summary": "Mo-Cap Dance Film",
+			"slug": "huntress",
+			"coverImage": {
+				"id": "3wOBnTK3WMa2seqSckmKgy",
+				"title": "huntress",
+				"description": "",
+				"url": "/test-assets/fixture-portrait.jpg",
+				"width": 1000,
+				"height": 1500,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+			},
+			"projectType": [
+				"Interactive",
+				"Film"
+			]
+		}
+	],
+	"projectInfo": {
+		"magnolia-app": {
+			"id": "5vWRrIOpKuHVO1BTfjqphB",
+			"title": "Magnolia App",
+			"summary": "Multi-Platform App",
+			"slug": "magnolia-app",
+			"coverImage": {
+				"id": "4aaWC1RbXRgnIufDNe5TuT",
+				"title": "Magnolia Cover Image",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1920,
+				"height": 1080,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			],
+			"role": "Product Designer",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Overview",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "On July 15, 2021, we launched the Magnolia App, a joint-venture from Chip & Joanna Gaines and Discovery Inc that is a digital home for all things Magnolia. As a product designer on a Design team of 10 people, I helped in the creation of this app across multiple platforms including web, iOS, Android, tvOS, Roku, and FireTV. The content within the app is organized into 4 verticals – Watch, Shop, Visit, and Create. I aided in all aspects of product design such as ideation, research, prototyping, pitching, and QAing. I worked closely with my design manager, senior designers, and product managers to establish requirements and deliver final designs.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Prototyping & Motion Design",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "One of my primary responsibilities on the team was creating prototypes and motion design assets for pitching purposes and deliverables for engineering. When building prototypes, I would work with the senior designers to understand the user journey + interactions to create a storyboard of the prototype. From there I would build the prototype using various tools at my fingertips – Sketch, Figma, Principle and After Effects.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Below is an example of a prototype I created for a pitch deck that proposed a creation of a \"Day/Night mode\" for our CTV app (demonstrated on tvOS). Here, the user is greeted with a message dependent on the time they open the app. The background of Home is then dark or light to reflect the time of day they are browsing. As the user scrolls down the page, they encounter full-bleed \"disruptors\" that break up the continuous scroll of shelves. This prototype was presented in front of Joanna Gaines for approval.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://downloads.contentful.com/rcuybrzofove/15CEJAVshSYdiDL9yhAFal/64880a6eddfe4f936738fc2c365afdf7/Magnolia-daymode.gif",
+								"title": "Magnolia-daymode",
+								"description": "Magnolia-daymode",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 800,
+								"height": 450,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Day Mode Prototype for Magnolia App on tvOS. Please contact me for full high-res video.",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Another prototype I created was for the onboarding experience of the Magnolia App. This involved several rounds of iterating in order to create the most optimal, engaging, and on-brand interaction. Creating an interactive prototype was essential in the decision-making process, as it promoted empathy for the users.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/577gFSS334bq8tMMZwAEP7/1f5d89b0f5bf50f8fadb71be2a43161e/Mobile-Onboarding-Proto-16x9-whitebg.gif",
+								"title": "Mobile-Onboarding-Proto",
+								"description": "Mobile-Onboarding-Proto",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "An iteration of a prototype for the mobile onboarding of the Magnolia App on iOS. Please contact me for full high-res video.",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "With the deadline for launch quickly approaching, I was challenged to lead the improvement of the motion of our app while we were in the QA-phase of the product in the months before launch. With the goal of making the interactions and transitions as clean and premium as possible, I worked with the developers to implement these improvements — which included loading-states, hover-states, and interactive component animations. These were primarily communicated through Jira tickets that I wrote referencing already-existing motion libraries and custom prototypes made by myself. I would also participate in virtual 1:1 working sessions with the developers to achieve the desired look & feel. Below is a capture of a spreadsheet I created to track the various motion improvements cross-platform.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/DgiExY3V20GNhotAOkooW/dcd8a8b195022f342790c3a7b5f7af49/Motion_Design_tracker.png",
+								"title": "Motion Design tracker",
+								"description": "Motion Design tracker",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "One of my favorite responsibilities was creating \"sizzle reels\" for our app that would be used by the VP of Design and the General Manager of Magnolia DTC to communicate our efforts to Discovery leadership and other departments within the company. Creating the sizzles gave me an opportunity to understand the scope of the projects the entire Magnolia DTC team worked on. I would work with my VP to determine features to showcase and choose a song that worked with the story we wanted to tell, which I would cut using Adobe Audition. I would then storyboard the sizzle reel by breaking down the song to its emotional cues and present visual stills of the design assets choreographed to music. Once approved, I would build the motion entirely using After Effects and make edits based off notes I received from my VP. At the top of this page is the sizzle reel I created with the help of a visual designer on our team to celebrate the launch of our app.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/33VU5MNbVVKJExwUzL1ByK/5c5e63555c8ea2e3bfbdb79e795d54b4/Screen_Shot_2021-10-12_at_3.25.21_PM.png",
+								"title": "Magnolia Sizzle storyboard",
+								"description": "Magnolia Sizzle storyboard",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 78,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Sizzle Reel storyboard process",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Create Vertical",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "As a product designer, I was responsible for owning certain features, most notably Create on mobile app & web. This was my first experience designing a feature that was part of a product built entirely from scratch. I worked collaboratively with the feature-owners of the other verticals to ensure design consistency, with Product to understand the overarching business and customer goals, and User Research to learn user expectations and assumptions.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "The biggest challenge of this feature was that throughout my design process, the feature requirements were still being defined by Product and Magnolia leadership (the name \"Create\" wasn't even given to it until soon before launch after our user research team conducted multiple tests and interviews). Because of this, I started my design process by first understanding the Magnolia brand and audience. I digested Magnolia audience research documents and put myself in the shoes of a Magnolia fan by following their socials, launch campaigns, and re-watching episodes of Fixer Upper. I also conducted competitive analysis of near-competitors that I understood the \"Create\" vertical was taking influence from, based on the loose definitions of incorporating brand-new Magnolia Workshops and incorporating their existing Blog. I worked with a senior designer to create a deck to compare how services like Masterclass, Pinterest, Food Network Kitchen, Goop, etc. presented their services/content.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "To help define this vertical, I also worked with our User Research team to determine the most comprehensible navigational architecture. I participated in defining testing goals and provided white-label assets for the tests. Our research team ran 2 tests – one to cast a large net on the variety of titles for this verticle (which included a card-sorting and ranking exercise) and another to understand user's expectations and associations based on certain names and provided UI. From the 2 tests, \"Create\" was considered the top result with Workshops, Recipes, and Blogs falling as content types underneath it. After presenting these findings to Magnolia leadership, they approved the naming of the vertical as \"Create\" with the subsequent content types for launch.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/Lf4Zef3rK0zXxj3jr3TvP/8a9b7851e259dda862e3319079017187/Create_Home______Research.png",
+								"title": "Create Home – Research",
+								"description": "Create Home – Research",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 33,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Results for 2 user tests ran on usertesting.com that were digested and presented to us by our User Research team",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "One limitation for designing this feature was that we would be building our app using an internal Discovery tool that was created for another app within Discovery's portfolio that launched prior. This means that there were content-management building blocks in place that the design had to support. Because the navigational architecture of this vertical was not finalized, I designed with flexible components in mind. Below is a preliminary wireframe I sketched to visualize how these components could be presented for the Create homepage.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/2K6ElD5lCj6xEmL9pv2UxG/8b64419cd1250fc6618d74950ef652c2/Create_Home______Wireframes.png",
+								"title": "Create Home – Wireframes",
+								"description": "Create Home – Wireframes",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "After wireframing and getting a better understanding of the content that would be displayed in this vertical based on research and conversations with Product, I comped up Create Home designs for approval. I re-purposed to my advantage what was already delivered for other verticals and thus was available in our \"design system\" (such as ledes, navigational blocks, full-bleed promos, and rails of cards) as well as created my own based on the proposed content types that were exclusive to my vertical (workshops, recipes, blog posts, photo galleries, etc). Because my comps were going to be used for pitch-purposes, I paid heavy attention to the visual imagery and variety in components to inspire Magnolia in the flexibility of this page. Below is my first iteration that I pitched to Magnolia leadership.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/2FaaNUFHQ49OcRinh9lfoj/5279aad3c089a7c2537e687eb7d74dc4/Create_Home_Desktop_comp.png",
+								"title": "Create Home Desktop comp",
+								"description": "Create Home Desktop comp",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Magnolia received these designs favorably; however, they asked us to explore options for the lede area, as they wanted the Create vertical to be distinguishable from the other verticals. I worked with a designer whose main responsibility was creating illustrative icons to pitch different creative concepts for the Create homepage, as seen below. You can see what they went with for launch on the live website ",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "hyperlink",
+								"data": {
+									"uri": "https://magnolia.com/create/"
+								},
+								"content": [
+									{
+										"nodeType": "text",
+										"value": "here",
+										"marks": [],
+										"data": {}
+									}
+								]
+							},
+							{
+								"nodeType": "text",
+								"value": " (in addition to Create Home I also owned Recipes and Blog).",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/2fwwO8rYn1z4AQqkkZeo0E/8639cbf5d48fa16b07eff08d6f338230/Create_Home_header_exploration.png",
+								"title": "Create Home header exploration",
+								"description": "Create Home header exploration",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Design System",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "As a brand-new design team of about 10 designing a product from scratch fully-remote in the middle of a pandemic, it was essential that we had a process in place to keep our designs consistent from designer to platform to vertical. We had weekly library syncs to update each other on decisions made for the various styles and components of our app. When we first started, we utilized Sketch libraries and Zeplin to collaborate and deliver to development. After a year, we eventually transitioned to Figma, which greatly aided in our collaboration.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "As the designer for the Create vertical, I was responsible for organizing cards of the various content types that the vertical included. I worked with my product manager to define the asset requirements, such as the metadata available and when/where certain metadata would be displayed.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/2FvyIe9abQheV3HQcceqXs/4987d4a2574ea0bfea58ed1bd62cbb47/Card_Exploration.png",
+								"title": "Card Exploration",
+								"description": "Card Exploration",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 20,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Once our app launched, it became a greater priorty for Product, Design, and Development to re-think the card component to be more flexible, unified, and consistent throughout our app. This led to a card exercise I embarked on in Figma to create a \"master card\" component that could be applied to all of our 7+ content types (Episode, Show, Workshop, Course, Recipe, Blog, Product, Talent). This exercise allowed me to learn the ins and outs of Figma libraries, being my first opportunity to do so. I learned to build the complex \"master card\" component using atomic base-components, which allowed for flexibility in metadata, aspect ratio, and states.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/5zlEk7oWwaZYTZolRc1HrY/381fe688ff8e7075fcdb9bff60070000/Screen_Shot_2021-10-12_at_2.52.08_PM.png",
+								"title": "Master Card",
+								"description": "Master Card",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 48,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "After creating the master card, I used this as a blueprint to make our main card component that has variants for content type, breakpoint, and dark vs. light mode. I then presented this component to the entire team during our weekly library sync, and we now use this component in our design system. We are currently in the process of shifting our product to component-based design on the engineering-side, ideally making our product more flexible & efficient with a consistent user experience.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.contentful.com/rcuybrzofove/2mmmrfCynWrOr8ZE2AfjWd/24e43d15b29bd9b7a08f0452b7d0f2d3/cards-figmalibrary.jpg",
+								"title": "cards-figmalibrary",
+								"description": "cards-figmalibrary",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 73,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					}
+				]
+			},
+			"videoLink": "https://www.youtube.com/embed/qB40moawv9s",
+			"password": "playwright-password"
+		},
+		"the-voice-app-agt-app": {
+			"id": "3DyXS39ylePOS3b8ChlP34",
+			"title": "The Voice App  /  AGT App",
+			"summary": "Mobile Play-Along Show App",
+			"slug": "the-voice-app-agt-app",
+			"coverImage": {
+				"id": "3giZ2QBOFdjxtxyuFUrU02",
+				"title": "TheVoice-AGT",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1920,
+				"height": 1080,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			],
+			"role": "UX/UI Designer",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Overview",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "At my time at NBC, I led the UX/UI of the Voice App for Season 18 & 19 and America's Got Talent App for Season 14 & 15. These two apps are paired with the broadcasted episodes for play-along experiences such as voting, building fantasy teams, and answering trivia/polls for points.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "At the beginning of each season's timeline I would work with our Product team to prioritize improvements and features to incorporate into the upcoming season. These would be identified through understanding the personas of those who watch The Voice and AGT while using the play-along app, disecting the user journey, auditing the app's accessibility against current standards, and reading through the app store reviews. Once these improvements/features were identified, I would begin my design process. This included conducting an analysis of other products with similar interactions, sketching out possible user flows and interfaces, obtaining feedback through design reviews, iterating these designs, creating prototypes, executing user tests, working with product to identify user data points, pitching my ideas to executives, and creating spec documents of these deliverables.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3kF0eJXEImQRPoJ10UyjuI/556fa9b85a1978c5858d5e057cb05c6a/TheVoice-CompExamples.png",
+								"title": "TheVoice-CompExamples",
+								"description": "TheVoice-CompExamples",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "America's Got Talent - Design Process",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "An example of a recent feature I worked on was the Congratulations screen for the America's Got Talent app. This screen appears at the end of the season once a winner is announced and remains present till the start of the next season. After analyzing our app store reviews, a user painpoint was discovered. Because the Congratulations screen is triggered right after the winner is announced, many users would be spoiled of the AGT results when opening the app before actually completing the final episode (say, if they were planning to watch the episode after its broadcast). In addition, we found that this screen could be more beneficial to users who use the app in-between seasons, sharing more relevant and up-to-date information. After discussing with the Product team, we created a requirement to allow for customizeable promo cards in addition to announcing the winner for this screen.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3YAvLJKwv6b6EYBl7gXmg7/d793a94aa49edf715af0b4574ab2eac1/AGT-Congrats-Before.png",
+								"title": "AGT-Congrats-Before",
+								"description": "AGT-Congrats-Before",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Screenshot of the Congratulations screen for Season 14, prior to re-design",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Visually, I found this to be a unique and exciting design challenge. After browsing through inspiration, I concepted various ways that users could interact with this screen to reveal who the winner is. As a brainstorming exercise, I wireframed by hand the possible different states of this screen, allowing an area for promo cards with customizeable copy.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/52ABQ8f7F0wFgraQ3Rab2k/9d7f72b9487e5100c59aa72fe56c9b0b/AGT_Congrats_Wireframes.JPG",
+								"title": "AGT Congrats Wireframes",
+								"description": "AGT Congrats Wireframes",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 75,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Wireframes sketched by hand",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "After conceptualizing a few variations of this screen, I brought my designs into Sketch. I approached my initial designs as a playground to explore aesthetic possibilities. I went through several rounds of iteration to visualize styling for the revealing the winner interaction and the promotional cards. I used various AGT assets, such as iconography and show art, as inspiration for adding branding details and texture to this screen. I thought about how animation could be used to add delight to these screens as well.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/1fiYlcXzGZXa3vlQ4JI8pK/538411efde10c0cde04224946e53e61a/AGT-Congrats-Iterations.png",
+								"title": "AGT-Congrats-Iterations",
+								"description": "AGT-Congrats-Iterations",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 61,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Screenshot of my Sketch file",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Before deciding on which options to create prototypes for, I went through multiple rounds of peer reviews with members of my team to get their impressions and advice on usability, accessibility, and aesthetics. I incorporated their notes and settled on my top two options to bring into Principle & After Effects to visualize how this interaction would look like.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/4ikFQEfL7enP1REODE2Gp7/a79faf337eb09c0013057cf0bce95c38/Portfolio-AGTCongrats-PrototypeOptions.gif",
+								"title": "Portfolio-AGTCongrats-PrototypeOptions",
+								"description": "Portfolio-AGTCongrats-PrototypeOptions",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "I took these designs to the VP of UX Design for review. Option 1 was preferred because of how it directed the focus of the user with a clear separation of content and its enjoyable interaction that encouraged more engagement. As we were designing for an entertainment app, delightful design is valued greatly.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Once approved by the VP of UX Design, I walked through the chosen design with Product to get their alignment. From there we did a final review with the executive team of our department. Once approved, I delivered the final designs through Zeplin and spec-ed out the animation for our development team. There were three rounds of Design QA in the timeline for the Beta, Alpha, and Release Candidate builds, where I logged bug tickets to ensure that this screen was developed as intended and covered all technical edge-cases. It was released for America's Got Talent Season 15 App.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/1S3FvJnhTP1P0ExaT2hfa6/db479aa2f54b4204e0d06811b7811cfa/Portfolio-AGTCongrats-Final.gif",
+								"title": "Portfolio-AGTCongrats-Final",
+								"description": "Portfolio-AGTCongrats-Final",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "Final product",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					}
+				]
+			}
+		},
+		"nbc-app": {
+			"id": "5BPMPxKTUdT4wxp8xj5kP6",
+			"title": "NBC App",
+			"summary": "Multi-Platform Entertainment App",
+			"slug": "nbc-app",
+			"coverImage": {
+				"id": "1MPQtnMohWbiX5QXmUMRv0",
+				"title": "NBC-OneApp",
+				"description": "",
+				"url": "/test-assets/fixture-wide.jpg",
+				"width": 1837,
+				"height": 1033,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+			},
+			"projectType": [
+				"Design"
+			],
+			"role": "UX/UI Designer",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Overview",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "In June 2019, the NBC App launched a re-design that incorporated 11 of NBC's brand apps—including Bravo, E!, USA, SYFY, Oxygen, and Telemundo—with a consistent user experience across all apps and 10+ platforms. Upon its launch, the NBC App was recognized as \"Best in Class tvOS App\" and is referenced in Apple's Human Interface Guidelines for Navigation, Search, and Live schedule.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/1lVfWXerrPI1cjjpePcDFA/7619858b1261e38c4dc042fdf3734ae9/Apple-HIG.png",
+								"title": "Apple HIG NBC Navigation",
+								"description": "Apple HIG NBC Navigation",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\nView ",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "hyperlink",
+								"data": {
+									"uri": "https://developer.apple.com/design/human-interface-guidelines/tvos/app-architecture/navigation/"
+								},
+								"content": [
+									{
+										"nodeType": "text",
+										"value": "here",
+										"marks": [],
+										"data": {}
+									}
+								]
+							},
+							{
+								"nodeType": "text",
+								"value": ".",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "As a team of about 10 UX designers, we worked collaboratively across various features and platforms, utilizing a breadth of interdiscplinary skills. I had the opportunity to design UX/UI for cross-platform experiences—including iOS, Android, tvOS, Roku, Fire TV, and Web—using Sketch, Zeplin, Principle, Photoshop, and After Effects. Each of us were expected to administer competitive analyses on competing apps/services every quarter, conduct quantitative and qualitative user research, create and test high-fidelity prototypes, work closely with product team to track issues and design solutions for updates or bugs, collaborate with the marketing team to design app screens, icons, and other promotional assets for iTunes and Google Play stores, pitch design concepts to executives for approval, and detail spec docs and user flows to account for all scenarios and use cases.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Beyond our existing responsibilities and expectations, I specifically honed in on creating prototypes and sizzle videos for pitches, ad sales demos, and company townhalls (utilizing Principle and After Effects). Above is the sizzle video created for the June 2019 launch of the NBC App and brand apps.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Competitive Analyses",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "An ongoing job responsibility for launching and updating the NBC streaming apps was conducting competitive analyses of our competitors' new/updated products and subsequent features. Every quarter we would individually be assigned to conduct an analysis of a specific product, feauture, or interface. For the launch of HBO Max in June 2020, I presented a competitive analysis of this product (entertainingly in the theme of Mad Max) during our team's quarterly all-hands meeting of about 125 people. Contact me for more information on these decks.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/ZZhfORr6xRoJkTUSImDvR/395990ca8517b1cc38613ef5a27b679e/NBCApp-CompAnalysis.png",
+								"title": "NBCApp-CompAnalysis",
+								"description": "NBCApp-CompAnalysis",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 52,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Motion Design",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "In addition to designing static UI, one of my skillsets was to illustrate the movement of our interfaces when ideating, pitching, iterating, and delivering through high-fidelity prototypes. I was tasked to visualize movement of our interfaces across all our platforms (mobile, TV, and web). These were created using Principle and After Effects.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Below is an example of a prototype I created to conceptualize the movement within NBC App on tvOS. It shows the user navigating to the Networks shelf, where each brand has their own tile animation when in focus. The user then clicks into the Oxygen brand and is redirected to the Oxygen brand-landing page. A video background unique to the brand animates over their selected gradient color as the content floats and fades in. When the user hovers over the first tile, they are shown a video preview of that show.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3dzepcFoEYCf9fYXfeYx7r/69c26b63601ee46a167da8e439e7ea0b/tvOS-prototype-HometoBrandLanding.gif",
+								"title": "NBC App - TVOS - Home to Brand Landing Prototype",
+								"description": "NBC App - TVOS - Home to Brand Landing Prototype",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "NBC App prototype on tvOS",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Another example below is a prototype I created for the NBC App on iOS. It visualizes the flow of a feature that I was tasked to re-design. The Previews shelf on mobile allows users to watch trailers of new shows, in the same vein as watching Instagram stories. The prototype shows a user tapping on one of these previews on the homepage. They then swipe through the previews of various shows before tapping on the Start Watching CTA, where they are then redirected to the video player of that episode.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3Ehn5JCB5PLIvm2p3pnk0y/cc45ad63a6cf978e58bc5e61003acd00/NBCApp-iOS-PreviewPrototype.gif",
+								"title": "NBCApp-iOS-PreviewPrototype",
+								"description": "NBCApp-iOS-PreviewPrototype",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "NBC App prototype on iOS",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "In addition to prototyping UI transitions, I would also produce animation assets for both internal and external use. Below is an example of an animation I created to visualize the NBC logo transitioning to the logo for Peacock, NBC's new streaming service, using After Effects. To conceptualize this motion, I compared how the new Peacock logo related to the distinct NBC logo. It consists of a \"spine\" of dots that each borrow the colors from the NBC peacock rainbow. Mimicking how a peacock \"fans out\" its feathers, I imagined the NBC logo unfurling and the motion continuing to spin around as the feathers turn into dots that eventually stack onto its spine form. I went through multiple iterations and reviews to smooth out the motion and make it as seemless as possible. At its final form, this animation visualizes the relationship of the fresh product of Peacock to NBC as a distinguished brand.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/1AZJqeIAknD0egX8VFdxBn/b1bd14cdbdce0204e99dfdd0e96a91d0/NBCtoPeacock.gif",
+								"title": "NBCtoPeacock",
+								"description": "NBCtoPeacock",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Accessibility",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Because quality UX is an experience that works for ",
+								"marks": [],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": "all",
+								"marks": [
+									{
+										"type": "italic"
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "text",
+								"value": " users, an essential part of our workflow as UX designers was ensuring our designs followed accessibility standards outlined by W3C and NBCUniversal's Accessibility Director. The features I designed consciously followed these guidelines and would be tested and reviewed to ensure its usability. In addition, I worked on several features specifically created to enhance the accessibility of our products. This required an understanding of the complexities of audio, visual, or motor limitations, and the variants in user experiences for those with such disabilities.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "For example, users who are tabbing through our website and/or engaging with screen readers are used to a pattern of navigation where a \"Skip to Content\" button exists that allows the focus to shift past the navigation options to the main content of the page. For NBC.com, I incorporated this Skip to Content pattern that appears when users first tab through the website.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/N9pWl7GALxuXN5BUR8EHC/50bc762fd19fbdb52c1b0c8c67a056da/NBCApp-Skip_to_content.png",
+								"title": "NBCApp-Skip to content",
+								"description": "NBCApp-Skip to content",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 52,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					}
+				]
+			},
+			"videoLink": "https://www.youtube.com/embed/2zmHRUAYfxU",
+			"password": "playwright-password"
+		},
+		"em-body": {
+			"id": "1JQwGGlqB2MC6gkqMwAkqQ",
+			"title": "Em/body",
+			"summary": "Interactive Installation",
+			"slug": "em-body",
+			"coverImage": {
+				"id": "7xiMZjncNauYm2sMeSwCSc",
+				"title": "EmBody",
+				"description": "",
+				"url": "/test-assets/fixture-portrait.jpg",
+				"width": 1000,
+				"height": 1500,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+			},
+			"projectType": [
+				"Interactive"
+			],
+			"role": "Senior Thesis Project",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Em/body explores how to motivate movement from individuals through visual and auditory reward. Using Kinect infrared sensors, an Arduino, Processing, and Max MSP, a user’s position and movement engage in versatile interactions with light and sound. These interactions progress as the user discovers and advances through stages of involvement within the sphere. Increasingly complex colors, rhythms, and sonic effects respond to various and specific body position and motion behaviors, influenced by Rudolf Laban’s movement analysis. Em/body invites the user to explore and play, ultimately developing a higher level of consciousness of the user’s own kinesthetics.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3VTPKobvqEE24WiceccaeA/191c492bad7e25a617c871bcd49428aa/2018-Thesis-Photos-LR-03294.jpg",
+								"title": "2018-Thesis-Photos-LR-03294",
+								"description": "2018-Thesis-Photos-LR-03294",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": " ",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5eEzTYS8fYq8G8QaiGsaYs/f8633eaeebfa458d0d62522a324f7945/2018-Thesis-Photos-LR-03347.jpg",
+								"title": "2018-Thesis-Photos-LR-03347",
+								"description": "2018-Thesis-Photos-LR-03347",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 67,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3hN7X018nSWeMyoGeWwM0k/df4e5e544bd1abe9db1c30412a4a8bcb/2018-Thesis-photos-LR-05727.jpg",
+								"title": "2018-Thesis-photos-LR-05727",
+								"description": "2018-Thesis-photos-LR-05727",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 67,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/6CM7mHyZbikqWQMg2EqewM/8632c469efa132e78aeaa49a2c4b5add/2018-Thesis-photos-LR-05782.jpg",
+								"title": "2018-Thesis-photos-LR-05782",
+								"description": "2018-Thesis-photos-LR-05782",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 67,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					}
+				]
+			},
+			"videoLink": "https://player.vimeo.com/video/269554546?title=0&byline=0&portrait=0"
+		},
+		"shed": {
+			"id": "6wHBOi55KMYWakkEqkMUY0",
+			"title": "Shed",
+			"summary": "Dance Film",
+			"slug": "shed",
+			"coverImage": {
+				"id": "739iizsTZuIE2oqaU6A4WU",
+				"title": "shed laurels field",
+				"description": "",
+				"url": "/test-assets/fixture-landscape.jpg",
+				"width": 1500,
+				"height": 1000,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+			},
+			"projectType": [
+				"Film"
+			],
+			"role": "Director, Cinematographer, Editor",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "'Shed' explores how dance can manifest the conflict of identity and sexuality in contrast to social expectations of womanhood. 2nd Place at Feminist Media Festival 2018 at USC. Official selection for San Francisco Dance Film Festival 2018, Dance Camera West 2018, Vancouver Festival of Recorded Movement 2018.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					}
+				]
+			},
+			"videoLink": "https://player.vimeo.com/video/223724092?title=0&byline=0&portrait=0"
+		},
+		"plantum": {
+			"id": "CAmzyAjRrUCAQiKkwsWwI",
+			"title": "Plantum",
+			"summary": "Mobile Game",
+			"slug": "plantum",
+			"coverImage": {
+				"id": "2n95GJb6ykYGGs2CWycEuc",
+				"title": "Plantum CoverImage",
+				"description": "",
+				"url": "/test-assets/fixture-square.jpg",
+				"width": 1200,
+				"height": 1200,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+			},
+			"projectType": [
+				"Design",
+				"Interactive"
+			],
+			"role": "Designer, Developer",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Plantum is a mobile game I created with a partner as a final project for my Mobile Games course for my Computer Programming minor at USC, using Unity and C# programming. An environmentalist from the 80’s wakes up in the future and needs to save his planet by cultivating futuristic plants, while being plummeted by space junk.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/6R9Eu4VKlq2KIW8OC4sgW0/5d2c6828a004025add944b09ebf0e710/Screen_Shot_2018-11-07_at_11.06.46_PM.png",
+								"title": "Screen Shot 2018-11-07 at 11.06.46 PM",
+								"description": "Screen Shot 2018-11-07 at 11.06.46 PM",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 63,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/6d4i07BJ5ecUYg2eoMWEia/73fba16299bbf468b3ec4e227eb2af51/Screen_Shot_2018-11-07_at_10.32.00_PM.png",
+								"title": "Screen Shot 2018-11-07 at 10.32.00 PM",
+								"description": "Screen Shot 2018-11-07 at 10.32.00 PM",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 63,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5JLTrFfED6g6k6OOAQkUmk/9d3f33a5480cc578bf272c991f45b05f/Screen_Shot_2018-11-07_at_11.05.43_PM.png",
+								"title": "Screen Shot 2018-11-07 at 11.05.43 PM",
+								"description": "Screen Shot 2018-11-07 at 11.05.43 PM",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 63,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/388wOlrBwQWiMeGcCs4WUa/ab9e2fcc19d07cb311f253322d70142b/Screen_Shot_2018-11-07_at_10.32.15_PM.png",
+								"title": "Screen Shot 2018-11-07 at 10.32.15 PM",
+								"description": "Screen Shot 2018-11-07 at 10.32.15 PM",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 63,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					}
+				]
+			},
+			"videoLink": "https://www.youtube.com/embed/jen4eZiF9dU"
+		},
+		"green-dot": {
+			"id": "2BYQetlY6MSaAQaA6GGG6w",
+			"title": "Green Dot",
+			"summary": "Mobile App UX/UI",
+			"slug": "green-dot",
+			"coverImage": {
+				"id": "7Fj64YMUSsI0emyMewWeci",
+				"title": "Green Dot Thumbnail",
+				"description": "",
+				"url": "/test-assets/fixture-square.jpg",
+				"width": 964,
+				"height": 935,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+			},
+			"projectType": [
+				"Design"
+			],
+			"role": "UX/UI Lead",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Problem",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "How can Green Dot administrative staff maintain communication with Green Dot alumni attending college in order to decrease drop-outs?",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Solution",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Create an application that creates a community for Green Dot alumni that the administration can push user-specific updates as well as gamify the college experience to encourage participation in alumni responses.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Team members",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "unordered-list",
+						"content": [
+							{
+								"nodeType": "list-item",
+								"content": [
+									{
+										"nodeType": "paragraph",
+										"content": [
+											{
+												"nodeType": "text",
+												"value": "1 project manager",
+												"marks": [],
+												"data": {}
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "list-item",
+								"content": [
+									{
+										"nodeType": "paragraph",
+										"content": [
+											{
+												"nodeType": "text",
+												"value": "2 designers",
+												"marks": [],
+												"data": {}
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							},
+							{
+								"nodeType": "list-item",
+								"content": [
+									{
+										"nodeType": "paragraph",
+										"content": [
+											{
+												"nodeType": "text",
+												"value": "5 developers",
+												"marks": [],
+												"data": {}
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Process",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5SZyRC8aLmMkKyGCECgIyM/cf02702f4c68fd8d2caee370e6ef34c4/GreenDot_FigmaScreenShot.png",
+								"title": "GreenDot FigmaScreenShot",
+								"description": "GreenDot FigmaScreenShot",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 71,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Our process included many meetings with the client to determine what features were needed for the mobile application and the administrative website, as well as working with students to understand what their needs were. Working with an agile work flow, we went through many iterations of flows, wireframes, visual identity, and mock-ups.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Interviews",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/UCfzgvZqs8oasYqemmkay/8b2ef48c576c35dbac22caa950445ef1/Screen_Shot_2018-07-27_at_12.17.41_PM.png",
+								"title": "Screen Shot 2018-07-27 at 12.17.41 PM",
+								"description": "Screen Shot 2018-07-27 at 12.17.41 PM",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 64,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "We conducted a focus group with 11 recently graduated Green Dot alumni to get an understanding of their relationship with Green Dot while a student and how Green Dot can help them succeed in their college experience. We also asked for feedback on the usefulness of features that the client and our team ideated for the app. Through these interviews we learned that gamifying the experience would lead to more interaction/communication with Green Dot.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Visual Identity",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/4igazhEI48UMeYmE6UKwUI/c67b5b85761b0652a81b5c7b22f84052/GreenDot_Styleguide.png",
+								"title": "GreenDot Styleguide",
+								"description": "GreenDot Styleguide",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 70,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Starting with Green Dot's given branding, we replicated their fonts and chose colors that would give the app a consistent feel.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Login",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5rdJtXczSMOCiwKGUyiQKm/9f70e37adb41a386ed10bbac3aba980b/GreenDot_Login.png",
+								"title": "GreenDot Login",
+								"description": "GreenDot Login",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Because we only want users that have pre-existing Green Dot email addresses to be able to access the features of the app, we created a multi-step process to create and verify accounts.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Notifications",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/KAlk5LfGCaeG88040YgoE/3706b29c0a749860c0ef89953c2149fc/GreenDot_Notifications.png",
+								"title": "GreenDot Notifications",
+								"description": "GreenDot Notifications",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Because one of the client’s biggest need was to notify alumni on various topics, notifications became a large part of our app. Organized into different categories, users would receive notifications and be able to access their history and take action on specific notifications.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Alumni Profile",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5dwWbqbOSQSAsUcoYE24ae/8881e263f6e411ebfe3286a2ed217b90/GreenDot_AlumniProfile.png",
+								"title": "GreenDot AlumniProfile",
+								"description": "GreenDot AlumniProfile",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "In order to allow Green Dot alumni to fully benefit from the Green Dot network, we created public profiles for each user, of which they can update and edit preferences.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Alumni Search",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/np5RxBiXxQQke0OgM6W4k/ac03e9666535cd4add508cc75419de6d/GreenDot_AlumniSearch.png",
+								"title": "GreenDot AlumniSearch",
+								"description": "GreenDot AlumniSearch",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Alumni can   search for specific users that may have been fellow classmates of there’s, or connect with alumni that go to their school. This encourages the Green Dot network to flourish.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Roadmap",
+								"marks": [
+									{
+										"type": "bold"
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/2DeGWBIM7aquaISQGekmUy/c4fbb478093a3058f51ac4b5f12c9017/GreenDot_Roadmap.png",
+								"title": "GreenDot Roadmap",
+								"description": "GreenDot Roadmap",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": " ",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/5gxQxKBDCwgGEIA8iaowCq/9d6303148385744c0aa5d491c3c2fab0/GreenDot_Roadmap2.png",
+								"title": "GreenDot Roadmap2",
+								"description": "GreenDot Roadmap2",
+								"url": "/test-assets/fixture-wide.jpg",
+								"width": 100,
+								"height": 56,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "To address the goal of encouraging alumni to stay in touch with the Green Dot administration, we created a gamified experience called the College Roadmap. Prompting users to fill out “checkpoints,”\nalumni receive points that will accumulate to winning a prize determined by the administration at the end of each year. This allows Green Dot to be aware of what support the alumni need in order to encourage them to stay in college.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "heading-1",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Admin Website",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "Using Django, we created a portal for the Green Dot administration to view and manage data for the Alumni application. Here, they can organize alumni in their system, create new notifications, and create new checkpoints for the Roadmap.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/3h7TgbnIlWOIUeo2UUOK0S/5932a91f30a345b7501fd111fd928231/Admin-Login-Page.png",
+								"title": "Admin-Login-Page",
+								"description": "Admin-Login-Page",
+								"url": "/test-assets/fixture-landscape.jpg",
+								"width": 100,
+								"height": 70,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/dKed7soLdYkKomYsAASiy/bcd807d987cc5ee2ec2233abfe62be2b/Admin-Alumni_Profile.png",
+								"title": "Admin-Alumni Profile",
+								"description": "Admin-Alumni Profile",
+								"url": "/test-assets/fixture-portrait.jpg",
+								"width": 100,
+								"height": 148,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+							}
+						}
+					},
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\n",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					},
+					{
+						"nodeType": "embedded-asset-block",
+						"content": [],
+						"data": {
+							"image": {
+								"id": "https://images.ctfassets.net/rcuybrzofove/1zA2bvA0uEQAeQekISemWy/75a4c9fc4a4b6f15e83f4e7e69f78140/Admin-NotificationNew.png",
+								"title": "Admin-NotificationNew",
+								"description": "Admin-NotificationNew",
+								"url": "/test-assets/fixture-square.jpg",
+								"width": 100,
+								"height": 110,
+								"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+							}
+						}
+					},
+					{
+						"nodeType": "table",
+						"content": [
+							{
+								"nodeType": "table-row",
+								"content": [
+									{
+										"nodeType": "table-cell",
+										"content": [
+											{
+												"nodeType": "paragraph",
+												"data": {},
+												"content": [
+													{
+														"nodeType": "text",
+														"data": {},
+														"marks": [],
+														"value": ""
+													}
+												]
+											}
+										],
+										"data": {}
+									}
+								],
+								"data": {}
+							}
+						],
+						"data": {}
+					}
+				]
+			}
+		},
+		"huntress": {
+			"id": "202A9jRCqo6Yi2CCAG22CG",
+			"title": "Huntress",
+			"summary": "Mo-Cap Dance Film",
+			"slug": "huntress",
+			"coverImage": {
+				"id": "3wOBnTK3WMa2seqSckmKgy",
+				"title": "huntress",
+				"description": "",
+				"url": "/test-assets/fixture-portrait.jpg",
+				"width": 1000,
+				"height": 1500,
+				"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+			},
+			"projectType": [
+				"Interactive",
+				"Film"
+			],
+			"role": "Director",
+			"description": {
+				"nodeType": "document",
+				"data": {},
+				"content": [
+					{
+						"nodeType": "paragraph",
+						"content": [
+							{
+								"nodeType": "text",
+								"value": "\"Huntress\" is a motion capture dance piece I created using OptiTrack motion capture with virtual camera as well as keijiro's Skinner in Unity. This was my final project for Motion Capture class at USC taught by John Brennan. Performed by Celine Kiner.",
+								"marks": [],
+								"data": {}
+							}
+						],
+						"data": {}
+					}
+				]
+			},
+			"videoLink": "https://player.vimeo.com/video/248257783?title=0&byline=0&portrait=0"
+		}
+	},
+	"albums": [
+		{
+			"name": "Dance",
+			"photos": [
+				{
+					"id": "fixture-dance-01",
+					"title": "Dance study 01",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-dance-02",
+					"title": "Dance study 02",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-dance-03",
+					"title": "Dance study 03",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-dance-04",
+					"title": "Dance study 04",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-dance-05",
+					"title": "Dance study 05",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-dance-06",
+					"title": "Dance study 06",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-dance-07",
+					"title": "Dance study 07",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-dance-08",
+					"title": "Dance study 08",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-dance-09",
+					"title": "Dance study 09",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-wide.jpg",
+					"width": 1800,
+					"height": 750,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+				},
+				{
+					"id": "fixture-dance-10",
+					"title": "Dance study 10",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-dance-11",
+					"title": "Dance study 11",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-dance-12",
+					"title": "Dance study 12",
+					"description": "Synthetic dance fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				}
+			]
+		},
+		{
+			"name": "Portraits",
+			"photos": [
+				{
+					"id": "fixture-portraits-01",
+					"title": "Portraits study 01",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1272,
+					"height": 1920,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-02",
+					"title": "Portraits study 02",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-03",
+					"title": "Portraits study 03",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-portraits-04",
+					"title": "Portraits study 04",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-05",
+					"title": "Portraits study 05",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-portraits-06",
+					"title": "Portraits study 06",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-07",
+					"title": "Portraits study 07",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-portraits-08",
+					"title": "Portraits study 08",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-09",
+					"title": "Portraits study 09",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-10",
+					"title": "Portraits study 10",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-portraits-11",
+					"title": "Portraits study 11",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-portraits-12",
+					"title": "Portraits study 12",
+					"description": "Synthetic portraits fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				}
+			]
+		},
+		{
+			"name": "Spaces",
+			"photos": [
+				{
+					"id": "fixture-spaces-01",
+					"title": "Spaces study 01",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1920,
+					"height": 1280,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-spaces-02",
+					"title": "Spaces study 02",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-spaces-03",
+					"title": "Spaces study 03",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-wide.jpg",
+					"width": 1800,
+					"height": 750,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+				},
+				{
+					"id": "fixture-spaces-04",
+					"title": "Spaces study 04",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-spaces-05",
+					"title": "Spaces study 05",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-spaces-06",
+					"title": "Spaces study 06",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-wide.jpg",
+					"width": 1800,
+					"height": 750,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+				},
+				{
+					"id": "fixture-spaces-07",
+					"title": "Spaces study 07",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-spaces-08",
+					"title": "Spaces study 08",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-portrait.jpg",
+					"width": 1000,
+					"height": 1500,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAlABkDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAMBBAUC/8QAJRAAAgEDAgYDAQAAAAAAAAAAAAECAxESBCEFEzFBYXEiMkJR/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgEA/8QAGBEBAQADAAAAAAAAAAAAAAAAAAECESH/2gAMAwEAAhEDEQA/AM2nTlL6xb9IbCPySexu8FdBaT8597mfxBU3rJcq1vArl1pBPSxp0lNVFLwhWIRW25PMh/Q7ORXjJwV7tego1cp2fcROeT26ExRaMW608Y4rqyvYndu7JsEyEMiAFqQyKOgAJR//2Q=="
+				},
+				{
+					"id": "fixture-spaces-09",
+					"title": "Spaces study 09",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-wide.jpg",
+					"width": 1800,
+					"height": 750,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+				},
+				{
+					"id": "fixture-spaces-10",
+					"title": "Spaces study 10",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-landscape.jpg",
+					"width": 1500,
+					"height": 1000,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAARABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAIDBP/EACEQAAICAQMFAQAAAAAAAAAAAAACAQMRBBJhBSEiMTJS/8QAFgEBAQEAAAAAAAAAAAAAAAAAAgED/8QAFhEBAQEAAAAAAAAAAAAAAAAAABEB/9oADAMBAAIRAxEAPwC/TdFVerTY2MeoJtVCWssTmIkzTqGjtXMxyFdjq2c5Bret/ht+cci7q/1BnexrOIE2BWoKUUAEKijAAVf/2Q=="
+				},
+				{
+					"id": "fixture-spaces-11",
+					"title": "Spaces study 11",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-square.jpg",
+					"width": 1200,
+					"height": 1200,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAZABkDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAAAQIDBAD/xAAiEAABAwMFAAMAAAAAAAAAAAABAAIDBBESBRMhMUEiUWH/xAAWAQEBAQAAAAAAAAAAAAAAAAABAAP/xAAWEQEBAQAAAAAAAAAAAAAAAAAAIRH/2gAMAwEAAhEDEQA/AK0OmGoi3C7EeJJacwTFjvFoo9QNNDg5twOlndVipnLncE9KrOYqWxY/C+SGKSWQRtsO1Dek+1Bne8vP4i0WStVGpJxcm55RsuCZCf/Z"
+				},
+				{
+					"id": "fixture-spaces-12",
+					"title": "Spaces study 12",
+					"description": "Synthetic spaces fixture image",
+					"url": "/test-assets/fixture-wide.jpg",
+					"width": 1800,
+					"height": 750,
+					"placeholder": "data:image/jpg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAAOABkDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAQIEA//EACAQAAICAQQDAQAAAAAAAAAAAAECABEhAwQSEwUUMkH/xAAWAQEBAQAAAAAAAAAAAAAAAAAAAQL/xAAVEQEBAAAAAAAAAAAAAAAAAAAAAf/aAAwDAQACEQMRAD8AHjdttnD+waoYirpp2EIbAOJNyZv2o6Ag2DFouPFUyoETt05ll/o3DwEyr//Z"
+				}
+			]
+		}
+	]
+}

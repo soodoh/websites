@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { contentfulFixture } from "@tests/fixtures/contentful";
 import { createTestSnapshot } from "@tests/support/snapshot-test-data";
 import { createImageFormatter, formatAsset } from "@/utils/contentful-assets";
 import {
@@ -7,7 +8,6 @@ import {
 	decodeImage,
 	decodeSocialMediaLink,
 } from "@/utils/contentful-data";
-import { loadContentfulSnapshot } from "@/utils/contentful-snapshot";
 import type {
 	ContentfulSnapshot,
 	Engagement,
@@ -27,10 +27,10 @@ const rawImage = {
 	},
 };
 
-test("decodes the committed fixture and reconstructs normalized data", async () => {
-	await expect(
-		loadContentfulSnapshot(new URL("../fixtures/contentful/", import.meta.url)),
-	).resolves.toMatchObject({ common: { brandName: "Sarabeth Belón" } });
+test("decodes the committed fixture and reconstructs normalized data", () => {
+	expect(decodeContentfulSnapshot(contentfulFixture)).toMatchObject({
+		common: { brandName: "Sarabeth Belón" },
+	});
 	const candidate = Object.freeze(createTestSnapshot());
 	const decoded: ContentfulSnapshot = decodeContentfulSnapshot(candidate);
 	const image: ImageType = decodeImage(decoded.about.headshot);

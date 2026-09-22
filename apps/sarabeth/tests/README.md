@@ -1,14 +1,19 @@
 # Playwright tests
 
-The Playwright server uses the committed Contentful fixture in
-`tests/fixtures/contentful` and the public playlist response fixture in
-`tests/fixtures/youtube-playlist.json`. Its explicit Vite configuration aliases
-the production Contentful provider and current-date modules to deterministic
-test implementations; canonical production builds exclude fixture code. Browser
-contexts intercept `/api/youtube-playlist`, YouTube thumbnails, and activated
-iframes, so CI never contacts Google or SSM. Focused contract tests run every
-Contentful fetcher against raw entry-shaped data, while browser routes intercept
-the fixture's absolute image and audio URLs to exercise production media markup.
+The Playwright server uses the curated Contentful presentation scenario in
+`tests/fixtures/contentful.ts` and the public playlist response fixture in
+`tests/fixtures/youtube-playlist.json`. The scenario is deliberately not a copy
+of the live Contentful space. Four reusable synthetic images cover wide,
+landscape, square, and portrait rendering, and one synthetic audio file serves
+the two recording scenarios.
+
+The explicit Vite configuration aliases the production Contentful provider and
+current-date modules to deterministic test implementations; canonical
+production builds exclude fixture code. Browser contexts intercept
+`/api/youtube-playlist`, Contentful media, YouTube thumbnails, and activated
+iframes, so CI never contacts Contentful, Google, or SSM. Focused contract tests
+run every Contentful fetcher against raw entry-shaped data to cover the live
+Contentful boundary independently from visual presentation.
 
 CMS-backed server functions use TanStack's static-function middleware. Their
 build-time results are emitted as static assets, so client-side navigation does
@@ -27,18 +32,10 @@ baselines. After an intentional, reviewed UI change, the only recording command
 is:
 
 ```sh
-RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
+bash scripts/playwright-docker.sh bun run test:e2e:update
 ```
 
-Refresh the Contentful fixture intentionally with real Contentful variables in
-`.env`. The recorder retains live CDN URLs, validates each downloaded WebP,
-creates one ID-named synthetic WAV per audio asset, validates the staged fixture,
-and swaps it into place while retaining the previous fixture for rollback:
-
-```sh
-bun run contentful:snapshot
-RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright bun run test:e2e:update
-```
-
-Visual baselines should only be recorded in the container so host font and
-browser differences do not enter screenshots.
+Change the curated scenario only when a test needs a new layout or behavior
+case. Content edits in the live CMS must not be copied into this fixture. Visual
+baselines should only be recorded in the container so host font and browser
+differences do not enter screenshots.
