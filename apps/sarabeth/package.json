@@ -37,15 +37,15 @@
 		"lint:fix": "biome check --write .",
 		"test:e2e": "playwright test --update-snapshots=none",
 		"test:e2e:update": "playwright test --update-snapshots",
-		"test:release-commit": "bun test scripts/release-commit.test.ts",
-		"test:unit": "bun run test:release-commit",
+		"test:release-commit": "vitest run --config ../../vitest.config.mts --project sarabeth scripts/release-commit.test.ts",
+		"test:unit": "vitest run --config ../../vitest.config.mts --project sarabeth",
 		"test:artifact": "bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify",
 		"test:browser": "bun run test:container",
 		"test:hosting": "../../scripts/deploy/verify-release.sh \"$HOSTING_BASE_URL\" \"$HOSTING_EXPECT_COMMIT\"",
-		"test:ci": "bun run lint && bun run test:release-commit && bun run test:e2e",
-		"test:ci:prebuilt": "bun run test:release-commit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
+		"test:ci": "bun run lint && bun run test:unit && bun run test:e2e",
+		"test:ci:prebuilt": "bun run test:unit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
-		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:release-commit && bun run test:container && bun run infra:lint",
+		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:unit && bun run test:container && bun run infra:lint",
 		"test:container": "bash scripts/playwright-docker.sh",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
@@ -83,6 +83,7 @@
 		"@vitejs/plugin-react": "6.1.1",
 		"tailwindcss": "4.3.3",
 		"typescript": "7.0.2",
-		"vite": "8.2.2"
+		"vite": "8.2.2",
+		"vitest": "4.1.6"
 	}
 }

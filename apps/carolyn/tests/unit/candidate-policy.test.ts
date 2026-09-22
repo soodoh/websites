@@ -1,10 +1,10 @@
-import { expect, test } from "bun:test";
 import type { Route } from "@playwright/test";
 import {
 	candidateOrigin,
 	candidateRequestAllowed,
 	routeCandidateRequest,
 } from "@tests/candidate-policy";
+import { expect, test } from "vitest";
 
 const environment = {
 	CAROLYN_CANDIDATE_BRANCH: "fixture-candidate",

@@ -21,7 +21,7 @@ The workspace dev command serves DiLoreto on `http://localhost:3103`. To run onl
 - `src/components/` contains reusable UI and gallery/modal behavior.
 - `src/content/` contains typed site and family-history content.
 - `src/assets/images/` contains build-managed images.
-- `tests/` contains desktop/mobile smoke, interaction, and visual coverage.
+- `tests/` contains Vitest unit coverage plus Playwright desktop/mobile smoke, interaction, and visual coverage.
 - `infra/opentofu/` contains the active AWS definition; the [native Amplify hosting decision](infra/hosting-architecture.md) records the completed hosting transition.
 
 The production delivery path is Route 53 to a native Amplify domain association. Amplify owns the production domain mappings, custom 404 rewrite, clean URLs, redirects, cache/security headers, and managed TLS. GitHub Actions uploads the verified `dist/client` artifact directly to the production branch. The former custom CloudFront resources were removed after the approved cutover and final cleanup.
@@ -39,6 +39,7 @@ bun run verify:diloreto
 Useful focused commands from `apps/diloreto`:
 
 ```sh
+bun run test:unit
 bun run test:genealogy
 bun run test:infra
 bun run test:smoke

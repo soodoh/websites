@@ -2,11 +2,12 @@ import {
 	afterAll,
 	afterEach,
 	beforeAll,
+	beforeEach,
 	describe,
 	expect,
-	setSystemTime,
 	test,
-} from "bun:test";
+	vi,
+} from "vitest";
 import {
 	deriveProjectAuthVersion,
 	signToken,
@@ -27,8 +28,12 @@ beforeAll(() => {
 	process.env.PROJECT_AUTH_SECRET = TEST_SECRET;
 });
 
+beforeEach(() => {
+	vi.useFakeTimers();
+});
+
 afterEach(() => {
-	setSystemTime();
+	vi.useRealTimers();
 });
 
 afterAll(() => {
@@ -65,7 +70,7 @@ async function createToken(
 
 describe("project auth tokens", () => {
 	test("accepts current and boundary timestamps", async () => {
-		setSystemTime(NOW_SECONDS * 1000);
+		vi.setSystemTime(NOW_SECONDS * 1000);
 
 		expect(
 			await verifyToken(
@@ -91,7 +96,7 @@ describe("project auth tokens", () => {
 	});
 
 	test("rejects expired and excessively future timestamps", async () => {
-		setSystemTime(NOW_SECONDS * 1000);
+		vi.setSystemTime(NOW_SECONDS * 1000);
 
 		expect(
 			await verifyToken(
@@ -113,7 +118,7 @@ describe("project auth tokens", () => {
 	});
 
 	test("rejects noncanonical and unsafe timestamps", async () => {
-		setSystemTime(NOW_SECONDS * 1000);
+		vi.setSystemTime(NOW_SECONDS * 1000);
 
 		for (const timestamp of [
 			"-1",
@@ -145,7 +150,7 @@ describe("project auth tokens", () => {
 	});
 
 	test("revokes a token when the project auth version changes", async () => {
-		setSystemTime(NOW_SECONDS * 1000);
+		vi.setSystemTime(NOW_SECONDS * 1000);
 		const token = await signToken(SLUG, AUTH_VERSION);
 
 		expect(await verifyToken(token, SLUG, AUTH_VERSION)).toBe(true);

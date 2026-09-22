@@ -7,12 +7,13 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 - `src/routes/` contains TanStack Start page routes and server handlers such as `api.email.ts`.
 - `src/router.tsx` creates the router; treat `src/routeTree.gen.ts` as generated.
 - `src/components/`, `src/utils/`, `src/styles/`, and `src/lib/` contain shared UI, integrations/data shaping, global styles, and small helpers.
-- `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
+- `tests/contract/` contains Vitest behavior contracts; `tests/browser/` and `tests/visual/` contain Playwright coverage.
 - `infra/opentofu/` is the AWS definition and sole infrastructure state owner.
 
 ## Workflows
 
 - `bun run typecheck` and `bun run lint`: focused static checks.
+- `bun run test:unit`: Vitest unit and contract tests named `*.test.ts(x)`.
 - `bun run test:container`: canonical Docker-pinned browser tests.
 - `bun run build:playwright:unchecked`: fixture browser build used by the verification chain.
 - `bun run build:amplify:fixture`, `bun run prepare:amplify`, and `bun run validate:amplify`: build and validate the fixture Amplify artifact.

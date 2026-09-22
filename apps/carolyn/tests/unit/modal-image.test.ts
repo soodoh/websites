@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import {
 	GALLERY_CHROME_HEIGHT_PX,
 	getModalImageSizes,

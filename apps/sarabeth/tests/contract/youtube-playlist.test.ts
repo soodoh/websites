@@ -2,7 +2,7 @@ import type {
 	GetParameterCommandOutput,
 	SSMClientConfig,
 } from "@aws-sdk/client-ssm";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 import {
 	getYouTubePlaylistRequest,
 	methodNotAllowedRequest,

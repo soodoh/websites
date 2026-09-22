@@ -15,6 +15,7 @@ This app is fully static. `bun run build` emits the deployable artifact under `d
 
 ## Workflows
 
+- `bun run test:unit`: run Vitest unit tests named `*.test.ts(x)`; it currently passes when none are present because behavior lives in the browser suite.
 - `bun run test:static`: validate the generated static artifact.
 - `bun run test:e2e`: run functional and visual tests in the pinned Docker environment.
 - `bun run test:e2e:static`: build and test production-static behavior, including static 404 handling.

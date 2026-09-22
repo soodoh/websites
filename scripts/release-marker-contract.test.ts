@@ -1,8 +1,13 @@
-import { describe, expect, test } from "bun:test";
+import { execFile } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
+import { describe, expect, test } from "vitest";
 
-const root = resolve(import.meta.dir, "..");
+const execFileAsync = promisify(execFile);
+const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 
 describe("shared production release marker", () => {
@@ -41,32 +46,38 @@ describe("shared production release marker", () => {
 
 	test("verifies the marker payload and no-store response", async () => {
 		const commit = "a".repeat(40);
-		const server = Bun.serve({
-			port: 0,
-			fetch: () =>
-				Response.json(
-					{ commit, runAttempt: "2", runId: "1234" },
-					{ headers: { "Cache-Control": "no-cache, no-store" } },
-				),
+		const server = createServer((_request, response) => {
+			response.writeHead(200, {
+				"Cache-Control": "no-cache, no-store",
+				"Content-Type": "application/json",
+			});
+			response.end(JSON.stringify({ commit, runAttempt: "2", runId: "1234" }));
+		});
+		await new Promise<void>((resolve, reject) => {
+			server.once("error", reject);
+			server.listen(0, "127.0.0.1", resolve);
 		});
 		try {
-			const verification = Bun.spawn(
+			const address = server.address();
+			if (!address || typeof address === "string") {
+				throw new Error("Node did not assign a release-marker test port.");
+			}
+			const { stdout } = await execFileAsync(
+				"bash",
 				[
-					"bash",
 					"scripts/deploy/verify-release.sh",
-					`http://127.0.0.1:${server.port}`,
+					`http://127.0.0.1:${address.port}`,
 					commit,
 					"1234",
 					"2",
 				],
-				{ cwd: root, stderr: "pipe", stdout: "pipe" },
+				{ cwd: root },
 			);
-			expect(await verification.exited).toBe(0);
-			expect(await new Response(verification.stdout).text()).toContain(
-				`Verified deployed commit ${commit}`,
-			);
+			expect(stdout).toContain(`Verified deployed commit ${commit}`);
 		} finally {
-			server.stop(true);
+			await new Promise<void>((resolve, reject) => {
+				server.close((error) => (error ? reject(error) : resolve()));
+			});
 		}
 	});
 });

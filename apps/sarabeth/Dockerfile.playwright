@@ -8,6 +8,7 @@ COPY --from=node /usr/local/bin/node /usr/local/bin/node
 RUN ln -s bun /usr/local/bin/bunx
 WORKDIR /work
 COPY package.json bun.lock bunfig.toml ./
+COPY vitest.config.mts ./
 COPY apps/carolyn/package.json apps/carolyn/package.json
 COPY apps/diloreto/package.json apps/diloreto/package.json
 COPY apps/paul/package.json apps/paul/package.json

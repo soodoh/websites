@@ -35,10 +35,6 @@ export default defineConfig({
 	},
 	projects: [
 		{
-			name: "contract",
-			testMatch: "contract/**/*.spec.ts",
-		},
-		{
 			name: "desktop",
 			testMatch: [...sharedBrowserTests, "browser/desktop/**/*.spec.ts"],
 			use: {

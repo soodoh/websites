@@ -7,6 +7,7 @@ const outputRoot = process.env.PLAYWRIGHT_OUTPUT_ROOT ?? ".";
 
 export default defineConfig({
 	testDir: "./tests",
+	testMatch: "**/*.spec.ts",
 	outputDir: `${outputRoot}/test-results`,
 	fullyParallel: true,
 	forbidOnly: Boolean(process.env.CI),

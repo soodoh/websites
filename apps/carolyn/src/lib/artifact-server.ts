@@ -1,3 +1,5 @@
+import { createServer } from "node:net";
+
 export function parseTcpPort(value: string, name: string): number {
 	const port = Number(value);
 	if (!Number.isInteger(port) || port < 1 || port > 65_535) {
@@ -10,17 +12,21 @@ export async function assertTcpPortAvailable(
 	port: number,
 	label = "Amplify compute port",
 ): Promise<void> {
-	let probe: ReturnType<typeof Bun.serve>;
+	const probe = createServer();
 	try {
-		probe = Bun.serve({
-			hostname: "127.0.0.1",
-			port,
-			fetch: () => new Response("port availability probe"),
+		await new Promise<void>((resolve, reject) => {
+			probe.once("error", reject);
+			probe.listen(port, "127.0.0.1", resolve);
 		});
 	} catch (error) {
 		throw new Error(`${label} ${port} is already in use.`, {
 			cause: error,
 		});
+	} finally {
+		if (probe.listening) {
+			await new Promise<void>((resolve, reject) => {
+				probe.close((error) => (error ? reject(error) : resolve()));
+			});
+		}
 	}
-	await probe.stop(true);
 }

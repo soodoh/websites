@@ -28,7 +28,7 @@ Local builds use ignored `.env` values:
 - `src/routes/` contains TanStack Start routes.
 - `src/components/` contains shared React UI.
 - `src/lib/` contains the build-only Contentful adapter, release-content module, project authorization, image helpers, and shared types.
-- `tests/` contains Playwright behavior/visual tests and focused Bun unit tests.
+- `tests/` contains Playwright behavior/visual tests and focused Vitest unit tests.
 - `infra/opentofu/` contains the active AWS definition and state boundary.
 
 Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. Unknown routes and missing assets terminate at Amplify's static target with an edge-generated HTTP 404 and never invoke compute.

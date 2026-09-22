@@ -12,7 +12,7 @@ if (
 
 export default defineConfig({
 	testDir: "tests",
-	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+	testMatch: "**/*.spec.ts",
 	snapshotPathTemplate:
 		"{testDir}/{testFilePath}-snapshots/{arg}{-projectName}{ext}",
 	fullyParallel: false,

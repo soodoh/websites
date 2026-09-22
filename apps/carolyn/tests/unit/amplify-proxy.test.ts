@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { forwardComputeResponse } from "@/lib/amplify-proxy";
 
 describe("Amplify compute proxy responses", () => {

@@ -37,6 +37,7 @@ bun run verify:paul
 Useful focused commands from `apps/paul`:
 
 ```sh
+bun run test:unit
 bun run test:static
 bun run test:e2e
 bun run test:e2e:static

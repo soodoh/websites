@@ -1,5 +1,5 @@
-import { describe, expect, mock, test } from "bun:test";
 import { isValidElement } from "react";
+import { describe, expect, test, vi } from "vitest";
 import ImageWrapper, {
 	getImageBreakpoints,
 	shouldUseImagePlaceholder,
@@ -24,7 +24,7 @@ describe("Contentful image transformer", () => {
 			),
 		).toBe(true);
 
-		const onLoad = mock(() => {});
+		const onLoad = vi.fn();
 		const image = {
 			id: "remote-image",
 			title: "Remote image",

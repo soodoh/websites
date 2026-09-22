@@ -1,8 +1,9 @@
-import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
 
-const appRoot = resolve(import.meta.dir, "..");
+const appRoot = fileURLToPath(new URL("..", import.meta.url));
 const workspaceRoot = resolve(appRoot, "../..");
 const readApp = (path: string) => readFileSync(resolve(appRoot, path), "utf8");
 const readWorkspace = (path: string) =>

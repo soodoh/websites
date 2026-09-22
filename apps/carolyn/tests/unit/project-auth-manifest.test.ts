@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { buildProjectAuthManifest } from "@/lib/project-auth-manifest-builder";
 
 const deriveAuthVersion = async (slug: string, password: string) =>

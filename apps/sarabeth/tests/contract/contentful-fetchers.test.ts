@@ -1,8 +1,8 @@
-import { expect, test } from "@playwright/test";
 import {
 	contentfulDocumentFixture,
 	contentfulEntryFixture,
 } from "@tests/support/contentful-entry-fixture";
+import { expect, test } from "vitest";
 import { createImageFormatter } from "@/utils/contentful-assets";
 import type { EntryQuery, EntrySource } from "@/utils/contentful-entry-source";
 import getAboutData from "@/utils/fetchers/about";

@@ -4,7 +4,7 @@ import type {
 	SendEmailCommandInput,
 	SendEmailCommandOutput,
 } from "@aws-sdk/client-ses";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 import { postEmailRequest } from "@/routes/api.email";
 import { emailFieldLimits } from "@/utils/email";
 import {

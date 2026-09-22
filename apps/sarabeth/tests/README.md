@@ -1,4 +1,4 @@
-# Playwright tests
+# Tests
 
 The Playwright server uses the curated Contentful presentation scenario in
 `tests/fixtures/contentful.ts` and the public playlist response fixture in
@@ -11,9 +11,9 @@ The explicit Vite configuration aliases the production Contentful provider and
 current-date modules to deterministic test implementations; canonical
 production builds exclude fixture code. Browser contexts intercept
 `/api/youtube-playlist`, Contentful media, YouTube thumbnails, and activated
-iframes, so CI never contacts Contentful, Google, or SSM. Focused contract tests
-run every Contentful fetcher against raw entry-shaped data to cover the live
-Contentful boundary independently from visual presentation.
+iframes, so CI never contacts Contentful, Google, or SSM. Focused Vitest
+contract tests run every Contentful fetcher against raw entry-shaped data to
+cover the live Contentful boundary independently from visual presentation.
 
 CMS-backed server functions use TanStack's static-function middleware. Their
 build-time results are emitted as static assets, so client-side navigation does
@@ -21,7 +21,8 @@ not introduce a runtime Contentful dependency. The Playwright launcher gives
 build and production-server children an allowlisted environment and binds to
 loopback.
 
-Run tests in the same ARM64 Linux/Chromium environment used by CI:
+Run unit and contract tests locally with `bun run test:unit`. Run browser tests
+in the same ARM64 Linux/Chromium environment used by CI:
 
 ```sh
 RELEASE_COMMIT=$(git rev-parse HEAD) docker compose -f compose.playwright.yaml run --build --rm playwright

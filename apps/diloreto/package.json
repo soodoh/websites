@@ -26,16 +26,16 @@
 		"check:output": "bun scripts/assert-static-output.ts",
 		"test:artifact": "bun run build && bun run check:output",
 		"test:browser": "bun run test:playwright",
-		"test:unit": "bun run test:genealogy",
+		"test:unit": "vitest run --config ../../vitest.config.mts --project diloreto",
 		"test:playwright": "bash scripts/test-playwright-docker.sh",
 		"test:playwright:update": "bash scripts/test-playwright-docker.sh --update-snapshots",
 		"test:smoke": "bash scripts/test-playwright-docker.sh tests/smoke.spec.ts",
 		"test:hosting": "node scripts/hosting-smoke.mjs",
-		"test:genealogy": "bun test scripts/genealogy",
-		"test:infra": "bun test infra/hosting-contract.test.ts",
-		"check": "bun run lint && bun run typecheck && bun run test:genealogy && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
+		"test:genealogy": "vitest run --config ../../vitest.config.mts --project diloreto scripts/genealogy",
+		"test:infra": "vitest run --config ../../vitest.config.mts --project diloreto infra/hosting-contract.test.ts",
+		"check": "bun run lint && bun run typecheck && bun run test:unit && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
 		"dev:workspace": "vite dev --port 3103",
-		"ci:verify": "bun run lint && bun run typecheck && bun run test:genealogy && bun run infra:lint && bun run test:infra && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
+		"ci:verify": "bun run lint && bun run typecheck && bun run test:unit && bun run infra:lint && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/diloreto/infra/opentofu"
 	},
 	"dependencies": {
@@ -68,6 +68,7 @@
 		"tw-animate-css": "1.4.0",
 		"typescript": "7.0.2",
 		"vite": "8.2.2",
-		"vite-imagetools": "12.0.1"
+		"vite-imagetools": "12.0.1",
+		"vitest": "4.1.6"
 	}
 }

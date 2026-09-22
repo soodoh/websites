@@ -1,8 +1,9 @@
-import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
 
-const root = resolve(import.meta.dir, "..");
+const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const modulePath = `$${"{path.module}"}`;
 

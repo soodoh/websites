@@ -1,6 +1,6 @@
-import { describe, expect, test } from "bun:test";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import type { Asset as ContentfulAsset } from "contentful";
+import { describe, expect, test } from "vitest";
 import { createLiveShapedFixture } from "@/lib/content-source";
 import {
 	createContentfulBuildClient,
@@ -389,9 +389,11 @@ describe("Contentful boundaries", () => {
 
 	test("creates a live-shaped hermetic fixture without local assets", () => {
 		const fixture = createLiveShapedFixture(contentfulFixture);
-		expect(fixture.backgroundImage.url).toStartWith(
-			"https://images.ctfassets.net/hermetic-build/",
-		);
+		expect(
+			fixture.backgroundImage.url.startsWith(
+				"https://images.ctfassets.net/hermetic-build/",
+			),
+		).toBe(true);
 		expect(fixture.backgroundImage.placeholder).toContain("w=25");
 		expect(JSON.stringify(fixture)).not.toContain("/test-assets/");
 	});

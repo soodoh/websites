@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { describe, test } from "node:test";
 import { strToU8, zipSync } from "fflate";
+import { describe, test } from "vitest";
 import { readGenealogySource } from "./input";
 
 const GEDCOM = "0 HEAD\n1 GEDC\n2 VERS 7.0\n0 TRLR\n";

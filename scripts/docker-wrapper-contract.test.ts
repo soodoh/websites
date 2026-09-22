@@ -1,9 +1,17 @@
-import { describe, expect, test } from "bun:test";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import {
+	mkdirSync,
+	mkdtempSync,
+	readFileSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
 
-const root = resolve(import.meta.dir, "..");
+const root = fileURLToPath(new URL("..", import.meta.url));
 const wrappers = [
 	["sarabeth", "playwright-docker.sh"],
 	["paul", "playwright-docker.sh"],
@@ -23,7 +31,9 @@ describe("Sarabeth successful-container manifest contracts", () => {
 		["mismatched-commit", JSON.stringify({ commit: "a".repeat(40) }), 1],
 	] as const) {
 		test(`${mode}: verifies the actual successful container and cleans only its own ID`, () => {
-			const scratch = mkdtempSync(join(tmpdir(), "websites-sarabeth-manifest-"));
+			const scratch = mkdtempSync(
+				join(tmpdir(), "websites-sarabeth-manifest-"),
+			);
 			try {
 				const appRoot = join(scratch, "apps/sarabeth");
 				const bin = join(scratch, "bin");
@@ -32,8 +42,15 @@ describe("Sarabeth successful-container manifest contracts", () => {
 				mkdirSync(join(appRoot, "scripts"), { recursive: true });
 				mkdirSync(bin);
 				writeFileSync(join(scratch, "bun.lock"), "fixture lock identity\n");
-				writeFileSync(script, readFileSync(join(root, "apps/sarabeth/scripts/playwright-docker.sh")));
-				writeFileSync(join(bin, "docker"), `#!/usr/bin/env bash
+				writeFileSync(
+					script,
+					readFileSync(
+						join(root, "apps/sarabeth/scripts/playwright-docker.sh"),
+					),
+				);
+				writeFileSync(
+					join(bin, "docker"),
+					`#!/usr/bin/env bash
 printf '%s\\n' "$*" >> "$MOCK_DOCKER_LOG"
 case "$1" in
   build) exit 0 ;;
@@ -49,12 +66,18 @@ case "$1" in
   rm) [[ "$*" == "rm --force owned-manifest-container" ]] ;;
   *) exit 99 ;;
 esac
-`, { mode: 0o755 });
-				writeFileSync(join(bin, "git"), `#!/usr/bin/env bash
+`,
+					{ mode: 0o755 },
+				);
+				writeFileSync(
+					join(bin, "git"),
+					`#!/usr/bin/env bash
 [[ "$*" == "-C $MOCK_WORKSPACE_ROOT rev-parse HEAD" ]] || exit 99
 echo ${commit}
-`, { mode: 0o755 });
-				const run = Bun.spawnSync(["bash", script], {
+`,
+					{ mode: 0o755 },
+				);
+				const run = spawnSync("bash", [script], {
 					cwd: scratch,
 					env: {
 						PATH: `${bin}:${process.env.PATH}`,
@@ -66,12 +89,18 @@ echo ${commit}
 						RELEASE_COMMIT: "untrusted-inherited-value",
 					},
 				});
-				expect(run.exitCode).toBe(expectedExit);
+				expect(run.status).toBe(expectedExit);
 				const commands = readFileSync(log, "utf8").trim().split("\n");
-				expect(commands.filter(command => command.startsWith("create "))).toHaveLength(1);
+				expect(
+					commands.filter((command) => command.startsWith("create ")),
+				).toHaveLength(1);
 				expect(commands).toContain("start --attach owned-manifest-container");
-				expect(commands).toContain(`cp owned-manifest-container:/work/apps/sarabeth/.amplify-hosting/static/__deployment.json ${appRoot}/test-results/container-deployment.json`);
-				expect(commands.filter(command => command.startsWith("rm "))).toEqual(["rm --force owned-manifest-container"]);
+				expect(commands).toContain(
+					`cp owned-manifest-container:/work/apps/sarabeth/.amplify-hosting/static/__deployment.json ${appRoot}/test-results/container-deployment.json`,
+				);
+				expect(commands.filter((command) => command.startsWith("rm "))).toEqual(
+					["rm --force owned-manifest-container"],
+				);
 				expect(commands.join("\n")).toContain(`--env RELEASE_COMMIT=${commit}`);
 				expect(commands.join("\n")).not.toContain("untrusted-inherited-value");
 			} finally {
@@ -91,8 +120,13 @@ describe("workspace Docker wrapper failure contracts", () => {
 				mkdirSync(join(appRoot, "scripts"), { recursive: true });
 				mkdirSync(bin);
 				writeFileSync(join(scratch, "bun.lock"), "fixture lock identity\n");
-				writeFileSync(join(appRoot, "scripts", script), readFileSync(join(root, "apps", app, "scripts", script)));
-				writeFileSync(join(bin, "docker"), `#!/usr/bin/env bash
+				writeFileSync(
+					join(appRoot, "scripts", script),
+					readFileSync(join(root, "apps", app, "scripts", script)),
+				);
+				writeFileSync(
+					join(bin, "docker"),
+					`#!/usr/bin/env bash
 printf '%s\\n' "$*" >> "$MOCK_DOCKER_LOG"
 case "$1" in
   info) echo aarch64 ;;
@@ -103,25 +137,35 @@ case "$1" in
   rm) [[ "$*" == "rm --force owned-contract-container" ]] ;;
   *) exit 99 ;;
 esac
-`, { mode: 0o755 });
-				writeFileSync(join(bin, "git"), `#!/usr/bin/env bash
+`,
+					{ mode: 0o755 },
+				);
+				writeFileSync(
+					join(bin, "git"),
+					`#!/usr/bin/env bash
 [[ "$*" == "-C $MOCK_WORKSPACE_ROOT rev-parse HEAD" ]] || exit 99
 echo 0123456789abcdef0123456789abcdef01234567
-`, { mode: 0o755 });
-				const run = Bun.spawnSync(["bash", join(appRoot, "scripts", script), "--update-snapshots=none"], {
-					cwd: scratch,
-					env: {
-						PATH: `${bin}:${process.env.PATH}`,
-						HOME: scratch,
-						MOCK_DOCKER_LOG: log,
-						MOCK_WORKSPACE_ROOT: scratch,
-						RELEASE_COMMIT: "untrusted-inherited-value",
-						PLAYWRIGHT_SKIP_BUILD: "1",
-						PLAYWRIGHT_BASE_URL: "http://127.0.0.1:4173",
-						EXPECTED_ARTIFACT_MODE: "fixture",
+`,
+					{ mode: 0o755 },
+				);
+				const run = spawnSync(
+					"bash",
+					[join(appRoot, "scripts", script), "--update-snapshots=none"],
+					{
+						cwd: scratch,
+						env: {
+							PATH: `${bin}:${process.env.PATH}`,
+							HOME: scratch,
+							MOCK_DOCKER_LOG: log,
+							MOCK_WORKSPACE_ROOT: scratch,
+							RELEASE_COMMIT: "untrusted-inherited-value",
+							PLAYWRIGHT_SKIP_BUILD: "1",
+							PLAYWRIGHT_BASE_URL: "http://127.0.0.1:4173",
+							EXPECTED_ARTIFACT_MODE: "fixture",
+						},
 					},
-				});
-				expect(run.exitCode).toBe(23);
+				);
+				expect(run.status).toBe(23);
 				const commands = readFileSync(log, "utf8");
 				expect(commands).toContain("rm --force owned-contract-container");
 				expect(commands).not.toContain("type=bind");
@@ -130,12 +174,18 @@ echo 0123456789abcdef0123456789abcdef01234567
 				expect(commands).not.toContain("tests/.");
 				expect(commands).not.toContain("__screenshots__");
 				if (app === "sarabeth") {
-					expect(commands).toContain("--env RELEASE_COMMIT=0123456789abcdef0123456789abcdef01234567");
+					expect(commands).toContain(
+						"--env RELEASE_COMMIT=0123456789abcdef0123456789abcdef01234567",
+					);
 					expect(commands).not.toContain("untrusted-inherited-value");
 				}
 				if (app === "carolyn") {
-					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test");
-					expect(commands).toContain("NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test");
+					expect(commands).toContain(
+						"NODE_OPTIONS=--dns-result-order=ipv4first bun run build:test",
+					);
+					expect(commands).toContain(
+						"NODE_OPTIONS=--dns-result-order=ipv4first bun run build:production:test",
+					);
 				}
 				if (app === "diloreto") {
 					expect(commands).toContain("--tmpfs /tmp:rw,size=2g,mode=1777");

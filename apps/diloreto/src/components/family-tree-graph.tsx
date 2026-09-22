@@ -506,7 +506,7 @@ function generationLabel(generation: number): string {
 	return generation < 0 ? "Earlier generations" : "Later generations";
 }
 
-function buildGraph(
+export function buildFamilyTreeGraph(
 	data: GenealogyData,
 	selectedPersonId: string,
 	onSelect: (personId: string) => void,
@@ -720,7 +720,7 @@ export default function FamilyTreeGraph({
 	onSelect,
 }: FamilyTreeGraphProps) {
 	const graph = useMemo(
-		() => buildGraph(data, selectedPersonId, onSelect),
+		() => buildFamilyTreeGraph(data, selectedPersonId, onSelect),
 		[data, selectedPersonId, onSelect],
 	);
 	const flowContainerRef = useRef<HTMLDivElement>(null);

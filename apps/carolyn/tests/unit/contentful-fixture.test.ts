@@ -1,7 +1,7 @@
-import { describe, expect, test } from "bun:test";
 import { readdir } from "node:fs/promises";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import rawFixture from "@tests/fixtures/contentful.json";
+import { describe, expect, test } from "vitest";
 import { parseContentfulFixture } from "@/lib/contentful-fixture-types";
 import { normalizeVideoLink } from "@/lib/fetch-projects";
 import manifest from "@/lib/generated-release/project-auth-manifest.server.json";
@@ -180,7 +180,7 @@ describe("Contentful fixture contract", () => {
 		const imageUrls = new Map<string, string>();
 		for (const image of images) {
 			expect(image.url).toMatch(/^\/test-assets\/[A-Za-z0-9_-]+\.jpg$/);
-			expect(image.placeholder).toStartWith("data:image/");
+			expect(image.placeholder.startsWith("data:image/")).toBe(true);
 			const existingUrl = imageUrls.get(image.id);
 			if (existingUrl) {
 				expect(image.url).toBe(existingUrl);

@@ -1,5 +1,5 @@
 import { ConditionalCheckFailedException } from "@aws-sdk/client-dynamodb";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 import {
 	createEmailRateLimiter,
 	type EmailRateLimitClient,

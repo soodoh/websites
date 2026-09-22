@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 import { getGalleryImageAlt } from "@/components/photo-carousel";
 import type { ImageType } from "@/utils/types";
 

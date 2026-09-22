@@ -18,6 +18,7 @@
     },
     "lint": { "cache": false },
     "typecheck": { "cache": false },
+    "test:unit": { "cache": false },
     "ci:verify": { "cache": false },
     "build": { "cache": false },
     "validate": { "cache": false },

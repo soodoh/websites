@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 import { getContentfulClient } from "@/utils/contentful";
 
 test("defers Contentful environment validation until the client is used", () => {

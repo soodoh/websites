@@ -1,8 +1,9 @@
-import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
 
-const root = resolve(import.meta.dir, "..");
+const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const foundation = read("infra/account-foundation/main.tf");
 
@@ -46,9 +47,11 @@ describe("AWS account foundation", () => {
 
 		expect(subjects).toHaveLength(5);
 		for (const subject of subjects) {
-			expect(subject).toStartWith(
-				"repo:soodoh@18269267/websites@1380705200:environment:",
-			);
+			expect(
+				subject.startsWith(
+					"repo:soodoh@18269267/websites@1380705200:environment:",
+				),
+			).toBe(true);
 		}
 	});
 

@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test";
 import { createTestSnapshot } from "@tests/support/snapshot-test-data";
+import { expect, test } from "vitest";
 import { getCurrentYear, partitionEngagements } from "@/utils/temporal-data";
 
 const engagement = createTestSnapshot().engagements.engagements[0];

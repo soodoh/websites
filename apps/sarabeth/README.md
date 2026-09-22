@@ -22,7 +22,7 @@ Contentful and YouTube development values belong in an ignored `.env` file. Keep
 - `src/routes/` contains page routes and server handlers.
 - `src/components/` contains shared React UI.
 - `src/utils/` contains Contentful fetchers, integrations, and data shaping.
-- `tests/contract/` contains behavior contracts; `tests/visual/` contains browser coverage.
+- `tests/contract/` contains Vitest behavior contracts; `tests/browser/` and `tests/visual/` contain Playwright coverage.
 - `infra/opentofu/` contains the active AWS definition and state boundary.
 
 The media page calls a server-side YouTube endpoint after hydration. Contact and runtime integrations use the AWS SDK default credential provider chain; production credentials come from IAM roles and SSM rather than static AWS keys.
@@ -40,6 +40,7 @@ Useful focused commands from `apps/sarabeth`:
 ```sh
 bun run lint
 bun run typecheck
+bun run test:unit
 bun run test:container
 bun run validate:amplify
 ```

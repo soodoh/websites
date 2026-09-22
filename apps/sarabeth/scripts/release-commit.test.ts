@@ -1,9 +1,9 @@
-import { expect, test } from "bun:test";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { resolveReleaseCommit } from "@scripts/release-commit";
+import { expect, test } from "vitest";
 
 const commit = "0123456789abcdef0123456789abcdef01234567";
 

@@ -6,15 +6,15 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 
 - `src/routes/` contains TanStack Start file routes; `src/routes/__root.tsx` defines the document shell.
 - `src/components/` contains reusable React UI; `src/lib/` contains the build-only Contentful adapter, generated-release seam, authorization, image helpers, and shared types.
-- `tests/` contains Playwright behavior/visual coverage and focused Bun tests under `tests/unit/`.
+- `tests/` contains Playwright behavior/visual coverage and focused Vitest tests under `tests/unit/`.
 - `infra/opentofu/` is the AWS definition and sole infrastructure state owner.
 - Treat `src/routeTree.gen.ts` and `src/lib/generated-release/` as generated files. Generated public content, protected content, route inventory, album JSON, and auth data must remain uncommitted.
 
 ## Workflows
 
 - `bun run validate`: app lint, unit tests, type checking, fixture builds, and artifact checks.
-- `bun run test:unit`: focused Bun unit tests.
-- `bun run test:visual -- tests/home.test.ts`: one canonical Playwright spec; run `bun run test:visual` for the full suite.
+- `bun run test:unit`: focused Vitest unit tests named `*.test.ts(x)`.
+- `bun run test:visual -- tests/home.spec.ts`: one canonical Playwright spec; run `bun run test:visual` for the full suite.
 - `bun run test:visual:update`: update canonical screenshots only after reviewing the intended visual change.
 - Root `bun run infra:validate` and local `bun run infra:validate` validate OpenTofu.
 

@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "vitest";
 
 const rootBuildSpec = readFileSync(
 	new URL("../../../../amplify.yml", import.meta.url),

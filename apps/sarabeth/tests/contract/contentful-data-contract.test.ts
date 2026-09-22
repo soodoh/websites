@@ -1,6 +1,6 @@
-import { expect, test } from "@playwright/test";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import { createTestSnapshot } from "@tests/support/snapshot-test-data";
+import { expect, test } from "vitest";
 import { createImageFormatter, formatAsset } from "@/utils/contentful-assets";
 import {
 	decodeContentfulSnapshot,

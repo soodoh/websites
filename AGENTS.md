@@ -34,5 +34,6 @@ state mutations, workflow dispatch, source-writer shutdown, production HTTP test
 Root Lefthook/commitlint require Conventional Commits with one scope: `carolyn`, `paul`,
 `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`. Root Renovate owns dependency updates.
 Each app keeps source under `src/`, browser tests under `tests/`, retained IaC under `infra/`,
-and maps `@/` to `src/`. Keep secrets, credentials, build output, auth manifests, reports, and
-generated evidence out of Git.
+and maps `@/` to `src/`. Name Vitest unit/contract files `*.test.ts(x)` and Playwright
+functional/visual files `*.spec.ts(x)`. Keep secrets, credentials, build output, auth manifests,
+reports, and generated evidence out of Git.

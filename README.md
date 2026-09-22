@@ -5,6 +5,7 @@ Four independent websites in one Bun 1.4.0 / Node 24.20.0 workspace, orchestrate
 ```sh
 bun install --frozen-lockfile
 bun run test:workspace
+bun run test:unit             # workspace and all app Vitest projects
 bun run lint
 bun run typecheck
 bun run verify:sarabeth        # or paul, carolyn, diloreto

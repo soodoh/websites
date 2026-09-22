@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, test } from "vitest";
 import { createServerSecretLoader } from "@/lib/server-secrets.server";
 
 const emptyEnvironment: Readonly<Record<string, string | undefined>> = {};

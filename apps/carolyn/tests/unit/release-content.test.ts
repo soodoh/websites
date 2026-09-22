@@ -1,5 +1,5 @@
-import { describe, expect, test } from "bun:test";
 import { contentfulFixture } from "@tests/fixtures/contentful";
+import { describe, expect, test } from "vitest";
 import type { ContentfulFixture } from "@/lib/contentful-fixture-types";
 import {
 	captureReleaseContent,
