@@ -58,7 +58,7 @@ After the AWS stack has created the site's versioned, encrypted state bucket, ru
 scripts/setup-contentful-github-webhooks.sh
 ```
 
-The wizard captures one shared Contentful token and one shared GitHub token, writes the same values to both GitHub Environments, and dispatches the OpenTofu configuration workflows. Those workflows plan and apply with OpenTofu 1.12.6 and `registry.terraform.io/cysp/contentful` 0.0.67. Contentful then dispatches the normal site workflow, which validates the current `main` SHA, starts that exact Amplify release through AWS OIDC, waits for it, and smoke-tests production.
+The wizard captures one shared Contentful token and one shared GitHub token, writes the same values to both GitHub Environments, and dispatches the OpenTofu configuration workflows. Those workflows plan and apply with OpenTofu 1.12.6 and `registry.terraform.io/cysp/contentful` 0.0.68. Contentful then dispatches the normal site workflow, which validates the current `main` SHA, starts that exact Amplify release through AWS OIDC, waits for it, and smoke-tests production.
 
 Treat publishing production Contentful content as a production deployment action. Prefer Contentful Releases for coordinated multi-entry changes so one logical update does not produce avoidable successive builds. Rotate the shared fine-grained GitHub token by updating both environment secrets and rerunning both OpenTofu workflows.
 

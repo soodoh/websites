@@ -35,7 +35,7 @@ describe("OpenTofu AWS ownership", () => {
 		for (const directory of awsRoots) {
 			const versions = read(`${directory}/versions.tf`);
 			expect(versions).toContain('required_version = "= 1.12.6"');
-			expect(versions).toContain('version = "= 6.65.0"');
+			expect(versions).toContain('version = "= 6.66.0"');
 			expect(versions).toContain('backend "s3"');
 			expect(versions).toContain("encrypt      = true");
 			expect(versions).toContain("use_lockfile = true");

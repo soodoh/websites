@@ -26,14 +26,14 @@ describe("project auth manifest", () => {
 
 	test("rejects duplicate and malformed slugs", async () => {
 		const hashPassword = async (password: string) => password;
-		expect(
+		await expect(
 			buildProjectAuthManifest(
 				[{ slug: "duplicate" }, { slug: "duplicate" }],
 				hashPassword,
 				deriveAuthVersion,
 			),
 		).rejects.toThrow("Duplicate project slug: duplicate");
-		expect(
+		await expect(
 			buildProjectAuthManifest(
 				[{ slug: "Invalid Slug" }],
 				hashPassword,
@@ -43,7 +43,7 @@ describe("project auth manifest", () => {
 	});
 
 	test("rejects passwords above bcrypt's byte limit", async () => {
-		expect(
+		await expect(
 			buildProjectAuthManifest(
 				[{ slug: "protected", password: "é".repeat(37) }],
 				async (password) => password,

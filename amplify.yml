@@ -6,9 +6,9 @@ applications:
       phases:
         preBuild:
           commands:
-            - nvm install 24.20.0
-            - nvm use 24.20.0
-            - npm install --global bun@1.4.0
+            - nvm install 24.21.0
+            - nvm use 24.21.0
+            - npm install --global bun@1.4.2
             - bun install --frozen-lockfile --ignore-scripts
         build:
           commands:
@@ -26,9 +26,9 @@ applications:
       phases:
         preBuild:
           commands:
-            - nvm install 24.20.0
-            - nvm use 24.20.0
-            - npm install --global bun@1.4.0
+            - nvm install 24.21.0
+            - nvm use 24.21.0
+            - npm install --global bun@1.4.2
             - bun install --frozen-lockfile --ignore-scripts
         build:
           commands:

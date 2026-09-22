@@ -54,7 +54,7 @@ Carolyn and Sarabeth use the AWS Cloud Control provider for Amplify branches bec
 
 ## Amplify custom headers
 
-AWS provider 6.65.0 returns Amplify custom headers as a nested JSON list, while `UpdateApp` requires top-level YAML. The committed `custom-headers.json.tftpl` files are the canonical read form used for stable plans.
+AWS provider 6.66.0 returns Amplify custom headers as a nested JSON list, while `UpdateApp` requires top-level YAML. The committed `custom-headers.json.tftpl` files are the canonical read form used for stable plans.
 
 For an intentional Carolyn header change, temporarily express the reviewed write payload required by that root, apply it once, then restore canonical JSON and require a no-change plan. For Sarabeth, set `write_target_custom_headers = true` only for the reviewed update apply, return it to `false`, and require a no-change plan.
 

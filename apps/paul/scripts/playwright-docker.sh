@@ -8,7 +8,7 @@ workspace_root="$(cd "${app_root}/../.." && pwd)"
 readonly workspace_root
 lock_hash="$(shasum -a 256 "${workspace_root}/bun.lock" | cut -c1-16)"
 readonly lock_hash
-readonly image="websites-portfolio-playwright:1.62.1-bun1.4.0-${lock_hash}"
+readonly image="websites-portfolio-playwright:1.63.0-bun1.4.2-${lock_hash}"
 cd "${app_root}"
 container=""
 

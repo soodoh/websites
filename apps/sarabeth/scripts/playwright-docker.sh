@@ -9,7 +9,7 @@ release_commit="$(git -C "${workspace_root}" rev-parse HEAD)"
 readonly release_commit
 lock_hash="$(shasum -a 256 "${workspace_root}/bun.lock" | cut -c1-16)"
 readonly lock_hash
-readonly image="websites-sarabeth-playwright:1.62.1-bun1.4.0-${lock_hash}"
+readonly image="websites-sarabeth-playwright:1.63.0-bun1.4.2-${lock_hash}"
 container=""
 cleanup() {
 	if [[ -n "${container}" ]]; then

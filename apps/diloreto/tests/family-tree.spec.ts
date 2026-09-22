@@ -8,6 +8,8 @@ test("query-selected family records are focused and fully page-scrollable", asyn
 	const flow = page.getByRole("application", {
 		name: "Interactive family relationship chart",
 	});
+	await expect(flow).toBeVisible();
+	await expect(flow.locator(".family-tree-node-focus")).toBeVisible();
 	const framing = await flow.evaluate((element) => {
 		const selectedNode = element.querySelector(".family-tree-node-focus");
 		if (!selectedNode) {

@@ -32,7 +32,7 @@ describe("workspace contract", () => {
 		const manifest = json("package.json");
 		expect(manifest.private).toBe(true);
 		expect(manifest.workspaces).toEqual(["apps/*"]);
-		expect(manifest.packageManager).toBe("bun@1.4.0");
+		expect(manifest.packageManager).toBe("bun@1.4.2");
 		expect(manifest.repository.url).toBe(repositoryUrl);
 		expect(manifest.bugs.url).toBe("https://github.com/soodoh/websites/issues");
 		expect(jsonc("bun.lock").workspaces).toHaveProperty("");
@@ -124,7 +124,7 @@ describe("workspace contract", () => {
 			expect(dockerfile).toContain(
 				"bun install --frozen-lockfile --ignore-scripts",
 			);
-			expect(dockerfile).toContain("playwright:v1.62.1-noble");
+			expect(dockerfile).toContain("playwright:v1.63.0-noble");
 			for (const workspace of apps) {
 				expect(dockerfile).toContain(`COPY apps/${workspace}/package.json`);
 			}
