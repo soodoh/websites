@@ -218,6 +218,14 @@ require_value() {
   fi
 }
 
+require_fine_grained_github_token() {
+  local value="$1"
+  if [[ ! "$value" =~ ^github_pat_[A-Za-z0-9_]+$ ]]; then
+    warn "The GitHub token is malformed. Paste only the fine-grained token beginning with github_pat_."
+    exit 1
+  fi
+}
+
 banner "Contentful → GitHub deployments"
 
 stage "Verify prerequisites"
@@ -269,6 +277,7 @@ step "Under repository permissions, grant Actions: Read and write. Leave every o
 step "Choose an appropriate expiration, generate the token, and copy it."
 ask_secret SHARED_GITHUB_TOKEN "Paste the shared fine-grained GitHub token:"
 require_value "GitHub token" "$SHARED_GITHUB_TOKEN"
+require_fine_grained_github_token "$SHARED_GITHUB_TOKEN"
 set_environment_secret production-carolyn CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SHARED_GITHUB_TOKEN"
 set_environment_secret production-sarabeth CONTENTFUL_GITHUB_ACTIONS_TOKEN "$SHARED_GITHUB_TOKEN"
 unset SHARED_GITHUB_TOKEN

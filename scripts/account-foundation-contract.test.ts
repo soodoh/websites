@@ -34,6 +34,24 @@ describe("AWS account foundation", () => {
 		expect(foundation).toContain('output "operational_alarm_topic_arn"');
 	});
 
+	test("binds production roles to the current GitHub repository identity", () => {
+		const subjects = siteConfigurations.flatMap((configuration) =>
+			Array.from(
+				configuration.matchAll(
+					/values\s+= \["(repo:[^"]+:environment:[^"]+)"\]/g,
+				),
+				(match) => match[1],
+			),
+		);
+
+		expect(subjects).toHaveLength(5);
+		for (const subject of subjects) {
+			expect(subject).toStartWith(
+				"repo:soodoh@18269267/websites@1380705200:environment:",
+			);
+		}
+	});
+
 	test("makes every site consume the shared alarm topic", () => {
 		for (const configuration of siteConfigurations) {
 			expect(configuration).toContain('variable "operational_alarm_topic_arn"');
