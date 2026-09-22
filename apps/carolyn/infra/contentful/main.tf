@@ -4,7 +4,7 @@ terraform {
   required_providers {
     contentful = {
       source  = "registry.terraform.io/cysp/contentful"
-      version = "= 0.0.67"
+      version = "0.0.68"
     }
   }
 
