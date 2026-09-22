@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "turbo": "2.10.12",
-    "vitest": "4.1.6",
+    "vitest": "5.0.1",
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-conventional": "21.2.2",
     "@commitlint/types": "21.2.0",
