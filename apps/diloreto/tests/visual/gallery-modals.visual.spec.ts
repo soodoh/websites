@@ -1,8 +1,8 @@
-import { expect, test } from "@playwright/test";
 import {
 	openGalleryThumbnail,
 	prepareGalleryScreenshot,
 } from "../support/gallery";
+import { expect, test } from "../support/test";
 
 const galleryPhotos = [
 	{

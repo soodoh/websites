@@ -14,7 +14,8 @@
     "bun": "1.4.2"
   },
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
     "dev": "turbo run dev:workspace --concurrency=4",

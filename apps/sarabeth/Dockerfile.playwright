@@ -13,11 +13,13 @@ COPY apps/carolyn/package.json apps/carolyn/package.json
 COPY apps/diloreto/package.json apps/diloreto/package.json
 COPY apps/paul/package.json apps/paul/package.json
 COPY apps/sarabeth/package.json apps/sarabeth/package.json
+COPY packages/playwright-support/package.json packages/playwright-support/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY renovate.json ./
 COPY amplify.yml ./
 COPY .github .github
 COPY apps/sarabeth apps/sarabeth
+COPY packages/playwright-support packages/playwright-support
 WORKDIR /work/apps/sarabeth
 ENV CI=1
 ENTRYPOINT ["bash", "scripts/playwright-container.sh"]

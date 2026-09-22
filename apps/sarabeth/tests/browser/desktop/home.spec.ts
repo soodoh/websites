@@ -30,8 +30,13 @@ test("keeps every home reveal visible without JavaScript", async ({
 });
 
 test("keeps every home reveal visible when application JavaScript fails", async ({
+	diagnostics,
 	page,
 }) => {
+	diagnostics.allowRequestFailure(/\.js.*ERR_BLOCKED_BY_CLIENT/);
+	diagnostics.allowConsoleError(
+		/Failed to load resource.*ERR_BLOCKED_BY_CLIENT/,
+	);
 	await page.route("**/*.js", async (route) => route.abort("blockedbyclient"));
 	await page.goto("/");
 

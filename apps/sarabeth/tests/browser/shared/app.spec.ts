@@ -58,7 +58,9 @@ test("hydrates and performs client-side header navigation", async ({
 	).toBeHidden();
 });
 
-test("rejects unsupported email endpoint methods", async ({ request }) => {
+test("rejects unsupported email endpoint methods", {
+	tag: "@desktop-only",
+}, async ({ request }) => {
 	const response = await request.get("/api/email");
 
 	expect(response.status()).toBe(405);
@@ -66,14 +68,25 @@ test("rejects unsupported email endpoint methods", async ({ request }) => {
 	expect(await response.body()).toHaveLength(0);
 });
 
-test("rejects unsupported YouTube playlist endpoint methods", async ({
-	request,
-}) => {
+test("rejects unsupported YouTube playlist endpoint methods", {
+	tag: "@desktop-only",
+}, async ({ request }) => {
 	const response = await request.post("/api/youtube-playlist");
 
 	expect(response.status()).toBe(405);
 	expect(response.headers().allow).toBe("GET");
 	expect(response.headers()["cache-control"]).toBe("no-store");
+});
+
+test("returns a usable not-found page", async ({ diagnostics, page }) => {
+	diagnostics.allowResponse("/browser-not-found", 404);
+	diagnostics.allowConsoleError(/Failed to load resource.*404/);
+	const response = await page.goto("/browser-not-found");
+
+	expect(response?.status()).toBe(404);
+	await expect(
+		page.getByRole("heading", { name: "Page not found" }),
+	).toBeVisible();
 });
 
 test("publishes the approved YouTube privacy disclosure", async ({ page }) => {
@@ -94,7 +107,9 @@ test("publishes the approved YouTube privacy disclosure", async ({ page }) => {
 	).toHaveAttribute("href", "/privacy");
 });
 
-test("serves the icons declared by the web manifest", async ({ request }) => {
+test("serves the icons declared by the web manifest", {
+	tag: "@desktop-only",
+}, async ({ request }) => {
 	const manifestResponse = await request.get("/favicon/site.webmanifest");
 	expect(manifestResponse.status()).toBe(200);
 	const manifest: unknown = await manifestResponse.json();
@@ -251,7 +266,11 @@ test("submits the hydrated contact form to the email endpoint", async ({
 	});
 });
 
-test("restores the contact form after a network failure", async ({ page }) => {
+test("restores the contact form after a network failure", async ({
+	diagnostics,
+	page,
+}) => {
+	diagnostics.allowConsoleError("Failed to load resource: net::ERR_FAILED");
 	await page.route("**/api/email", async (route) => {
 		await route.abort("failed");
 	});
@@ -266,8 +285,10 @@ test("restores the contact form after a network failure", async ({ page }) => {
 });
 
 test("restores the contact form after a non-JSON server failure", async ({
+	diagnostics,
 	page,
 }) => {
+	diagnostics.allowConsoleError(/Failed to load resource:.*500/);
 	await page.route("**/api/email", async (route) => {
 		await route.fulfill({ status: 500, body: "Service unavailable" });
 	});

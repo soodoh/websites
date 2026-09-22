@@ -1,10 +1,13 @@
-import { test as base, expect } from "@playwright/test";
 import { installContentfulRoutes } from "@tests/support/contentful-routes";
 import { installYouTubePlaylistRoute } from "@tests/support/youtube-playlist-route";
+import {
+	test as diagnosticsTest,
+	expect,
+} from "@websites/playwright-support/test";
 
 const fixedBrowserTime = new Date("2026-01-01T12:00:00.000Z");
 
-const test = base.extend<{
+const test = diagnosticsTest.extend<{
 	contentfulRoutes: undefined;
 	fixedBrowserTime: undefined;
 	youtubePlaylistRoute: undefined;
@@ -32,5 +35,5 @@ const test = base.extend<{
 	],
 });
 
-export type { Locator, Page } from "@playwright/test";
+export type { Locator, Page } from "@websites/playwright-support/test";
 export { expect, test };

@@ -1,40 +1,29 @@
-import { defineConfig } from "@playwright/test";
+import {
+	defineWebsitePlaywrightConfig,
+	desktopProject,
+	mobileProject,
+} from "@websites/playwright-support/config";
 
-const desktopViewport = { width: 1440, height: 900 };
-const mobileViewport = { width: 390, height: 844 };
 const localBaseUrl = "http://127.0.0.1:3000";
 const externalBaseUrl = process.env.PLAYWRIGHT_BASE_URL;
 const useStaticBuild = process.env.PLAYWRIGHT_STATIC === "1";
+const sharedTests = [
+	"browser/shared/**/*.spec.ts",
+	"visual/**/*.visual.spec.ts",
+];
 
-export default defineConfig({
-	testDir: "./tests",
-	fullyParallel: true,
-	forbidOnly: Boolean(process.env.CI),
-	retries: process.env.CI ? 2 : 0,
-	reporter: [["list"], ["html", { open: "never" }]],
-	snapshotPathTemplate:
-		"{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}",
+export default defineWebsitePlaywrightConfig({
 	use: {
 		baseURL: externalBaseUrl ?? localBaseUrl,
-		browserName: "chromium",
 		colorScheme: "dark",
-		deviceScaleFactor: 1,
-		screenshot: "only-on-failure",
-		serviceWorkers: "block",
-		trace: "retain-on-failure",
 	},
 	projects: [
-		{
-			name: "desktop",
-			use: { viewport: desktopViewport },
-		},
-		{
-			name: "mobile",
-			use: {
-				hasTouch: true,
-				viewport: mobileViewport,
-			},
-		},
+		desktopProject({
+			testMatch: [...sharedTests, "browser/desktop/**/*.spec.ts"],
+		}),
+		mobileProject({
+			testMatch: [...sharedTests, "browser/mobile/**/*.spec.ts"],
+		}),
 	],
 	webServer: externalBaseUrl
 		? undefined

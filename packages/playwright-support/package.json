@@ -1,0 +1,24 @@
+{
+	"name": "@websites/playwright-support",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./config": "./src/config.ts",
+		"./test": "./src/test.ts",
+		"./visual": "./src/visual.ts"
+	},
+	"scripts": {
+		"lint": "biome check .",
+		"typecheck": "tsc --noEmit"
+	},
+	"peerDependencies": {
+		"@playwright/test": "1.63.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"@playwright/test": "1.63.0",
+		"@types/node": "26.6.2",
+		"typescript": "7.0.2"
+	}
+}

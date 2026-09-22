@@ -50,6 +50,10 @@ async function createArtifact(): Promise<string> {
 		await writeFile(join(root, "static", path), `<html>${path}</html>`);
 	}
 	await writeFile(
+		join(root, "static", "__static-not-found/index.html"),
+		'<html><head><link rel="modulepreload" href="/route.js"></head><body>__static-not-found Page not found<script src="/hydrate.js"></script></body></html>',
+	);
+	await writeFile(
 		join(root, "deploy-manifest.json"),
 		JSON.stringify({
 			version: 1,
@@ -126,9 +130,14 @@ describe("Amplify artifact preparation", () => {
 		await expect(
 			stat(join(root, "static", "projects", "public-project.html")),
 		).resolves.toBeDefined();
-		expect(await readFile(join(root, "static", "404.html"), "utf8")).toContain(
-			"__static-not-found",
+		const notFoundHtml = await readFile(
+			join(root, "static", "404.html"),
+			"utf8",
 		);
+		expect(notFoundHtml).toContain("__static-not-found");
+		expect(notFoundHtml).toContain("<title>CD: Page Not Found</title>");
+		expect(notFoundHtml).not.toContain("<script");
+		expect(notFoundHtml).not.toContain('rel="modulepreload"');
 		expect(
 			JSON.parse(
 				await readFile(join(root, "static", "__deployment.json"), "utf8"),

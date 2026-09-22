@@ -1,7 +1,10 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { APIResponse, Route } from "@playwright/test";
-import { test as base, expect } from "@playwright/test";
+import {
+	test as diagnosticsTest,
+	expect,
+} from "@websites/playwright-support/test";
 import { parseContentfulFixture } from "@/lib/contentful-fixture-types";
 import { decodeImage } from "@/lib/image-type";
 
@@ -51,7 +54,7 @@ export async function fetchRoutedResponse(route: Route): Promise<APIResponse> {
 	});
 }
 
-export const test = base.extend({
+export const test = diagnosticsTest.extend({
 	context: async ({ context }, use) => {
 		if (process.env.HERMETIC_ARTIFACT_TEST === "true") {
 			await context.route(
@@ -75,4 +78,5 @@ export const test = base.extend({
 	},
 });
 
+export type { APIResponse, Locator, Page, Route } from "@playwright/test";
 export { expect };

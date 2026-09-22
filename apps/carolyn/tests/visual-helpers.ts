@@ -152,6 +152,7 @@ type VisualReadinessOptions = {
 	expectedPath: string;
 	images?: () => Locator;
 	album?: string;
+	requireHydration?: boolean;
 };
 
 async function expectVisualState(
@@ -172,7 +173,9 @@ async function settleVisualAttempt(
 	options: VisualReadinessOptions,
 ): Promise<void> {
 	await expectVisualState(page, options);
-	await waitForHydration(page);
+	if (options.requireHydration !== false) {
+		await waitForHydration(page);
+	}
 	await page.evaluate(async () => {
 		await Promise.all([
 			document.fonts.load('400 16px "Karla"'),
@@ -224,6 +227,7 @@ type FullPageScreenshotOptions = {
 	capture?: "body" | "page";
 	mask?: Locator[];
 	maskColor?: string;
+	requireHydration?: boolean;
 };
 
 export async function expectFullPageScreenshot(
@@ -231,7 +235,10 @@ export async function expectFullPageScreenshot(
 	name: string,
 	options: FullPageScreenshotOptions,
 ): Promise<void> {
-	const readiness = { expectedPath: options.expectedPath };
+	const readiness = {
+		expectedPath: options.expectedPath,
+		requireHydration: options.requireHydration,
+	};
 	await settleVisualPage(page, readiness);
 	await expectVisualState(page, readiness);
 	const screenshotOptions = {

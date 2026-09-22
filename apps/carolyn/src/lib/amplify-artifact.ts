@@ -1,11 +1,4 @@
-import {
-	copyFile,
-	readFile,
-	rename,
-	rm,
-	stat,
-	writeFile,
-} from "node:fs/promises";
+import { copyFile, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export type AmplifyArtifactMode = "fixture" | "production";
@@ -241,7 +234,16 @@ async function emitCustomNotFoundPage(amplifyRoot: string): Promise<void> {
 		}
 		throw error;
 	}
-	await rename(source, join(amplifyRoot, "static", "404.html"));
+	const prerenderedHtml = await readFile(source, "utf8");
+	const staticHtml = prerenderedHtml
+		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+		.replace(/<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, "")
+		.replace(/<title>[\s\S]*?<\/title>/gi, "")
+		.replace("</head>", "<title>CD: Page Not Found</title></head>");
+	if (!staticHtml.includes("Page not found")) {
+		throw new Error("Refusing to emit a custom 404 without its expected UI.");
+	}
+	await writeFile(join(amplifyRoot, "static", "404.html"), staticHtml);
 	await rm(join(amplifyRoot, "static", "__static-not-found"), {
 		force: true,
 		recursive: true,

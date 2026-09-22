@@ -12,8 +12,10 @@ COPY apps/carolyn/package.json apps/carolyn/package.json
 COPY apps/diloreto/package.json apps/diloreto/package.json
 COPY apps/paul/package.json apps/paul/package.json
 COPY apps/sarabeth/package.json apps/sarabeth/package.json
+COPY packages/playwright-support/package.json packages/playwright-support/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY apps/paul apps/paul
+COPY packages/playwright-support packages/playwright-support
 WORKDIR /work/apps/paul
 RUN mkdir -p dist/client && chmod -R a+rX /work
 ENV CI=1

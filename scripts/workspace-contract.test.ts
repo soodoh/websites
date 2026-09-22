@@ -31,7 +31,7 @@ describe("workspace contract", () => {
 	test("has one root lock, unique workspaces, and one hook owner", () => {
 		const manifest = json("package.json");
 		expect(manifest.private).toBe(true);
-		expect(manifest.workspaces).toEqual(["apps/*"]);
+		expect(manifest.workspaces).toEqual(["apps/*", "packages/*"]);
 		expect(manifest.packageManager).toBe("bun@1.4.2");
 		expect(manifest.repository.url).toBe(repositoryUrl);
 		expect(manifest.bugs.url).toBe("https://github.com/soodoh/websites/issues");
@@ -128,6 +128,12 @@ describe("workspace contract", () => {
 			for (const workspace of apps) {
 				expect(dockerfile).toContain(`COPY apps/${workspace}/package.json`);
 			}
+			expect(dockerfile).toContain(
+				"COPY packages/playwright-support/package.json",
+			);
+			expect(dockerfile).toContain(
+				"COPY packages/playwright-support packages/playwright-support",
+			);
 		}
 		expect(read("apps/sarabeth/Dockerfile.playwright")).toContain(
 			"COPY renovate.json ./",

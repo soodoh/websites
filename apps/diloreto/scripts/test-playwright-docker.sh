@@ -29,7 +29,7 @@ docker_args=(
 	--user "$(id -u):$(id -g)"
 	--env CI=1
 	--env HOME=/tmp/playwright-home
-	--env PLAYWRIGHT_OUTPUT_ROOT=/tmp/playwright-output
+	--env PLAYWRIGHT_OUTPUT_ROOT=/work/apps/diloreto/.playwright-output
 )
 if [[ -n "${PLAYWRIGHT_BASE_URL:-}" ]]; then
 	docker_args+=(--env "PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL}")
@@ -48,19 +48,32 @@ status=$?
 set -e
 for report in playwright-report test-results; do
 	rm -rf "${repository_root:?}/${report}"
-	docker cp "${container}:/tmp/playwright-output/${report}" "${repository_root}/${report}" >/dev/null 2>&1 || true
+	docker cp "${container}:/work/apps/diloreto/.playwright-output/${report}" "${repository_root}/${report}" >/dev/null 2>&1 || true
 done
 if [[ "${status}" -eq 0 ]]; then
 	for argument in "$@"; do
 		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
-			staging=$(mktemp -d)
-			docker cp "${container}:/work/apps/diloreto/tests/." "${staging}"
-			while IFS= read -r -d '' snapshot; do
-				relative="${snapshot#"${staging}/"}"
-				mkdir -p "$(dirname "${repository_root}/tests/${relative}")"
-				cp "${snapshot}" "${repository_root}/tests/${relative}"
-			done < <(find "${staging}" -path '*-snapshots/*.png' -print0)
-			rm -rf "${staging}"
+			staging=$(mktemp -d "${repository_root}/tests/.screenshots-staging.XXXXXX")
+			backup="${repository_root}/tests/.screenshots-backup"
+			docker cp "${container}:/work/apps/diloreto/tests/__screenshots__/." "${staging}"
+			if ! find "${staging}" -type f -name '*.png' -print -quit | grep -q .; then
+				echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
+				rm -rf "${staging}"
+				exit 1
+			fi
+
+			rm -rf "${backup}"
+			if [[ -d "${repository_root}/tests/__screenshots__" ]]; then
+				mv "${repository_root}/tests/__screenshots__" "${backup}"
+			fi
+			if mv "${staging}" "${repository_root}/tests/__screenshots__"; then
+				rm -rf "${backup}"
+			else
+				if [[ -d "${backup}" ]]; then
+					mv "${backup}" "${repository_root}/tests/__screenshots__"
+				fi
+				exit 1
+			fi
 			break
 		fi
 	done

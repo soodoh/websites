@@ -17,6 +17,7 @@ import {
 	Suspense,
 	useCallback,
 	useDeferredValue,
+	useEffect,
 	useMemo,
 	useState,
 } from "react";
@@ -507,9 +508,12 @@ function GraphFallback() {
 function FamilyTreePage(): JSX.Element {
 	const search = Route.useSearch();
 	const navigate = Route.useNavigate();
-	const requestedPerson = search.person
-		? genealogy.people[search.person]
-		: undefined;
+	const [isClientMounted, setIsClientMounted] = useState(false);
+	useEffect(() => setIsClientMounted(true), []);
+	const requestedPerson =
+		isClientMounted && search.person
+			? genealogy.people[search.person]
+			: undefined;
 	const selectedPerson =
 		requestedPerson && !requestedPerson.isLiving
 			? requestedPerson
@@ -612,13 +616,17 @@ function FamilyTreePage(): JSX.Element {
 						<span>Drag to explore · Scroll to zoom</span>
 					</div>
 					<div className="family-tree-graph">
-						<Suspense fallback={<GraphFallback />}>
-							<FamilyTreeGraph
-								data={genealogy}
-								selectedPersonId={selectedPerson.id}
-								onSelect={selectPerson}
-							/>
-						</Suspense>
+						{isClientMounted ? (
+							<Suspense fallback={<GraphFallback />}>
+								<FamilyTreeGraph
+									data={genealogy}
+									selectedPersonId={selectedPerson.id}
+									onSelect={selectPerson}
+								/>
+							</Suspense>
+						) : (
+							<GraphFallback />
+						)}
 					</div>
 				</section>
 				<PersonDetails person={selectedPerson} onSelect={selectPerson} />

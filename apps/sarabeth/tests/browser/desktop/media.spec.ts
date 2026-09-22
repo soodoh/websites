@@ -187,8 +187,10 @@ test("links non-embeddable selections to YouTube without loading an iframe", asy
 });
 
 test("shows an external fallback and retries a failed playlist request", async ({
+	diagnostics,
 	page,
 }) => {
+	diagnostics.allowConsoleError(/Failed to load resource:.*502/);
 	await page.setViewportSize({ width: 390, height: 844 });
 	let attempts = 0;
 	await page.route("**/api/youtube-playlist", async (route) => {
@@ -454,8 +456,10 @@ test("reports a media error emitted after playback begins", async ({
 });
 
 test("reports failed audio playback without an unhandled page error", async ({
+	diagnostics,
 	page,
 }) => {
+	diagnostics.allowConsoleError("Failed to load resource: net::ERR_FAILED");
 	const pageErrors: string[] = [];
 	page.on("pageerror", (error) => pageErrors.push(error.message));
 	await page.goto("/media");

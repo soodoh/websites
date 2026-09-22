@@ -56,14 +56,27 @@ done
 if [[ "${status}" -eq 0 ]]; then
 	for argument in "$@"; do
 		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
-			staging=$(mktemp -d)
-			docker cp "${container}:/work/apps/carolyn/tests/." "${staging}"
-			while IFS= read -r -d '' snapshot; do
-				relative="${snapshot#"${staging}/"}"
-				mkdir -p "$(dirname "${ROOT_DIR}/tests/${relative}")"
-				cp "${snapshot}" "${ROOT_DIR}/tests/${relative}"
-			done < <(find "${staging}" -path '*-snapshots/*.png' -print0)
-			rm -rf "${staging}"
+			staging=$(mktemp -d "${ROOT_DIR}/tests/.screenshots-staging.XXXXXX")
+			backup="${ROOT_DIR}/tests/.screenshots-backup"
+			docker cp "${container}:/work/apps/carolyn/tests/__screenshots__/." "${staging}"
+			if ! find "${staging}" -type f -name '*.png' -print -quit | grep -q .; then
+				echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
+				rm -rf "${staging}"
+				exit 1
+			fi
+
+			rm -rf "${backup}"
+			if [[ -d "${ROOT_DIR}/tests/__screenshots__" ]]; then
+				mv "${ROOT_DIR}/tests/__screenshots__" "${backup}"
+			fi
+			if mv "${staging}" "${ROOT_DIR}/tests/__screenshots__"; then
+				rm -rf "${backup}"
+			else
+				if [[ -d "${backup}" ]]; then
+					mv "${backup}" "${ROOT_DIR}/tests/__screenshots__"
+				fi
+				exit 1
+			fi
 			break
 		fi
 	done
