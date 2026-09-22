@@ -14,6 +14,10 @@ const awsRoots = [
 	"apps/sarabeth/infra/opentofu",
 ];
 const siteRoots = awsRoots.slice(1);
+const contentfulRoots = [
+	"apps/carolyn/infra/contentful",
+	"apps/sarabeth/infra/contentful",
+];
 const retiredSources = [
 	"infra/aws-account-foundation.yaml",
 	"apps/diloreto/infra/amplify-hosting.yml",
@@ -96,6 +100,16 @@ describe("OpenTofu AWS ownership", () => {
 				site === "paul" || site === "diloreto"
 					? "$DEPLOYMENT_MARKER_PATH"
 					: "/__deployment.json",
+			);
+		}
+	});
+
+	test("sends GitHub-required headers from Contentful webhooks", () => {
+		for (const directory of contentfulRoots) {
+			const configuration = read(`${directory}/main.tf`);
+			expect(configuration).toContain('"User-Agent" = {');
+			expect(configuration).toContain(
+				'value = "soodoh-websites-contentful-webhook"',
 			);
 		}
 	});

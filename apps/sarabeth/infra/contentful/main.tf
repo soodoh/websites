@@ -64,6 +64,9 @@ resource "contentful_webhook" "github_deployment" {
     "X-GitHub-Api-Version" = {
       value = "2022-11-28"
     }
+    "User-Agent" = {
+      value = "soodoh-websites-contentful-webhook"
+    }
   }
 
   transformation = {
