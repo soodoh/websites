@@ -7,7 +7,7 @@ WORKSPACE_ROOT="$(cd "${ROOT_DIR}/../.." && pwd)"
 readonly WORKSPACE_ROOT
 LOCK_HASH="$(shasum -a 256 "${WORKSPACE_ROOT}/bun.lock" | cut -c1-16)"
 readonly LOCK_HASH
-readonly IMAGE_NAME="websites-carolyn-playwright:1.62.1-bun1.4.0-${LOCK_HASH}"
+readonly IMAGE_NAME="websites-carolyn-playwright:1.63.0-bun1.4.2-${LOCK_HASH}"
 DOCKER_ARCHITECTURE="$(docker info --format '{{.Architecture}}')"
 readonly DOCKER_ARCHITECTURE
 container=""

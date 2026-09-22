@@ -18,6 +18,16 @@
       "rangeStrategy": "bump"
     },
     {
+      "description": "OpenTofu roots use Terraform syntax; ignore HashiCorp Terraform releases.",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepNames": [
+        "hashicorp/terraform"
+      ],
+      "enabled": false
+    },
+    {
       "matchManagers": [
         "github-actions",
         "dockerfile"
