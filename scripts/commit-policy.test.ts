@@ -43,3 +43,16 @@ test("Renovate uses the approved dependency scope", () => {
 		lint(`chore(${config.semanticCommitScope}): update dependencies`),
 	).toBe(0);
 });
+
+test("Renovate enables protected native automerge", () => {
+	const config = JSON.parse(
+		readFileSync(resolve(root, "renovate.json"), "utf8"),
+	);
+	expect(config).toMatchObject({
+		automerge: true,
+		automergeType: "pr",
+		automergeStrategy: "squash",
+		platformAutomerge: true,
+		rebaseWhen: "behind-base-branch",
+	});
+});
