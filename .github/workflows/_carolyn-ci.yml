@@ -6,7 +6,7 @@ permissions:
 jobs:
   verify:
     name: carolyn fixture verification
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     timeout-minutes: 45
     env:
       CI: "1"
