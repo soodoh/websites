@@ -253,6 +253,7 @@ test.describe("Projects visual states", () => {
 	test("matches a protected project before and after authentication", async ({
 		page,
 	}) => {
+		await stubVideoPlayers(page);
 		const gateResponse = await page.goto("/projects/magnolia-app");
 		if (!gateResponse) {
 			throw new Error("Protected project navigation returned no response.");

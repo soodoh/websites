@@ -82,6 +82,12 @@ test.describe("TanStack Start migration behavior", () => {
 		expect(unauthorizedHtml).not.toContain("Magnolia App");
 		expect(unauthorizedHtml).not.toMatch(/\$2[aby]\$\d{2}\$/);
 
+		await page.route("https://www.youtube.com/**", (route) =>
+			route.fulfill({
+				body: "<!doctype html><title>Video placeholder</title>",
+				contentType: "text/html",
+			}),
+		);
 		await page.goto("/projects/magnolia-app");
 		await page.locator("html[data-hydrated='true']").waitFor();
 		const passwordInput = page.getByLabel("Password", { exact: true });
