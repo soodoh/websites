@@ -8,7 +8,7 @@ terraform {
     }
     awscc = {
       source  = "registry.terraform.io/hashicorp/awscc"
-      version = "= 1.102.0"
+      version = "1.103.0"
     }
   }
 
