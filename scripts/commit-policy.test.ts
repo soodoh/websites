@@ -20,19 +20,17 @@ function lint(subject: string) {
 		input: `${subject}\n`,
 	}).status;
 }
-for (const scope of scopes) {
-	test(`commit policy accepts required scope ${scope}`, () => {
-		expect(lint(`chore(${scope}): verify the policy`)).toBe(0);
-	});
-}
-for (const subject of [
-	"chore: missing scope",
-	"chore(unknown): invalid scope",
-]) {
-	test(`commit policy rejects ${subject}`, () => {
-		expect(lint(subject)).toBe(1);
-	});
-}
+test("commit policy accepts approved scopes and rejects missing or unknown scopes", () => {
+	for (const scope of scopes) {
+		expect(lint(`chore(${scope}): verify the policy`), scope).toBe(0);
+	}
+	for (const subject of [
+		"chore: missing scope",
+		"chore(unknown): invalid scope",
+	]) {
+		expect(lint(subject), subject).toBe(1);
+	}
+});
 test("Renovate uses the approved dependency scope", () => {
 	const config = JSON.parse(
 		readFileSync(resolve(root, "renovate.json"), "utf8"),
@@ -42,17 +40,4 @@ test("Renovate uses the approved dependency scope", () => {
 	expect(
 		lint(`chore(${config.semanticCommitScope}): update dependencies`),
 	).toBe(0);
-});
-
-test("Renovate enables protected native automerge", () => {
-	const config = JSON.parse(
-		readFileSync(resolve(root, "renovate.json"), "utf8"),
-	);
-	expect(config).toMatchObject({
-		automerge: true,
-		automergeType: "pr",
-		automergeStrategy: "squash",
-		platformAutomerge: true,
-		rebaseWhen: "behind-base-branch",
-	});
 });

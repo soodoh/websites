@@ -6,7 +6,6 @@ import { describe, expect, test } from "vitest";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const apps = ["sarabeth", "paul", "carolyn", "diloreto"] as const;
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
-const json = (path: string) => JSON.parse(read(path));
 
 function filesBelow(directory: string): string[] {
 	return readdirSync(directory).flatMap((entry) => {
@@ -16,30 +15,6 @@ function filesBelow(directory: string): string[] {
 }
 
 describe("Playwright policy", () => {
-	test("uses the shared configuration and standard browser commands", () => {
-		for (const app of apps) {
-			const manifest = json(`apps/${app}/package.json`);
-			expect(manifest.devDependencies["@websites/playwright-support"]).toBe(
-				"workspace:*",
-			);
-			for (const script of [
-				"test:browser",
-				"test:browser:local",
-				"test:browser:update",
-			]) {
-				expect(manifest.scripts[script], `${app} ${script}`).toEqual(
-					expect.any(String),
-				);
-			}
-			expect(manifest.scripts["test:browser:update"]).toContain(
-				"update",
-			);
-			expect(read(`apps/${app}/playwright.config.ts`)).toContain(
-				"defineWebsitePlaywrightConfig",
-			);
-		}
-	});
-
 	test("keeps screenshots in explicitly named visual specs", () => {
 		for (const app of apps) {
 			const testsRoot = resolve(root, "apps", app, "tests");

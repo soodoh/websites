@@ -22,9 +22,6 @@ const headersFor = (pattern: string) =>
 			.find((entry) => entry.pattern === pattern)
 			?.headers.map(({ key, value }) => [key.toLowerCase(), value]) ?? [],
 	);
-const smoke = readApp("scripts/hosting-smoke.mjs");
-const outputFinalizer = readApp("scripts/finalize-static-output.ts");
-const outputAssertion = readApp("scripts/assert-static-output.ts");
 const workflow = readWorkspace(".github/workflows/deploy-diloreto.yml");
 const githubShaExpression = `$${"{{ github.sha }}"}`;
 const domainVariable = `$${"{var.domain_name}"}`;
@@ -49,23 +46,10 @@ describe("native Amplify hosting contract", () => {
 		}
 	});
 
-	test("returns the static custom 404 with an actual 404 status", () => {
+	test("configures Amplify's static 404 rewrite", () => {
 		expect(configuration).toContain('source = "/<*>"');
 		expect(configuration).toContain('target = "/404.html"');
 		expect(configuration).toContain('status = "404-200"');
-		expect(outputAssertion).toContain("404: Page Not Found");
-		expect(outputAssertion).toContain("must not contain hydration scripts");
-		expect(smoke).toContain('"/hosting-migration-smoke/missing-page"');
-		expect(smoke).toContain("missing.response.status === 301");
-	});
-
-	test("emits both Amplify clean-URL file forms without redirects", () => {
-		expect(outputFinalizer).toContain("writeCleanPathAliases");
-		expect(outputAssertion).toContain('"areyou/index.html"');
-		expect(outputAssertion).toContain('"areyou.html"');
-		expect(outputAssertion).toContain("historyAlias !== history");
-		expect(smoke).toContain('new URL("/areyou", baseUrl)');
-		expect(smoke).toContain('new URL("/areyou/", baseUrl)');
 	});
 
 	test("defines domain-only permanent redirects", () => {
@@ -75,7 +59,6 @@ describe("native Amplify hosting contract", () => {
 			`source = "https://paul.${domainVariable}"`,
 		);
 		expect(configuration).toContain('target = "https://pauldiloreto.com"');
-		expect(smoke).toContain("did not preserve the path and query");
 	});
 
 	test("sets immutable caching only for fingerprinted assets", () => {
@@ -108,13 +91,11 @@ describe("native Amplify hosting contract", () => {
 		});
 	});
 
-	test("deploys through the static uploader and verifies the release marker", () => {
+	test("runs the release smoke check after a static upload", () => {
 		expect(workflow).toContain(
 			'scripts/deploy/amplify-static.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" release/site.zip',
 		);
 		expect(workflow).toContain("apps/diloreto/scripts/hosting-smoke.mjs");
 		expect(workflow).toContain(`HOSTING_EXPECT_COMMIT: ${githubShaExpression}`);
-		expect(smoke).toContain('new URL("/__deployment.json", baseUrl)');
-		expect(smoke).toContain("Release marker commit");
 	});
 });

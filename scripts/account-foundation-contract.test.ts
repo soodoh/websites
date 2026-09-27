@@ -7,14 +7,38 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const foundation = read("infra/account-foundation/main.tf");
 
-const siteConfigurations = [
-	"apps/paul/infra/opentofu/main.tf",
-	"apps/diloreto/infra/opentofu/main.tf",
-	"apps/carolyn/infra/opentofu/main.tf",
-	"apps/sarabeth/infra/opentofu/main.tf",
-].map(read);
+const siteRoots = [
+	"apps/paul/infra/opentofu",
+	"apps/diloreto/infra/opentofu",
+	"apps/carolyn/infra/opentofu",
+	"apps/sarabeth/infra/opentofu",
+];
+const siteConfigurations = siteRoots.map((directory) =>
+	read(`${directory}/main.tf`),
+);
 
 describe("AWS account foundation", () => {
+	test("keeps each AWS state encrypted and natively locked", () => {
+		for (const directory of ["infra/account-foundation", ...siteRoots]) {
+			const versions = readFileSync(
+				resolve(root, directory, "versions.tf"),
+				"utf8",
+			);
+			expect(versions, directory).toContain('backend "s3"');
+			expect(versions, directory).toMatch(/encrypt\s*=\s*true/);
+			expect(versions, directory).toMatch(/use_lockfile\s*=\s*true/);
+		}
+	});
+
+	test("sites consume the shared OIDC provider without owning another", () => {
+		for (const configuration of siteConfigurations) {
+			expect(configuration).toContain('variable "github_oidc_provider_arn"');
+			expect(configuration).not.toContain(
+				'resource "aws_iam_openid_connect_provider"',
+			);
+		}
+	});
+
 	test("owns OIDC, shared notifications, the account budget, and protected state", () => {
 		for (const resource of [
 			'resource "aws_iam_openid_connect_provider" "github_actions"',
