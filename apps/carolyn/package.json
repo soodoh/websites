@@ -81,7 +81,7 @@
 		"@types/bun": "1.4.2",
 		"@types/node": "26.6.4",
 		"@types/react": "19.3.0",
-		"@vitejs/plugin-react": "6.1.1",
+		"@vitejs/plugin-react": "6.1.2",
 		"@websites/playwright-support": "workspace:*",
 		"nitro": "3.0.260903-beta",
 		"p-all": "5.0.1",
