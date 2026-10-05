@@ -13,6 +13,23 @@ Every site owns one workflow. The workflow validates the current commit, then de
 
 Every deployment proceeds automatically after its workflow checks pass. GitHub Environments remain the site-specific trust and secret boundary, but they do not require a human reviewer. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate OpenTofu-managed Contentful webhooks that dispatch the corresponding GitHub deployment workflow against `main`; content and source releases therefore share the same verification, deployment, and smoke-test path.
 
+## Deployment selection
+
+Source deployments use GitHub's native `push.branches` and ordered `push.paths` filters, with no custom changed-file detector. A push to `main` selects each site whose app files changed, except for app-local docs, infrastructure, tests, root Markdown documentation, and the explicitly excluded browser/Lighthouse configuration files. Source, public assets, build scripts, and build configuration remain deployment triggers. Pull-request CI still verifies all four sites, including changes excluded from deployment.
+
+Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
+
+Deployment-script triggers follow the hosting mechanism:
+
+- `amplify-static.sh`: Paul and DiLoreto.
+- `amplify-release.sh` and `verify-release.sh`: Carolyn and Sarabeth.
+- `wait-for-amplify-job.sh`: all four sites.
+- `amplify.yml`: Carolyn and Sarabeth only.
+
+Each site's deployment workflow also selects itself when changed. When adding or changing a deployment-script dependency, update the corresponding native path filters and `scripts/deployment-paths-contract.test.ts`. Manual dispatch and Contentful dispatch intentionally bypass source path filtering.
+
+These filters select changed inputs, not byte-level differences in the built website. They also retain GitHub's native diff limits: path filtering considers up to 300 changed files, while pushes exceeding 1,000 commits or diff-generation timeouts run without path filtering. Manually dispatch an affected site if an unusually large push misses its paths.
+
 ## Required configuration
 
 Set these variables on each GitHub Environment:

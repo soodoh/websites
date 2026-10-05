@@ -5,10 +5,25 @@ on:
     branches: [main]
     paths:
       - apps/carolyn/**
+      # PR CI still verifies docs, tests, and infrastructure changes.
+      - '!apps/carolyn/docs/**'
+      - '!apps/carolyn/infra/**'
+      - '!apps/carolyn/tests/**'
+      - '!apps/carolyn/*.md'
+      - '!apps/carolyn/**/*.test.ts'
+      - '!apps/carolyn/**/*.test.tsx'
+      - '!apps/carolyn/**/*.spec.ts'
+      - '!apps/carolyn/**/*.spec.tsx'
+      - '!apps/carolyn/Dockerfile.playwright'
+      - '!apps/carolyn/compose.playwright.yaml'
+      - '!apps/carolyn/playwright*.config.ts'
+      - '!apps/carolyn/lighthouserc.cjs'
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-carolyn.yml
-      - scripts/deploy/**
+      - scripts/deploy/amplify-release.sh
+      - scripts/deploy/verify-release.sh
+      - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock
       - bunfig.toml

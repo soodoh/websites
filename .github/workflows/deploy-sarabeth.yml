@@ -5,10 +5,25 @@ on:
     branches: [main]
     paths:
       - apps/sarabeth/**
+      # PR CI still verifies docs, tests, and infrastructure changes.
+      - '!apps/sarabeth/docs/**'
+      - '!apps/sarabeth/infra/**'
+      - '!apps/sarabeth/tests/**'
+      - '!apps/sarabeth/*.md'
+      - '!apps/sarabeth/**/*.test.ts'
+      - '!apps/sarabeth/**/*.test.tsx'
+      - '!apps/sarabeth/**/*.spec.ts'
+      - '!apps/sarabeth/**/*.spec.tsx'
+      - '!apps/sarabeth/Dockerfile.playwright'
+      - '!apps/sarabeth/compose.playwright.yaml'
+      - '!apps/sarabeth/playwright*.config.ts'
+      - '!apps/sarabeth/lighthouserc.cjs'
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-sarabeth.yml
-      - scripts/deploy/**
+      - scripts/deploy/amplify-release.sh
+      - scripts/deploy/verify-release.sh
+      - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock
       - bunfig.toml
