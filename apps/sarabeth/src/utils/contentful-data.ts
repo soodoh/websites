@@ -413,8 +413,3 @@ export const getSnapshotImages = (
 
 export const getSnapshotAudio = (snapshot: ContentfulSnapshot): Asset[] =>
 	snapshot.media.audio;
-
-export const getSnapshotAssets = (snapshot: ContentfulSnapshot): Asset[] => [
-	...getSnapshotImages(snapshot),
-	...getSnapshotAudio(snapshot),
-];

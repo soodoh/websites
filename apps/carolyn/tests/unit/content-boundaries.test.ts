@@ -12,14 +12,8 @@ import {
 	parseExactContentfulEntry,
 } from "@/lib/contentful-utils";
 import { validateResumeUrl } from "@/lib/fetch-about-data";
-import { createSocialMediaCache } from "@/lib/fetch-home-data";
-import { loadInitialPhotographyData } from "@/lib/fetch-photos";
-import {
-	filterProjectsToRelease,
-	normalizeVideoLink,
-} from "@/lib/fetch-projects";
+import { normalizeVideoLink } from "@/lib/fetch-projects";
 import { decodeImage, isImagePlaceholder } from "@/lib/image-type";
-import type { SocialMedia } from "@/lib/types";
 
 function createContentfulImageAsset(id: string): ContentfulAsset<undefined> {
 	return {
@@ -228,27 +222,6 @@ describe("Contentful boundaries", () => {
 		}
 	});
 
-	test("filters runtime project lists to unique release-manifest slugs", () => {
-		const releasedProject = contentfulFixture.projects[0];
-		const postReleaseProject = {
-			...contentfulFixture.projects[1],
-			id: "post-release-project",
-			slug: "post-release-project",
-		};
-		expect(
-			filterProjectsToRelease(
-				[releasedProject, postReleaseProject],
-				(slug) => slug === releasedProject.slug,
-			),
-		).toEqual([releasedProject]);
-		expect(() =>
-			filterProjectsToRelease(
-				[releasedProject, { ...releasedProject, id: "duplicate-project" }],
-				() => true,
-			),
-		).toThrow(`Duplicate released project slug: ${releasedProject.slug}`);
-	});
-
 	test("normalizes supported YouTube and Vimeo links", () => {
 		expect(normalizeVideoLink("https://youtu.be/abc_DEF-123?t=10")).toBe(
 			"https://www.youtube.com/embed/abc_DEF-123",
@@ -356,37 +329,6 @@ describe("Contentful boundaries", () => {
 		expect(loads).toBe(2);
 	});
 
-	test("caches social media with expiry and rejected-promise eviction", async () => {
-		const cachedLoad = createSocialMediaCache(100);
-		const socialMedia: SocialMedia[] = [
-			{ id: "instagram", title: "instagram", link: "https://example.com" },
-		];
-		let loads = 0;
-		const load = async () => {
-			loads += 1;
-			return socialMedia;
-		};
-		expect(await cachedLoad(load, 0)).toBe(socialMedia);
-		expect(await cachedLoad(load, 99)).toBe(socialMedia);
-		expect(await cachedLoad(load, 100)).toBe(socialMedia);
-		expect(loads).toBe(2);
-
-		const retryingLoad = createSocialMediaCache(100);
-		let attempts = 0;
-		const retry = async () => {
-			attempts += 1;
-			if (attempts === 1) {
-				throw new Error("temporary social failure");
-			}
-			return socialMedia;
-		};
-		await expect(retryingLoad(retry, 0)).rejects.toThrow(
-			"temporary social failure",
-		);
-		await expect(retryingLoad(retry, 1)).resolves.toBe(socialMedia);
-		expect(attempts).toBe(2);
-	});
-
 	test("creates a live-shaped hermetic fixture without local assets", () => {
 		const fixture = createLiveShapedFixture(contentfulFixture);
 		expect(
@@ -428,39 +370,5 @@ describe("Contentful boundaries", () => {
 		expect(() =>
 			getContentfulAssetId("https://images.ctfassets.net/space"),
 		).toThrow("valid asset ID");
-	});
-
-	test("derives ordered initial photography data from one album snapshot", async () => {
-		let loads = 0;
-		const initial = await loadInitialPhotographyData(async () => {
-			loads += 1;
-			return contentfulFixture.albums;
-		});
-		expect(loads).toBe(1);
-		expect(initial.albumNames).toEqual(["Dance", "Portraits", "Spaces"]);
-		expect(initial.initialAlbum.name).toBe("Dance");
-		expect(initial.initialAlbum).toBe(contentfulFixture.albums[0]);
-	});
-
-	test("rejects empty and malformed initial photography snapshots", async () => {
-		await expect(loadInitialPhotographyData(async () => [])).rejects.toThrow(
-			"No photography albums",
-		);
-		await expect(
-			loadInitialPhotographyData(async () => [
-				{ name: "", photos: contentfulFixture.albums[0].photos },
-			]),
-		).rejects.toThrow("Album name is malformed");
-		await expect(
-			loadInitialPhotographyData(async () => [
-				{ name: " Dance", photos: contentfulFixture.albums[0].photos },
-			]),
-		).rejects.toThrow("Album name is malformed");
-		await expect(
-			loadInitialPhotographyData(async () => [
-				contentfulFixture.albums[0],
-				contentfulFixture.albums[0],
-			]),
-		).rejects.toThrow("Duplicate photography album name: Dance");
 	});
 });

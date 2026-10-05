@@ -1,8 +1,7 @@
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
-import {
-	type ContentfulDeliveryClient,
-	type ContentSourceLoader,
-	getBuildContentSource,
+import type {
+	ContentfulDeliveryClient,
+	ContentSourceLoader,
 } from "@/lib/content-source";
 import type { AboutSkeleton } from "@/lib/contentful-types";
 import { isContentfulAssetUrl } from "@/lib/contentful-url-policy";
@@ -69,14 +68,6 @@ function formatResumeUrl(
 	return validateResumeUrl(formatAsset(resumeAsset).url);
 }
 
-export function getAboutContent(): Promise<{
-	backgroundImage: ImageType;
-	aboutData: AboutData;
-	resumeUrl: string;
-}> {
-	return getAboutContentFromSource(getBuildContentSource);
-}
-
 export async function getAboutContentFromSource(
 	loadSource: ContentSourceLoader,
 ): Promise<{
@@ -98,47 +89,6 @@ export async function getAboutContentFromSource(
 		aboutData: await formatAboutData(aboutEntry),
 		resumeUrl: formatResumeUrl(aboutEntry),
 	};
-}
-
-export function getAboutPageData(): Promise<{
-	backgroundImage: ImageType;
-	aboutData: AboutData;
-}> {
-	return getAboutPageDataFromSource(getBuildContentSource);
-}
-
-export async function getAboutPageDataFromSource(
-	loadSource: ContentSourceLoader,
-): Promise<{
-	backgroundImage: ImageType;
-	aboutData: AboutData;
-}> {
-	const source = await loadSource();
-	if (source.kind === "fixture") {
-		return {
-			backgroundImage: source.content.backgroundImage,
-			aboutData: source.content.about,
-		};
-	}
-	const aboutEntry = await getAboutEntry(source.client);
-	return {
-		backgroundImage: formatBackgroundImage(aboutEntry),
-		aboutData: await formatAboutData(aboutEntry),
-	};
-}
-
-export function getResumeUrl(): Promise<string> {
-	return getResumeUrlFromSource(getBuildContentSource);
-}
-
-export async function getResumeUrlFromSource(
-	loadSource: ContentSourceLoader,
-): Promise<string> {
-	const source = await loadSource();
-	if (source.kind === "fixture") {
-		return validateResumeUrl(source.content.resumeUrl);
-	}
-	return formatResumeUrl(await getAboutEntry(source.client));
 }
 
 export function validateResumeUrl(rawUrl: string): string {

@@ -312,48 +312,6 @@ function focusFamilyIds(
 	return familyIds;
 }
 
-function collectInitialPersonIds(
-	data: GenealogyData,
-	selectedPersonId: string,
-): Set<string> {
-	const personIds = new Set<string>(
-		relationshipMap(data, selectedPersonId).keys(),
-	);
-
-	let ancestors = [selectedPersonId];
-	for (let depth = 1; depth <= 2; depth += 1) {
-		const next: string[] = [];
-		for (const personId of ancestors) {
-			for (const parentId of parentIds(data, personId)) {
-				if (!personIds.has(parentId)) {
-					personIds.add(parentId);
-					next.push(parentId);
-				}
-			}
-		}
-		ancestors = next;
-	}
-
-	let descendants = [selectedPersonId];
-	for (let depth = 1; depth <= 2; depth += 1) {
-		const next: string[] = [];
-		for (const personId of descendants) {
-			for (const childId of childIds(data, personId)) {
-				if (!personIds.has(childId)) {
-					personIds.add(childId);
-					next.push(childId);
-				}
-			}
-		}
-		descendants = next;
-	}
-
-	for (const partnerId of partnerIds(data, selectedPersonId)) {
-		personIds.add(partnerId);
-	}
-	return personIds;
-}
-
 type ComponentPerson = {
 	person: GenealogyPerson;
 	generation: number;
@@ -514,8 +472,8 @@ export function buildFamilyTreeGraph(
 	nodes: FamilyTreeFlowNode[];
 	edges: Edge[];
 } {
-	const initialPersonIds = collectInitialPersonIds(data, selectedPersonId);
 	const selectedRelationships = relationshipMap(data, selectedPersonId);
+	const initialPersonIds = new Set(selectedRelationships.keys());
 	const selectedFamilyIds = focusFamilyIds(data, selectedPersonId);
 	const visitedPersonIds = new Set<string>();
 	const components = [

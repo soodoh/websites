@@ -16,14 +16,13 @@ const assert = (condition, message) => {
  * @returns {Promise<string[]>}
  */
 const listFiles = async (directory) => {
-	const entries = await readdir(directory, { withFileTypes: true });
-	const nestedFiles = await Promise.all(
-		entries.map(async (entry) => {
-			const path = join(directory, entry.name);
-			return entry.isDirectory() ? listFiles(path) : [path];
-		}),
-	);
-	return nestedFiles.flat();
+	const entries = await readdir(directory, {
+		recursive: true,
+		withFileTypes: true,
+	});
+	return entries
+		.filter((entry) => !entry.isDirectory())
+		.map((entry) => join(entry.parentPath, entry.name));
 };
 
 for (const file of requiredFiles) {

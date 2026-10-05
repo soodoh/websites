@@ -14,21 +14,14 @@ const searchableExtensions = new Set([
 ]);
 const forbiddenPatterns = [/\.netlify\/images/i, /netlify/i];
 
-const files: string[] = [];
-const routeFiles: string[] = [];
-
-async function collectFiles(
-	directory: string,
-	results: string[],
-): Promise<void> {
-	for (const entry of await readdir(directory, { withFileTypes: true })) {
-		const path = join(directory, entry.name);
-		if (entry.isDirectory()) {
-			await collectFiles(path, results);
-		} else {
-			results.push(path);
-		}
-	}
+async function listFiles(directory: string): Promise<string[]> {
+	const entries = await readdir(directory, {
+		recursive: true,
+		withFileTypes: true,
+	});
+	return entries
+		.filter((entry) => !entry.isDirectory())
+		.map((entry) => join(entry.parentPath, entry.name));
 }
 
 function routeOutputPath(routeFile: string): string | undefined {
@@ -57,7 +50,7 @@ function routeOutputPath(routeFile: string): string | undefined {
 	return routePath ? `${routePath}/index.html` : "index.html";
 }
 
-await collectFiles(routesDirectory, routeFiles);
+const routeFiles = await listFiles(routesDirectory);
 const requiredRouteFiles = routeFiles
 	.filter((path) => extname(path) === ".tsx")
 	.flatMap((path) => {
@@ -81,7 +74,7 @@ for (const requiredFile of [
 	}
 }
 
-await collectFiles(outputDirectory, files);
+const files = await listFiles(outputDirectory);
 
 for (const path of files) {
 	const extension = extname(path);

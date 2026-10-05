@@ -1,9 +1,6 @@
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { BLOCKS } from "@contentful/rich-text-types";
-import {
-	type ContentSourceLoader,
-	getBuildContentSource,
-} from "@/lib/content-source";
+import type { ContentSourceLoader } from "@/lib/content-source";
 import type { ProjectSkeleton } from "@/lib/contentful-types";
 import {
 	type ContentfulEntry,
@@ -120,10 +117,6 @@ function formatBaseProject(item: ContentfulEntry): Project {
 	};
 }
 
-export function getProjects(): Promise<Project[]> {
-	return getProjectsFromSource(getBuildContentSource);
-}
-
 function requireUniqueProjectSlugs(projects: Project[]): Project[] {
 	const slugs = new Set<string>();
 	for (const project of projects) {
@@ -135,22 +128,12 @@ function requireUniqueProjectSlugs(projects: Project[]): Project[] {
 	return projects;
 }
 
-export function filterProjectsToRelease(
-	projects: Project[],
-	isReleased: (slug: string) => boolean = () => true,
-): Project[] {
-	return requireUniqueProjectSlugs(
-		projects.filter((project) => isReleased(project.slug)),
-	);
-}
-
 export async function getProjectsFromSource(
 	loadSource: ContentSourceLoader,
-	isReleased: (slug: string) => boolean = () => true,
 ): Promise<Project[]> {
 	const source = await loadSource();
 	if (source.kind === "fixture") {
-		return filterProjectsToRelease(source.content.projects, isReleased);
+		return requireUniqueProjectSlugs(source.content.projects);
 	}
 
 	const projects = await getAllContentfulEntries(
@@ -170,15 +153,7 @@ export async function getProjectsFromSource(
 			}),
 		"Projects query",
 	);
-	return requireUniqueProjectSlugs(
-		projects
-			.filter(
-				(project) =>
-					typeof project.fields.slug === "string" &&
-					isReleased(project.fields.slug),
-			)
-			.map(formatBaseProject),
-	);
+	return requireUniqueProjectSlugs(projects.map(formatBaseProject));
 }
 
 export type ProjectPageSnapshot = {
@@ -218,23 +193,6 @@ function getProjectPassword(projectItem: ContentfulEntry): string | undefined {
 		);
 	}
 	return password || undefined;
-}
-
-export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
-	return (await getProjectPageSnapshot(slug)).projectInfo;
-}
-
-export async function getProjectInfoFromSource(
-	slug: string,
-	loadSource: ContentSourceLoader,
-): Promise<ProjectInfo> {
-	return (await getProjectPageSnapshotFromSource(slug, loadSource)).projectInfo;
-}
-
-export function getProjectPageSnapshot(
-	slug: string,
-): Promise<ProjectPageSnapshot> {
-	return getProjectPageSnapshotFromSource(slug, getBuildContentSource);
 }
 
 export async function getProjectPageSnapshotFromSource(

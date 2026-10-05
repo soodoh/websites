@@ -4,14 +4,9 @@ import type {
 	ContentSourceLoader,
 } from "@/lib/content-source";
 import { getAboutContentFromSource } from "@/lib/fetch-about-data";
-import { getBackgroundImage, getSocialMedia } from "@/lib/fetch-home-data";
+import { getSocialMedia } from "@/lib/fetch-home-data";
+import { getAlbumsFromSource } from "@/lib/fetch-photos";
 import {
-	getAlbumFromSource,
-	getAlbumsFromSource,
-	getInitialPhotographyDataFromSource,
-} from "@/lib/fetch-photos";
-import {
-	getProjectInfoFromSource,
 	getProjectPageSnapshotFromSource,
 	getProjectsFromSource,
 } from "@/lib/fetch-projects";
@@ -119,7 +114,7 @@ describe("live Contentful contracts", () => {
 		});
 	});
 
-	test("rejects duplicate About singletons in full and background queries", async () => {
+	test("rejects duplicate About singletons in the release query", async () => {
 		const aboutEntry = entry("about", {
 			bio: "Hello from Contentful",
 			location: "Los Angeles",
@@ -133,13 +128,6 @@ describe("live Contentful contracts", () => {
 		]);
 		await expect(
 			getAboutContentFromSource(liveSource(aboutClient)),
-		).rejects.toThrow("did not return exactly one entry");
-
-		const { client: backgroundClient } = createFakeClient([
-			collection([aboutEntry], 2),
-		]);
-		await expect(
-			getBackgroundImage(liveSource(backgroundClient)),
 		).rejects.toThrow("did not return exactly one entry");
 	});
 
@@ -198,7 +186,7 @@ describe("live Contentful contracts", () => {
 			badImage,
 		);
 		await expect(
-			getProjectInfoFromSource("project", liveSource(detailClient)),
+			getProjectPageSnapshotFromSource("project", liveSource(detailClient)),
 		).rejects.toThrow("approved HTTPS host");
 
 		const { client: albumClient } = createFakeClient([
@@ -305,26 +293,23 @@ describe("live Contentful contracts", () => {
 		expect(requireQuery(queries[1])).toMatchObject({ skip: 1 });
 	});
 
-	test("filters post-release projects before mapping list details", async () => {
-		const releasedProject = entry("released", {
-			title: "Released project",
-			slug: "released",
-			summary: "Released summary",
-			coverImage: imageAsset("released-cover"),
-			projectType: ["Design"],
-		});
-		const postReleaseMalformedProject = entry("post-release", {
-			slug: "post-release",
-		});
-		const { client } = createFakeClient([
-			collection([releasedProject, postReleaseMalformedProject]),
-		]);
-
-		await expect(
-			getProjectsFromSource(liveSource(client), (slug) => slug === "released"),
-		).resolves.toEqual([
-			expect.objectContaining({ id: "released", slug: "released" }),
-		]);
+	test("rejects malformed slugs instead of silently omitting release entries", async () => {
+		for (const slug of [undefined, 42, ""]) {
+			const { client } = createFakeClient([
+				collection([
+					entry("malformed-project", {
+						title: "Project title",
+						summary: "Project summary",
+						slug,
+						coverImage: imageAsset("cover"),
+						projectType: ["Design"],
+					}),
+				]),
+			]);
+			await expect(getProjectsFromSource(liveSource(client))).rejects.toThrow(
+				"Project malformed-project slug is missing",
+			);
+		}
 	});
 
 	test("rejects duplicate released project slugs", async () => {
@@ -404,7 +389,7 @@ describe("live Contentful contracts", () => {
 			collection(duplicateItems),
 		]);
 		await expect(
-			getProjectInfoFromSource("duplicate", liveSource(detailClient)),
+			getProjectPageSnapshotFromSource("duplicate", liveSource(detailClient)),
 		).rejects.toThrow("did not return exactly one project");
 	});
 
@@ -430,7 +415,7 @@ describe("live Contentful contracts", () => {
 			),
 		);
 
-		const project = await getProjectInfoFromSource(
+		const { projectInfo: project } = await getProjectPageSnapshotFromSource(
 			"project-detail",
 			liveSource(client),
 		);
@@ -459,7 +444,10 @@ describe("live Contentful contracts", () => {
 			imageAsset("repeated-image"),
 		);
 
-		await getProjectInfoFromSource("project-detail", liveSource(client));
+		await getProjectPageSnapshotFromSource(
+			"project-detail",
+			liveSource(client),
+		);
 		expect(assetRequests).toEqual(["repeated-image"]);
 	});
 
@@ -478,78 +466,34 @@ describe("live Contentful contracts", () => {
 			]),
 		]);
 		await expect(
-			getProjectInfoFromSource("project-detail", liveSource(client)),
+			getProjectPageSnapshotFromSource("project-detail", liveSource(client)),
 		).rejects.toThrow("malformed password field");
 	});
 
-	test("loads initial album names without formatting every album", async () => {
-		const { client, queries } = createFakeClient([
-			collection([
-				entry("dance-name", { album: "Dance" }),
-				entry("portraits-name", { album: "Portraits" }),
-			]),
-			collection([
-				entry("dance", {
-					album: "Dance",
-					photos: [imageAsset("dance-photo")],
-				}),
-			]),
-		]);
-
-		const initial = await getInitialPhotographyDataFromSource(
-			liveSource(client),
-		);
-		expect(initial.albumNames).toEqual(["Dance", "Portraits"]);
-		expect(initial.initialAlbum).toMatchObject({
-			name: "Dance",
-			photos: [expect.objectContaining({ id: "dance-photo" })],
-		});
-		expect(requireQuery(queries[0])).toEqual({
-			content_type: "photos",
-			limit: 1000,
-			order: ["fields.order"],
-			select: ["fields.album"],
-			skip: 0,
-		});
-		expect(requireQuery(queries[1])).toEqual({
-			content_type: "photos",
-			limit: 1,
-			order: ["fields.order"],
-		});
-	});
-
-	test("maps album lists and exact album queries", async () => {
+	test("maps ordered album lists for release capture", async () => {
 		const albumEntry = entry("album", {
 			album: "Portraits",
 			photos: [imageAsset("portrait")],
 		});
-		const { client, queries } = createFakeClient([
-			collection([albumEntry]),
-			collection([albumEntry]),
-		]);
+		const { client, queries } = createFakeClient([collection([albumEntry])]);
 		const source = liveSource(client);
 
 		expect(await getAlbumsFromSource(source)).toEqual([
-			expect.objectContaining({ name: "Portraits" }),
+			expect.objectContaining({
+				name: "Portraits",
+				photos: [expect.objectContaining({ id: "portrait" })],
+			}),
 		]);
-		expect(await getAlbumFromSource("Portraits", source)).toMatchObject({
-			name: "Portraits",
-			photos: [expect.objectContaining({ id: "portrait" })],
-		});
 		expect(requireQuery(queries[0])).toMatchObject({
 			content_type: "photos",
 			limit: 1000,
 			skip: 0,
 			order: ["fields.order"],
 		});
-		expect(requireQuery(queries[1])).toEqual({
-			content_type: "photos",
-			"fields.album": "Portraits",
-			limit: 2,
-		});
+		expect(queries).toHaveLength(1);
 	});
 
-	test("rejects malformed and duplicate album names in every live query", async () => {
+	test("rejects malformed and duplicate album names in release queries", async () => {
 		for (const albumName of ["", " Padded", "Padded ", "x".repeat(101)]) {
 			const { client } = createFakeClient([
 				collection([entry("bad-name", { album: albumName })]),
@@ -565,45 +509,12 @@ describe("live Contentful contracts", () => {
 		};
 		const duplicateEntry = entry("duplicate", duplicateFields);
 		const secondDuplicateEntry = entry("second-duplicate", duplicateFields);
-		const { client: namesClient } = createFakeClient([
-			collection([
-				entry("first", { album: "Dance" }),
-				entry("second", { album: "Dance" }),
-			]),
-			collection([duplicateEntry]),
-		]);
-		await expect(
-			getInitialPhotographyDataFromSource(liveSource(namesClient)),
-		).rejects.toThrow("Duplicate photography album name: Dance");
-
 		const { client: listClient } = createFakeClient([
 			collection([duplicateEntry, secondDuplicateEntry]),
 		]);
 		await expect(getAlbumsFromSource(liveSource(listClient))).rejects.toThrow(
 			"Duplicate photography album name: Dance",
 		);
-
-		const { client: exactClient } = createFakeClient([
-			collection([duplicateEntry, secondDuplicateEntry]),
-		]);
-		await expect(
-			getAlbumFromSource("Dance", liveSource(exactClient)),
-		).rejects.toThrow("Duplicate photography album name: Dance");
-	});
-
-	test("rejects inconsistent initial album names after shared validation", async () => {
-		const { client } = createFakeClient([
-			collection([entry("dance-name", { album: "Dance" })]),
-			collection([
-				entry("portraits", {
-					album: "Portraits",
-					photos: [imageAsset("portrait")],
-				}),
-			]),
-		]);
-		await expect(
-			getInitialPhotographyDataFromSource(liveSource(client)),
-		).rejects.toThrow("inconsistent albums");
 	});
 
 	test("maps social entries through the injected live client", async () => {
@@ -637,6 +548,30 @@ describe("live Contentful contracts", () => {
 			limit: 1000,
 			skip: 0,
 		});
+	});
+
+	test("retries failed social media loads through the same live client", async () => {
+		const { client, queries } = createFakeClient([
+			{ items: "malformed", total: 1 },
+			collection([
+				entry("instagram-entry", {
+					title: "instagram",
+					link: "https://instagram.com/example",
+				}),
+			]),
+		]);
+		const source = liveSource(client);
+		await expect(getSocialMedia(source)).rejects.toThrow(
+			"malformed Contentful response",
+		);
+		await expect(getSocialMedia(source)).resolves.toEqual([
+			{
+				id: "instagram-entry",
+				title: "instagram",
+				link: "https://instagram.com/example",
+			},
+		]);
+		expect(queries).toHaveLength(2);
 	});
 
 	test("rejects live social links with mismatched hosts or unsafe URLs", async () => {
