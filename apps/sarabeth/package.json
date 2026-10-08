@@ -65,7 +65,7 @@
 		"clsx": "2.1.1",
 		"contentful": "11.12.10",
 		"embla-carousel-react": "8.6.0",
-		"lucide-react": "1.52.0",
+		"lucide-react": "1.53.0",
 		"nitro": "3.0.260903-beta",
 		"radix-ui": "1.7.0",
 		"react": "19.3.0",
@@ -78,7 +78,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.5.15",
 		"@lhci/cli": "0.15.1",
-		"@playwright/test": "1.63.0",
+		"@playwright/test": "1.64.0",
 		"@tailwindcss/vite": "4.3.3",
 		"@types/node": "26.6.4",
 		"@types/react": "19.3.0",
