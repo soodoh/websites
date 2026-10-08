@@ -52,9 +52,9 @@
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
 	"dependencies": {
-		"@aws-sdk/client-dynamodb": "3.1147.0",
-		"@aws-sdk/client-ses": "3.1147.0",
-		"@aws-sdk/client-ssm": "3.1147.0",
+		"@aws-sdk/client-dynamodb": "3.1148.0",
+		"@aws-sdk/client-ses": "3.1148.0",
+		"@aws-sdk/client-ssm": "3.1148.0",
 		"@contentful/rich-text-react-renderer": "16.2.2",
 		"@contentful/rich-text-types": "17.2.7",
 		"@tanstack/react-router": "1.170.41",
