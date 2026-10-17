@@ -1,6 +1,7 @@
 # Websites
 
-Four independent websites in one Bun 1.4.2 / Node 24.21.0 workspace, orchestrated by Turborepo.
+Four independent websites in one Bun / Node workspace, orchestrated by Turborepo.
+Use the versions pinned in `.bun-version` and `.nvmrc`.
 
 ```sh
 bun install --frozen-lockfile
