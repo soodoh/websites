@@ -32,7 +32,7 @@
     "test:workspace": "vitest run --config vitest.config.mts --project workspace"
   },
   "devDependencies": {
-    "turbo": "2.11.9",
+    "turbo": "2.11.10",
     "vitest": "5.0.5",
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
