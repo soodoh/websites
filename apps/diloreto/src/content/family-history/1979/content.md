@@ -34,4 +34,4 @@ The other root, the Gigante, is unique. There is only on family in town with tha
 
 The roots were unquestionably strong and transplanted in our country with its freedom and unlimited opportunities, the many trees can only continue to grow.
 
-*Researched and prepared by Armand DiGiulio (oldest First Cousin)*
+_Researched and prepared by Armand DiGiulio (oldest First Cousin)_

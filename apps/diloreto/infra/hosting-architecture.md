@@ -12,16 +12,16 @@ Route 53 → Amplify domain association → Amplify WEB app/main branch
 
 ## Responsibility mapping
 
-| Responsibility | Native Amplify implementation |
-| --- | --- |
-| Custom 404 body with HTTP 404 | Final catch-all `/<*> → /404.html` rule with Amplify's `404-200` rewrite status. |
-| `/areyou` and `/areyou/` | The static artifact emits matching `.html` and directory-index documents. |
-| `www.diloreto.com` | Domain-only `301` to `https://diloreto.com`; Amplify appends the original path. |
-| `paul.diloreto.com` | Domain-only `301` to `https://pauldiloreto.com`; Amplify appends the original path. |
-| Caching | `/assets/*` is immutable for one year; HTML, public non-fingerprinted files, and `/__deployment.json` are non-storing and revalidating. |
-| Security headers | Amplify applies HSTS, `nosniff`, frame denial, referrer policy, and permissions policy to all responses. |
-| TLS and DNS | Amplify provisions the managed certificate and the domain association's apex, `www`, and `paul` mappings. |
-| Static releases | `.github/workflows/deploy-diloreto.yml` packages `dist/client`, invokes `scripts/deploy/amplify-static.sh`, and verifies the public release marker and hosting contract. |
+| Responsibility                | Native Amplify implementation                                                                                                                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Custom 404 body with HTTP 404 | Final catch-all `/<*> → /404.html` rule with Amplify's `404-200` rewrite status.                                                                                         |
+| `/areyou` and `/areyou/`      | The static artifact emits matching `.html` and directory-index documents.                                                                                                |
+| `www.diloreto.com`            | Domain-only `301` to `https://diloreto.com`; Amplify appends the original path.                                                                                          |
+| `paul.diloreto.com`           | Domain-only `301` to `https://pauldiloreto.com`; Amplify appends the original path.                                                                                      |
+| Caching                       | `/assets/*` is immutable for one year; HTML, public non-fingerprinted files, and `/__deployment.json` are non-storing and revalidating.                                  |
+| Security headers              | Amplify applies HSTS, `nosniff`, frame denial, referrer policy, and permissions policy to all responses.                                                                 |
+| TLS and DNS                   | Amplify provisions the managed certificate and the domain association's apex, `www`, and `paul` mappings.                                                                |
+| Static releases               | `.github/workflows/deploy-diloreto.yml` packages `dist/client`, invokes `scripts/deploy/amplify-static.sh`, and verifies the public release marker and hosting contract. |
 
 ## Evidence
 
