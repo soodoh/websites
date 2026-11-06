@@ -76,15 +76,15 @@
 		"unpic": "4.2.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.6.5",
+		"@biomejs/biome": "2.6.6",
 		"@lhci/cli": "0.16.0",
 		"@playwright/test": "1.65.0",
-		"@tailwindcss/vite": "4.3.4",
+		"@tailwindcss/vite": "4.3.5",
 		"@types/node": "26.6.6",
 		"@types/react": "19.3.0",
 		"@vitejs/plugin-react": "6.2.1",
 		"@websites/playwright-support": "workspace:*",
-		"tailwindcss": "4.3.4",
+		"tailwindcss": "4.3.5",
 		"typescript": "7.0.2",
 		"vite": "8.3.6",
 		"vitest": "5.1.0"
