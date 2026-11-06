@@ -53,7 +53,7 @@
 	"dependencies": {
 		"@fontsource/fjalla-one": "5.3.0",
 		"@fontsource/geo": "5.3.0",
-		"@tailwindcss/vite": "4.3.4",
+		"@tailwindcss/vite": "4.3.5",
 		"@tanstack/react-router": "1.170.46",
 		"@tanstack/react-start": "1.169.4",
 		"class-variance-authority": "0.7.1",
@@ -64,10 +64,10 @@
 		"react-dom": "19.3.1",
 		"react-scroll-parallax": "3.5.0",
 		"tailwind-merge": "3.7.0",
-		"tailwindcss": "4.3.4"
+		"tailwindcss": "4.3.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.6.5",
+		"@biomejs/biome": "2.6.6",
 		"@lhci/cli": "0.16.0",
 		"@playwright/test": "1.65.0",
 		"@types/node": "26.6.6",
