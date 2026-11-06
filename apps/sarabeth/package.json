@@ -52,9 +52,9 @@
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
 	"dependencies": {
-		"@aws-sdk/client-dynamodb": "3.1162.0",
-		"@aws-sdk/client-ses": "3.1162.0",
-		"@aws-sdk/client-ssm": "3.1162.0",
+		"@aws-sdk/client-dynamodb": "3.1163.0",
+		"@aws-sdk/client-ses": "3.1163.0",
+		"@aws-sdk/client-ssm": "3.1163.0",
 		"@contentful/rich-text-react-renderer": "16.2.2",
 		"@contentful/rich-text-types": "17.2.7",
 		"@tanstack/react-router": "1.170.46",
@@ -65,7 +65,7 @@
 		"clsx": "2.1.1",
 		"contentful": "11.12.10",
 		"embla-carousel-react": "8.6.0",
-		"lucide-react": "1.68.0",
+		"lucide-react": "1.69.0",
 		"nitro": "3.0.260903-beta",
 		"radix-ui": "1.8.1",
 		"react": "19.3.1",
@@ -78,7 +78,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.6.5",
 		"@lhci/cli": "0.16.0",
-		"@playwright/test": "1.64.1",
+		"@playwright/test": "1.65.0",
 		"@tailwindcss/vite": "4.3.4",
 		"@types/node": "26.6.6",
 		"@types/react": "19.3.0",
@@ -86,7 +86,7 @@
 		"@websites/playwright-support": "workspace:*",
 		"tailwindcss": "4.3.4",
 		"typescript": "7.0.2",
-		"vite": "8.3.5",
+		"vite": "8.3.6",
 		"vitest": "5.1.0"
 	}
 }
