@@ -13,6 +13,18 @@ expected_commit=${4:-}
 timeout_seconds=${5:-1800}
 started_at=$(date +%s)
 
+report_diagnostics() {
+  # Keep presigned log/artifact URLs and build output out of Actions logs.
+  jq -r '.job.steps[]? | select(.status == "FAILED" or .status == "CANCELLED") |
+    "Amplify step \(.stepName): \(.status)"' <<<"$job" >&2
+  local region branch_path
+  region=$(jq -r '.job.summary.jobArn // "" | split(":")[3] // empty' <<<"$job")
+  if [[ -n "$region" ]]; then
+    branch_path=$(jq -rn --arg branch "$branch" '$branch | @uri')
+    echo "Amplify console: https://${region}.console.aws.amazon.com/amplify/apps/${app_id}/branches/${branch_path}/deployments/${job_id}" >&2
+  fi
+}
+
 while true; do
   job=$(aws amplify get-job \
     --app-id "$app_id" \
@@ -34,12 +46,14 @@ while true; do
       ;;
     FAILED | CANCELLED)
       echo "Amplify job $job_id ended with $status." >&2
+      report_diagnostics
       exit 1
       ;;
   esac
 
   if (( $(date +%s) - started_at >= timeout_seconds )); then
     echo "Timed out waiting for Amplify job $job_id; last status: $status." >&2
+    report_diagnostics
     exit 1
   fi
 

@@ -32,7 +32,19 @@ function runSetup(script: string, files: Versions, installed = files) {
    else printf 'bun %s\\n' "$*"; fi
  }
  node() { printf 'v%s\\n' "$INSTALLED_NODE"; }
- nvm() { printf 'nvm %s\\n' "$*"; }
+ atomic_ready=0
+ yum() {
+   [[ "$*" == 'install -y libatomic' ]] || return 2
+   atomic_ready=1
+   printf 'yum %s\\n' "$*"
+ }
+ nvm() {
+   if [[ "$atomic_ready" != 1 ]]; then
+     printf 'node: error while loading shared libraries: libatomic.so.1\\n' >&2
+     return 127
+   fi
+   printf 'nvm %s\\n' "$*"
+ }
  npm() { printf 'npm %s\\n' "$*"; }
  python() { :; }
  shellcheck() { printf 'version: 0.11.0\\n'; }
@@ -73,6 +85,61 @@ function amplifySetup(site: string) {
 	if (!block) throw new Error(`Missing ${site} Amplify preBuild commands`);
 	return block[1].trimEnd().replace(/^ {12}- /gm, "");
 }
+
+// Opt in locally with VERIFY_AMPLIFY_TOOLCHAIN=1; PR root checks always run this.
+// Use x86_64 like Amplify, not the ARM64 browser-test images. These are real
+// Node/npm/Bun binaries on pinned Amazon Linux, not the stubs above.
+test
+	// biome-ignore lint/suspicious/noUndeclaredEnvVars: Root Vitest runs directly, outside Turbo.
+	.runIf(process.env.VERIFY_AMPLIFY_TOOLCHAIN === "1")
+	.each(["carolyn", "sarabeth"])(
+	"%s Amplify tools start on Amazon Linux",
+	(site) => {
+		const setup = amplifySetup(site)
+			.split("\n")
+			.filter((line) => !line.startsWith("bun install "))
+			.join("\n");
+		const result = spawnSync(
+			"docker",
+			[
+				"run",
+				"--rm",
+				"--interactive",
+				"--platform",
+				"linux/amd64",
+				"--workdir",
+				"/tmp",
+				"amazonlinux:2023@sha256:3ccfbe800f864982b0a4e124a614b2382518cbd04b3c1cd35202bd46f392675b",
+				"bash",
+				"-euo",
+				"pipefail",
+			],
+			{
+				encoding: "utf8",
+				timeout: 240_000,
+				maxBuffer: 8 * 1024 * 1024,
+				input: `
+printf '%s\\n' '${pins.node}' > .nvmrc
+printf '%s\\n' '${pins.bun}' > .bun-version
+yum install -y tar gzip
+export NVM_DIR=/tmp/nvm
+mkdir -p "$NVM_DIR"
+curl --fail --silent --show-error --location \\
+  https://raw.githubusercontent.com/nvm-sh/nvm/977563e97ddc66facf3a8e31c6cff01d236f09bd/nvm.sh \\
+  --output "$NVM_DIR/nvm.sh"
+. "$NVM_DIR/nvm.sh" --no-use
+${setup}
+test "$(node --version)" = "v${pins.node}"
+npm --version
+test "$(bun --version)" = "${pins.bun}"
+`,
+			},
+		);
+		expect(result.error).toBeUndefined();
+		expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+	},
+	250_000,
+);
 
 test("manifest and browser images agree with the root toolchain pins", () => {
 	const manifest = json("package.json");
@@ -128,6 +195,7 @@ describe.each([
 			const result = runSetup(amplifySetup(site), versions);
 			expect(result.status, result.stderr).toBe(0);
 			expect(result.stdout.trim().split("\n")).toEqual([
+				"yum install -y libatomic",
 				`nvm install ${versions.node}`,
 				`nvm use ${versions.node}`,
 				`npm install --global bun@${versions.bun}`,
