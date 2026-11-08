@@ -6,7 +6,7 @@ applications:
       phases:
         preBuild:
           commands:
-            - yum install -y libatomic
+            - sudo yum install -y libatomic
             - nvm install "$(< .nvmrc)"
             - nvm use "$(< .nvmrc)"
             - npm install --global "bun@$(< .bun-version)"
@@ -27,7 +27,7 @@ applications:
       phases:
         preBuild:
           commands:
-            - yum install -y libatomic
+            - sudo yum install -y libatomic
             - nvm install "$(< .nvmrc)"
             - nvm use "$(< .nvmrc)"
             - npm install --global "bun@$(< .bun-version)"
