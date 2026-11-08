@@ -18,6 +18,8 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/ci-tools
       - run: bun run test:workspace && bash scripts/ci/lint.sh
+        env:
+          VERIFY_AMPLIFY_TOOLCHAIN: "1"
   sarabeth:
     uses: ./.github/workflows/_sarabeth-ci.yml
   carolyn:

@@ -57,6 +57,8 @@ For Carolyn and Sarabeth, configure the existing Amplify app to use this reposit
 
 Carolyn and Sarabeth deployment roles can temporarily stamp `RELEASE_RUN_ID` and `RELEASE_RUN_ATTEMPT` onto the Amplify branch build environment. The release script restores the prior branch environment after Amplify finishes.
 
+Both applications install `libatomic` before selecting Node in `amplify.yml`; Node 26's Linux x86-64 binary requires `libatomic.so.1`, which the Amplify build image does not provide by default. PR root checks exercise the actual tool setup on pinned x86-64 Amazon Linux with real Node, npm, and Bun binaries. Run the same container checks locally with `VERIFY_AMPLIFY_TOOLCHAIN=1 bun run test:workspace -- scripts/toolchain-contract.test.ts` (requires Docker). The job waiter reports failed/cancelled steps and an Amplify console link on failure or timeout, without printing presigned log/artifact URLs.
+
 ### Contentful deployment webhooks
 
 OpenTofu owns one webhook in each production Contentful space under `apps/<site>/infra/contentful/`. Each webhook is restricted to the `master` environment and entry/asset publish and unpublish events. It calls GitHub's `workflow_dispatch` API for the matching deployment workflow with `ref: main` and `source: contentful`.
