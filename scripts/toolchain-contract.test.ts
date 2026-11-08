@@ -33,6 +33,7 @@ function runSetup(script: string, files: Versions, installed = files) {
  }
  node() { printf 'v%s\\n' "$INSTALLED_NODE"; }
  atomic_ready=0
+ sudo() { printf 'sudo '; "$@"; }
  yum() {
    [[ "$*" == 'install -y libatomic' ]] || return 2
    atomic_ready=1
@@ -119,10 +120,15 @@ test
 				timeout: 240_000,
 				maxBuffer: 8 * 1024 * 1024,
 				input: `
+yum install -y tar gzip sudo shadow-utils util-linux
+useradd --create-home builder
+printf 'builder ALL=(ALL) NOPASSWD: ALL\\n' > /etc/sudoers.d/builder
+chmod 440 /etc/sudoers.d/builder
+runuser --user builder -- bash -euo pipefail <<'AMPLIFY_SETUP'
+cd "$HOME"
 printf '%s\\n' '${pins.node}' > .nvmrc
 printf '%s\\n' '${pins.bun}' > .bun-version
-yum install -y tar gzip
-export NVM_DIR=/tmp/nvm
+export NVM_DIR="$HOME/.nvm"
 mkdir -p "$NVM_DIR"
 curl --fail --silent --show-error --location \\
   https://raw.githubusercontent.com/nvm-sh/nvm/977563e97ddc66facf3a8e31c6cff01d236f09bd/nvm.sh \\
@@ -132,6 +138,7 @@ ${setup}
 test "$(node --version)" = "v${pins.node}"
 npm --version
 test "$(bun --version)" = "${pins.bun}"
+AMPLIFY_SETUP
 `,
 			},
 		);
@@ -195,7 +202,7 @@ describe.each([
 			const result = runSetup(amplifySetup(site), versions);
 			expect(result.status, result.stderr).toBe(0);
 			expect(result.stdout.trim().split("\n")).toEqual([
-				"yum install -y libatomic",
+				"sudo yum install -y libatomic",
 				`nvm install ${versions.node}`,
 				`nvm use ${versions.node}`,
 				`npm install --global bun@${versions.bun}`,
