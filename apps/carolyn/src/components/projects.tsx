@@ -47,8 +47,11 @@ const Projects = ({
 			/>
 
 			<div>
-				<Masonry>
-					{filteredProjects.map((item, index) => (
+				<Masonry
+					items={filteredProjects}
+					getDimensions={(item) => item.coverImage}
+				>
+					{(item, index) => (
 						<Link
 							key={item.id}
 							aria-label={`${item.title} - ${item.summary}`}
@@ -61,6 +64,7 @@ const Projects = ({
 								<h3>{item.summary}</h3>
 							</div>
 							<ImageWrapper
+								className="w-full h-full object-contain"
 								alt=""
 								breakpoints={MASONRY_IMAGE_BREAKPOINTS}
 								image={item.coverImage}
@@ -69,7 +73,7 @@ const Projects = ({
 								sizes={MASONRY_IMAGE_SIZES}
 							/>
 						</Link>
-					))}
+					)}
 				</Masonry>
 			</div>
 		</div>

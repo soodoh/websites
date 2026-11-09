@@ -1,6 +1,7 @@
 import { readdir } from "node:fs/promises";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import rawFixture from "@tests/fixtures/contentful.json";
+import sharp from "sharp";
 import { describe, expect, test } from "vitest";
 import { parseContentfulFixture } from "@/lib/contentful-fixture-types";
 import { normalizeVideoLink } from "@/lib/fetch-projects";
@@ -198,6 +199,20 @@ describe("Contentful fixture contract", () => {
 			).filter((name) => !name.startsWith(".")),
 		);
 		expect([...assetFiles].sort()).toEqual([...referencedFiles].sort());
+	});
+
+	test("masonry image metadata matches the local assets' aspect ratios", async () => {
+		const images = [
+			...contentfulFixture.projects.map((project) => project.coverImage),
+			...contentfulFixture.albums.flatMap((album) => album.photos),
+		];
+		for (const image of images) {
+			const path = new URL(`../../public${image.url}`, import.meta.url);
+			const metadata = await sharp(path.pathname).metadata();
+			expect(image.width * metadata.height, image.id).toBe(
+				image.height * metadata.width,
+			);
+		}
 	});
 
 	test("contains only canonical supported video embeds", () => {

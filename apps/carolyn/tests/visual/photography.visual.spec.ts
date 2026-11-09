@@ -73,10 +73,18 @@ test.describe("Photography visual states", () => {
 			expectedPath: "/photography",
 			album: "Portraits",
 		});
+		// Keep the same screenshot subjects without relying on the old
+		// column-grouped DOM order (desktop photo 11, mobile photo 09).
+		const desktopFilter = page.getByRole("button", {
+			name: "Choose filter: Portraits",
+			exact: true,
+		});
+		const photo = (await desktopFilter.isVisible()) ? "11" : "09";
 		await page
-			.locator(".masonry-grid")
-			.getByRole("button", { name: /View fullscreen photo/ })
-			.nth(8)
+			.getByRole("button", {
+				name: `View fullscreen photo (Portraits study ${photo})`,
+				exact: true,
+			})
 			.scrollIntoViewIfNeeded();
 		await expectCurrentPath(page, "/photography");
 		await expect(page.locator("[data-photography-album]")).toHaveAttribute(

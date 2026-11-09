@@ -51,16 +51,67 @@
 }
 
 @layer components {
-	/* Masonry grid (react-masonry-css) */
-	.masonry-grid {
-		--grid-gap: 50px;
-		display: flex;
-		gap: var(--grid-gap);
-		width: auto;
+	/* The outer sizing container makes 100cqw the grid width, not the viewport. */
+	.masonry-container {
+		container-type: inline-size;
+		--masonry-gap: 50px;
 	}
 
-	.masonry-grid-column > * {
-		margin-bottom: var(--grid-gap);
+	.masonry-grid {
+		--masonry-width: var(--masonry-width-1);
+		position: relative;
+		height: var(--masonry-height-1);
+	}
+
+	.masonry-item {
+		--masonry-column: var(--masonry-column-1);
+		position: absolute;
+		left: calc(
+			var(--masonry-column) *
+			(var(--masonry-width) + var(--masonry-gap))
+		);
+		top: var(--masonry-top-1);
+		width: var(--masonry-width);
+		height: calc(var(--masonry-ratio) * var(--masonry-width));
+	}
+
+	.masonry-item > * {
+		display: flex;
+		width: 100%;
+		height: 100%;
+	}
+
+	@media (width > 660px) {
+		.masonry-grid {
+			--masonry-width: var(--masonry-width-2);
+			height: var(--masonry-height-2);
+		}
+		.masonry-item {
+			--masonry-column: var(--masonry-column-2);
+			top: var(--masonry-top-2);
+		}
+	}
+
+	@media (width > 962px) {
+		.masonry-grid {
+			--masonry-width: var(--masonry-width-3);
+			height: var(--masonry-height-3);
+		}
+		.masonry-item {
+			--masonry-column: var(--masonry-column-3);
+			top: var(--masonry-top-3);
+		}
+	}
+
+	@media (width > 1260px) {
+		.masonry-grid {
+			--masonry-width: var(--masonry-width-4);
+			height: var(--masonry-height-4);
+		}
+		.masonry-item {
+			--masonry-column: var(--masonry-column-4);
+			top: var(--masonry-top-4);
+		}
 	}
 
 	/* Rich text container (CMS content with nested selectors) */

@@ -278,8 +278,8 @@ const PhotographyContent = ({
 						Loading {selectedAlbumName} album
 					</span>
 				) : null}
-				<Masonry>
-					{album.photos.map((image, index) => (
+				<Masonry items={album.photos} getDimensions={(image) => image}>
+					{(image, index) => (
 						<Button
 							key={`image-${image.id}`}
 							variant="ghost"
@@ -288,9 +288,10 @@ const PhotographyContent = ({
 							onPointerEnter={preloadImageGallery}
 							onFocus={preloadImageGallery}
 							onClick={(event) => handleThumbnailClick(index, event)}
-							className="h-auto w-full p-0 rounded-none hover:bg-transparent"
+							className="h-full w-full p-0 rounded-none transition-colors hover:bg-transparent"
 						>
 							<ImageWrapper
+								className="w-full h-full object-contain"
 								alt=""
 								breakpoints={MASONRY_IMAGE_BREAKPOINTS}
 								quality={50}
@@ -299,7 +300,7 @@ const PhotographyContent = ({
 								sizes={MASONRY_IMAGE_SIZES}
 							/>
 						</Button>
-					))}
+					)}
 				</Masonry>
 			</div>
 		</>

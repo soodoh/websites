@@ -441,7 +441,7 @@ test.describe("Photography gallery navigation", () => {
 		).toBeVisible();
 		await expectModalImageSelection(
 			dialog.locator("[aria-hidden='false'] img"),
-			1272,
+			1280,
 			1920,
 		);
 		await dialog.getByRole("button", { name: "Close image modal" }).click();
