@@ -53,7 +53,7 @@
 		"infra:validate": "../../scripts/infra/validate-opentofu.sh apps/carolyn/infra/opentofu"
 	},
 	"dependencies": {
-		"@aws-sdk/client-ssm": "3.1164.0",
+		"@aws-sdk/client-ssm": "3.1165.0",
 		"@contentful/rich-text-from-markdown": "16.2.2",
 		"@contentful/rich-text-react-renderer": "16.2.2",
 		"@contentful/rich-text-types": "17.2.7",
