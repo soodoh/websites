@@ -4,13 +4,6 @@ import { selectFilter, waitForHydration } from "@tests/visual-helpers";
 const widths = [390, 660, 661, 962, 963, 1260, 1261, 1600];
 const routes = ["/", "/projects", "/photography"];
 
-// These geometry checks isolate masonry from the unrelated remote-font network.
-test.beforeEach(async ({ page }) => {
-	await page.route("https://fonts.googleapis.com/**", (route) =>
-		route.fulfill({ contentType: "text/css", body: "" }),
-	);
-});
-
 async function readLayout(page: Page) {
 	return page.locator(".masonry-grid").evaluate((grid) => {
 		const gridBox = grid.getBoundingClientRect();

@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
-	handleYouTubePlaylistRequest,
 	type YouTubePlaylistDependencies,
 	youtubePlaylistErrorCacheControl,
 } from "@/utils/youtube-playlist.server";
+import { handleYouTubePlaylistRequest } from "@/utils/youtube-playlist-response.server";
 
 export const getYouTubePlaylistRequest = (
 	{ request }: { request: Request },

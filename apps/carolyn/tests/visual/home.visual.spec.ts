@@ -29,7 +29,10 @@ test.describe("Home page visual states", () => {
 	}) => {
 		await settleVisualPage(page, { expectedPath: "/" });
 		const header = page.locator("header");
-		const brandLogo = header.locator('a[aria-label="Home"]');
+		const brandLogo = header.getByRole("link", {
+			name: "Carolyn DiLoreto — Home",
+			exact: true,
+		});
 		await expect(brandLogo).toBeHidden();
 		await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
 		await expect(brandLogo).toBeVisible();

@@ -541,7 +541,7 @@ function FamilyTreePage(): JSX.Element {
 	);
 
 	return (
-		<main className="family-tree-page">
+		<div className="family-tree-page">
 			<section className="family-tree-hero">
 				<div>
 					<p className="family-tree-eyebrow">The DiLoreto lineage</p>
@@ -631,7 +631,7 @@ function FamilyTreePage(): JSX.Element {
 				</section>
 				<PersonDetails person={selectedPerson} onSelect={selectPerson} />
 			</div>
-		</main>
+		</div>
 	);
 }
 

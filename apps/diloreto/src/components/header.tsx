@@ -9,7 +9,7 @@ export default function Header({ isHome }: HeaderProps): JSX.Element {
 	return (
 		<header
 			className={`
-        sticky z-50 bg-primary
+        sticky z-50 bg-brand
         ${isHome ? "bottom-0" : "top-0"}
       `}
 		>

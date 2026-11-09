@@ -1,0 +1,15 @@
+Self-hosted Google Fonts Latin WOFF2 subsets, retrieved 2026-11-09.
+
+Karla v33, variable weights 200–800 (SIL Open Font License 1.1):
+Normal: https://fonts.gstatic.com/s/karla/v33/qkBbXvYC6trAT7RVLtw.woff2
+Italic: https://fonts.gstatic.com/s/karla/v33/qkBVXvYC6trAT7RQHt6e4Q.woff2
+
+Old Standard TT v22 (SIL Open Font License 1.1):
+400: https://fonts.gstatic.com/s/oldstandardtt/v22/MwQubh3o1vLImiwAVvYawgcf2eVeqlq4.woff2
+400 italic: https://fonts.gstatic.com/s/oldstandardtt/v22/MwQsbh3o1vLImiwAVvYawgcf2eVer2q6bHM.woff2
+700: https://fonts.gstatic.com/s/oldstandardtt/v22/MwQrbh3o1vLImiwAVvYawgcf2eVWEX-tS1Zf.woff2
+
+Use the hinted variants served to Linux Chromium. The unhinted macOS variants
+change glyph advances under the pinned Linux screenshot renderer.
+
+Only normal Karla and normal 400 Old Standard TT are preloaded; other faces load on demand.

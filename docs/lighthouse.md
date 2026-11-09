@@ -31,18 +31,22 @@ Reports are written under `.lighthouseci/<site>/<mobile|desktop>/`: `reports/` c
 
 Do not run audits concurrently on the same checkout. The runner requires free local ports (Paul/Sarabeth 3000, DiLoreto 4173, Carolyn 4100 plus its compute port 3000) and owns the temporary servers through Lighthouse's lifecycle.
 
-## Initial minimums
+## Current minimums
 
-Scores below are percentages; JSON stores them as fractions. Performance gets five points of measurement headroom below the weakest route's observed median, except Paul, which retains its existing 90-point floor. Other category minimums match the weakest observed route median without an automatic discount.
+Scores below are percentages; JSON stores them as fractions. Performance minimums retain deliberate measurement headroom rather than requiring perfect scores. The initial calibration used five points below the weakest route's observed median, except Paul, which retains its existing 90-point floor. Other category minimums match the weakest observed route median without an automatic discount.
 
 | Site     | Routes                           | Performance mobile / desktop | Accessibility | Best practices | SEO |
 | -------- | -------------------------------- | ---------------------------- | ------------- | -------------- | --- |
 | Paul     | `/`                              | 90 / 90                      | 100           | 100            | 100 |
-| DiLoreto | `/`, `/areyou`                   | 87 / 95                      | 93            | 100            | 100 |
-| Carolyn  | `/`, `/projects`, `/photography` | 84 / 95                      | 100           | 100            | 100 |
-| Sarabeth | `/`, `/about`, `/media`          | 95 / 95                      | 100           | 96             | 100 |
+| DiLoreto | `/`, `/areyou`                   | 87 / 95                      | 100           | 100            | 100 |
+| Carolyn  | `/`, `/projects`, `/photography` | 95 / 95                      | 100           | 100            | 100 |
+| Sarabeth | `/`, `/about`, `/media`          | 95 / 95                      | 100           | 100            | 100 |
 
-Known baseline limitations are not fixes: DiLoreto lacks a main landmark and `/areyou` has contrast failures. Sarabeth's local `/media` reaches the unmocked `/api/youtube-playlist` endpoint, which returns 500 without production configuration and lowers best practices to 96. Its Playwright suite supplies a playlist route fixture; Lighthouse currently measures the credential-free fallback instead. Keep these findings visible and ratchet the corresponding minimums upward when they are addressed.
+The former accessibility and best-practices exceptions are resolved: DiLoreto has one shared main landmark and accessible text/button contrast, and Sarabeth's fixture build supplies a deterministic playlist response through a build-only server boundary. Its production endpoint still reports configuration/upstream failures, with separate contract and browser error-path coverage. DiLoreto accessibility and Sarabeth best practices are therefore ratcheted to 100 in both profiles.
+
+Carolyn's SSR-stable masonry and self-hosted critical fonts produce 100 performance medians on all configured routes in both profiles, so its mobile performance floor is raised from 84 to 95. Its self-hosted fonts retain the hinted variants served to Linux Chromium to preserve the existing visual baselines.
+
+The 2026-11-09 local follow-up reports show 100 accessibility, best practices, and SEO on every configured route/profile. Performance is 100 except DiLoreto `/areyou` mobile (92, with zero CLS after route-specific critical-font preloads) and Sarabeth `/media` desktop (98). The latter now measures the actual playlist and thumbnail loading rather than the previous API-error fallback; its performance is not directly comparable to the empty fallback. Aggregate scores do not replace review of individual accessibility diagnostics.
 
 ## Updating baselines
 

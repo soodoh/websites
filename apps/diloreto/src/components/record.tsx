@@ -9,9 +9,15 @@ type RecordProps = {
 	data: HistoryRecord;
 	openPhoto: OpenPhoto;
 	isEven: boolean;
+	prioritizeHeaderPhoto?: boolean;
 };
 
-function Record({ data, openPhoto, isEven }: RecordProps): JSX.Element {
+function Record({
+	data,
+	openPhoto,
+	isEven,
+	prioritizeHeaderPhoto = false,
+}: RecordProps): JSX.Element {
 	const hasGallery =
 		data.galleryPhotos !== undefined && data.galleryPhotos.length > 0;
 
@@ -42,6 +48,7 @@ function Record({ data, openPhoto, isEven }: RecordProps): JSX.Element {
 							data={data.headerPhoto}
 							link={data.link}
 							openPhoto={openPhoto}
+							priority={prioritizeHeaderPhoto}
 						/>
 					</div>
 				) : null}

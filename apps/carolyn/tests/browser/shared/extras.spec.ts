@@ -61,7 +61,7 @@ test.describe("Header route state", () => {
 			return;
 		}
 		await expectDarkSurfaceFocus(
-			page.getByRole("link", { name: "Home", exact: true }),
+			page.getByRole("link", { name: "Carolyn DiLoreto — Home", exact: true }),
 		);
 		await expectDarkSurfaceFocus(
 			page.getByRole("link", { name: "Photography", exact: true }),
@@ -101,7 +101,9 @@ test.describe("Header route state", () => {
 			}),
 		);
 
-		await page.getByRole("link", { name: "Home", exact: true }).click();
+		await page
+			.getByRole("link", { name: "Carolyn DiLoreto — Home", exact: true })
+			.click();
 		await expect(
 			page.getByRole("heading", { name: "Something went wrong" }),
 		).toBeVisible();
@@ -111,7 +113,7 @@ test.describe("Header route state", () => {
 			"rgb(73, 79, 92)",
 		);
 		await expect(
-			page.getByRole("link", { name: "Home", exact: true }),
+			page.getByRole("link", { name: "Carolyn DiLoreto — Home", exact: true }),
 		).toBeVisible();
 	});
 });

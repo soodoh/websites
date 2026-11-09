@@ -76,7 +76,7 @@ const Header = (): JSX.Element => {
 					isTransparent &&
 						"invisible transition-all duration-[250ms] ease-in-out nonessential-motion",
 				)}
-				aria-label="Home"
+				aria-label="Carolyn DiLoreto — Home"
 				to="/"
 			>
 				<Logo />

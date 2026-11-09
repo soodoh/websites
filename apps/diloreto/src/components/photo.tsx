@@ -11,16 +11,20 @@ type PhotoProps = {
 	data: ContentImage;
 	link?: string;
 	openPhoto: OpenPhoto;
+	priority?: boolean;
 };
 
 export default function Photo({
 	data,
 	link,
 	openPhoto,
+	priority = false,
 }: PhotoProps): JSX.Element {
 	const image = (
 		<ResponsiveImage
 			image={data}
+			loading={priority ? "eager" : "lazy"}
+			fetchPriority={priority ? "high" : "auto"}
 			sizes="(max-width: 320px) 100vw, 300px"
 			className="h-auto w-full object-contain"
 		/>

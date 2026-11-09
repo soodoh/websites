@@ -86,6 +86,7 @@ function FamilyHistory(): JSX.Element {
 					key={record.title}
 					data={record}
 					isEven={index % 2 === 0}
+					prioritizeHeaderPhoto={index === 0}
 					openPhoto={openPhoto}
 				/>
 			))}
@@ -103,6 +104,17 @@ export const Route = createFileRoute("/areyou")({
 					"Are you a DiLoreto? View the history of the DiLoretos from Alfadena, Italy to Michigan and California. Extensive historical sources, photos and family tree listed.",
 			},
 		],
+		links: [
+			"/fonts/old-standard-tt-latin-400.woff2",
+			"/fonts/old-standard-tt-latin-400-italic.woff2",
+			"/fonts/karla-latin-400.woff2",
+		].map((href) => ({
+			rel: "preload",
+			href,
+			as: "font",
+			type: "font/woff2",
+			crossOrigin: "anonymous",
+		})),
 	}),
 	component: FamilyHistory,
 });

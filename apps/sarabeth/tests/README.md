@@ -7,11 +7,15 @@ of the live Contentful space. Four reusable synthetic images cover wide,
 landscape, square, and portrait rendering, and one synthetic audio file serves
 the two recording scenarios.
 
-The explicit Vite configuration aliases the production Contentful provider and
-current-date modules to deterministic test implementations; canonical
-production builds exclude fixture code. Browser contexts intercept
-`/api/youtube-playlist`, Contentful media, YouTube thumbnails, and activated
-iframes, so CI never contacts Contentful, Google, or SSM. Focused Vitest
+The explicit Vite configuration aliases the production Contentful provider,
+current-date module, and playlist-response boundary to deterministic test
+implementations; canonical production builds exclude fixture code. The fixture
+server itself serves `/api/youtube-playlist` without credentials, so Lighthouse
+and API-request tests exercise the playlist without Playwright interception.
+Browser contexts additionally intercept the playlist for loading/error tests,
+Contentful media, YouTube thumbnails, and activated iframes, so the Playwright
+suite never contacts Contentful, Google, or SSM. Lighthouse uses the fixed public
+YouTube thumbnail URLs from the playlist fixture. Focused Vitest
 contract tests run every Contentful fetcher against raw entry-shaped data to
 cover the live Contentful boundary independently from visual presentation.
 

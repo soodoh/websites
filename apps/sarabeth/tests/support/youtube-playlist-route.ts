@@ -1,13 +1,7 @@
 import type { BrowserContext } from "@playwright/test";
-import youtubePlaylistJson from "@tests/fixtures/youtube-playlist.json" with {
-	type: "json",
-};
-import { decodeYouTubePlaylist } from "@/utils/youtube-playlist-data";
+import { youtubePlaylistFixture } from "./youtube-playlist-fixture";
 
-export const youtubePlaylistFixture = decodeYouTubePlaylist(
-	youtubePlaylistJson,
-	"youtubePlaylistFixture",
-);
+export { youtubePlaylistFixture } from "./youtube-playlist-fixture";
 
 export const installYouTubePlaylistRoute = async (
 	context: BrowserContext,

@@ -7,6 +7,12 @@ export default defineConfig(
 		envDir: false,
 		resolve: {
 			alias: {
+				"@/utils/youtube-playlist-response.server": fileURLToPath(
+					new URL(
+						"./tests/support/youtube-playlist-response.server.ts",
+						import.meta.url,
+					),
+				),
 				"@/utils/data-provider.server": fileURLToPath(
 					new URL("./tests/support/data-provider.server.ts", import.meta.url),
 				),

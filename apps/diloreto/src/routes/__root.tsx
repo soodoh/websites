@@ -24,7 +24,7 @@ export function RootDocument({
 			</head>
 			<body>
 				<Header isHome={pathname === "/"} />
-				{children}
+				<main>{children}</main>
 				<Scripts />
 			</body>
 		</html>
