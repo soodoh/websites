@@ -17,7 +17,7 @@ on:
       - '!apps/sarabeth/Dockerfile.playwright'
       - '!apps/sarabeth/compose.playwright.yaml'
       - '!apps/sarabeth/playwright*.config.ts'
-      - '!apps/sarabeth/lighthouserc.cjs'
+      - '!apps/sarabeth/lighthouse.json'
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-sarabeth.yml
@@ -44,7 +44,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    uses: ./.github/workflows/_sarabeth-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: sarabeth
   deploy:
     needs: verify
     if: github.ref == 'refs/heads/main'

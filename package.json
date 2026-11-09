@@ -29,7 +29,9 @@
     "verify:paul": "turbo run ci:verify --filter=portfolio-website --concurrency=1",
     "verify:carolyn": "turbo run ci:verify --filter=carolyn-portfolio --concurrency=1",
     "verify:diloreto": "turbo run ci:verify --filter=diloreto-website --concurrency=1",
-    "test:workspace": "vitest run --config vitest.config.mts --project workspace"
+    "test:workspace": "vitest run --config vitest.config.mts --project workspace",
+    "lighthouse": "bun scripts/lighthouse/run.mjs",
+    "lighthouse:install": "playwright-core install --with-deps chromium"
   },
   "devDependencies": {
     "turbo": "2.11.10",
@@ -37,7 +39,9 @@
     "@commitlint/cli": "21.2.4",
     "@commitlint/config-conventional": "21.2.4",
     "@commitlint/types": "21.2.3",
-    "lefthook": "2.2.2"
+    "lefthook": "2.2.2",
+    "@lhci/cli": "0.16.0",
+    "playwright-core": "1.65.0"
   },
   "trustedDependencies": [
     "unrs-resolver"

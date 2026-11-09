@@ -40,7 +40,7 @@ describe.each(sites)("%s deployment selection", (site) => {
 			`!apps/${site}/Dockerfile.playwright`,
 			`!apps/${site}/compose.playwright.yaml`,
 			`!apps/${site}/playwright*.config.ts`,
-			`!apps/${site}/lighthouserc.cjs`,
+			`!apps/${site}/lighthouse.json`,
 		]);
 	});
 
@@ -84,7 +84,7 @@ test("PR CI still verifies every app regardless of changed paths", () => {
 	expect(source).not.toMatch(/\bpaths(?:-ignore)?:/);
 	for (const site of sites) {
 		expect(source).toContain(
-			`  ${site}:\n    uses: ./.github/workflows/_${site}-ci.yml`,
+			`  ${site}:\n    uses: ./.github/workflows/_site-ci.yml\n    with:\n      site: ${site}`,
 		);
 	}
 });

@@ -21,13 +21,21 @@ jobs:
         env:
           VERIFY_AMPLIFY_TOOLCHAIN: "1"
   sarabeth:
-    uses: ./.github/workflows/_sarabeth-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: sarabeth
   carolyn:
-    uses: ./.github/workflows/_carolyn-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: carolyn
   paul:
-    uses: ./.github/workflows/_paul-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: paul
   diloreto:
-    uses: ./.github/workflows/_diloreto-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: diloreto
   gate:
     name: CI gate
     if: always()

@@ -47,7 +47,8 @@
 		"test:ci": "bun run lint && bun run test:unit && bun run test:e2e",
 		"test:ci:prebuilt": "bun run test:unit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
-		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:unit && bun run test:container && bun run infra:lint",
+		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:unit && bun run test:container && bun run infra:lint && bun run lighthouse --prebuilt",
+		"lighthouse": "bun ../../scripts/lighthouse/run.mjs sarabeth",
 		"test:container": "bash scripts/playwright-docker.sh",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
@@ -77,7 +78,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.6.6",
-		"@lhci/cli": "0.16.0",
 		"@playwright/test": "1.65.0",
 		"@tailwindcss/vite": "4.3.5",
 		"@types/node": "26.6.6",
