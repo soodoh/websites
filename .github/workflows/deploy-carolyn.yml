@@ -6,18 +6,18 @@ on:
     paths:
       - apps/carolyn/**
       # PR CI still verifies docs, tests, and infrastructure changes.
-      - '!apps/carolyn/docs/**'
-      - '!apps/carolyn/infra/**'
-      - '!apps/carolyn/tests/**'
-      - '!apps/carolyn/*.md'
-      - '!apps/carolyn/**/*.test.ts'
-      - '!apps/carolyn/**/*.test.tsx'
-      - '!apps/carolyn/**/*.spec.ts'
-      - '!apps/carolyn/**/*.spec.tsx'
-      - '!apps/carolyn/Dockerfile.playwright'
-      - '!apps/carolyn/compose.playwright.yaml'
-      - '!apps/carolyn/playwright*.config.ts'
-      - '!apps/carolyn/lighthouse.json'
+      - "!apps/carolyn/docs/**"
+      - "!apps/carolyn/infra/**"
+      - "!apps/carolyn/tests/**"
+      - "!apps/carolyn/*.md"
+      - "!apps/carolyn/**/*.test.ts"
+      - "!apps/carolyn/**/*.test.tsx"
+      - "!apps/carolyn/**/*.spec.ts"
+      - "!apps/carolyn/**/*.spec.tsx"
+      - "!apps/carolyn/Dockerfile.playwright"
+      - "!apps/carolyn/compose.playwright.yaml"
+      - "!apps/carolyn/playwright*.config.ts"
+      - "!apps/carolyn/lighthouse.json"
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-carolyn.yml

@@ -22,4 +22,4 @@ Apply the workspace rules in `../../AGENTS.md` together with this app-specific o
 
 ## Conventions
 
-Use TypeScript and functional React components. Prefer the `@/` alias for cross-directory imports and relative imports within one folder. Follow `biome.json` for formatting and import organization.
+Use TypeScript and functional React components. Prefer the `@/` alias for cross-directory imports and relative imports within one folder. Follow the root `../../biome.json` for formatting and import organization.

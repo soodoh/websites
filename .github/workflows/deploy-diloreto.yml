@@ -5,18 +5,18 @@ on:
     paths:
       - apps/diloreto/**
       # PR CI still verifies docs, tests, and infrastructure changes.
-      - '!apps/diloreto/docs/**'
-      - '!apps/diloreto/infra/**'
-      - '!apps/diloreto/tests/**'
-      - '!apps/diloreto/*.md'
-      - '!apps/diloreto/**/*.test.ts'
-      - '!apps/diloreto/**/*.test.tsx'
-      - '!apps/diloreto/**/*.spec.ts'
-      - '!apps/diloreto/**/*.spec.tsx'
-      - '!apps/diloreto/Dockerfile.playwright'
-      - '!apps/diloreto/compose.playwright.yaml'
-      - '!apps/diloreto/playwright*.config.ts'
-      - '!apps/diloreto/lighthouse.json'
+      - "!apps/diloreto/docs/**"
+      - "!apps/diloreto/infra/**"
+      - "!apps/diloreto/tests/**"
+      - "!apps/diloreto/*.md"
+      - "!apps/diloreto/**/*.test.ts"
+      - "!apps/diloreto/**/*.test.tsx"
+      - "!apps/diloreto/**/*.spec.ts"
+      - "!apps/diloreto/**/*.spec.tsx"
+      - "!apps/diloreto/Dockerfile.playwright"
+      - "!apps/diloreto/compose.playwright.yaml"
+      - "!apps/diloreto/playwright*.config.ts"
+      - "!apps/diloreto/lighthouse.json"
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-diloreto.yml
       - scripts/deploy/amplify-static.sh

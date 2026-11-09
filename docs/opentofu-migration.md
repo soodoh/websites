@@ -4,13 +4,13 @@
 
 All account and site ownership handoffs are complete. OpenTofu is the sole active AWS desired state for the account foundations and all four sites. The retired CloudFormation/CDK stacks and Sarabeth CloudFormation execution role have been deleted. Production deployments, exact release-marker checks, and smoke tests succeeded after each handoff.
 
-| Boundary | OpenTofu root | State key |
-| --- | --- | --- |
-| Account foundation | `infra/account-foundation` | `account-foundation/terraform.tfstate` |
-| Paul | `apps/paul/infra/opentofu` | `sites/paul/terraform.tfstate` |
-| DiLoreto | `apps/diloreto/infra/opentofu` | `sites/diloreto/terraform.tfstate` |
-| Carolyn | `apps/carolyn/infra/opentofu` | `sites/carolyn/terraform.tfstate` |
-| Sarabeth | `apps/sarabeth/infra/opentofu` | `sites/sarabeth/terraform.tfstate` |
+| Boundary           | OpenTofu root                  | State key                              |
+| ------------------ | ------------------------------ | -------------------------------------- |
+| Account foundation | `infra/account-foundation`     | `account-foundation/terraform.tfstate` |
+| Paul               | `apps/paul/infra/opentofu`     | `sites/paul/terraform.tfstate`         |
+| DiLoreto           | `apps/diloreto/infra/opentofu` | `sites/diloreto/terraform.tfstate`     |
+| Carolyn            | `apps/carolyn/infra/opentofu`  | `sites/carolyn/terraform.tfstate`      |
+| Sarabeth           | `apps/sarabeth/infra/opentofu` | `sites/sarabeth/terraform.tfstate`     |
 
 Each AWS account has its own versioned, encrypted S3 state bucket. Contentful remains in the independent roots under `apps/carolyn/infra/contentful` and `apps/sarabeth/infra/contentful`; never combine Contentful and AWS state.
 

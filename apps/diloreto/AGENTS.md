@@ -24,4 +24,4 @@ The deployable static artifact is `dist/client`. Smoke and Playwright tests exer
 
 ## Conventions
 
-Use TypeScript and follow `biome.json`. Keep route filenames aligned with URL structure, component/view files in `PascalCase`, and utility modules lowercase. The source alias is `@/`, mapped to `src/`.
+Use TypeScript and follow the root `../../biome.json`. Keep route filenames aligned with URL structure, component/view files in `PascalCase`, and utility modules lowercase. The source alias is `@/`, mapped to `src/`.

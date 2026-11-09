@@ -15,6 +15,18 @@ bun run ci:verify              # complete serial verification
 
 `bun run dev` starts the apps on ports 3100–3103. CMS-backed development requires development-only configuration.
 
+## Formatting and linting
+
+Root `biome.json` is the shared policy for all four sites, shared packages, root scripts, and configuration. `bun run lint` checks the repository; `bun run lint:fix` applies safe fixes. Running `bun run lint` inside an app or package inherits the same policy but checks only that workspace. Root CI also runs the repository-wide check.
+
+The shared policy supports Tailwind and excludes generated routes, build/test reports, and downloaded OpenTofu providers. There are no app-local Biome configurations or CSS Modules overrides.
+
+## TypeScript and generated files
+
+All apps and the shared Playwright package extend root `tsconfig.base.json` for their common strict, no-emit, ESM/bundler compiler policy. Targets, runtime libraries/types, React-specific settings, aliases, and included/excluded files remain local. Relative aliases continue to resolve from each workspace, and Paul's tooling project still extends its app config.
+
+Root `.gitignore` owns shared dependency, build, report, environment, secret, and local-tool exclusions. Carolyn retains a small local file for generated release/authentication content and fixture-recovery artifacts; DiLoreto retains its local deployment-recovery exclusion. Paul and Sarabeth need no local ignore file. Intentionally tracked generated route trees and genealogy data remain trackable, as do example environment files and OpenTofu provider lockfiles.
+
 ## Hosting profiles
 
 Paul and DiLoreto are fully static Amplify apps deployed as verified ZIP artifacts. Carolyn and Sarabeth are static-first Amplify compute apps: Contentful is captured at build time, public routes are prerendered, and only explicitly allow-listed feature routes reach compute. All four publish the same `/__deployment.json` release contract and use the same operational alarm and core security-header baseline.

@@ -1,5 +1,6 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"root": true,
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -10,8 +11,22 @@
 		"ignoreUnknown": true,
 		"includes": [
 			"**",
-			"!!src/routeTree.gen.ts",
-			"!!src/content/genealogy/generated.json"
+			"!!**/.terraform",
+			"!!**/.amplify-hosting",
+			"!!**/.output",
+			"!!**/.nitro",
+			"!!**/.tanstack",
+			"!!**/.turbo",
+			"!!**/dist",
+			"!!**/build",
+			"!!**/coverage",
+			"!!**/playwright-report",
+			"!!**/test-results",
+			"!!**/.lighthouseci",
+			"!!apps/*/src/routeTree.gen.ts",
+			"!!apps/carolyn/src/lib/generated-release",
+			"!!apps/diloreto/src/content/genealogy/generated.json",
+			"!apps/carolyn/tests/fixtures/contentful.json"
 		]
 	},
 	"assist": {
@@ -19,11 +34,6 @@
 			"source": {
 				"organizeImports": "on"
 			}
-		}
-	},
-	"css": {
-		"parser": {
-			"tailwindDirectives": true
 		}
 	},
 	"formatter": {
@@ -46,6 +56,11 @@
 					}
 				}
 			}
+		}
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
 		}
 	}
 }

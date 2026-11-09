@@ -6,18 +6,18 @@ on:
     paths:
       - apps/sarabeth/**
       # PR CI still verifies docs, tests, and infrastructure changes.
-      - '!apps/sarabeth/docs/**'
-      - '!apps/sarabeth/infra/**'
-      - '!apps/sarabeth/tests/**'
-      - '!apps/sarabeth/*.md'
-      - '!apps/sarabeth/**/*.test.ts'
-      - '!apps/sarabeth/**/*.test.tsx'
-      - '!apps/sarabeth/**/*.spec.ts'
-      - '!apps/sarabeth/**/*.spec.tsx'
-      - '!apps/sarabeth/Dockerfile.playwright'
-      - '!apps/sarabeth/compose.playwright.yaml'
-      - '!apps/sarabeth/playwright*.config.ts'
-      - '!apps/sarabeth/lighthouse.json'
+      - "!apps/sarabeth/docs/**"
+      - "!apps/sarabeth/infra/**"
+      - "!apps/sarabeth/tests/**"
+      - "!apps/sarabeth/*.md"
+      - "!apps/sarabeth/**/*.test.ts"
+      - "!apps/sarabeth/**/*.test.tsx"
+      - "!apps/sarabeth/**/*.spec.ts"
+      - "!apps/sarabeth/**/*.spec.tsx"
+      - "!apps/sarabeth/Dockerfile.playwright"
+      - "!apps/sarabeth/compose.playwright.yaml"
+      - "!apps/sarabeth/playwright*.config.ts"
+      - "!apps/sarabeth/lighthouse.json"
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-sarabeth.yml

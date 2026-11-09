@@ -23,4 +23,4 @@ This app is fully static. `bun run build` emits the deployable artifact under `d
 
 ## Conventions
 
-Use strict TypeScript and functional React components. Keep content constants in `src/content/`, UI logic in `src/components/`, and cross-directory imports on the `@/` alias. Follow `biome.json` for formatting and import organization.
+Use strict TypeScript and functional React components. Keep content constants in `src/content/`, UI logic in `src/components/`, and cross-directory imports on the `@/` alias. Follow the root `../../biome.json` for formatting and import organization.

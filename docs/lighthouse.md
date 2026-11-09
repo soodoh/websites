@@ -35,12 +35,12 @@ Do not run audits concurrently on the same checkout. The runner requires free lo
 
 Scores below are percentages; JSON stores them as fractions. Performance gets five points of measurement headroom below the weakest route's observed median, except Paul, which retains its existing 90-point floor. Other category minimums match the weakest observed route median without an automatic discount.
 
-| Site | Routes | Performance mobile / desktop | Accessibility | Best practices | SEO |
-| --- | --- | --- | --- | --- | --- |
-| Paul | `/` | 90 / 90 | 100 | 100 | 100 |
-| DiLoreto | `/`, `/areyou` | 87 / 95 | 93 | 100 | 100 |
-| Carolyn | `/`, `/projects`, `/photography` | 84 / 95 | 100 | 100 | 100 |
-| Sarabeth | `/`, `/about`, `/media` | 95 / 95 | 100 | 96 | 100 |
+| Site     | Routes                           | Performance mobile / desktop | Accessibility | Best practices | SEO |
+| -------- | -------------------------------- | ---------------------------- | ------------- | -------------- | --- |
+| Paul     | `/`                              | 90 / 90                      | 100           | 100            | 100 |
+| DiLoreto | `/`, `/areyou`                   | 87 / 95                      | 93            | 100            | 100 |
+| Carolyn  | `/`, `/projects`, `/photography` | 84 / 95                      | 100           | 100            | 100 |
+| Sarabeth | `/`, `/about`, `/media`          | 95 / 95                      | 100           | 96             | 100 |
 
 Known baseline limitations are not fixes: DiLoreto lacks a main landmark and `/areyou` has contrast failures. Sarabeth's local `/media` reaches the unmocked `/api/youtube-playlist` endpoint, which returns 500 without production configuration and lowers best practices to 96. Its Playwright suite supplies a playlist route fixture; Lighthouse currently measures the credential-free fallback instead. Keep these findings visible and ratchet the corresponding minimums upward when they are addressed.
 

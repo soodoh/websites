@@ -16,7 +16,7 @@ function deploymentPaths(site: (typeof sites)[number]): string[] {
 	return block[1]
 		.split("\n")
 		.filter((line) => line.startsWith("      - "))
-		.map((line) => line.slice(8).replace(/^'(.*)'$/, "$1"));
+		.map((line) => line.slice(8).replace(/^(['"])(.*)\1$/, "$2"));
 }
 
 describe.each(sites)("%s deployment selection", (site) => {

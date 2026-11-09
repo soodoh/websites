@@ -5,18 +5,18 @@ on:
     paths:
       - apps/paul/**
       # PR CI still verifies docs, tests, and infrastructure changes.
-      - '!apps/paul/docs/**'
-      - '!apps/paul/infra/**'
-      - '!apps/paul/tests/**'
-      - '!apps/paul/*.md'
-      - '!apps/paul/**/*.test.ts'
-      - '!apps/paul/**/*.test.tsx'
-      - '!apps/paul/**/*.spec.ts'
-      - '!apps/paul/**/*.spec.tsx'
-      - '!apps/paul/Dockerfile.playwright'
-      - '!apps/paul/compose.playwright.yaml'
-      - '!apps/paul/playwright*.config.ts'
-      - '!apps/paul/lighthouse.json'
+      - "!apps/paul/docs/**"
+      - "!apps/paul/infra/**"
+      - "!apps/paul/tests/**"
+      - "!apps/paul/*.md"
+      - "!apps/paul/**/*.test.ts"
+      - "!apps/paul/**/*.test.tsx"
+      - "!apps/paul/**/*.spec.ts"
+      - "!apps/paul/**/*.spec.tsx"
+      - "!apps/paul/Dockerfile.playwright"
+      - "!apps/paul/compose.playwright.yaml"
+      - "!apps/paul/playwright*.config.ts"
+      - "!apps/paul/lighthouse.json"
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-paul.yml
       - scripts/deploy/amplify-static.sh
