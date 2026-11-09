@@ -48,7 +48,8 @@
 		"test:visual": "bun run build:production:test && EXPECTED_ARTIFACT_MODE=production HERMETIC_ARTIFACT_TEST=true ./scripts/playwright-docker.sh --update-snapshots=none",
 		"test:visual:update": "bun run build:production:test && EXPECTED_ARTIFACT_MODE=production HERMETIC_ARTIFACT_TEST=true ./scripts/playwright-docker.sh --update-snapshots=all",
 		"dev:workspace": "bun run predev && vite dev --port 3102",
-		"ci:verify": "bun run validate && bun run infra:validate && bun run test:visual",
+		"ci:verify": "bun run validate && bun run infra:validate && bun run test:visual && bun run lighthouse --prebuilt",
+		"lighthouse": "bun ../../scripts/lighthouse/run.mjs carolyn",
 		"infra:validate": "../../scripts/infra/validate-opentofu.sh apps/carolyn/infra/opentofu"
 	},
 	"dependencies": {

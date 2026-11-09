@@ -17,7 +17,7 @@ on:
       - '!apps/carolyn/Dockerfile.playwright'
       - '!apps/carolyn/compose.playwright.yaml'
       - '!apps/carolyn/playwright*.config.ts'
-      - '!apps/carolyn/lighthouserc.cjs'
+      - '!apps/carolyn/lighthouse.json'
       - amplify.yml
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-carolyn.yml
@@ -44,7 +44,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    uses: ./.github/workflows/_carolyn-ci.yml
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: carolyn
   deploy:
     needs: verify
     if: github.ref == 'refs/heads/main'

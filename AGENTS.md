@@ -16,7 +16,9 @@ apps must declare every dependency they import.
 - `bun run ci:verify`: root checks followed by all four complete verification chains, concurrency 1.
 
 Run app verification serially because tests generate files in app directories. Sarabeth and
-Carolyn browser fixtures require ARM64 Docker. Portfolio Lighthouse requires local Chrome.
+Carolyn browser fixtures require ARM64 Docker. All four verification chains include Lighthouse;
+run `bun run lighthouse:install` first. When changing Lighthouse policy or baselines, read
+`docs/lighthouse.md`.
 
 ## Deployment
 

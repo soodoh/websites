@@ -1,0 +1,15 @@
+{
+	"routes": ["/", "/about", "/media"],
+	"mobile": {
+		"performance": 0.95,
+		"accessibility": 1,
+		"best-practices": 0.96,
+		"seo": 1
+	},
+	"desktop": {
+		"performance": 0.95,
+		"accessibility": 1,
+		"best-practices": 0.96,
+		"seo": 1
+	}
+}

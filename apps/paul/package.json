@@ -44,9 +44,9 @@
 		"test:hosting": "bun scripts/hosting-smoke.mjs",
 		"test:e2e:static": "bun run build && bun run test:e2e:static:prebuilt",
 		"test:e2e:static:prebuilt": "PLAYWRIGHT_STATIC=1 PLAYWRIGHT_EXPECT_STATIC_404=1 ./scripts/playwright-docker.sh --update-snapshots=none",
-		"lighthouse": "lhci autorun",
+		"lighthouse": "bun ../../scripts/lighthouse/run.mjs paul",
 		"dev:workspace": "vite dev --port 3101",
-		"ci:verify": "bun run lint && bun run typecheck && bun run test:unit && bun run lint:shell && bun run infra:lint && bun run build && bun run test:static && bun run test:e2e:static:prebuilt && bun run lighthouse",
+		"ci:verify": "bun run lint && bun run typecheck && bun run test:unit && bun run lint:shell && bun run infra:lint && bun run build && bun run test:static && bun run test:e2e:static:prebuilt && bun run lighthouse --prebuilt",
 		"lint:shell": "bash -c 'for script in scripts/*.sh; do bash -n \"$script\" || exit; done' && shellcheck scripts/*.sh",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/paul/infra/opentofu"
 	},
@@ -68,7 +68,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.6.6",
-		"@lhci/cli": "0.16.0",
 		"@playwright/test": "1.65.0",
 		"@types/node": "26.6.6",
 		"@types/react": "19.3.0",

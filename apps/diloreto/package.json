@@ -38,7 +38,8 @@
 		"test:infra": "vitest run --config ../../vitest.config.mts --project diloreto infra/hosting-contract.test.ts",
 		"check": "bun run lint && bun run typecheck && bun run test:unit && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
 		"dev:workspace": "vite dev --port 3103",
-		"ci:verify": "bun run lint && bun run typecheck && bun run test:unit && bun run infra:lint && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright",
+		"ci:verify": "bun run lint && bun run typecheck && bun run test:unit && bun run infra:lint && bun run build && bun run check:output && PLAYWRIGHT_SKIP_BUILD=1 bun run test:playwright && bun run lighthouse --prebuilt",
+		"lighthouse": "bun ../../scripts/lighthouse/run.mjs diloreto",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/diloreto/infra/opentofu"
 	},
 	"dependencies": {

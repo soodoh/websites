@@ -1,0 +1,15 @@
+{
+	"routes": ["/", "/areyou"],
+	"mobile": {
+		"performance": 0.87,
+		"accessibility": 0.93,
+		"best-practices": 1,
+		"seo": 1
+	},
+	"desktop": {
+		"performance": 0.95,
+		"accessibility": 0.93,
+		"best-practices": 1,
+		"seo": 1
+	}
+}

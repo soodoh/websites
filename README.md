@@ -33,3 +33,14 @@ Pull requests run `.github/workflows/ci.yml`, which verifies the root and all fo
 Each deployment workflow uses native path filters, a site-specific GitHub Environment, AWS OIDC, and a non-canceling concurrency group. A merge to `main` that matches a site's paths validates and deploys that site; manual dispatches must also target `main`.
 
 See [deployment and rollback operations](docs/deployment.md).
+
+## Lighthouse
+
+All four sites use the same mobile/desktop Lighthouse checks, with per-site category baselines in `apps/<site>/lighthouse.json`.
+
+```sh
+bun run lighthouse:install
+bun run lighthouse paul        # or carolyn, diloreto, sarabeth; builds locally first
+```
+
+PRs and deployments reuse one verification workflow, including Lighthouse. See [Lighthouse checks and baseline updates](docs/lighthouse.md).

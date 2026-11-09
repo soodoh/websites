@@ -1,0 +1,61 @@
+name: Site CI
+on:
+  workflow_call:
+    inputs:
+      site:
+        description: Site to verify (paul, diloreto, carolyn, sarabeth)
+        required: true
+        type: string
+      package-static:
+        description: Package the verified static output for deployment
+        default: false
+        type: boolean
+permissions:
+  contents: read
+jobs:
+  verify:
+    name: ${{ inputs.site }} fixture verification
+    runs-on: ${{ fromJSON('{"paul":"ubuntu-26.04","diloreto":"ubuntu-26.04","carolyn":"ubuntu-26.04-arm","sarabeth":"ubuntu-26.04-arm"}')[inputs.site] }}
+    timeout-minutes: 60
+    env:
+      CI: "1"
+      AWS_EC2_METADATA_DISABLED: "true"
+      SITE: ${{ inputs.site }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/ci-tools
+      - name: Install pinned Lighthouse Chromium
+        run: bun run lighthouse:install
+      - name: Verify site, including mobile and desktop Lighthouse
+        run: bun run "verify:$SITE"
+      - name: Package static site
+        if: inputs.package-static
+        run: |
+          set -euo pipefail
+          case "$SITE" in paul|diloreto) ;; *) exit 1 ;; esac
+          jq -n \
+            --arg commit "$GITHUB_SHA" \
+            --arg runId "$GITHUB_RUN_ID" \
+            --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
+            '{commit: $commit, runId: $runId, runAttempt: $runAttempt}' \
+            > "apps/$SITE/dist/client/__deployment.json"
+          cd "apps/$SITE/dist/client"
+          zip -q -r "$RUNNER_TEMP/site.zip" .
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: inputs.package-static
+        with:
+          name: ${{ inputs.site }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/site.zip
+          retention-days: 1
+          if-no-files-found: error
+      - name: Retain Lighthouse reports, including assertion failures
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse-${{ inputs.site }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .lighthouseci/${{ inputs.site }}/
+          include-hidden-files: true
+          retention-days: 7
+          if-no-files-found: warn

@@ -16,7 +16,7 @@ on:
       - '!apps/paul/Dockerfile.playwright'
       - '!apps/paul/compose.playwright.yaml'
       - '!apps/paul/playwright*.config.ts'
-      - '!apps/paul/lighthouserc.cjs'
+      - '!apps/paul/lighthouse.json'
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-paul.yml
       - scripts/deploy/amplify-static.sh
@@ -35,38 +35,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    runs-on: ubuntu-26.04
-    timeout-minutes: 45
-    env:
-      CI: "1"
-      AWS_EC2_METADATA_DISABLED: "true"
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/ci-tools
-      - name: Install pinned Lighthouse Chrome
-        run: |
-          curl --fail --silent --show-error --location https://storage.googleapis.com/chrome-for-testing-public/152.0.7977.77/linux64/chrome-linux64.zip -o "$RUNNER_TEMP/chrome.zip"
-          unzip -q "$RUNNER_TEMP/chrome.zip" -d "$RUNNER_TEMP/chrome"
-          echo "CHROME_PATH=$RUNNER_TEMP/chrome/chrome-linux64/chrome" >> "$GITHUB_ENV"
-      - run: bun run verify:paul
-      - name: Package static site
-        run: |
-          jq -n \
-            --arg commit "$GITHUB_SHA" \
-            --arg runId "$GITHUB_RUN_ID" \
-            --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
-            '{commit: $commit, runId: $runId, runAttempt: $runAttempt}' \
-            > apps/paul/dist/client/__deployment.json
-          cd apps/paul/dist/client
-          zip -q -r "$RUNNER_TEMP/site.zip" .
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: paul-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/site.zip
-          retention-days: 1
-          if-no-files-found: error
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: paul
+      package-static: true
   deploy:
     needs: verify
     if: github.ref == 'refs/heads/main'

@@ -16,7 +16,7 @@ on:
       - '!apps/diloreto/Dockerfile.playwright'
       - '!apps/diloreto/compose.playwright.yaml'
       - '!apps/diloreto/playwright*.config.ts'
-      - '!apps/diloreto/lighthouserc.cjs'
+      - '!apps/diloreto/lighthouse.json'
       - .github/actions/ci-tools/**
       - .github/workflows/deploy-diloreto.yml
       - scripts/deploy/amplify-static.sh
@@ -35,33 +35,10 @@ concurrency:
   cancel-in-progress: false
 jobs:
   verify:
-    runs-on: ubuntu-26.04
-    timeout-minutes: 45
-    env:
-      CI: "1"
-      AWS_EC2_METADATA_DISABLED: "true"
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/ci-tools
-      - run: bun run verify:diloreto
-      - name: Package static site
-        run: |
-          jq -n \
-            --arg commit "$GITHUB_SHA" \
-            --arg runId "$GITHUB_RUN_ID" \
-            --arg runAttempt "$GITHUB_RUN_ATTEMPT" \
-            '{commit: $commit, runId: $runId, runAttempt: $runAttempt}' \
-            > apps/diloreto/dist/client/__deployment.json
-          cd apps/diloreto/dist/client
-          zip -q -r "$RUNNER_TEMP/site.zip" .
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: diloreto-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/site.zip
-          retention-days: 1
-          if-no-files-found: error
+    uses: ./.github/workflows/_site-ci.yml
+    with:
+      site: diloreto
+      package-static: true
   deploy:
     needs: verify
     if: github.ref == 'refs/heads/main'

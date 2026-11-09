@@ -2,7 +2,7 @@
 
 ## Design
 
-Every site owns one workflow. The workflow validates the current commit, then deploys that same commit in a protected environment. There is no cross-workflow artifact lookup, release database, custom queue reconciliation, or committed run evidence.
+Every site owns one deployment entry point. The workflow validates the current commit, then deploys that same commit in a protected environment. There is no cross-workflow artifact lookup, release database, custom queue reconciliation, or committed run evidence.
 
 | Site | Workflow | Environment | AWS mechanism |
 | --- | --- | --- | --- |
@@ -12,6 +12,14 @@ Every site owns one workflow. The workflow validates the current commit, then de
 | Sarabeth | `deploy-sarabeth.yml` | `production-sarabeth` | repository-connected Amplify release |
 
 Every deployment proceeds automatically after its workflow checks pass. GitHub Environments remain the site-specific trust and secret boundary, but they do not require a human reviewer. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate OpenTofu-managed Contentful webhooks that dispatch the corresponding GitHub deployment workflow against `main`; content and source releases therefore share the same verification, deployment, and smoke-test path.
+
+## Shared verification
+
+PR CI and all four deployment entry points call `_site-ci.yml` with a site name. It keeps Carolyn/Sarabeth on ARM64 and Paul/DiLoreto on x86-64, installs the same Playwright-pinned Chromium, and runs the site's complete `verify:<site>` chain. Every chain includes the shared mobile/desktop Lighthouse checks against locally built output, using the category baselines in `apps/<site>/lighthouse.json`. Reports are retained for seven days, including assertion failures. See [Lighthouse checks](lighthouse.md) for routes, baseline policy, and local commands.
+
+Static deployment callers additionally request packaging. The reusable workflow stamps and uploads the exact Paul/DiLoreto output that passed verification; deployment jobs still download their original site/run/attempt artifact names. Carolyn/Sarabeth retain their repository-connected release mechanism. No reusable verification job receives production credentials, and the PR `CI gate` still requires root checks and all four sites to succeed.
+
+Verification-only changes (shared CI/Lighthouse implementation or per-site baseline files) are checked on PRs but do not independently select a production deployment. Website, dependency, and toolchain changes retain the native deployment selection below.
 
 ## Deployment selection
 
