@@ -4,6 +4,8 @@ shopt -s nullglob
 
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
+bun run lint
+
 # Remove this narrow exception once actionlint supports GitHub-hosted Ubuntu 26 upstream.
 go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 \
   -ignore '^label "ubuntu-26[.]04(-arm)?" is unknown[.]' \

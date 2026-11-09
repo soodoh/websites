@@ -27,4 +27,4 @@ Add contract tests under `tests/contract/` and page/visual coverage under `tests
 - Production retrieves `CONTENTFUL_ACCESS_TOKEN` from `/sarabeth-studio/production/contentful/access-token` during Amplify `preBuild`.
 - The contact and runtime integrations use the AWS SDK default credential provider chain and compute IAM role. Keep static AWS access keys out of app configuration.
 
-Use TypeScript, functional React components, the `@/` alias for cross-folder imports, and `biome.json` as the formatting source of truth.
+Use TypeScript, functional React components, the `@/` alias for cross-folder imports, and the root `../../biome.json` as the formatting source of truth.

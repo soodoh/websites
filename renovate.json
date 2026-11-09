@@ -1,80 +1,55 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended",
-    "group:allNonMajor"
-  ],
-  "automerge": true,
-  "automergeType": "pr",
-  "automergeStrategy": "squash",
-  "platformAutomerge": true,
-  "rebaseWhen": "behind-base-branch",
-  "github-actions": {
-    "managerFilePatterns": [
-      "/apps/[^/]+/\\.github/workflows/[^/]+\\.ya?ml$/"
-    ]
-  },
-  "packageRules": [
-    {
-      "matchDepTypes": [
-        "dependencies",
-        "devDependencies"
-      ],
-      "rangeStrategy": "bump"
-    },
-    {
-      "description": "OpenTofu roots use Terraform syntax; ignore HashiCorp Terraform releases.",
-      "matchManagers": [
-        "terraform"
-      ],
-      "matchDepNames": [
-        "hashicorp/terraform"
-      ],
-      "enabled": false
-    },
-    {
-      "matchManagers": [
-        "github-actions",
-        "dockerfile"
-      ],
-      "pinDigests": true
-    }
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)\\.bun-version$/"
-      ],
-      "matchStrings": [
-        "^(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s*$"
-      ],
-      "depNameTemplate": "oven-sh/bun",
-      "datasourceTemplate": "github-releases"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/package\\.json$/"
-      ],
-      "matchStrings": [
-        "cfn-lint==(?<currentValue>\\d+\\.\\d+\\.\\d+)"
-      ],
-      "depNameTemplate": "cfn-lint",
-      "datasourceTemplate": "pypi"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/package\\.json$/"
-      ],
-      "matchStrings": [
-        "github.com/rhysd/actionlint/cmd/actionlint@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
-      ],
-      "depNameTemplate": "rhysd/actionlint",
-      "datasourceTemplate": "github-releases"
-    }
-  ],
-  "semanticCommits": "enabled",
-  "semanticCommitScope": "deps"
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": ["config:recommended", "group:allNonMajor"],
+	"automerge": true,
+	"automergeType": "pr",
+	"automergeStrategy": "squash",
+	"platformAutomerge": true,
+	"rebaseWhen": "behind-base-branch",
+	"github-actions": {
+		"managerFilePatterns": ["/apps/[^/]+/\\.github/workflows/[^/]+\\.ya?ml$/"]
+	},
+	"packageRules": [
+		{
+			"matchDepTypes": ["dependencies", "devDependencies"],
+			"rangeStrategy": "bump"
+		},
+		{
+			"description": "OpenTofu roots use Terraform syntax; ignore HashiCorp Terraform releases.",
+			"matchManagers": ["terraform"],
+			"matchDepNames": ["hashicorp/terraform"],
+			"enabled": false
+		},
+		{
+			"matchManagers": ["github-actions", "dockerfile"],
+			"pinDigests": true
+		}
+	],
+	"customManagers": [
+		{
+			"customType": "regex",
+			"managerFilePatterns": ["/(^|/)\\.bun-version$/"],
+			"matchStrings": ["^(?<currentValue>\\d+\\.\\d+\\.\\d+)\\s*$"],
+			"depNameTemplate": "oven-sh/bun",
+			"datasourceTemplate": "github-releases"
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": ["/package\\.json$/"],
+			"matchStrings": ["cfn-lint==(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+			"depNameTemplate": "cfn-lint",
+			"datasourceTemplate": "pypi"
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": ["/package\\.json$/"],
+			"matchStrings": [
+				"github.com/rhysd/actionlint/cmd/actionlint@(?<currentValue>v\\d+\\.\\d+\\.\\d+)"
+			],
+			"depNameTemplate": "rhysd/actionlint",
+			"datasourceTemplate": "github-releases"
+		}
+	],
+	"semanticCommits": "enabled",
+	"semanticCommitScope": "deps"
 }

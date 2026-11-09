@@ -1,8 +1,8 @@
+# Dependencies and workspace caches
 node_modules/
 .turbo/
-.env
-.env.*
-!.env.example
+
+# Build and hosting output
 .amplify-hosting/
 .output/
 .nitro/
@@ -10,6 +10,18 @@ node_modules/
 dist/
 build/
 cdk.out/
+*.tsbuildinfo
+*.zip
+
+# Local environment and secret material
+.env
+.env.*
+!.env.example
+*.local
+*.pem
+*.key
+
+# OpenTofu working directories, state, and plans
 .terraform/
 *.tfstate
 *.tfstate.*
@@ -17,15 +29,33 @@ cdk.out/
 *.tfbackend
 *.tfvars
 !*.tfvars.example
+
+# Test and browser reports
 coverage/
 playwright-report/
 test-results/
 .lighthouseci/
-*.tsbuildinfo
-*.zip
+.playwright-output/
+
+# Logs and crash dumps
+logs
 *.log
-*.pem
-*.key
-.DS_Store
+npm-debug.log*
+bun-debug.log*
+core
+*.core
+
+# Local agent/browser artifacts
 .pi/
+.pi-subagents
+.playwright-mcp/
+
+# Legacy local hosting/tool caches (not active build configuration)
+.vinxi/
+.vercel
+.netlify
+.oxlintcache
+
+# OS and interpreter artifacts
+.DS_Store
 __pycache__/

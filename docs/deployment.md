@@ -4,12 +4,12 @@
 
 Every site owns one deployment entry point. The workflow validates the current commit, then deploys that same commit in a protected environment. There is no cross-workflow artifact lookup, release database, custom queue reconciliation, or committed run evidence.
 
-| Site | Workflow | Environment | AWS mechanism |
-| --- | --- | --- | --- |
-| Paul | `deploy-paul.yml` | `production-portfolio` | verified static ZIP uploaded to Amplify |
-| DiLoreto | `deploy-diloreto.yml` | `production-diloreto` | verified static ZIP uploaded to Amplify |
-| Carolyn | `deploy-carolyn.yml` | `production-carolyn` | repository-connected Amplify release |
-| Sarabeth | `deploy-sarabeth.yml` | `production-sarabeth` | repository-connected Amplify release |
+| Site     | Workflow              | Environment            | AWS mechanism                           |
+| -------- | --------------------- | ---------------------- | --------------------------------------- |
+| Paul     | `deploy-paul.yml`     | `production-portfolio` | verified static ZIP uploaded to Amplify |
+| DiLoreto | `deploy-diloreto.yml` | `production-diloreto`  | verified static ZIP uploaded to Amplify |
+| Carolyn  | `deploy-carolyn.yml`  | `production-carolyn`   | repository-connected Amplify release    |
+| Sarabeth | `deploy-sarabeth.yml` | `production-sarabeth`  | repository-connected Amplify release    |
 
 Every deployment proceeds automatically after its workflow checks pass. GitHub Environments remain the site-specific trust and secret boundary, but they do not require a human reviewer. AWS access uses short-lived OIDC credentials. Each site has its own non-canceling concurrency group. Carolyn and Sarabeth additionally accept separate OpenTofu-managed Contentful webhooks that dispatch the corresponding GitHub deployment workflow against `main`; content and source releases therefore share the same verification, deployment, and smoke-test path.
 

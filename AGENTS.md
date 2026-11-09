@@ -10,7 +10,8 @@ apps must declare every dependency they import.
 ## Commands
 
 - `bun run dev`: starts Sarabeth, Paul, Carolyn, and DiLoreto on ports 3100–3103.
-- `bun run lint`, `bun run typecheck`: serial workspace checks.
+- `bun run lint`: one root Biome check covering apps, shared packages, scripts, and configuration.
+- `bun run typecheck`: serial workspace type checks.
 - `bun run test:workspace`: root workspace, Docker-wrapper, and commit-policy tests.
 - `bun run verify:<site>`: complete verification for one of `sarabeth`, `paul`, `carolyn`, or `diloreto`.
 - `bun run ci:verify`: root checks followed by all four complete verification chains, concurrency 1.
@@ -32,6 +33,12 @@ sole active AWS definition. Obtain explicit approval before GitHub settings writ
 state mutations, workflow dispatch, source-writer shutdown, production HTTP tests, or deployment.
 
 ## Repository rules
+
+Root `biome.json` owns formatting, lint rules, and generated-file exclusions for every workspace.
+App-local `bun run lint` inherits that policy while checking only the current app.
+Root `tsconfig.base.json` owns common compiler policy; keep targets, runtime types, aliases,
+and file coverage in workspace configs. Root `.gitignore` owns common generated-output rules;
+app ignore files contain only app-specific exceptions.
 
 Root Lefthook/commitlint require Conventional Commits with one scope: `carolyn`, `paul`,
 `diloreto`, `sarabeth`, `repo`, `ci`, or `deps`. Root Renovate owns dependency updates.
