@@ -21,6 +21,12 @@ Static deployment callers additionally request packaging. The reusable workflow 
 
 Verification-only changes (shared CI/Lighthouse implementation or per-site baseline files) are checked on PRs but do not independently select a production deployment. Website, dependency, and toolchain changes retain the native deployment selection below.
 
+## Static route-data caching
+
+Carolyn and Sarabeth serve prerendered route-data JSON with year-long immutable caching. Their static server-function IDs must therefore change when the data changes, not just when the source function is renamed. Carolyn scopes these IDs to the hash of its captured public-content snapshot. Sarabeth scopes them to a unique identity created once per build and shared by the client, server, and prerender compiler. Runtime functions retain their default IDs.
+
+Do not use the Git commit alone as the cache identity: Contentful can publish different content at the same commit. Old browser-cached metadata must not override fresh page content or reference album files removed by a newer release. Paul and DiLoreto do not use this static route-data cache.
+
 ## Deployment selection
 
 Source deployments use GitHub's native `push.branches` and ordered `push.paths` filters, with no custom changed-file detector. A push to `main` selects each site whose app files changed, except for app-local docs, infrastructure, tests, root Markdown documentation, and the explicitly excluded browser/Lighthouse configuration files. Source, public assets, build scripts, and build configuration remain deployment triggers. Pull-request CI still verifies all four sites, including changes excluded from deployment.

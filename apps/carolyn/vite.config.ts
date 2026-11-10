@@ -9,6 +9,10 @@ import { getArtifactMode } from "./src/lib/build-environment.ts";
 import projectRoutes from "./src/lib/generated-release/project-routes.json" with {
 	type: "json",
 };
+import publicReleaseContent from "./src/lib/generated-release/public-release-content.json" with {
+	type: "json",
+};
+import { createReleaseFunctionId } from "./src/lib/static-release-function-id.ts";
 
 const publicProjectSlugs = Object.entries(projectRoutes).flatMap(
 	([slug, route]) => (route === "public" ? [slug] : []),
@@ -52,6 +56,11 @@ export default defineConfig(({ mode }) => {
 				],
 			}),
 			tanstackStart({
+				serverFns: {
+					generateFunctionId: createReleaseFunctionId(
+						JSON.stringify(publicReleaseContent),
+					),
+				},
 				pages: [{ path: "/__static-not-found" }],
 				prerender: {
 					enabled: true,

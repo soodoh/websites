@@ -4,6 +4,7 @@ import viteReact from "@vitejs/plugin-react";
 import { responsiveImages } from "@websites/images/vite";
 import { nitro } from "nitro/vite";
 import type { UserConfig } from "vite";
+import { createStaticReleaseFunctionId } from "./scripts/static-release-function-id";
 
 export const sharedViteConfig = {
 	server: {
@@ -24,6 +25,9 @@ export const sharedViteConfig = {
 	plugins: [
 		responsiveImages(),
 		tanstackStart({
+			serverFns: {
+				generateFunctionId: createStaticReleaseFunctionId(),
+			},
 			pages: [{ path: "/" }],
 			prerender: {
 				enabled: true,
