@@ -54,9 +54,9 @@
 	},
 	"dependencies": {
 		"@websites/images": "workspace:*",
-		"@aws-sdk/client-dynamodb": "3.1164.0",
-		"@aws-sdk/client-ses": "3.1164.0",
-		"@aws-sdk/client-ssm": "3.1164.0",
+		"@aws-sdk/client-dynamodb": "3.1165.0",
+		"@aws-sdk/client-ses": "3.1165.0",
+		"@aws-sdk/client-ssm": "3.1165.0",
 		"@contentful/rich-text-react-renderer": "16.2.2",
 		"@contentful/rich-text-types": "17.2.7",
 		"@tanstack/react-router": "1.170.46",
