@@ -27,8 +27,8 @@ import {
 	DialogDescription,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import { fetchGeneratedAlbum } from "@/lib/generated-album";
 import type { Album } from "@/lib/types";
+import { useAlbumSelection } from "@/lib/use-album-selection";
 import { cn, darkSurfaceFocusClass } from "@/lib/utils";
 
 const loadImageGallery = () => import("@/components/image-gallery");
@@ -93,73 +93,16 @@ const PhotographyContent = ({
 	initialAlbum: Album;
 }): JSX.Element => {
 	const [galleryOpen, setGalleryOpen] = useState(false);
-	const [album, setAlbum] = useState(initialAlbum);
-	const [selectedAlbumName, setSelectedAlbumName] = useState(initialAlbum.name);
+	const { album, selectedAlbumName, isLoading, loadError, selectAlbum } =
+		useAlbumSelection(initialAlbum, albumSources);
 	const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 	const [galleryNavigation, setGalleryNavigation] =
 		useState<CarouselNavigation>();
-	const [loadError, setLoadError] = useState<string>();
-	const [isLoading, setIsLoading] = useState(false);
 	const openingButtonRef = useRef<HTMLButtonElement>(null);
 	const pendingGalleryNavigation = useRef<GalleryNavigationIntent[]>([]);
-	const albumRequestId = useRef(0);
-	const albumCache = useRef(new Map([[initialAlbum.name, initialAlbum]]));
-	const albumRequests = useRef(new Map<string, Promise<Album>>());
-	const requestedAlbumName = useRef<string | undefined>(undefined);
-
 	const handleAlbumChange = (albumName: string) => {
-		if (requestedAlbumName.current === albumName) {
-			return;
-		}
-		const requestId = albumRequestId.current + 1;
-		albumRequestId.current = requestId;
-		requestedAlbumName.current = albumName;
-		setSelectedAlbumName(albumName);
 		setGalleryOpen(false);
-		setLoadError(undefined);
-		const cachedAlbum = albumCache.current.get(albumName);
-		if (cachedAlbum) {
-			requestedAlbumName.current = undefined;
-			setAlbum(cachedAlbum);
-			setIsLoading(false);
-			return;
-		}
-		setIsLoading(true);
-		void (async () => {
-			try {
-				let albumRequest = albumRequests.current.get(albumName);
-				if (!albumRequest) {
-					const albumSource = albumSources[albumName];
-					if (!albumSource) {
-						throw new Error(`Album source is missing: ${albumName}`);
-					}
-					albumRequest = fetchGeneratedAlbum(albumSource);
-					albumRequests.current.set(albumName, albumRequest);
-					const evictRequest = () => {
-						if (albumRequests.current.get(albumName) === albumRequest) {
-							albumRequests.current.delete(albumName);
-						}
-					};
-					void albumRequest.then(evictRequest, evictRequest);
-				}
-				const nextAlbum = await albumRequest;
-				albumCache.current.set(albumName, nextAlbum);
-				if (albumRequestId.current === requestId) {
-					requestedAlbumName.current = undefined;
-					setAlbum(nextAlbum);
-				}
-			} catch {
-				if (albumRequestId.current === requestId) {
-					requestedAlbumName.current = undefined;
-					setSelectedAlbumName(album.name);
-					setLoadError("Unable to load this album. Please try again.");
-				}
-			} finally {
-				if (albumRequestId.current === requestId) {
-					setIsLoading(false);
-				}
-			}
-		})();
+		void selectAlbum(albumName);
 	};
 
 	useEffect(() => {

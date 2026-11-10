@@ -33,6 +33,13 @@ Local builds use ignored `.env` values:
 
 Fixed public pages and every unprotected project detail are prerendered. Client navigation reads immutable TanStack static server-function cache files, while photography lazily fetches immutable static album JSON. Exact protected project paths, password verification, and the `/resume` HTTP 307 redirect remain compute-backed. Unknown routes and missing assets terminate at Amplify's static target with an edge-generated HTTP 404 and never invoke compute.
 
+`src/lib/album-selection.ts` owns visit-local album selection: cached albums,
+in-flight request reuse, latest-choice ordering, and rollback/retry after loading
+errors. `use-album-selection.ts` binds its snapshots to React without sharing state
+between mounted visits or server renders. Photography rendering retains gallery
+navigation, focus restoration, and masonry; selection tests exercise the same
+interface used by that binding, alongside the existing browser behavior checks.
+
 Production compute reads only the generated protected-project snapshot, generated auth manifest, generated common content, and `PROJECT_AUTH_SECRET`. It has no Contentful client or token-loading path. Amplify retrieves `CONTENTFUL_ACCESS_TOKEN` from SSM only for the build. `bun run build` emits the deployment contract under `.amplify-hosting/`.
 
 ## Verification

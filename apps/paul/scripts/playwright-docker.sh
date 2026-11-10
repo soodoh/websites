@@ -56,32 +56,9 @@ set -e
 
 copy_artifacts
 
-for argument in "$@"; do
-	if [[ "${status}" -eq 0 && ( "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ) ]]; then
-		staging_directory="$(mktemp -d tests/.screenshots-staging.XXXXXX)"
-		backup_directory="tests/.screenshots-backup"
-		docker cp "${container}:/work/apps/paul/tests/__screenshots__/." "${staging_directory}"
-		if ! find "${staging_directory}" -type f -name '*.png' -print -quit | grep -q .; then
-			echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
-			rm -rf "${staging_directory}"
-			exit 1
-		fi
-
-		rm -rf "${backup_directory}"
-		if [[ -d tests/__screenshots__ ]]; then
-			mv tests/__screenshots__ "${backup_directory}"
-		fi
-		if mv "${staging_directory}" tests/__screenshots__; then
-			rm -rf "${backup_directory}"
-		else
-			if [[ -d "${backup_directory}" ]]; then
-				mv "${backup_directory}" tests/__screenshots__
-			fi
-			exit 1
-		fi
-		break
-	fi
-done
+if [[ "${status}" -eq 0 ]]; then
+	bash "${workspace_root}/scripts/playwright/publish-snapshots.sh" "${container}" "${app_root}" "$@"
+fi
 
 trap - EXIT
 cleanup

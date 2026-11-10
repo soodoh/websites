@@ -48,6 +48,22 @@ The shared visual module contains only stable browser primitives. CMS routing,
 authentication, galleries, filters, route inventories, and content assertions
 remain app-local.
 
+## Snapshot publication
+
+The four Docker runners retain their own builds, architecture requirements,
+container lifecycle, and verification checks. After every required check succeeds,
+they invoke `scripts/playwright/publish-snapshots.sh` with the successful container,
+the app directory, and the original test arguments. Sarabeth verifies that
+container's release marker before publication.
+
+The shared command publishes only for an explicit snapshot-update argument. It
+copies snapshots into a private staging directory, requires at least one PNG,
+and replaces the reviewed baseline directory with recovery on replacement failure.
+Copy/validation failures leave the previous baselines intact; staging is cleaned
+on exit. If restoring the previous baselines also fails, the command retains the
+recovery copy and reports its location instead of deleting it. Normal verification
+with `--update-snapshots=none` never publishes snapshots.
+
 ## Coverage expectations
 
 For applicable routes and states, cover:
