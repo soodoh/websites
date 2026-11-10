@@ -50,6 +50,14 @@ The 2026-11-09 local follow-up reports show 100 accessibility, best practices, a
 
 The subsequent shared image-pipeline follow-up raises DiLoreto `/areyou` mobile performance to 94 in local three-run medians, with LCP approximately 3.15 seconds (previously 3.38 seconds), zero CLS, and unchanged 100 non-performance scores. The map is now a pixel-preserving approximately 8 KB WebP rather than the former approximately 27 KB encoding. Initial sampled image transfers fall from approximately 236 KB to 152 KB through adaptive formats and responsive candidates. Other route/profile medians remain unchanged. See [responsive image delivery](images.md) for the shared local/Contentful policy and its tradeoffs.
 
+## Application-loading follow-up
+
+The next local follow-up compiles DiLoreto's repository-owned history and biography Markdown at build time, using the same ReactMarkdown renderer, HTML escaping, and safe-URL policy. Browser code receives only compiled markup, not the parser. `/areyou` mobile improves from 94 to 95, with median LCP falling from approximately 3.15 to 3.00 seconds and zero CLS. Sampled initial JavaScript transfers fall from approximately 187 KB to 152 KB; desktop performance remains 100. Existing Linux visual baselines are unchanged.
+
+Sarabeth `/media` now preloads its same-origin playlist request, preconnects to the thumbnail origin, and prioritizes only the featured thumbnail. Browser coverage verifies that the preload is reused rather than producing a duplicate API request, while preserving loading, unavailable, retry, and explicit-playback behavior. Playlist buttons derive their accessible names from their visible duration, number, title, and selection text, with a visually hidden action prefix contained inside the thumbnail. The zero-weight `label-content-name-mismatch` diagnostic, which previously failed, now passes in every mobile and desktop run. Performance remains 100 mobile and 98 desktop, so these hints are not claimed as a category-score improvement.
+
+A prerendered playlist snapshot is deliberately deferred: the current build role can read the Contentful parameter, not the runtime YouTube secret. The thumbnail still depends on hydrated playlist rendering; removing that dependency needs a separately designed public-snapshot boundary rather than silently expanding secret access. Paul and Carolyn remain unchanged. A trial Carolyn mobile-navigation split saved only approximately 3 KiB without a score improvement and was not retained.
+
 ## Updating baselines
 
 Collect without enforcing the current minimums:

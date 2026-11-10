@@ -169,7 +169,7 @@ test("links non-embeddable selections to YouTube without loading an iframe", asy
 	await page.goto("/media");
 	await page
 		.getByRole("button", {
-			name: "Select Only Echo; opens on YouTube",
+			name: /Select video; opens on YouTube:.*Only Echo/,
 		})
 		.click();
 

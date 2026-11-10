@@ -1,6 +1,6 @@
 import type { JSX } from "react";
 import { memo } from "react";
-import ReactMarkdown from "react-markdown";
+import MarkdownContent from "@/components/markdown-content";
 import type { HistoryRecord } from "@/content/family-history";
 import HistoryGallery from "./history-gallery";
 import Photo, { type OpenPhoto } from "./photo";
@@ -56,9 +56,7 @@ function Record({
 				<div
 					className={`row-start-1 ${markdownColSpan} max-sm:row-start-auto max-sm:col-span-3`}
 				>
-					<div className="font-serif markdown-content">
-						<ReactMarkdown>{data.content}</ReactMarkdown>
-					</div>
+					<MarkdownContent content={data.content} />
 				</div>
 
 				{hasGallery ? (

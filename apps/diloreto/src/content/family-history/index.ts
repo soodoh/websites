@@ -1,3 +1,4 @@
+import type { CompiledMarkdown } from "../markdown";
 import type { HistoryRecord, HistoryRecordMetadata } from "./types";
 
 export type { HistoryRecord } from "./types";
@@ -9,10 +10,10 @@ const metadataByPath = import.meta.glob<HistoryRecordMetadata>(
 		import: "default",
 	},
 );
-const markdownByPath = import.meta.glob<string>("./*/content.md", {
+const markdownByPath = import.meta.glob<CompiledMarkdown>("./*/content.md", {
 	eager: true,
 	import: "default",
-	query: "?raw",
+	query: "?compiled",
 });
 
 const recordsByDirectory = Object.entries(metadataByPath).map(

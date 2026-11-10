@@ -1,5 +1,5 @@
 import type { JSX, RefObject } from "react";
-import ReactMarkdown from "react-markdown";
+import MarkdownContent from "@/components/markdown-content";
 import {
 	Dialog,
 	DialogContent,
@@ -41,9 +41,7 @@ export default function PersonModal({
 					</a>
 				) : null}
 
-				<div className="font-serif markdown-content">
-					<ReactMarkdown>{data.bio}</ReactMarkdown>
-				</div>
+				<MarkdownContent content={data.bio} />
 			</DialogContent>
 		</Dialog>
 	);
