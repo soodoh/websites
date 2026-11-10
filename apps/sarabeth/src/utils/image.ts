@@ -1,3 +1,4 @@
+import { getImageWidths } from "@websites/images";
 import type { CSSProperties } from "react";
 import { transform as transformContentfulUrl } from "unpic/providers/contentful";
 import type { Operations } from "unpic/types";
@@ -29,10 +30,7 @@ export const getImageDimensions = ({ width, height }: ImageDimensions) => {
 };
 
 export const getImageBreakpoints = (width: number): number[] => {
-	const breakpoints = responsiveWidths.filter(
-		(responsiveWidth) => responsiveWidth < width,
-	);
-	return [...breakpoints, width];
+	return getImageWidths(width, responsiveWidths, maximumContentfulDimension);
 };
 
 export const getBlurStyle = (

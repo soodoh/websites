@@ -46,6 +46,10 @@ test("browser containers install from the frozen root lock without host dependen
 		expect(dockerfile).toContain(
 			"COPY packages/playwright-support packages/playwright-support",
 		);
+		expect(dockerfile).toContain(
+			"COPY packages/images/package.json packages/images/package.json",
+		);
+		expect(dockerfile).toContain("COPY packages/images packages/images");
 	}
 	expect(read(".dockerignore")).toContain("**/.env.*");
 	expect(read(".dockerignore")).toContain("**/node_modules");

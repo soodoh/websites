@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { responsiveImages } from "@websites/images/vite";
 import { nitro } from "nitro/vite";
 import { defineConfig, loadEnv } from "vite";
 import { getStaticPublicPaths } from "./src/lib/amplify-artifact.ts";
@@ -32,6 +33,7 @@ export default defineConfig(({ mode }) => {
 			tsconfigPaths: true,
 		},
 		plugins: [
+			responsiveImages(),
 			nitro({
 				preset: "aws_amplify",
 				awsAmplify: { runtime: "nodejs24.x" },

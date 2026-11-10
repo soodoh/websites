@@ -1,3 +1,4 @@
+import ResponsiveImage from "@websites/images/react";
 import type { JSX } from "react";
 import { about } from "@/content/about";
 import Parallax from "./parallax";
@@ -26,26 +27,11 @@ const About = (): JSX.Element => {
 				startY={10}
 				endY={-60}
 			>
-				<picture>
-					<source
-						type="image/avif"
-						srcSet="/images/profile-240.avif 240w, /images/profile-320.avif 320w, /images/profile-480.avif 480w, /images/profile-960.avif 960w, /images/profile-1200.avif 1200w"
-						sizes="(width < 700px) min(calc(80vw - 6rem), 304px), (width < 1333px) 30vw, 400px"
-					/>
-					<source
-						type="image/webp"
-						srcSet="/images/profile-240.webp 240w, /images/profile-320.webp 320w, /images/profile-480.webp 480w, /images/profile-960.webp 960w, /images/profile-1200.webp 1200w"
-						sizes="(width < 700px) min(calc(80vw - 6rem), 304px), (width < 1333px) 30vw, 400px"
-					/>
-					<img
-						src={about.image}
-						alt="Paul DiLoreto"
-						width={960}
-						height={1280}
-						loading="lazy"
-						decoding="async"
-					/>
-				</picture>
+				<ResponsiveImage
+					image={about.image}
+					alt="Paul DiLoreto"
+					sizes="(width < 700px) min(calc(80vw - 6rem), 304px), (width < 1333px) 30vw, 400px"
+				/>
 			</Parallax>
 
 			<div className="text-light-yellow mt-[6.5rem] grid grid-cols-[5rem_auto] gap-y-12 max-xs:grid-cols-1 relative z-5 [&>h3]:text-2xl [&>h3]:text-light-blue [&>h3]:m-0">

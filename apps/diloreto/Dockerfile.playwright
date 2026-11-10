@@ -14,9 +14,11 @@ COPY apps/diloreto/package.json apps/diloreto/package.json
 COPY apps/paul/package.json apps/paul/package.json
 COPY apps/sarabeth/package.json apps/sarabeth/package.json
 COPY packages/playwright-support/package.json packages/playwright-support/package.json
+COPY packages/images/package.json packages/images/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY apps/diloreto apps/diloreto
 COPY packages/playwright-support packages/playwright-support
+COPY packages/images packages/images
 WORKDIR /work/apps/diloreto
 RUN mkdir -p dist/client .playwright-output && chmod -R a+rX /work
 RUN chmod -R a+rwX tests .playwright-output

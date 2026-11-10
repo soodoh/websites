@@ -23,6 +23,7 @@ export default function Photo({
 	const image = (
 		<ResponsiveImage
 			image={data}
+			alt={data.alt}
 			loading={priority ? "eager" : "lazy"}
 			fetchPriority={priority ? "high" : "auto"}
 			sizes="(max-width: 320px) 100vw, 300px"

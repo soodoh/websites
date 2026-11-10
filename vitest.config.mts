@@ -43,7 +43,7 @@ export default defineConfig({
 				test: {
 					name: "workspace",
 					environment: "node",
-					include: ["scripts/**/*.test.ts"],
+					include: ["scripts/**/*.test.ts", "packages/*/tests/**/*.test.ts"],
 				},
 			},
 			appProject(

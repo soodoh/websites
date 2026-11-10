@@ -1,4 +1,5 @@
 import { Image, type ImageProps } from "@unpic/react/base";
+import { getImageWidths } from "@websites/images";
 import {
 	type CSSProperties,
 	type JSX,
@@ -66,13 +67,7 @@ export function getImageBreakpoints(
 	breakpoints: number[],
 	intrinsicWidth: number,
 ): number[] {
-	const terminalWidth = Math.min(intrinsicWidth, CONTENTFUL_MAX_WIDTH);
-	return [
-		...new Set([
-			...breakpoints.filter((breakpoint) => breakpoint < terminalWidth),
-			terminalWidth,
-		]),
-	];
+	return getImageWidths(intrinsicWidth, breakpoints, CONTENTFUL_MAX_WIDTH);
 }
 
 export function shouldUseImagePlaceholder(

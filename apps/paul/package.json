@@ -51,6 +51,7 @@
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/paul/infra/opentofu"
 	},
 	"dependencies": {
+		"@websites/images": "workspace:*",
 		"@fontsource/fjalla-one": "5.3.0",
 		"@fontsource/geo": "5.3.0",
 		"@tailwindcss/vite": "4.3.5",
