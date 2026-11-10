@@ -148,6 +148,7 @@ export default function ImageModal({
 											{isDisplayed || shouldPreload ? (
 												<ResponsiveImage
 													image={photo}
+													alt={photo.alt}
 													sizes={modalImageSizes(photo)}
 													loading={isDisplayed ? "eager" : "lazy"}
 													fetchPriority={isDisplayed ? "high" : "low"}

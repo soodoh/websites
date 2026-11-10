@@ -1,3 +1,4 @@
+import ResponsiveImage from "@websites/images/react";
 import type { JSX } from "react";
 import type { Project } from "@/content/projects";
 
@@ -11,27 +12,13 @@ const ProjectThumbnail = ({ project }: { project: Project }): JSX.Element => {
 				{project.title}
 			</div>
 
-			<picture className="block w-full">
-				<source
-					type="image/avif"
-					srcSet={project.image.avifSrcSet}
-					sizes="(width < 960px) 80vw, (width < 1400px) 400px, min(calc(50vw - 10rem), 600px)"
-				/>
-				<source
-					type="image/webp"
-					srcSet={project.image.webpSrcSet}
-					sizes="(width < 960px) 80vw, (width < 1400px) 400px, min(calc(50vw - 10rem), 600px)"
-				/>
-				<img
-					className="w-full h-auto opacity-50"
-					alt={project.ariaLabel}
-					src={project.image.src}
-					width={project.image.width}
-					height={project.image.height}
-					loading="lazy"
-					decoding="async"
-				/>
-			</picture>
+			<ResponsiveImage
+				pictureClassName="block w-full"
+				className="w-full h-auto opacity-50"
+				image={project.image}
+				alt={project.ariaLabel}
+				sizes="(width < 960px) 80vw, (width < 1400px) 400px, min(calc(50vw - 10rem), 600px)"
+			/>
 		</div>
 	);
 };

@@ -48,6 +48,8 @@ Carolyn's SSR-stable masonry and self-hosted critical fonts produce 100 performa
 
 The 2026-11-09 local follow-up reports show 100 accessibility, best practices, and SEO on every configured route/profile. Performance is 100 except DiLoreto `/areyou` mobile (92, with zero CLS after route-specific critical-font preloads) and Sarabeth `/media` desktop (98). The latter now measures the actual playlist and thumbnail loading rather than the previous API-error fallback; its performance is not directly comparable to the empty fallback. Aggregate scores do not replace review of individual accessibility diagnostics.
 
+The subsequent shared image-pipeline follow-up raises DiLoreto `/areyou` mobile performance to 94 in local three-run medians, with LCP approximately 3.15 seconds (previously 3.38 seconds), zero CLS, and unchanged 100 non-performance scores. The map is now a pixel-preserving approximately 8 KB WebP rather than the former approximately 27 KB encoding. Initial sampled image transfers fall from approximately 236 KB to 152 KB through adaptive formats and responsive candidates. Other route/profile medians remain unchanged. See [responsive image delivery](images.md) for the shared local/Contentful policy and its tradeoffs.
+
 ## Updating baselines
 
 Collect without enforcing the current minimums:

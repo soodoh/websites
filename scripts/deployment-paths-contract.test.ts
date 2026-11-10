@@ -49,6 +49,7 @@ describe.each(sites)("%s deployment selection", (site) => {
 			expect.arrayContaining([
 				"package.json",
 				"bun.lock",
+				"packages/images/**",
 				"bunfig.toml",
 				"turbo.json",
 				".nvmrc",

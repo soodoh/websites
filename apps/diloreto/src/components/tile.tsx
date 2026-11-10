@@ -32,6 +32,7 @@ export default function Tile({
 		<>
 			<ResponsiveImage
 				image={image}
+				alt={image.alt}
 				sizes="(max-width: 640px) calc(50vw - 12px), (max-width: 1216px) calc(33vw - 12px), 400px"
 				loading={priority ? "eager" : "lazy"}
 				fetchPriority={priority ? "high" : "auto"}

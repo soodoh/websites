@@ -156,10 +156,18 @@ test("responsive images select right-sized sources", {
 							"Project image locator did not resolve to an image",
 						);
 					}
-					return image.currentSrc;
+					const candidates = Array.from(
+						image.closest("picture")?.querySelectorAll("source") ?? [],
+					).flatMap((source) => source.srcset.split(", "));
+					const selected = candidates.find(
+						(candidate) =>
+							new URL(candidate.split(" ")[0], location.href).href ===
+							image.currentSrc,
+					);
+					return Number.parseInt(selected?.split(" ")[1] ?? "", 10);
 				}),
 		)
-		.toMatch(/\/images\/carolyn-portfolio-480\.avif$/);
+		.toBe(480);
 
 	const profilePage = await page.context().newPage();
 	await profilePage.setViewportSize({ width: 699, height: 844 });
@@ -174,10 +182,18 @@ test("responsive images select right-sized sources", {
 				if (!(image instanceof HTMLImageElement)) {
 					throw new Error("Profile image locator did not resolve to an image");
 				}
-				return image.currentSrc;
+				const candidates = Array.from(
+					image.closest("picture")?.querySelectorAll("source") ?? [],
+				).flatMap((source) => source.srcset.split(", "));
+				const selected = candidates.find(
+					(candidate) =>
+						new URL(candidate.split(" ")[0], location.href).href ===
+						image.currentSrc,
+				);
+				return Number.parseInt(selected?.split(" ")[1] ?? "", 10);
 			}),
 		)
-		.toMatch(/\/images\/profile-320\.avif$/);
+		.toBe(320);
 	await profilePage.close();
 });
 

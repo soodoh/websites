@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { responsiveImages } from "@websites/images/vite";
 import { nitro } from "nitro/vite";
 import type { UserConfig } from "vite";
 
@@ -21,6 +22,7 @@ export const sharedViteConfig = {
 		sourcemap: false,
 	},
 	plugins: [
+		responsiveImages(),
 		tanstackStart({
 			pages: [{ path: "/" }],
 			prerender: {

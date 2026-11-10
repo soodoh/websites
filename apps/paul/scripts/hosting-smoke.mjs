@@ -60,7 +60,11 @@ assert(
 	`Hashed asset returned ${hashedAsset.response.status}`,
 );
 
-const image = await request(new URL("/images/profile-480.webp", baseUrl), {
+const imagePath = root.body.match(
+	/(?:src|srcSet)="(\/assets\/[^" ]+\.(?:avif|webp|png|jpe?g))/i,
+)?.[1];
+assert(imagePath, "Root does not reference a build-generated responsive image");
+const image = await request(new URL(imagePath, baseUrl), {
 	headers: { "Accept-Encoding": "br, gzip" },
 });
 assert(
@@ -68,7 +72,7 @@ assert(
 	`Image returned ${image.response.status}`,
 );
 assert(
-	image.response.headers.get("content-type")?.startsWith("image/webp"),
+	image.response.headers.get("content-type")?.startsWith("image/"),
 	"Responsive image has an incorrect content type",
 );
 
@@ -147,8 +151,8 @@ if (expectAmplify) {
 	);
 	const imageCacheControl = image.response.headers.get("cache-control") ?? "";
 	assert(
-		imageCacheControl.includes("must-revalidate") &&
-			!imageCacheControl.includes("immutable"),
+		imageCacheControl.includes("max-age=31536000") &&
+			imageCacheControl.includes("immutable"),
 		`Image cache policy is incorrect: ${imageCacheControl}`,
 	);
 	assert(

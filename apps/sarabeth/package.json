@@ -53,6 +53,7 @@
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
 	"dependencies": {
+		"@websites/images": "workspace:*",
 		"@aws-sdk/client-dynamodb": "3.1164.0",
 		"@aws-sdk/client-ses": "3.1164.0",
 		"@aws-sdk/client-ssm": "3.1164.0",

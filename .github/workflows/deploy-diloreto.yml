@@ -23,6 +23,10 @@ on:
       - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock
+      - packages/images/**
+      - "!packages/images/tests/**"
+      - "!packages/images/**/*.test.ts"
+      - "!packages/images/*.md"
       - bunfig.toml
       - turbo.json
       - .nvmrc

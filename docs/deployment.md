@@ -25,7 +25,7 @@ Verification-only changes (shared CI/Lighthouse implementation or per-site basel
 
 Source deployments use GitHub's native `push.branches` and ordered `push.paths` filters, with no custom changed-file detector. A push to `main` selects each site whose app files changed, except for app-local docs, infrastructure, tests, root Markdown documentation, and the explicitly excluded browser/Lighthouse configuration files. Source, public assets, build scripts, and build configuration remain deployment triggers. Pull-request CI still verifies all four sites, including changes excluded from deployment.
 
-Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
+Shared image-package source changes (`packages/images/**`, excluding package tests and top-level Markdown) select all four sites, since all four consume its policy or Vite integration. Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
 
 Deployment-script triggers follow the hosting mechanism:
 

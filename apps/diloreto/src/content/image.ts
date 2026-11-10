@@ -1,11 +1,6 @@
-export type ResponsiveImageData = {
-	sources: Record<string, string>;
-	img: {
-		src: string;
-		w: number;
-		h: number;
-	};
-};
+import type { ResponsiveImageData } from "@websites/images";
+
+export type { ResponsiveImageData } from "@websites/images";
 
 export type ContentImage = ResponsiveImageData & {
 	alt: string;

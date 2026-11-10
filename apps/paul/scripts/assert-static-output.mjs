@@ -70,13 +70,42 @@ assert(
 	),
 	"dist/client contains a server artifact",
 );
+const pictures = [
+	...indexHtml.matchAll(/<picture\b[^>]*>([\s\S]*?)<\/picture>/g),
+];
 assert(
-	relativeFiles.includes("images/profile-240.avif") &&
-		relativeFiles.includes("images/profile-1200.webp") &&
-		relativeFiles.includes("images/carolyn-portfolio-320.avif") &&
-		relativeFiles.includes("images/family-website-480.webp") &&
-		!relativeFiles.includes("images/profile.jpeg"),
-	"responsive image assets are incomplete or the oversized profile source leaked into the artifact",
+	pictures.length === 3,
+	"All three content images must use responsive picture markup",
+);
+const imageReferences = new Set();
+for (const [, picture] of pictures) {
+	const sources = [...picture.matchAll(/srcSet="([^"]+)"/gi)];
+	assert(sources.length > 0, "Responsive image has no source candidates");
+	for (const [, srcSet] of sources) {
+		for (const candidate of srcSet.split(", ")) {
+			const [url, descriptor] = candidate.split(" ");
+			assert(
+				/^\d+w$/.test(descriptor),
+				`Invalid responsive descriptor: ${descriptor}`,
+			);
+			assert(
+				url.startsWith("/assets/"),
+				`Image is not build-generated: ${url}`,
+			);
+			imageReferences.add(url.slice(1));
+		}
+	}
+	assert(
+		/\bsizes=/.test(picture) &&
+			/\bwidth="\d+"/.test(picture) &&
+			/\bheight="\d+"/.test(picture),
+		"Responsive image must declare layout sizes and dimensions",
+	);
+}
+for (const image of imageReferences) await access(join(clientRoot, image));
+assert(
+	!relativeFiles.some((file) => file.startsWith("images/")),
+	"Hand-maintained image variants leaked into the artifact",
 );
 
 const assetReferences = [
@@ -95,9 +124,12 @@ for (const asset of assetReferences) {
 	);
 }
 
-const profileFallbackSize = (
-	await stat(join(clientRoot, "images/profile-960.jpg"))
-).size;
+const profileFallback = indexHtml.match(
+	/<img\b[^>]*src="([^"]+)"[^>]*alt="Paul DiLoreto"/,
+);
+assert(profileFallback, "Profile fallback is missing");
+const profileFallbackSize = (await stat(join(clientRoot, profileFallback[1])))
+	.size;
 assert(
 	profileFallbackSize < 250_000,
 	`Profile fallback is unexpectedly large: ${profileFallbackSize} bytes`,
