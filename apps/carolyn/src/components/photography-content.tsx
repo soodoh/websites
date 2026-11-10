@@ -139,6 +139,7 @@ const PhotographyContent = ({
 				options={albumNames}
 				current={selectedAlbumName}
 				onChange={handleAlbumChange}
+				resultsReady={!isLoading && !loadError}
 			/>
 
 			{galleryOpen ? (
