@@ -37,8 +37,16 @@ Fixed public pages and every unprotected project detail are prerendered. Client 
 in-flight request reuse, latest-choice ordering, and rollback/retry after loading
 errors. `use-album-selection.ts` binds its snapshots to React without sharing state
 between mounted visits or server renders. Photography rendering retains gallery
-navigation, focus restoration, and masonry; selection tests exercise the same
-interface used by that binding, alongside the existing browser behavior checks.
+navigation and focus restoration; selection tests exercise the same interface
+used by that binding, alongside the existing browser behavior checks.
+
+`src/components/portfolio-grid.tsx` owns Portfolio grid geometry, its CSS, the
+page-container sizing relationship, and responsive thumbnail delivery. Render
+the grid inside `PortfolioGridContainer`, including surrounding page content
+that shares its width. Callers provide images and place each rendered thumbnail
+inside their own accessible link or button; they retain overlays, interactions,
+and whether to prioritize the first image. The same layout facts generate both
+server-rendered placement and image hints, including sparse filtered grids.
 
 Production compute reads only the generated protected-project snapshot, generated auth manifest, generated common content, and `PROJECT_AUTH_SECRET`. It has no Contentful client or token-loading path. Amplify retrieves `CONTENTFUL_ACCESS_TOKEN` from SSM only for the build. `bun run build` emits the deployment contract under `.amplify-hosting/`.
 

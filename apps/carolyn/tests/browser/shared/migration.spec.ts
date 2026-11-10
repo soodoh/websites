@@ -50,10 +50,6 @@ test.describe("TanStack Start migration behavior", () => {
 
 		await page.goto("/projects");
 		const projectThumbnail = page.locator(".masonry-grid img").first();
-		await expect(projectThumbnail).toHaveAttribute(
-			"sizes",
-			/\(max-width: 660px\) calc\(100vw - 48px\)/,
-		);
 		await expect(projectThumbnail).toHaveAttribute("srcset", /1200w/);
 
 		await page.goto("/projects/the-voice-app-agt-app");

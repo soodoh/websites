@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type { JSX } from "react";
 import PhotographyContent from "@/components/photography-content";
+import { PortfolioGridContainer } from "@/components/portfolio-grid";
 import { getStaticPhotographyContent } from "@/lib/release-server-functions";
-import { containerClass } from "@/lib/utils";
 
 export const Route = createFileRoute("/photography")({
 	loader: () => getStaticPhotographyContent(),
@@ -22,13 +22,13 @@ export const Route = createFileRoute("/photography")({
 function PhotographyPage(): JSX.Element {
 	const { albumNames, albumSources, initialAlbum } = Route.useLoaderData();
 	return (
-		<div className={containerClass}>
+		<PortfolioGridContainer>
 			<h1 className="sr-only">Photography</h1>
 			<PhotographyContent
 				albumNames={albumNames}
 				albumSources={albumSources}
 				initialAlbum={initialAlbum}
 			/>
-		</div>
+		</PortfolioGridContainer>
 	);
 }

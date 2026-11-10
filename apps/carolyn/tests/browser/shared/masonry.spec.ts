@@ -1,11 +1,40 @@
 import { expect, type Page, test } from "@tests/playwright";
 import { selectFilter, waitForHydration } from "@tests/visual-helpers";
 
-const widths = [390, 660, 661, 962, 963, 1260, 1261, 1600];
+const widths = [390, 660, 661, 962, 963, 1260, 1261, 1488, 1489, 1600];
 const routes = ["/", "/projects", "/photography"];
 
 async function readLayout(page: Page) {
 	return page.locator(".masonry-grid").evaluate((grid) => {
+		function advertisedWidth(sizes: string): number {
+			// Split source-size entries, not commas nested inside CSS math functions.
+			const entries: string[] = [];
+			let depth = 0;
+			let entry = "";
+			for (const character of `${sizes},`) {
+				if (character === "(") depth += 1;
+				if (character === ")") depth -= 1;
+				if (character === "," && depth === 0) {
+					entries.push(entry.trim());
+					entry = "";
+				} else entry += character;
+			}
+			for (const candidate of entries) {
+				const conditional = /^(\([^)]+\))\s+(.+)$/.exec(candidate);
+				if (conditional && !window.matchMedia(conditional[1]).matches) continue;
+				const length = conditional?.[2] ?? candidate;
+				if (!CSS.supports("width", length)) {
+					throw new Error(`Invalid image source size: ${length}`);
+				}
+				const probe = document.createElement("div");
+				probe.style.cssText = `position:fixed;visibility:hidden;width:${length};height:0`;
+				document.body.append(probe);
+				const width = probe.getBoundingClientRect().width;
+				probe.remove();
+				return width;
+			}
+			throw new Error(`No matching image source size: ${sizes}`);
+		}
 		const gridBox = grid.getBoundingClientRect();
 		const footer = document.querySelector("footer");
 		if (!footer) throw new Error("Missing footer");
@@ -29,6 +58,7 @@ async function readLayout(page: Page) {
 					cardHeight: cardBox.height,
 					imageWidth: imageBox.width,
 					imageHeight: imageBox.height,
+					advertisedWidth: advertisedWidth(image.sizes),
 					ratio:
 						Number(image.getAttribute("height")) /
 						Number(image.getAttribute("width")),
@@ -65,6 +95,10 @@ function expectRoundRobinLayout(layout: Layout, viewportWidth: number): void {
 		expect(Math.abs(item.cardWidth - item.width)).toBeLessThan(0.5);
 		expect(Math.abs(item.cardHeight - item.height)).toBeLessThan(0.5);
 		expect(Math.abs(item.imageWidth - item.width)).toBeLessThan(0.5);
+		expect(
+			Math.abs(item.advertisedWidth - item.width),
+			"image sizes must describe rendered card width",
+		).toBeLessThan(0.5);
 		expect(Math.abs(item.imageHeight - item.height)).toBeLessThan(0.5);
 		columnHeights[column] += cardWidth * item.ratio + gap;
 	}
@@ -105,7 +139,39 @@ async function settleLayout(page: Page, scriptsEnabled = true): Promise<void> {
 	});
 }
 
-test.describe("SSR-stable masonry", { tag: "@desktop-only" }, () => {
+test.describe("SSR-stable Portfolio grid", { tag: "@desktop-only" }, () => {
+	for (const width of [390, 660, 661, 962, 963, 1260, 1261, 1488, 1489]) {
+		test(`selects the bounded thumbnail candidate on a fresh ${width}px visit`, async ({
+			page,
+		}) => {
+			// Set the viewport before navigation: cached larger candidates need not
+			// downgrade on resize, which would mask the initial selection behavior.
+			await page.setViewportSize({ width, height: 900 });
+			await page.goto("/photography");
+			await settleLayout(page);
+			const image = page.locator(".masonry-grid img").first();
+			await image.evaluate(async (element: HTMLImageElement) =>
+				element.decode(),
+			);
+			const selection = await image.evaluate((element: HTMLImageElement) => ({
+				url: element.currentSrc,
+				candidates: element.srcset
+					.split(",")
+					.map((candidate) => Number(candidate.trim().match(/ (\d+)w$/)?.[1])),
+				requestedWidth:
+					element.getBoundingClientRect().width * window.devicePixelRatio,
+			}));
+			const expectedWidth =
+				selection.candidates.find(
+					(candidate) => candidate >= selection.requestedWidth,
+				) ?? selection.candidates.at(-1);
+			expect(Number(new URL(selection.url).searchParams.get("w"))).toBe(
+				expectedWidth,
+			);
+			expectRoundRobinLayout(await readLayout(page), width);
+		});
+	}
+
 	for (const route of routes) {
 		test(`keeps ${route} geometry through hydration and delayed images`, async ({
 			page,
@@ -226,7 +292,9 @@ test.describe("SSR-stable masonry", { tag: "@desktop-only" }, () => {
 	});
 });
 
-test.describe("Masonry without JavaScript", { tag: "@desktop-only" }, () => {
+test.describe("Portfolio grid without JavaScript", {
+	tag: "@desktop-only",
+}, () => {
 	test.use({ javaScriptEnabled: false });
 	for (const route of routes) {
 		test(`lays out ${route} at every breakpoint`, async ({

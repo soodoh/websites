@@ -8,6 +8,12 @@ Language for the four websites and their shared verification work.
 Replacement of a site's reviewed visual baselines with snapshots from a successful browser verification run. Publication requires all of that site's required checks to succeed.
 _Avoid_: Snapshot upload
 
+## Carolyn portfolio
+
+**Portfolio grid**:
+Carolyn's ordered display of project covers or photographs at their original proportions.
+_Avoid_: Masonry gallery
+
 ## Carolyn photography
 
 **Photography album**:
