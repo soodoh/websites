@@ -2,6 +2,7 @@ import sharp from "sharp";
 import { describe, expect, test, vi } from "vitest";
 import { prepareContentfulImage } from "../src/contentful";
 import { createContentfulPreviewLoader } from "../src/contentful.server";
+import { fallbackPlaceholder } from "../src/policy";
 import {
 	createBlurPlaceholder,
 	createRemotePreviewLoader,
@@ -64,6 +65,50 @@ describe("shared preview preparation", () => {
 		}
 		expect(fetchImage).toHaveBeenCalledTimes(1);
 	});
+
+	test.each(["downloads.ctfassets.net", "downloads.contentful.com"])(
+		"requests transformed previews from the image CDN for %s assets",
+		async (hostname) => {
+			const fetchImage = vi.fn<typeof fetch>(
+				async () => new Response(await fixture()),
+			);
+			const load = createContentfulPreviewLoader({ fetch: fetchImage });
+			await load(`https://${hostname}/space/asset/version/photo.jpg`);
+			const url = new URL(String(fetchImage.mock.calls[0][0]));
+			expect(url.hostname).toBe(hostname.replace("downloads.", "images."));
+			expect(url.searchParams.get("w")).toBe("64");
+			expect(url.searchParams.get("fm")).toBe("webp");
+		},
+	);
+
+	test.each([
+		"advertised size",
+		"streamed size",
+		"upstream",
+		"decode",
+		"timeout",
+	])(
+		"falls back on Contentful preview %s failures without relaxing validation or caching the failure",
+		async (failure) => {
+			const bytes = await fixture();
+			const fetchImage = vi.fn<typeof fetch>(async () => {
+				if (fetchImage.mock.calls.length > 1) return new Response(bytes);
+				if (failure === "timeout") throw new Error("Request timed out");
+				if (failure === "upstream") return new Response(null, { status: 503 });
+				if (failure === "decode") return new Response("Not an image");
+				return new Response(new Uint8Array(512_001), {
+					headers:
+						failure === "advertised size" ? { "content-length": "512001" } : {},
+				});
+			});
+			const load = createContentfulPreviewLoader({ fetch: fetchImage });
+			await expect(load(source)).resolves.toBe(fallbackPlaceholder);
+			await expect(load(source)).resolves.toMatch(/^data:image\/webp;base64,/);
+			expect(fetchImage).toHaveBeenCalledTimes(2);
+			expect(() => load("https://evil.test/a.jpg")).toThrow();
+			expect(fetchImage).toHaveBeenCalledTimes(2);
+		},
+	);
 
 	test("evicts failed requests and rejects oversized streamed responses", async () => {
 		const bytes = await fixture();

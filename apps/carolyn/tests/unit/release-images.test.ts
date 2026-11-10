@@ -1,6 +1,7 @@
 import { BLOCKS } from "@contentful/rich-text-types";
 import { contentfulFixture } from "@tests/fixtures/contentful";
 import { fallbackPlaceholder } from "@websites/images";
+import { createContentfulPreviewLoader } from "@websites/images/contentful/server";
 import { expect, test, vi } from "vitest";
 import { prepareReleaseImages } from "@/lib/prepare-release-images.server";
 import {
@@ -58,6 +59,39 @@ test("prepares each unique remote preview once and retains protected partitionin
 	expect(JSON.stringify(release.protectedProjectDetails)).toContain(
 		"protected-preview",
 	);
+});
+
+test("an oversized optional preview does not abort release generation", async () => {
+	const snapshot = await captureReleaseContent(async () => ({
+		kind: "fixture",
+		content: contentfulFixture,
+	}));
+	const image = {
+		...snapshot.backgroundImage,
+		url: "https://images.ctfassets.net/space/asset/version/photo.jpg",
+		placeholder: fallbackPlaceholder,
+	};
+	snapshot.backgroundImage = image;
+	const fetchImage = vi.fn(
+		async () =>
+			new Response(new Uint8Array(512_001), {
+				headers: { "content-length": "512001" },
+			}),
+	);
+	const prepared = await prepareReleaseImages(
+		snapshot,
+		createContentfulPreviewLoader({
+			fetch: Object.assign(fetchImage, { preconnect: vi.fn() }),
+		}),
+	);
+	expect(fetchImage).toHaveBeenCalled();
+	expect(prepared.backgroundImage).toEqual(image);
+	const release = await generateReleaseContent(
+		prepared,
+		async () => "hash",
+		async () => "version",
+	);
+	expect(release.publicContent).toBeDefined();
 });
 
 test("fixture previews never require remote image requests", async () => {
