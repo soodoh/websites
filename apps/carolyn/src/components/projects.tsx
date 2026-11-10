@@ -4,13 +4,10 @@ import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import Filter from "@/components/filter";
-import ImageWrapper, {
-	MASONRY_IMAGE_BREAKPOINTS,
-	MASONRY_IMAGE_SIZES,
-} from "@/components/image-wrapper";
-import Masonry from "@/components/masonry";
+import PortfolioGrid, {
+	PortfolioGridContainer,
+} from "@/components/portfolio-grid";
 import type { Project, ProjectFilter } from "@/lib/types";
-import { containerClass } from "@/lib/utils";
 
 type Props = {
 	projects: Project[];
@@ -38,7 +35,7 @@ const Projects = ({
 			: projects.filter((project) => project.projectType.includes(projectType));
 
 	return (
-		<div className={containerClass}>
+		<PortfolioGridContainer>
 			<h1 className="sr-only">Projects</h1>
 			<Filter
 				options={projectTypes}
@@ -47,11 +44,12 @@ const Projects = ({
 			/>
 
 			<div>
-				<Masonry
+				<PortfolioGrid
 					items={filteredProjects}
-					getDimensions={(item) => item.coverImage}
+					getImage={(item) => item.coverImage}
+					prioritizeFirst={prioritizeFirst}
 				>
-					{(item, index) => (
+					{(item, _index, image) => (
 						<Link
 							key={item.id}
 							aria-label={`${item.title} - ${item.summary}`}
@@ -63,20 +61,12 @@ const Projects = ({
 								<h2>{item.title}</h2>
 								<h3>{item.summary}</h3>
 							</div>
-							<ImageWrapper
-								className="w-full h-full object-contain"
-								alt=""
-								breakpoints={MASONRY_IMAGE_BREAKPOINTS}
-								image={item.coverImage}
-								priority={prioritizeFirst && index === 0}
-								quality={50}
-								sizes={MASONRY_IMAGE_SIZES}
-							/>
+							{image}
 						</Link>
 					)}
-				</Masonry>
+				</PortfolioGrid>
 			</div>
-		</div>
+		</PortfolioGridContainer>
 	);
 };
 

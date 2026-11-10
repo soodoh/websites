@@ -13,11 +13,7 @@ import {
 	useState,
 } from "react";
 import Filter from "@/components/filter";
-import ImageWrapper, {
-	MASONRY_IMAGE_BREAKPOINTS,
-	MASONRY_IMAGE_SIZES,
-} from "@/components/image-wrapper";
-import Masonry from "@/components/masonry";
+import PortfolioGrid from "@/components/portfolio-grid";
 import { Button } from "@/components/ui/button";
 import type { CarouselNavigation } from "@/components/ui/carousel";
 import {
@@ -221,8 +217,12 @@ const PhotographyContent = ({
 						Loading {selectedAlbumName} album
 					</span>
 				) : null}
-				<Masonry items={album.photos} getDimensions={(image) => image}>
-					{(image, index) => (
+				<PortfolioGrid
+					items={album.photos}
+					getImage={(image) => image}
+					prioritizeFirst
+				>
+					{(image, index, thumbnail) => (
 						<Button
 							key={`image-${image.id}`}
 							variant="ghost"
@@ -233,18 +233,10 @@ const PhotographyContent = ({
 							onClick={(event) => handleThumbnailClick(index, event)}
 							className="h-full w-full p-0 rounded-none transition-colors hover:bg-transparent"
 						>
-							<ImageWrapper
-								className="w-full h-full object-contain"
-								alt=""
-								breakpoints={MASONRY_IMAGE_BREAKPOINTS}
-								quality={50}
-								image={image}
-								priority={index === 0}
-								sizes={MASONRY_IMAGE_SIZES}
-							/>
+							{thumbnail}
 						</Button>
 					)}
-				</Masonry>
+				</PortfolioGrid>
 			</div>
 		</>
 	);

@@ -59,10 +59,6 @@ export function transformContentfulImage(
 	return transformedUrl.toString();
 }
 
-export const MASONRY_IMAGE_BREAKPOINTS = [
-	128, 256, 384, 640, 750, 828, 1080, 1200,
-];
-
 export function getImageBreakpoints(
 	breakpoints: number[],
 	intrinsicWidth: number,
@@ -76,14 +72,6 @@ export function shouldUseImagePlaceholder(
 ): boolean {
 	return priority || placeholder.startsWith("data:image/");
 }
-
-export const MASONRY_IMAGE_SIZES = [
-	"(max-width: 660px) calc(100vw - 48px)",
-	"(max-width: 962px) calc((100vw - 98px) / 2)",
-	"(max-width: 1260px) calc((100vw - 148px) / 3)",
-	"(max-width: 1488px) calc((100vw - 198px) / 4)",
-	"323px",
-].join(", ");
 
 type Props = {
 	image: ImageType;
