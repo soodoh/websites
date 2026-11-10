@@ -1,5 +1,7 @@
-import { Image } from "@unpic/react/base";
+import { getImageWidths } from "@websites/images";
+import { getContentfulDimensions } from "@websites/images/contentful";
 import { type JSX, useCallback, useEffect, useState } from "react";
+import ImageWrapper, { responsiveWidths } from "@/components/image-wrapper";
 import type { CarouselApi } from "@/components/ui/carousel";
 import {
 	Carousel,
@@ -8,12 +10,6 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-	getBlurStyle,
-	getImageBreakpoints,
-	getImageDimensions,
-	transformImageUrl,
-} from "@/utils/image";
 import type { ImageType } from "@/utils/types";
 
 export const getGalleryImageAlt = (image: ImageType): string =>
@@ -28,36 +24,29 @@ const CarouselImage = ({
 	image: ImageType;
 	priority: boolean;
 }): JSX.Element => {
-	const { aspectRatio, height, width } = getImageDimensions(image);
+	const { aspectRatio, width } = getContentfulDimensions(image, 3840);
 	const displayWidth = Math.max(
 		1,
 		Math.min(width, 1200, Math.round(aspectRatio * 560)),
 	);
 	const candidateWidth = Math.min(width, displayWidth * 2);
 	const breakpoints = [
-		...new Set([displayWidth, ...getImageBreakpoints(candidateWidth)]),
+		...new Set([
+			displayWidth,
+			...getImageWidths(candidateWidth, responsiveWidths, 3840),
+		]),
 	].sort((first, second) => first - second);
 
 	return (
-		<div
-			className="h-full max-w-full"
-			style={{
-				...getBlurStyle(image.placeholder, "contain"),
-				aspectRatio,
-			}}
-		>
-			<Image
+		<div className="h-full max-w-full" style={{ aspectRatio }}>
+			<ImageWrapper
+				image={image}
 				priority={priority}
 				alt={getGalleryImageAlt(image)}
-				breakpoints={breakpoints}
+				widths={breakpoints}
 				className="h-full w-full object-contain"
-				height={height}
-				layout="fixed"
+				placeholderFit="contain"
 				sizes={`(max-width: ${displayWidth}px) 100vw, ${displayWidth}px`}
-				src={image.url}
-				transformer={transformImageUrl}
-				unstyled
-				width={width}
 			/>
 		</div>
 	);

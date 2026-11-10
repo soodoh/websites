@@ -100,6 +100,17 @@ test("real Vite build emits responsive assets and keeps the map below its previo
 		const data = (await import(
 			/* @vite-ignore */ pathToFileURL(join(root, "dist", entry.fileName)).href
 		)) as { map: ResponsiveImageData; photo: ResponsiveImageData };
+		for (const image of [data.map, data.photo]) {
+			expect(image.placeholder).toMatch(/^data:image\/webp;base64,/);
+			const bytes = Buffer.from(
+				image.placeholder?.split(",")[1] ?? "",
+				"base64",
+			);
+			expect(bytes.length).toBeLessThanOrEqual(2048);
+			const metadata = await sharp(bytes).metadata();
+			expect(metadata.width).toBeLessThanOrEqual(24);
+			expect(metadata.height).toBeLessThanOrEqual(24);
+		}
 		expect(data.map.img.w).toBe(500);
 		expect(Object.keys(data.map.sources)[0]).toBe("webp");
 		const selectedUrl = data.map.sources.webp.split(" ")[0];

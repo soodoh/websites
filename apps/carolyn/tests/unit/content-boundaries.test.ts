@@ -4,10 +4,10 @@ import { describe, expect, test } from "vitest";
 import { createLiveShapedFixture } from "@/lib/content-source";
 import {
 	createContentfulBuildClient,
+	formatImage,
 	formatUrl,
 	getAllContentfulEntries,
 	getContentfulAssetId,
-	getContentfulPlaceholder,
 	getImageAssetFromRichTextNode,
 	parseExactContentfulEntry,
 } from "@/lib/contentful-utils";
@@ -132,14 +132,13 @@ describe("Contentful boundaries", () => {
 		);
 	});
 
-	test("builds CDN placeholders without fetching image bodies", () => {
+	test("uses an immediate inline fallback until release previews are prepared", () => {
 		expect(
-			getContentfulPlaceholder(
-				"https://images.ctfassets.net/image.jpg?token=keep",
-			),
-		).toBe(
-			"https://images.ctfassets.net/image.jpg?token=keep&w=25&q=30&fm=jpg",
-		);
+			formatImage({
+				sys: { id: "preview" },
+				fields: { ...createContentfulImageAsset("preview").fields },
+			}).placeholder,
+		).toMatch(/^data:image\//);
 	});
 
 	test("decodes local and Contentful image placeholders consistently", () => {
@@ -336,7 +335,9 @@ describe("Contentful boundaries", () => {
 				"https://images.ctfassets.net/hermetic-build/",
 			),
 		).toBe(true);
-		expect(fixture.backgroundImage.placeholder).toContain("w=25");
+		expect(fixture.backgroundImage.placeholder).toBe(
+			contentfulFixture.backgroundImage.placeholder,
+		);
 		expect(JSON.stringify(fixture)).not.toContain("/test-assets/");
 	});
 

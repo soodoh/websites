@@ -24,6 +24,32 @@ test("renders production-shaped transformed Contentful image URLs", async ({
 		.toBe(true);
 });
 
+test("Contentful previews are inline and visible before the CDN image finishes", async ({
+	page,
+}) => {
+	let release = () => {};
+	const gate = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	await page.route("https://images.ctfassets.net/**", async (route) => {
+		await gate;
+		await route.fallback();
+	});
+	try {
+		await page.goto("/about", { waitUntil: "domcontentloaded" });
+		const image = page.getByRole("img").first();
+		const picture = image.locator("..");
+		await expect(picture).toHaveAttribute("data-responsive-image", "");
+		await expect(picture).toHaveCSS("background-image", /data:image\//);
+		await expect(image).toHaveCSS("opacity", "1");
+		release();
+		await expect(picture).toHaveAttribute("data-image-state", "loaded");
+		await expect(picture).toHaveCSS("background-image", "none");
+	} finally {
+		release();
+	}
+});
+
 test("keeps audio on its Contentful URL without a production proxy", async ({
 	page,
 }) => {

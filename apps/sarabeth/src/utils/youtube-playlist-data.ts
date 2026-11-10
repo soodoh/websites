@@ -1,3 +1,4 @@
+import { fallbackPlaceholder } from "@websites/images";
 import type { YouTubePlaylist, YouTubePlaylistVideo } from "@/utils/types";
 
 type UnknownRecord = Record<string, unknown>;
@@ -324,6 +325,26 @@ export const formatYouTubeDuration = (duration: string): string => {
 	return `${remainingMinutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
 
+const decodeThumbnailRendition = (value: unknown, path: string) => {
+	const thumbnail = readRecord(value, path);
+	return {
+		url: readYouTubeThumbnailUrl(thumbnail.url, `${path}.url`),
+		width: readOptionalPositiveInteger(thumbnail.width, `${path}.width`),
+		height: readOptionalPositiveInteger(thumbnail.height, `${path}.height`),
+	};
+};
+
+const decodeThumbnailPlaceholder = (value: unknown, path: string): string => {
+	const placeholder = readString(value, path);
+	if (
+		placeholder !== fallbackPlaceholder &&
+		(placeholder.length > 3000 ||
+			!/^data:image\/webp;base64,[A-Za-z0-9+/]+=*$/.test(placeholder))
+	)
+		return fail(path, "an inline image preview");
+	return placeholder;
+};
+
 const decodeYouTubePlaylistVideo = (
 	value: unknown,
 	path: string,
@@ -347,6 +368,23 @@ const decodeYouTubePlaylistVideo = (
 			video.thumbnailUrl,
 			`${path}.thumbnailUrl`,
 		),
+		...(video.thumbnailRenditions === undefined
+			? {}
+			: {
+					thumbnailRenditions: readArray(
+						video.thumbnailRenditions,
+						`${path}.thumbnailRenditions`,
+						decodeThumbnailRendition,
+					),
+				}),
+		...(video.thumbnailPlaceholder === undefined
+			? {}
+			: {
+					thumbnailPlaceholder: decodeThumbnailPlaceholder(
+						video.thumbnailPlaceholder,
+						`${path}.thumbnailPlaceholder`,
+					),
+				}),
 		embeddable: readBoolean(video.embeddable, `${path}.embeddable`),
 		madeForKids: readBoolean(video.madeForKids, `${path}.madeForKids`),
 		watchUrl,

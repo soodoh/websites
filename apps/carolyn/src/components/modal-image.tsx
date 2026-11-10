@@ -24,6 +24,7 @@ const ModalImage = ({ image, priority = false }: Props): JSX.Element => {
 		<ImageWrapper
 			alt={image.description || image.title}
 			className="w-full h-full object-contain"
+			pictureClassName="w-full h-full"
 			priority={priority}
 			placeholderFit="contain"
 			image={image}

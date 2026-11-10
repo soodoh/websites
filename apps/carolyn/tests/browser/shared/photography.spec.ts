@@ -145,67 +145,55 @@ async function touchSwipeGallery(
 }
 
 test.describe("Photography album loading", () => {
-	test("bounds eager remote placeholders to the likely LCP thumbnail", {
+	test("uses inline album previews without remote placeholder requests", {
 		tag: "@desktop-only",
 	}, async ({ page }) => {
-		const remotePlaceholder =
-			"https://images.ctfassets.net/live-shaped/placeholder.jpg?w=25&q=30&fm=jpg";
+		let release = () => {};
+		const gate = new Promise<void>((resolve) => {
+			release = resolve;
+		});
+		let holdImages = false;
 		let placeholderRequests = 0;
-		let markPlaceholderRequested = () => {};
-		const placeholderRequested = new Promise<void>((resolve) => {
-			markPlaceholderRequested = resolve;
+		page.on("request", (request) => {
+			if (/[?&]w=25(?:&|$)/.test(request.url())) placeholderRequests++;
 		});
 		await page.route(
-			"https://images.ctfassets.net/live-shaped/**",
+			"https://images.ctfassets.net/hermetic-build/**",
 			async (route) => {
-				placeholderRequests += 1;
-				markPlaceholderRequested();
-				await route.fulfill({ status: 204 });
-			},
-		);
-		await page.route(
-			`https://images.ctfassets.net/hermetic-build/${albumExpectations.Portraits.firstPhotoId}/**`,
-			async (route) => {
-				if (route.request().url().includes("q=50")) {
-					await placeholderRequested;
-				}
+				if (holdImages) await gate;
 				await route.fallback();
 			},
 		);
-		await page.route("**/__release/albums/*.json", async (route) => {
-			const { albumName, body, response } = await fetchAlbumRoute(route);
-			if (albumName !== "Portraits") {
-				await route.fulfill({ response, body });
-				return;
+		try {
+			await page.goto("/photography");
+			await page.locator("html[data-hydrated='true']").waitFor();
+			holdImages = true;
+			await selectFilter(page, "Dance", "Portraits");
+			const albumImages = page.locator(".masonry-grid img");
+			await expect(albumImages).toHaveCount(albumExpectations.Portraits.count);
+			for (const image of await albumImages.all()) {
+				await expect(image.locator("..")).toHaveCSS(
+					"background-image",
+					/data:image\//,
+				);
 			}
-			const replacedBody = body.replace(
-				serializedPlaceholderPattern,
-				remotePlaceholder,
+			await expect(albumImages.first()).toHaveAttribute(
+				"fetchpriority",
+				"high",
 			);
-			expect(replacedBody).toContain(remotePlaceholder);
-			await route.fulfill({ response, body: replacedBody });
-		});
-		await page.goto("/photography");
-		await page.locator("html[data-hydrated='true']").waitFor();
-
-		await selectFilter(page, "Dance", "Portraits");
-		await expect(
-			page
-				.locator(".masonry-grid")
-				.getByRole("button", { name: /View fullscreen photo/ }),
-		).toHaveCount(albumExpectations.Portraits.count);
-		await expect.poll(() => placeholderRequests).toBe(1);
-		const albumImages = page.locator(".masonry-grid img");
-		await expect(albumImages.first()).toHaveAttribute("fetchpriority", "high");
-		await expect(albumImages.first()).not.toHaveAttribute("loading", "lazy");
-		await expect(albumImages.nth(1)).toHaveAttribute("loading", "lazy");
-		await expect(albumImages.nth(1)).not.toHaveAttribute(
-			"style",
-			/background-image/,
-		);
-		await expect(
-			page.locator(".masonry-grid img[fetchpriority='high']"),
-		).toHaveCount(1);
+			await expect(albumImages.nth(1)).toHaveAttribute("loading", "lazy");
+			await expect(
+				page.locator(".masonry-grid img[fetchpriority='high']"),
+			).toHaveCount(1);
+			expect(placeholderRequests).toBe(0);
+			release();
+			await expect(albumImages.first().locator("..")).toHaveAttribute(
+				"data-image-state",
+				"loaded",
+			);
+		} finally {
+			release();
+		}
 	});
 
 	test("reuses albums already loaded during the visit", {
@@ -607,7 +595,7 @@ test.describe("Photography gallery navigation", () => {
 		await expect(page.getByRole("dialog")).toBeVisible();
 	});
 
-	test("keeps remote-placeholder image nodes stable across priority changes", {
+	test("keeps legacy remote-placeholder nodes and per-image decode work stable across priority changes", {
 		tag: "@desktop-only",
 	}, async ({ page }) => {
 		const remotePlaceholder =
@@ -618,10 +606,8 @@ test.describe("Photography gallery navigation", () => {
 		await page.addInitScript(() => {
 			const originalDecode = HTMLImageElement.prototype.decode;
 			HTMLImageElement.prototype.decode = function decode() {
-				const current = Number(
-					document.documentElement.dataset.imageDecodeCalls ?? "0",
-				);
-				document.documentElement.dataset.imageDecodeCalls = String(current + 1);
+				const current = Number(this.dataset.imageDecodeCalls ?? "0");
+				this.dataset.imageDecodeCalls = String(current + 1);
 				return originalDecode.call(this);
 			};
 		});
@@ -677,11 +663,14 @@ test.describe("Photography gallery navigation", () => {
 		expect(injectedRemotePlaceholder).toBe(true);
 		expect(placeholderRequests).toBeLessThanOrEqual(2);
 		expect(fullSizeRequests.size).toBeLessThanOrEqual(4);
-		expect(
-			Number(
-				await page.locator("html").getAttribute("data-image-decode-calls"),
-			),
-		).toBeLessThanOrEqual(2);
+		// Shared blur-up deliberately decodes each newly loaded image. Priority
+		// changes must not repeat that work or replace an existing image node.
+		const decodeCounts = await page
+			.locator("img")
+			.evaluateAll((images) =>
+				images.map((image) => Number(image.dataset.imageDecodeCalls ?? "0")),
+			);
+		expect(Math.max(...decodeCounts)).toBeLessThanOrEqual(1);
 	});
 
 	test("prioritizes the selected fullscreen image", {

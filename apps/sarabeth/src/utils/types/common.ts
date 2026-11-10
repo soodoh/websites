@@ -1,3 +1,5 @@
+import type { YouTubeThumbnail } from "@websites/images/youtube";
+
 export type Asset = {
 	id: string;
 	title: string;
@@ -19,6 +21,8 @@ export type YouTubePlaylistVideo = {
 	title: string;
 	duration: string;
 	thumbnailUrl: string;
+	thumbnailRenditions?: YouTubeThumbnail[];
+	thumbnailPlaceholder?: string;
 	embeddable: boolean;
 	madeForKids: boolean;
 	watchUrl: string;

@@ -31,6 +31,37 @@ test("playlist button names include all visible labels, including duration and s
 	);
 });
 
+test("YouTube thumbnails share the inline-placeholder renderer", async ({
+	page,
+}) => {
+	let release = () => {};
+	const gate = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	await page.route("https://i.ytimg.com/**", async (route) => {
+		await gate;
+		await route.fallback();
+	});
+	try {
+		await page.goto("/media", { waitUntil: "domcontentloaded" });
+		const playlist = page.getByRole("region", { name: "Arias video playlist" });
+		const thumbnail = playlist.locator("img").first();
+		const frame = thumbnail.locator("..");
+		await expect(frame).toHaveAttribute("data-responsive-image", "");
+		await expect(frame).toHaveAttribute("data-image-state", "initial");
+		await expect(thumbnail).toHaveCSS("opacity", "1");
+		await expect(frame).toHaveCSS("background-color", "rgb(128, 128, 128)");
+		await expect(frame).toHaveCSS("background-image", "none");
+		await expect(thumbnail).toHaveAttribute("alt", "");
+		release();
+		await expect(frame).toHaveAttribute("data-image-state", "loaded");
+		await expect(frame).toHaveCSS("background-image", "none");
+		await expect(frame).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+	} finally {
+		release();
+	}
+});
+
 test("media resource hints start the playlist early without a duplicate API request", async ({
 	page,
 }) => {

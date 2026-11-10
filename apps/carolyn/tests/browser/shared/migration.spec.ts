@@ -39,6 +39,34 @@ test.describe("TanStack Start migration behavior", () => {
 		await expect(page).toHaveURL(/\/projects\/?$/);
 	});
 
+	test("shows an inline Contentful preview before the full image arrives", async ({
+		page,
+	}) => {
+		let release = () => {};
+		const gate = new Promise<void>((resolve) => {
+			release = resolve;
+		});
+		await page.route(
+			"https://images.ctfassets.net/hermetic-build/**",
+			async (route) => {
+				await gate;
+				await route.fallback();
+			},
+		);
+		try {
+			await page.goto("/", { waitUntil: "domcontentloaded" });
+			const picture = page.locator("main img").first().locator("..");
+			await expect(picture).toHaveAttribute("data-image-state", "initial");
+			await expect(picture.locator("img")).toHaveCSS("opacity", "1");
+			await expect(picture).toHaveCSS("background-image", /data:image\//);
+			release();
+			await expect(picture).toHaveAttribute("data-image-state", "loaded");
+			await expect(picture).toHaveCSS("background-image", "none");
+		} finally {
+			release();
+		}
+	});
+
 	test("generates bounded responsive image URLs", async ({ page }) => {
 		await page.goto("/");
 		const backgroundImage = page.locator("main img").first();

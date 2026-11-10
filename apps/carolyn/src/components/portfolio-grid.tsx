@@ -163,6 +163,7 @@ export default function PortfolioGrid<T extends { id: string }>({
 							index,
 							<ImageWrapper
 								className="w-full h-full object-contain"
+								pictureClassName="w-full h-full"
 								alt=""
 								breakpoints={imageBreakpoints}
 								quality={50}

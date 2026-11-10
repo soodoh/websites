@@ -3,10 +3,7 @@ import {
 	type ContentfulFixture,
 	parseContentfulFixture,
 } from "@/lib/contentful-fixture-types";
-import {
-	createContentfulBuildClient,
-	getContentfulPlaceholder,
-} from "@/lib/contentful-utils";
+import { createContentfulBuildClient } from "@/lib/contentful-utils";
 import { decodeImage } from "@/lib/image-type";
 
 export type ContentfulDeliveryClient = {
@@ -29,7 +26,7 @@ function replaceFixtureImageUrls(value: unknown): unknown {
 		return {
 			...image,
 			url,
-			placeholder: getContentfulPlaceholder(url),
+			placeholder: image.placeholder,
 		};
 	}
 	if (Array.isArray(value)) {

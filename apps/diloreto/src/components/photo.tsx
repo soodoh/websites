@@ -28,6 +28,7 @@ export default function Photo({
 			fetchPriority={priority ? "high" : "auto"}
 			sizes="(max-width: 320px) 100vw, 300px"
 			className="h-auto w-full object-contain"
+			placeholderFit="contain"
 		/>
 	);
 

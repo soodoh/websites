@@ -69,6 +69,107 @@ test("all content images expose build-generated, ordered responsive candidates",
 	}
 });
 
+test("inline previews fill reserved space while full images are delayed, then clear without layout shift", async ({
+	page,
+}) => {
+	let release = () => {};
+	const gate = new Promise<void>((resolve) => {
+		release = resolve;
+	});
+	await page.route(
+		/\/assets\/.*\.(?:avif|webp|png|gif|jpe?g)(?:\?.*)?$/,
+		async (route) => {
+			await gate;
+			await route.continue();
+		},
+	);
+	try {
+		await page.goto("/", { waitUntil: "domcontentloaded" });
+		const priorityPicture = page.locator('[data-slot="tile"] picture').first();
+		await expect(priorityPicture).toHaveAttribute(
+			"data-image-state",
+			"initial",
+		);
+		await expect(priorityPicture.locator("img")).toHaveCSS("opacity", "1");
+		const picture = page.locator('[data-slot="tile"] picture').nth(3);
+		await expect(picture).toHaveAttribute("data-image-state", "pending");
+		await expect(picture).toHaveCSS(
+			"background-image",
+			/data:image\/webp;base64/,
+		);
+		await expect(picture.locator("img")).toHaveCSS("opacity", "0");
+		const before = await picture.boundingBox();
+		expect(before?.width).toBeGreaterThan(0);
+		release();
+		await expect(picture).toHaveAttribute("data-image-state", "loaded");
+		await expect(picture).toHaveCSS("background-image", "none");
+		await expect(picture.locator("img")).toHaveCSS("opacity", "1");
+		const after = await picture.boundingBox();
+		expect(after?.width).toBe(before?.width);
+		expect(after?.height).toBe(before?.height);
+	} finally {
+		release();
+	}
+});
+
+test("failed images retain their inline preview", async ({
+	page,
+	diagnostics,
+}) => {
+	diagnostics.allowConsoleError("Failed to load resource: net::ERR_FAILED");
+	await page.route(
+		/\/assets\/.*\.(?:avif|webp|png|gif|jpe?g)(?:\?.*)?$/,
+		(route) => route.abort(),
+	);
+	await page.goto("/");
+	const picture = page.locator('[data-slot="tile"] picture').first();
+	await expect(picture).toHaveAttribute("data-image-state", "failed");
+	await expect(picture).toHaveCSS(
+		"background-image",
+		/data:image\/webp;base64/,
+	);
+});
+
+test("cached and reduced-motion images do not stay hidden", async ({
+	page,
+}) => {
+	await page.emulateMedia({ reducedMotion: "reduce" });
+	await page.goto("/");
+	const picture = page.locator('[data-slot="tile"] picture').nth(3);
+	await expect(picture).toHaveAttribute("data-image-state", "loaded");
+	await expect(picture.locator("img")).toHaveCSS("animation-name", "none");
+	await page.reload();
+	await expect(picture).toHaveAttribute("data-image-state", "loaded");
+	await expect(picture.locator("img")).toHaveCSS("opacity", "1");
+});
+
+test("native responsive images remain visible without JavaScript", async ({
+	browser,
+	baseURL,
+}) => {
+	const context = await browser.newContext({ javaScriptEnabled: false });
+	try {
+		const page = await context.newPage();
+		await page.goto(`${baseURL}/areyou`);
+		const map = page.getByAltText(
+			"Map of Italy showing the regional distribution of people with the DiLoreto surname",
+			{ exact: true },
+		);
+		await expect
+			.poll(() =>
+				map.evaluate((element) => (element as HTMLImageElement).naturalWidth),
+			)
+			.toBeGreaterThan(0);
+		await expect(map).toHaveCSS("opacity", "1");
+		await expect(map.locator("..")).toHaveAttribute(
+			"data-image-state",
+			"initial",
+		);
+	} finally {
+		await context.close();
+	}
+});
+
 test("history LCP map uses its smaller lossless rendition without upscaling", async ({
 	page,
 	request,

@@ -20,6 +20,7 @@ const Background = ({
 			<ImageWrapper
 				alt=""
 				className="w-full h-full object-cover"
+				pictureClassName="w-full h-full"
 				priority
 				image={image}
 				sizes="100vw"

@@ -20,6 +20,7 @@ import {
 	youtubePlaylistId,
 } from "@/utils/youtube-playlist-config";
 import {
+	decodeYouTubePlaylist,
 	formatYouTubeDuration,
 	selectYouTubeThumbnail,
 } from "@/utils/youtube-playlist-data";
@@ -275,6 +276,46 @@ test("preserves playlist positions when joining video details", async () => {
 	await expect(fetchYouTubePlaylist(dependencies)).resolves.toMatchObject({
 		videos: [{ id: "video-a" }, { id: "video-b" }],
 	});
+});
+
+test("preserves actual thumbnail renditions and shares prepared inline previews", async () => {
+	const sources: string[] = [];
+	const playlist = await fetchYouTubePlaylist({
+		...createDependencies(defaultFetch),
+		loadThumbnailPreview: async (source) => {
+			sources.push(source);
+			return "data:image/webp;base64,YQ==";
+		},
+	});
+	expect(sources).toEqual(["https://i.ytimg.com/vi/video-1/mqdefault.jpg"]);
+	expect(playlist.videos[0].thumbnailRenditions).toEqual([
+		{ url: sources[0], width: 320, height: 180 },
+	]);
+	expect(decodeYouTubePlaylist(playlist).videos[0].thumbnailPlaceholder).toBe(
+		"data:image/webp;base64,YQ==",
+	);
+});
+
+test("thumbnail preview failure cannot make a playable playlist unavailable", async () => {
+	const playlist = await fetchYouTubePlaylist({
+		...createDependencies(defaultFetch),
+		loadThumbnailPreview: async () => {
+			throw new Error("Image unavailable");
+		},
+	});
+	expect(playlist.videos).toHaveLength(1);
+	expect(playlist.videos[0].thumbnailPlaceholder).toMatch(/^data:image\//);
+	expect(decodeYouTubePlaylist(playlist).videos).toHaveLength(1);
+});
+
+test("a stalled thumbnail cannot hold the playlist beyond its preview budget", async () => {
+	const playlist = await fetchYouTubePlaylist({
+		...createDependencies(defaultFetch),
+		timeoutMilliseconds: 10,
+		loadThumbnailPreview: () => new Promise<string>(() => {}),
+	});
+	expect(playlist.videos).toHaveLength(1);
+	expect(playlist.videos[0].thumbnailPlaceholder).toMatch(/^data:image\//);
 });
 
 test("formats ISO-8601 durations for minutes, hours, and days", () => {

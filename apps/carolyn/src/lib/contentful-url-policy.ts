@@ -1,9 +1,6 @@
-const CONTENTFUL_IMAGE_HOSTS = new Set([
-	"downloads.contentful.com",
-	"downloads.ctfassets.net",
-	"images.contentful.com",
-	"images.ctfassets.net",
-]);
+import { requireContentfulImageUrl } from "@websites/images/contentful";
+
+export { requireContentfulImageUrl };
 
 function parseStandardHttpsUrl(value: string): URL | undefined {
 	let url: URL;
@@ -24,8 +21,12 @@ function parseStandardHttpsUrl(value: string): URL | undefined {
 }
 
 export function isContentfulImageUrl(value: string): boolean {
-	const url = parseStandardHttpsUrl(value);
-	return url !== undefined && CONTENTFUL_IMAGE_HOSTS.has(url.hostname);
+	try {
+		requireContentfulImageUrl(value);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 export function isContentfulAssetUrl(value: string): boolean {
@@ -35,11 +36,4 @@ export function isContentfulAssetUrl(value: string): boolean {
 		(url.hostname === "ctfassets.net" ||
 			url.hostname.endsWith(".ctfassets.net"))
 	);
-}
-
-export function requireContentfulImageUrl(value: string): URL {
-	if (!isContentfulImageUrl(value)) {
-		throw new Error("Contentful images must use an approved HTTPS host.");
-	}
-	return new URL(value);
 }

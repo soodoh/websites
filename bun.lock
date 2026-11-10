@@ -27,7 +27,6 @@
         "@tanstack/react-router": "1.170.46",
         "@tanstack/react-start": "1.169.5",
         "@tanstack/start-static-server-functions": "1.167.44",
-        "@unpic/react": "1.0.2",
         "@websites/images": "workspace:*",
         "bcryptjs": "3.0.3",
         "class-variance-authority": "0.7.1",
@@ -40,7 +39,6 @@
         "react-dom": "19.3.1",
         "tailwind-merge": "3.7.0",
         "tailwindcss": "4.3.5",
-        "unpic": "4.2.2",
       },
       "devDependencies": {
         "@biomejs/biome": "2.6.6",
@@ -148,7 +146,6 @@
         "@tanstack/react-router": "1.170.46",
         "@tanstack/react-start": "1.169.5",
         "@tanstack/start-static-server-functions": "1.167.44",
-        "@unpic/react": "1.0.2",
         "@websites/images": "workspace:*",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
@@ -159,10 +156,8 @@
         "radix-ui": "1.8.1",
         "react": "19.3.1",
         "react-dom": "19.3.1",
-        "sharp": "0.35.5",
         "tailwind-merge": "3.7.0",
         "tw-animate-css": "1.4.0",
-        "unpic": "4.2.2",
       },
       "devDependencies": {
         "@biomejs/biome": "2.6.6",
@@ -182,14 +177,16 @@
       "name": "@websites/images",
       "version": "0.0.0",
       "dependencies": {
+        "sharp": "0.35.5",
         "vite-imagetools": "12.0.1",
       },
       "devDependencies": {
         "@biomejs/biome": "2.6.6",
         "@types/node": "26.6.6",
         "@types/react": "19.3.0",
+        "@types/react-dom": "19.3.0",
         "react": "19.3.1",
-        "sharp": "0.35.5",
+        "react-dom": "19.3.1",
         "typescript": "7.0.2",
         "vite": "8.3.7",
         "vitest": "5.1.0",
@@ -907,10 +904,6 @@
     "@typescript/typescript-win32-x64": ["@typescript/typescript-win32-x64@7.0.2", "", { "os": "win32", "cpu": "x64" }, "sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g=="],
 
     "@ungap/structured-clone": ["@ungap/structured-clone@1.3.0", "", {}, "sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g=="],
-
-    "@unpic/core": ["@unpic/core@1.0.3", "", { "dependencies": { "unpic": "^4.2.2" } }, "sha512-aum9YNVUGso7MjGLD0Rp/08kywCGLqZ03/q6VQBFFakDBOXWEc8D4kPGcZ8v5wEnGRex3lE+++bOuucBp3KJ/w=="],
-
-    "@unpic/react": ["@unpic/react@1.0.2", "", { "dependencies": { "@unpic/core": "^1.0.3" }, "peerDependencies": { "next": "^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0", "react": "^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0" }, "optionalPeers": ["next"] }, "sha512-5RmRfELwTF8w+4zjtQGqjpvX+RU2VLvis3xDCS1O2uWk0PZN2cvatL+3/KAR3mshAuRrkFGTX1XwyAezSXaoCA=="],
 
     "@vercel/stega": ["@vercel/stega@1.1.0", "", {}, "sha512-DFOm3Gk78nKDkppQEG5aj8Wj8R8hPKu/xrz4Rtp0AfiaNbZNCoJbxn7VI6iMxqhGeLdUDy/8mTuTWMz/izAtPA=="],
 
@@ -2035,8 +2028,6 @@
     "unist-util-visit-parents": ["unist-util-visit-parents@6.0.2", "", { "dependencies": { "@types/unist": "^3.0.0", "unist-util-is": "^6.0.0" } }, "sha512-goh1s1TBrqSqukSc8wrjwWhL0hiJxgA8m4kFxGlQ+8FYQ3C/m11FcTs4YYem7V664AhHVvgoQLk890Ssdsr2IQ=="],
 
     "universalify": ["universalify@2.0.1", "", {}, "sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw=="],
-
-    "unpic": ["unpic@4.2.2", "", {}, "sha512-z6T2ScMgRV2y2H8MwwhY5xHZWXhUx/YxtOCGJwfURSl7ypVy4HpLIMWoIZKnnxQa/RKzM0kg8hUh0paIrpLfvw=="],
 
     "unpipe": ["unpipe@1.0.0", "", {}, "sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ=="],
 

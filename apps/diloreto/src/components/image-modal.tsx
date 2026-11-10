@@ -158,6 +158,7 @@ export default function ImageModal({
 															: undefined
 													}
 													pictureClassName="size-full"
+													placeholderFit="contain"
 													className="size-full object-contain"
 												/>
 											) : null}

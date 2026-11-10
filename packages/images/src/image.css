@@ -1,0 +1,27 @@
+@keyframes websites-image-reveal {
+	from {
+		opacity: 0;
+	}
+}
+
+[data-responsive-image][data-image-state="pending"] > img,
+[data-responsive-image][data-image-state="failed"] > img {
+	opacity: 0;
+}
+
+[data-responsive-image][data-image-state="revealing"] > img {
+	animation: websites-image-reveal 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-responsive-image] > img {
+		animation: none;
+	}
+}
+
+@media (scripting: none) {
+	[data-responsive-image] {
+		/* biome-ignore lint/complexity/noImportantStyles: override the inline preview when scripts cannot remove it from transparent images. */
+		background-image: none !important;
+	}
+}

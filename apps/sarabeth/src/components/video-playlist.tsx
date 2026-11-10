@@ -1,8 +1,40 @@
+import ResponsiveImage from "@websites/images/react";
+import { prepareYouTubeImage } from "@websites/images/youtube";
 import { ExternalLink, Play } from "lucide-react";
 import { type JSX, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { YouTubePlaylistVideo } from "@/utils/types";
+
+const VideoThumbnail = ({
+	video,
+	featured = false,
+}: {
+	video: YouTubePlaylistVideo;
+	featured?: boolean;
+}): JSX.Element => (
+	<ResponsiveImage
+		alt=""
+		image={prepareYouTubeImage(
+			video.thumbnailUrl,
+			video.thumbnailRenditions,
+			video.thumbnailPlaceholder,
+		)}
+		className={
+			featured
+				? "h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+				: "h-full w-full object-cover"
+		}
+		pictureClassName="h-full w-full"
+		fetchPriority={featured ? "high" : "auto"}
+		loading={featured ? "eager" : "lazy"}
+		sizes={
+			featured
+				? "(min-width: 1200px) 800px, (min-width: 768px) 67vw, 100vw"
+				: "128px"
+		}
+	/>
+);
 
 type VideoPlaylistProps = {
 	isPlaybackActive: boolean;
@@ -173,14 +205,7 @@ const VideoPlaylist = ({
 						className="group absolute inset-0 h-full w-full overflow-hidden rounded-none text-left text-white focus-visible:ring-inset"
 						aria-label={`Play featured video: ${selectedVideo.title}`}
 					>
-						<img
-							alt=""
-							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-							fetchPriority="high"
-							height="180"
-							src={selectedVideo.thumbnailUrl}
-							width="320"
-						/>
+						<VideoThumbnail video={selectedVideo} featured />
 						<span
 							className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-black/20"
 							aria-hidden="true"
@@ -203,14 +228,7 @@ const VideoPlaylist = ({
 						className="group absolute inset-0 block overflow-hidden text-left text-white focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-[-2px]"
 						aria-label={`Open video on YouTube: ${selectedVideo.title}`}
 					>
-						<img
-							alt=""
-							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-							fetchPriority="high"
-							height="180"
-							src={selectedVideo.thumbnailUrl}
-							width="320"
-						/>
+						<VideoThumbnail video={selectedVideo} featured />
 						<span
 							className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-black/20"
 							aria-hidden="true"
@@ -268,14 +286,7 @@ const VideoPlaylist = ({
 												? "Play "
 												: "Select video; opens on YouTube: "}
 										</span>
-										<img
-											alt=""
-											className="h-full w-full object-cover"
-											height="180"
-											loading="lazy"
-											src={video.thumbnailUrl}
-											width="320"
-										/>
+										<VideoThumbnail video={video} />
 										<span className="absolute right-1 bottom-1 rounded-sm bg-black/85 px-1 py-0.5 font-sans text-[0.65rem] text-white">
 											{video.duration}
 										</span>

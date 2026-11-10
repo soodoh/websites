@@ -3,6 +3,7 @@ import { hash } from "bcryptjs";
 import { assertSafeProductionBuildEnvironment } from "@/lib/build-environment";
 import { writeGeneratedRelease } from "@/lib/generated-release-writer";
 import { deriveProjectAuthVersion } from "@/lib/password-utils";
+import { prepareReleaseImages } from "@/lib/prepare-release-images.server";
 import {
 	captureReleaseContent,
 	generateReleaseContent,
@@ -12,7 +13,7 @@ const BCRYPT_ROUNDS = 10;
 
 async function main(): Promise<void> {
 	assertSafeProductionBuildEnvironment(process.env);
-	const snapshot = await captureReleaseContent();
+	const snapshot = await prepareReleaseImages(await captureReleaseContent());
 	const release = await generateReleaseContent(
 		snapshot,
 		(password) => hash(password, BCRYPT_ROUNDS),

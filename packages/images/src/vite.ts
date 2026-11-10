@@ -1,4 +1,5 @@
 import { getImageWidths } from "@websites/images";
+import { createBlurPlaceholder } from "@websites/images/server";
 import {
 	imagetools,
 	type OutputFormat,
@@ -135,6 +136,12 @@ export function responsiveImages() {
 					? [base, { ...base, lossless: "true", quality: "100" }]
 					: [base];
 			}),
-		extendOutputFormats: (formats) => ({ ...formats, optimizedPicture }),
+		extendOutputFormats: (formats) => ({
+			...formats,
+			optimizedPicture: () => async (images) => ({
+				...(optimizedPicture()(images) as object),
+				placeholder: await createBlurPlaceholder(images[0].image),
+			}),
+		}),
 	});
 }

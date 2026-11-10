@@ -1,7 +1,8 @@
+import { fallbackPlaceholder } from "@websites/images";
 import { createClient } from "contentful";
 import { requireContentfulImageUrl } from "@/lib/contentful-url-policy";
 import { isPositiveSafeInteger } from "@/lib/image-type";
-import type { Asset, ImagePlaceholder, ImageType } from "@/lib/types";
+import type { Asset, ImageType } from "@/lib/types";
 
 export type ContentfulEntry = {
 	sys: { id: string };
@@ -156,14 +157,6 @@ export function formatAsset(asset: ContentfulAsset): Asset {
 	};
 }
 
-export function getContentfulPlaceholder(url: string): ImagePlaceholder {
-	const placeholderUrl = new URL(url);
-	placeholderUrl.searchParams.set("w", "25");
-	placeholderUrl.searchParams.set("q", "30");
-	placeholderUrl.searchParams.set("fm", "jpg");
-	return placeholderUrl.toString();
-}
-
 export function formatImage(contentfulAsset: ContentfulAsset): ImageType {
 	const asset = formatAsset(contentfulAsset);
 	requireContentfulImageUrl(asset.url);
@@ -181,7 +174,7 @@ export function formatImage(contentfulAsset: ContentfulAsset): ImageType {
 		...asset,
 		width,
 		height,
-		placeholder: getContentfulPlaceholder(asset.url),
+		placeholder: fallbackPlaceholder,
 	};
 }
 
