@@ -3,6 +3,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { responsiveImages } from "@websites/images/vite";
 import { defineConfig } from "vite";
+import { compiledMarkdown } from "./scripts/compiled-markdown";
 
 export default defineConfig({
 	resolve: {
@@ -12,6 +13,7 @@ export default defineConfig({
 		port: 3000,
 	},
 	plugins: [
+		compiledMarkdown(),
 		responsiveImages(),
 		tanstackStart({
 			pages: [

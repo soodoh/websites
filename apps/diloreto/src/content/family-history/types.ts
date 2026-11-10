@@ -1,4 +1,5 @@
 import type { ContentImage } from "../image";
+import type { CompiledMarkdown } from "../markdown";
 
 export type HistoryRecordMetadata = {
 	title: string;
@@ -9,5 +10,5 @@ export type HistoryRecordMetadata = {
 
 export type HistoryRecord = HistoryRecordMetadata & {
 	year: number;
-	content: string;
+	content: CompiledMarkdown;
 };

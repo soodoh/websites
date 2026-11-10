@@ -176,6 +176,7 @@ const VideoPlaylist = ({
 						<img
 							alt=""
 							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+							fetchPriority="high"
 							height="180"
 							src={selectedVideo.thumbnailUrl}
 							width="320"
@@ -205,6 +206,7 @@ const VideoPlaylist = ({
 						<img
 							alt=""
 							className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+							fetchPriority="high"
 							height="180"
 							src={selectedVideo.thumbnailUrl}
 							width="320"
@@ -255,17 +257,17 @@ const VideoPlaylist = ({
 									type="button"
 									onClick={() => playVideo(index)}
 									aria-current={isSelected ? "true" : undefined}
-									aria-label={
-										video.embeddable
-											? `Play ${video.title}`
-											: `Select ${video.title}; opens on YouTube`
-									}
 									className={cn(
 										"grid w-full grid-cols-[8rem_minmax(0,1fr)] gap-3 rounded-md border border-transparent p-2 text-left whitespace-normal hover:bg-background focus-visible:ring-accent-dark/50",
 										isSelected && "border-accent/50 bg-background",
 									)}
 								>
 									<span className="relative aspect-video w-32 overflow-hidden bg-black">
+										<span className="sr-only">
+											{video.embeddable
+												? "Play "
+												: "Select video; opens on YouTube: "}
+										</span>
 										<img
 											alt=""
 											className="h-full w-full object-cover"

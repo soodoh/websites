@@ -11,6 +11,16 @@ export const Route = createFileRoute("/media")({
 	loader: () => fetchMediaData(),
 	staleTime: Number.POSITIVE_INFINITY,
 	head: () => ({
+		links: [
+			{ rel: "preconnect", href: "https://i.ytimg.com" },
+			{
+				rel: "preload",
+				href: "/api/youtube-playlist",
+				as: "fetch",
+				type: "application/json",
+				crossOrigin: "anonymous",
+			},
+		],
 		meta: [
 			{ title: "Sarabeth's Recordings & Photos" },
 			{

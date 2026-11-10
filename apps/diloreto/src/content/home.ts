@@ -4,9 +4,9 @@ import photoGalleryCardImage from "@/assets/images/home/photo-gallery-card-famil
 import carolynPortraitImage from "@/assets/images/people/carolyn-diloreto-portrait.jpeg?responsive";
 import johnPortraitImage from "@/assets/images/people/john-diloreto-portrait.jpeg?responsive";
 import paulPortraitImage from "@/assets/images/people/paul-michael-diloreto-portrait.jpg?responsive";
-import carolynBio from "./bios/carolyn-diloreto.md?raw";
-import johnBio from "./bios/john-diloreto.md?raw";
-import paulBio from "./bios/paul-diloreto.md?raw";
+import carolynBio from "./bios/carolyn-diloreto.md?compiled";
+import johnBio from "./bios/john-diloreto.md?compiled";
+import paulBio from "./bios/paul-diloreto.md?compiled";
 import {
 	type Contact,
 	carolynContact,
@@ -14,13 +14,14 @@ import {
 	paulContact,
 } from "./contacts";
 import type { ContentImage } from "./image";
+import type { CompiledMarkdown } from "./markdown";
 
 export type HomeTile =
 	| (ContentImage & { kind: "contact" })
 	| (ContentImage & { kind: "family-history"; link: "/areyou" })
 	| (ContentImage & {
 			kind: "person";
-			bio: string;
+			bio: CompiledMarkdown;
 			contact: Contact;
 			fullName: string;
 	  })
