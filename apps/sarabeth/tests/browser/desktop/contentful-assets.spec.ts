@@ -22,6 +22,16 @@ test("renders production-shaped transformed Contentful image URLs", async ({
 			),
 		)
 		.toBe(true);
+	const ratios = await image.evaluate((element) => {
+		const bounds = element.getBoundingClientRect();
+		return {
+			displayed: bounds.width / bounds.height,
+			declared:
+				Number(element.getAttribute("width")) /
+				Number(element.getAttribute("height")),
+		};
+	});
+	expect(ratios.displayed).toBeCloseTo(ratios.declared, 3);
 });
 
 test("Contentful previews are inline and visible before the CDN image finishes", async ({

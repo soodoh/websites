@@ -33,6 +33,7 @@ const ImageWrapper = ({
 		alt={alt}
 		sizes={sizes}
 		className={className}
+		style={{ aspectRatio: image.width / image.height }}
 		pictureClassName={pictureClassName}
 		placeholderFit={placeholderFit}
 		loading={priority ? "eager" : "lazy"}
