@@ -43,6 +43,7 @@
 		"test:browser": "bun run test:container",
 		"test:browser:update": "bash scripts/playwright-docker.sh bun run test:e2e:update",
 		"test:browser:local": "bun run test:e2e",
+		"test:static:prebuilt": "playwright test --config playwright.static.config.ts --update-snapshots=none",
 		"test:hosting": "../../scripts/deploy/verify-release.sh \"$HOSTING_BASE_URL\" \"$HOSTING_EXPECT_COMMIT\"",
 		"test:ci": "bun run lint && bun run test:unit && bun run test:e2e",
 		"test:ci:prebuilt": "bun run test:unit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
@@ -54,6 +55,7 @@
 	},
 	"dependencies": {
 		"@websites/images": "workspace:*",
+		"@websites/static-site": "workspace:*",
 		"@aws-sdk/client-dynamodb": "3.1165.0",
 		"@aws-sdk/client-ses": "3.1165.0",
 		"@aws-sdk/client-ssm": "3.1165.0",

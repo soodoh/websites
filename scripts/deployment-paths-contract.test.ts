@@ -50,6 +50,7 @@ describe.each(sites)("%s deployment selection", (site) => {
 				"package.json",
 				"bun.lock",
 				"packages/images/**",
+				"packages/static-site/**",
 				"bunfig.toml",
 				"turbo.json",
 				".nvmrc",

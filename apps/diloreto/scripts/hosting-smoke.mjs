@@ -107,9 +107,8 @@ for (const { path, amplifyCanonicalPath } of [
 		`${path} returned ${missing.response.status}, expected 404`,
 	);
 	assert(
-		missing.body.includes("404: Page Not Found") &&
-			!missing.body.includes("<script"),
-		`${path} does not return the hydration-free custom 404 body`,
+		missing.body.includes("404: Page Not Found"),
+		`${path} does not return the custom 404 body`,
 	);
 }
 

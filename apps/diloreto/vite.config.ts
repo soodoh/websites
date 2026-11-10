@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { responsiveImages } from "@websites/images/vite";
+import { writeCleanPathAliases } from "@websites/static-site/output";
 import { defineConfig } from "vite";
 import { compiledMarkdown } from "./scripts/compiled-markdown";
 
@@ -27,6 +28,10 @@ export default defineConfig({
 				autoStaticPathsDiscovery: true,
 				crawlLinks: false,
 				failOnError: true,
+				onSuccess: ({ page }) =>
+					page.path === "/404"
+						? undefined
+						: writeCleanPathAliases("dist/client", [page.path]),
 			},
 		}),
 		tailwindcss(),

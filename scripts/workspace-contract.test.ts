@@ -60,6 +60,12 @@ test("browser containers install from the frozen root lock without host dependen
 			"COPY packages/images/package.json packages/images/package.json",
 		);
 		expect(dockerfile).toContain("COPY packages/images packages/images");
+		expect(dockerfile).toContain(
+			"COPY packages/static-site/package.json packages/static-site/package.json",
+		);
+		expect(dockerfile).toContain(
+			"COPY packages/static-site packages/static-site",
+		);
 	}
 	expect(read(".dockerignore")).toContain("**/.env.*");
 	expect(read(".dockerignore")).toContain("**/node_modules");

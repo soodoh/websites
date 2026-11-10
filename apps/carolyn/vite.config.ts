@@ -19,7 +19,7 @@ const publicProjectSlugs = Object.entries(projectRoutes).flatMap(
 );
 const staticPublicPaths = new Set([
 	...getStaticPublicPaths(publicProjectSlugs),
-	"/__static-not-found",
+	"/404",
 ]);
 
 export default defineConfig(({ mode }) => {
@@ -61,7 +61,12 @@ export default defineConfig(({ mode }) => {
 						JSON.stringify(publicReleaseContent),
 					),
 				},
-				pages: [{ path: "/__static-not-found" }],
+				pages: [
+					{
+						path: "/404",
+						prerender: { outputPath: "/404.html", crawlLinks: false },
+					},
+				],
 				prerender: {
 					enabled: true,
 					autoStaticPathsDiscovery: true,

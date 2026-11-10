@@ -128,6 +128,16 @@ for (const page of prerenderedPages) {
 	}
 }
 
+const notFoundDocument = await readFile(
+	join(outputDirectory, "static", "404.html"),
+	"utf8",
+);
+assert(
+	notFoundDocument.includes("Page not found") &&
+		notFoundDocument.includes("<script"),
+	"The native 404 must retain its content and interactive client runtime",
+);
+
 const staticCacheDirectory = join(
 	outputDirectory,
 	"static",

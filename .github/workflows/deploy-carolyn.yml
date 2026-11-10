@@ -26,6 +26,9 @@ on:
       - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock
+      - packages/static-site/**
+      - "!packages/static-site/tests/**"
+      - "!packages/static-site/*.md"
       - packages/images/**
       - "!packages/images/tests/**"
       - "!packages/images/**/*.test.ts"

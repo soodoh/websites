@@ -28,10 +28,7 @@ const Header = (): JSX.Element => {
 				))}
 			</nav>
 
-			<div
-				data-static-navigation-replacement="mobile"
-				className="hidden max-md:block"
-			>
+			<div className="hidden max-md:block">
 				<Sheet open={open} onOpenChange={setOpen}>
 					<SheetTrigger asChild>
 						<Button

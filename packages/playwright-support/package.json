@@ -5,6 +5,7 @@
 	"type": "module",
 	"exports": {
 		"./config": "./src/config.ts",
+		"./not-found": "./src/not-found.ts",
 		"./test": "./src/test.ts",
 		"./visual": "./src/visual.ts"
 	},

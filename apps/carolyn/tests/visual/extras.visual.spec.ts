@@ -60,7 +60,6 @@ test.describe("Static route visual states", () => {
 		);
 		await expectFullPageScreenshot(page, "not-found-full-page.png", {
 			expectedPath: "/route-that-does-not-exist",
-			requireHydration: false,
 		});
 	});
 

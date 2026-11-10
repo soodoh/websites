@@ -1,4 +1,5 @@
 import handler, { createServerEntry } from "@tanstack/react-start/server-entry";
+import { acceptNotFoundPrerender } from "@websites/static-site/server";
 
 const ONLY_HTML_ERROR = JSON.stringify({
 	error: "Only HTML requests are supported here",
@@ -15,7 +16,10 @@ async function isOnlyHtmlError(response: Response): Promise<boolean> {
 
 export default createServerEntry({
 	async fetch(request, options) {
-		const response = await handler.fetch(request, options);
+		const response = acceptNotFoundPrerender(
+			request,
+			await handler.fetch(request, options),
+		);
 		if (!(await isOnlyHtmlError(response))) {
 			return response;
 		}

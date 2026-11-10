@@ -145,7 +145,6 @@ const requiredIndexPages = staticPublicPaths
 const actualIndexPages = publicFiles
 	.filter((file) => file.endsWith("index.html"))
 	.map((file) => relative(publicRoot, file))
-	.filter((file) => !file.startsWith("__static-not-found/"))
 	.sort();
 if (
 	actualIndexPages.length !== requiredIndexPages.length ||

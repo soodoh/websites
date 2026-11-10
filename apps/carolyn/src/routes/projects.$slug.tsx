@@ -60,7 +60,9 @@ export const Route = createFileRoute("/projects/$slug")({
 		return data;
 	},
 	head: ({ loaderData }) => {
-		if (!loaderData?.authorized) {
+		// Missing projects render the shared not-found metadata, not an auth page.
+		if (!loaderData) return {};
+		if (!loaderData.authorized) {
 			return {
 				meta: [
 					{ title: "CD Projects - Password Protected" },

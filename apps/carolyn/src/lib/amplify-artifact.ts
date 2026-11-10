@@ -1,5 +1,6 @@
-import { copyFile, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { writeCleanPathAliases } from "@websites/static-site/output";
 
 export type AmplifyArtifactMode = "fixture" | "production";
 
@@ -179,25 +180,6 @@ export function createProductionRoutes(
 	return routes;
 }
 
-async function emitHtmlAliases(
-	amplifyRoot: string,
-	publicPaths: readonly string[],
-): Promise<void> {
-	for (const publicPath of publicPaths) {
-		if (publicPath === "/") continue;
-		const source = join(
-			amplifyRoot,
-			"static",
-			publicPath.slice(1),
-			"index.html",
-		);
-		await copyFile(
-			source,
-			join(amplifyRoot, "static", `${publicPath.slice(1)}.html`),
-		);
-	}
-}
-
 export function resolveDeploymentMetadata(
 	environment: NodeJS.ProcessEnv = process.env,
 ): { commit: string; runAttempt: string; runId: string } {
@@ -219,37 +201,6 @@ export function resolveDeploymentMetadata(
 	return { commit, runAttempt, runId };
 }
 
-async function emitCustomNotFoundPage(amplifyRoot: string): Promise<void> {
-	const source = join(
-		amplifyRoot,
-		"static",
-		"__static-not-found",
-		"index.html",
-	);
-	try {
-		await stat(source);
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-			throw new Error("Vite did not prerender the static custom 404 page.");
-		}
-		throw error;
-	}
-	const prerenderedHtml = await readFile(source, "utf8");
-	const staticHtml = prerenderedHtml
-		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-		.replace(/<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, "")
-		.replace(/<title>[\s\S]*?<\/title>/gi, "")
-		.replace("</head>", "<title>CD: Page Not Found</title></head>");
-	if (!staticHtml.includes("Page not found")) {
-		throw new Error("Refusing to emit a custom 404 without its expected UI.");
-	}
-	await writeFile(join(amplifyRoot, "static", "404.html"), staticHtml);
-	await rm(join(amplifyRoot, "static", "__static-not-found"), {
-		force: true,
-		recursive: true,
-	});
-}
-
 export async function prepareAmplifyArtifact(
 	amplifyRoot: string,
 	mode: AmplifyArtifactMode,
@@ -268,8 +219,10 @@ export async function prepareAmplifyArtifact(
 		manifestPath,
 		`${JSON.stringify(generatedManifest, null, 2)}\n`,
 	);
-	await emitHtmlAliases(amplifyRoot, getStaticPublicPaths(publicProjectSlugs));
-	await emitCustomNotFoundPage(amplifyRoot);
+	await writeCleanPathAliases(
+		join(amplifyRoot, "static"),
+		getStaticPublicPaths(publicProjectSlugs),
+	);
 	await writeFile(
 		join(amplifyRoot, "static", "__deployment.json"),
 		`${JSON.stringify(resolveDeploymentMetadata())}\n`,

@@ -28,7 +28,13 @@ export const sharedViteConfig = {
 			serverFns: {
 				generateFunctionId: createStaticReleaseFunctionId(),
 			},
-			pages: [{ path: "/" }],
+			pages: [
+				{ path: "/" },
+				{
+					path: "/404",
+					prerender: { outputPath: "/404.html", crawlLinks: false },
+				},
+			],
 			prerender: {
 				enabled: true,
 				crawlLinks: true,

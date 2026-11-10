@@ -1,0 +1,20 @@
+{
+	"name": "@websites/static-site",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		"./server": "./src/server.ts",
+		"./output": "./src/output.ts"
+	},
+	"scripts": {
+		"lint": "biome check .",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.6.6",
+		"@types/node": "26.6.6",
+		"typescript": "7.0.2",
+		"vitest": "5.1.0"
+	}
+}

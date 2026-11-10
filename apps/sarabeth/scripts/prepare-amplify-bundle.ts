@@ -3,17 +3,14 @@ import { join } from "node:path";
 import { createProductionRoutes } from "@scripts/amplify-routing";
 import publicRoutes from "@scripts/public-routes.json" with { type: "json" };
 import { resolveReleaseCommit } from "@scripts/release-commit";
+import { writeCleanPathAliases } from "@websites/static-site/output";
 
 const manifestPath = join(".amplify-hosting", "deploy-manifest.json");
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
 manifest.routes = createProductionRoutes(manifest.routes, publicRoutes);
 
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
-for (const path of publicRoutes.filter((path) => path !== "/")) {
-	const outputPath = join(".amplify-hosting", "static", path.slice(1));
-	const html = await readFile(join(outputPath, "index.html"));
-	await writeFile(`${outputPath}.html`, html);
-}
+await writeCleanPathAliases(join(".amplify-hosting", "static"), publicRoutes);
 const commit = await resolveReleaseCommit();
 const runId = process.env.RELEASE_RUN_ID ?? "local";
 const runAttempt = process.env.RELEASE_RUN_ATTEMPT ?? "local";

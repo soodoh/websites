@@ -36,7 +36,7 @@ if [[ "${PLAYWRIGHT_STATIC:-}" == "1" ]]; then
 	fi
 fi
 
-for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_EXPECT_STATIC_404 PLAYWRIGHT_STATIC; do
+for variable in PLAYWRIGHT_BASE_URL PLAYWRIGHT_STATIC; do
 	if [[ -n "${!variable:-}" ]]; then
 		docker_arguments+=(--env "${variable}=${!variable}")
 	fi

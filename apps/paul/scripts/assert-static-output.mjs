@@ -55,8 +55,8 @@ assert(
 	"404.html contains the home page banner and could flash incorrect content",
 );
 assert(
-	!notFoundHtml.includes("<script"),
-	"404.html contains client scripts and could hydrate against an unknown URL",
+	notFoundHtml.includes("<script"),
+	"404.html must retain JavaScript for the interactive navigation",
 );
 for (const { label, url } of navigationLinks) {
 	assert(

@@ -121,11 +121,8 @@ if (!/srcset=/i.test(home) || !/srcset=/i.test(history)) {
 if (!notFound.includes("404: Page Not Found")) {
 	throw new Error("The custom 404 document is missing its expected content");
 }
-if (/<script\b/i.test(notFound)) {
-	throw new Error("The custom 404 document must not contain hydration scripts");
-}
-if (/<link\b(?=[^>]*\brel=["']modulepreload["'])/i.test(notFound)) {
-	throw new Error("The custom 404 document must not contain module preloads");
+if (!/<script\b/i.test(notFound)) {
+	throw new Error("The custom 404 document must retain its client runtime");
 }
 
 const totalBytes = (

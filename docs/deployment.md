@@ -19,6 +19,8 @@ PR CI and all four deployment entry points call `_site-ci.yml` with a site name.
 
 Static deployment callers additionally request packaging. The reusable workflow stamps and uploads the exact Paul/DiLoreto output that passed verification; deployment jobs still download their original site/run/attempt artifact names. Carolyn/Sarabeth retain their repository-connected release mechanism. No reusable verification job receives production credentials, and the PR `CI gate` still requires root checks and all four sites to succeed.
 
+Sarabeth’s pinned browser container runs both its SSR/API suite and a separate packaged-static suite. The static suite serves only `.amplify-hosting/static` (no compute or SPA fallback), checking mobile/desktop 404 hydration and recovery, clean-path aliases, and client navigation using packaged route data. Run `bun run test:artifact` followed by `bun run test:static:prebuilt` from `apps/sarabeth` for the focused local check.
+
 Verification-only changes (shared CI/Lighthouse implementation or per-site baseline files) are checked on PRs but do not independently select a production deployment. Website, dependency, and toolchain changes retain the native deployment selection below.
 
 ## Static route-data caching
@@ -31,7 +33,7 @@ Do not use the Git commit alone as the cache identity: Contentful can publish di
 
 Source deployments use GitHub's native `push.branches` and ordered `push.paths` filters, with no custom changed-file detector. A push to `main` selects each site whose app files changed, except for app-local docs, infrastructure, tests, root Markdown documentation, and the explicitly excluded browser/Lighthouse configuration files. Source, public assets, build scripts, and build configuration remain deployment triggers. Pull-request CI still verifies all four sites, including changes excluded from deployment.
 
-Shared image-package source changes (`packages/images/**`, excluding package tests and top-level Markdown) select all four sites, since all four consume its policy or Vite integration. Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
+Shared image-package source changes (`packages/images/**`, excluding package tests and top-level Markdown) select all four sites, since all four consume its policy or Vite integration. Shared static-site implementation changes (`packages/static-site/**`, excluding tests and top-level Markdown) also select all four sites. That package preserves native, interactive static 404 documents and provides clean-path alias generation. Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
 
 Deployment-script triggers follow the hosting mechanism:
 
