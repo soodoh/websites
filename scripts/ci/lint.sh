@@ -17,6 +17,7 @@ scripts/infra/validate-opentofu.sh
 scripts=(
   scripts/ci/*.sh
   scripts/deploy/*.sh
+  scripts/playwright/*.sh
   apps/sarabeth/scripts/playwright-*.sh
   apps/carolyn/scripts/playwright-docker.sh
   apps/paul/scripts/*.sh

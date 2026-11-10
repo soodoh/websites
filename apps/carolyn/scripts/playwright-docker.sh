@@ -54,32 +54,7 @@ for report in playwright-report test-results; do
 	docker cp "${container}:/work/apps/carolyn/${report}" "${ROOT_DIR}/${report}" >/dev/null 2>&1 || true
 done
 if [[ "${status}" -eq 0 ]]; then
-	for argument in "$@"; do
-		if [[ "${argument}" == "--update-snapshots" || "${argument}" == "--update-snapshots=all" || "${argument}" == "--update-snapshots=changed" || "${argument}" == "--update-snapshots=missing" ]]; then
-			staging=$(mktemp -d "${ROOT_DIR}/tests/.screenshots-staging.XXXXXX")
-			backup="${ROOT_DIR}/tests/.screenshots-backup"
-			docker cp "${container}:/work/apps/carolyn/tests/__screenshots__/." "${staging}"
-			if ! find "${staging}" -type f -name '*.png' -print -quit | grep -q .; then
-				echo "Playwright produced no visual baselines; keeping the existing snapshots." >&2
-				rm -rf "${staging}"
-				exit 1
-			fi
-
-			rm -rf "${backup}"
-			if [[ -d "${ROOT_DIR}/tests/__screenshots__" ]]; then
-				mv "${ROOT_DIR}/tests/__screenshots__" "${backup}"
-			fi
-			if mv "${staging}" "${ROOT_DIR}/tests/__screenshots__"; then
-				rm -rf "${backup}"
-			else
-				if [[ -d "${backup}" ]]; then
-					mv "${backup}" "${ROOT_DIR}/tests/__screenshots__"
-				fi
-				exit 1
-			fi
-			break
-		fi
-	done
+	bash "${WORKSPACE_ROOT}/scripts/playwright/publish-snapshots.sh" "${container}" "${ROOT_DIR}" "$@"
 fi
 trap - EXIT
 cleanup
