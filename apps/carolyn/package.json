@@ -55,7 +55,7 @@
 	"dependencies": {
 		"@websites/images": "workspace:*",
 		"@websites/static-site": "workspace:*",
-		"@aws-sdk/client-ssm": "3.1165.0",
+		"@aws-sdk/client-ssm": "3.1166.0",
 		"@contentful/rich-text-from-markdown": "16.2.2",
 		"@contentful/rich-text-react-renderer": "16.2.2",
 		"@contentful/rich-text-types": "17.2.7",
