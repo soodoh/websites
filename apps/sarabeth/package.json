@@ -1,5 +1,5 @@
 {
-	"name": "sarabeth-studio",
+	"name": "sarabeth",
 	"version": "1.1.0",
 	"homepage": "https://sarabethbelon.com",
 	"private": true,
@@ -43,17 +43,19 @@
 		"test:browser": "bun run test:container",
 		"test:browser:update": "bash scripts/playwright-docker.sh bun run test:e2e:update",
 		"test:browser:local": "bun run test:e2e",
+		"test:static:prebuilt": "playwright test --config playwright.static.config.ts --update-snapshots=none",
 		"test:hosting": "../../scripts/deploy/verify-release.sh \"$HOSTING_BASE_URL\" \"$HOSTING_EXPECT_COMMIT\"",
 		"test:ci": "bun run lint && bun run test:unit && bun run test:e2e",
 		"test:ci:prebuilt": "bun run test:unit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
 		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:unit && bun run test:container && bun run infra:lint && bun run lighthouse --prebuilt",
-		"lighthouse": "bun ../../scripts/lighthouse/run.mjs sarabeth",
+		"lighthouse": "bun ../../scripts/lighthouse/run.ts sarabeth",
 		"test:container": "bash scripts/playwright-docker.sh",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},
 	"dependencies": {
 		"@websites/images": "workspace:*",
+		"@websites/static-site": "workspace:*",
 		"@aws-sdk/client-dynamodb": "3.1165.0",
 		"@aws-sdk/client-ses": "3.1165.0",
 		"@aws-sdk/client-ssm": "3.1165.0",

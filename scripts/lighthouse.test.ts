@@ -1,19 +1,19 @@
 import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { createServer } from "node:net";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertTcpPortAvailable } from "@websites/static-site/ports";
 import { describe, expect, test } from "vitest";
-import policy from "./lighthouse/policy.cjs";
-import { assertPortsAvailable } from "./lighthouse/server-ports.mjs";
-
-const {
+import {
 	categories,
 	formFactors,
-	sites,
-	sitePolicy,
-	validateBudgets,
 	lighthouseConfig,
-} = policy;
+	sitePolicy,
+	sites,
+	validateBudgets,
+} from "./lighthouse/policy";
+
 const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const json = (path: string) => JSON.parse(read(path));
@@ -52,7 +52,7 @@ describe.each(Object.keys(sites))("%s shared Lighthouse policy", (site) => {
 	test("complete verification invokes shared Lighthouse on the already-built output", () => {
 		const manifest = json(`apps/${site}/package.json`);
 		expect(manifest.scripts.lighthouse).toBe(
-			`bun ../../scripts/lighthouse/run.mjs ${site}`,
+			`bun ../../scripts/lighthouse/run.ts ${site}`,
 		);
 		expect(manifest.scripts["ci:verify"]).toMatch(
 			/&& bun run lighthouse --prebuilt$/,
@@ -86,8 +86,11 @@ test.each([
 	Number.NaN,
 	Number.POSITIVE_INFINITY,
 ])("rejects invalid score %s", (score) => {
-	const budgets = structuredClone(sitePolicy("paul").budgets);
-	budgets.mobile.performance = score;
+	const previous = sitePolicy("paul").budgets;
+	const budgets = {
+		...previous,
+		mobile: { ...previous.mobile, performance: score },
+	};
 	expect(() => validateBudgets("paul", budgets)).toThrow(
 		"invalid mobile Lighthouse baselines",
 	);
@@ -95,13 +98,14 @@ test.each([
 
 test("requires exactly the four audited categories in both profiles", () => {
 	const budgets = structuredClone(sitePolicy("paul").budgets);
-	delete budgets.desktop.seo;
-	expect(() => validateBudgets("paul", budgets)).toThrow(
+	const desktop: Record<string, unknown> = { ...budgets.desktop };
+	delete desktop.seo;
+	expect(() => validateBudgets("paul", { ...budgets, desktop })).toThrow(
 		"invalid desktop Lighthouse baselines",
 	);
-	budgets.desktop.seo = 1;
-	budgets.desktop.typo = 0.9;
-	expect(() => validateBudgets("paul", budgets)).toThrow(
+	desktop.seo = 1;
+	desktop.typo = 0.9;
+	expect(() => validateBudgets("paul", { ...budgets, desktop })).toThrow(
 		"invalid desktop Lighthouse baselines",
 	);
 });
@@ -116,8 +120,7 @@ test.each([
 	["/#content"],
 	[42],
 ])("rejects empty, duplicate, or non-local routes: %j", (...routes) => {
-	const budgets = structuredClone(sitePolicy("paul").budgets);
-	budgets.routes = routes;
+	const budgets = { ...sitePolicy("paul").budgets, routes };
 	expect(() => validateBudgets("paul", budgets)).toThrow(
 		"Lighthouse routes must be unique local paths",
 	);
@@ -130,13 +133,36 @@ test("refuses occupied local ports instead of auditing an unrelated server", asy
 	if (!address || typeof address === "string")
 		throw new Error("Missing test port");
 	try {
-		await expect(assertPortsAvailable([address.port])).rejects.toThrow(
-			`Lighthouse requires free port ${address.port}`,
-		);
+		await expect(
+			assertTcpPortAvailable(address.port, "Lighthouse requires free port"),
+		).rejects.toThrow(`Lighthouse requires free port ${address.port}`);
 	} finally {
 		await new Promise<void>((accept) => server.close(() => accept()));
 	}
-	await expect(assertPortsAvailable([address.port])).resolves.toBeUndefined();
+	await expect(
+		assertTcpPortAvailable(address.port, "Lighthouse requires free port"),
+	).resolves.toBeUndefined();
+});
+
+test("native LHCI retains positive assertion evidence for successful runs", () => {
+	const require = createRequire(import.meta.url);
+	const cliRequire = createRequire(require.resolve("@lhci/cli/package.json"));
+	const { getAllAssertionResults } = cliRequire(
+		"@lhci/utils/src/assertions.js",
+	);
+	const { ci } = lighthouseConfig("paul", "mobile");
+	const report = {
+		finalUrl: ci.collect.url[0],
+		audits: {},
+		categories: Object.fromEntries(
+			categories.map((category) => [category, { score: 1 }]),
+		),
+	};
+	const results = getAllAssertionResults(ci.assert, [report]);
+	expect(results).toHaveLength(categories.length);
+	expect(results.every((result: { passed: boolean }) => result.passed)).toBe(
+		true,
+	);
 });
 
 test("root owns the exact Lighthouse and browser versions used across every site", () => {

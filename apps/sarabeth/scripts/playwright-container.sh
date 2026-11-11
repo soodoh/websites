@@ -6,4 +6,7 @@ bun run build:amplify:fixture
 bun run prepare:amplify
 bun run validate:amplify
 bun run build:playwright:unchecked
-exec "$@"
+"$@"
+# Keep the SSR/API suite above; separately exercise the packaged Amplify fallback.
+# Run last so the SSR runner cannot clear the static traces/report.
+exec bun run test:static:prebuilt

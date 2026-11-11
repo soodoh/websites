@@ -145,6 +145,70 @@ async function touchSwipeGallery(
 }
 
 test.describe("Photography album loading", () => {
+	test("does not reuse the previous release's cached photography metadata", async ({
+		page,
+	}) => {
+		// This cache key shipped before route data was scoped to a content release.
+		// Model a browser retaining that immutable response across a deployment.
+		await page.route(
+			"**/__tsr/staticServerFnCache/479d843506997242122d0d0a1ec97e39195e7c0a.json",
+			async (route) => {
+				const response = await fetchRoutedResponse(route);
+				const body = (await response.text()).replaceAll(
+					/\/__release\/albums\/[a-f0-9]{64}\.json/g,
+					`/__release/albums/${"0".repeat(64)}.json`,
+				);
+				await route.fulfill({ response, body });
+			},
+		);
+		await page.goto("/");
+		await page.locator("html[data-hydrated='true']").waitFor();
+		const mobileNavigation = page.getByRole("button", {
+			name: "Open Navigation",
+		});
+		if (await mobileNavigation.isVisible()) await mobileNavigation.click();
+		await page.getByRole("link", { name: "Photography", exact: true }).click();
+		await expectCurrentPath(page, "/photography");
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Dance",
+		);
+
+		await selectFilter(page, "Dance", "Portraits");
+		await expect(page.getByRole("alert")).toHaveCount(0);
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Portraits",
+		);
+	});
+
+	test("keeps the selected album after navigating from home", async ({
+		page,
+	}) => {
+		await page.goto("/");
+		await page.locator("html[data-hydrated='true']").waitFor();
+		const mobileNavigation = page.getByRole("button", {
+			name: "Open Navigation",
+		});
+		if (await mobileNavigation.isVisible()) await mobileNavigation.click();
+		await page.getByRole("link", { name: "Photography", exact: true }).click();
+		await expectCurrentPath(page, "/photography");
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Dance",
+		);
+
+		await selectFilter(page, "Dance", "Portraits");
+		await expect(page.locator("[data-photography-album]")).toHaveAttribute(
+			"data-photography-album",
+			"Portraits",
+		);
+		await expect(page.locator(".masonry-grid img").first()).toHaveAttribute(
+			"src",
+			/fixture-portraits-01/,
+		);
+	});
+
 	test("uses inline album previews without remote placeholder requests", {
 		tag: "@desktop-only",
 	}, async ({ page }) => {

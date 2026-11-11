@@ -1,8 +1,11 @@
-import { readdir, readFile, stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 import { extname, join, relative } from "node:path";
+import {
+	artifactSize,
+	listArtifactFiles,
+} from "@websites/static-site/artifact";
 
 const outputDirectory = "dist/client";
-const routesDirectory = "src/routes";
 const requiredAssets = ["robots.txt", "favicon.png", "apple-touch-icon.png"];
 const searchableExtensions = new Set([
 	".css",
@@ -14,49 +17,14 @@ const searchableExtensions = new Set([
 ]);
 const forbiddenPatterns = [/\.netlify\/images/i, /netlify/i];
 
-async function listFiles(directory: string): Promise<string[]> {
-	const entries = await readdir(directory, {
-		recursive: true,
-		withFileTypes: true,
-	});
-	return entries
-		.filter((entry) => !entry.isDirectory())
-		.map((entry) => join(entry.parentPath, entry.name));
-}
-
-function routeOutputPath(routeFile: string): string | undefined {
-	const routeId = relative(routesDirectory, routeFile)
-		.slice(0, -extname(routeFile).length)
-		.replaceAll(".", "/");
-
-	if (routeId === "__root" || routeId.includes("$")) {
-		return undefined;
-	}
-
-	const routeSegments = routeId
-		.split("/")
-		.filter(
-			(segment) =>
-				segment !== "index" &&
-				!segment.startsWith("_") &&
-				!(segment.startsWith("(") && segment.endsWith(")")),
-		);
-	const routePath = routeSegments.join("/");
-
-	if (routePath === "404") {
-		return "404.html";
-	}
-
-	return routePath ? `${routePath}/index.html` : "index.html";
-}
-
-const routeFiles = await listFiles(routesDirectory);
-const requiredRouteFiles = routeFiles
-	.filter((path) => extname(path) === ".tsx")
-	.flatMap((path) => {
-		const outputPath = routeOutputPath(path);
-		return outputPath ? [outputPath] : [];
-	});
+// Independent artifact contract, not a second parser for TanStack route filenames.
+// Native autoStaticPathsDiscovery + failOnError covers additional static routes.
+const requiredRouteFiles = [
+	"index.html",
+	"areyou/index.html",
+	"familytree/index.html",
+	"404.html",
+];
 const requiredCleanPathAliases = requiredRouteFiles.flatMap((path) =>
 	path.endsWith("/index.html")
 		? [`${path.slice(0, -"/index.html".length)}.html`]
@@ -74,7 +42,7 @@ for (const requiredFile of [
 	}
 }
 
-const files = await listFiles(outputDirectory);
+const files = await listArtifactFiles(outputDirectory);
 
 for (const path of files) {
 	const extension = extname(path);
@@ -121,16 +89,11 @@ if (!/srcset=/i.test(home) || !/srcset=/i.test(history)) {
 if (!notFound.includes("404: Page Not Found")) {
 	throw new Error("The custom 404 document is missing its expected content");
 }
-if (/<script\b/i.test(notFound)) {
-	throw new Error("The custom 404 document must not contain hydration scripts");
-}
-if (/<link\b(?=[^>]*\brel=["']modulepreload["'])/i.test(notFound)) {
-	throw new Error("The custom 404 document must not contain module preloads");
+if (!/<script\b/i.test(notFound)) {
+	throw new Error("The custom 404 document must retain its client runtime");
 }
 
-const totalBytes = (
-	await Promise.all(files.map(async (path) => (await stat(path)).size))
-).reduce((total, size) => total + size, 0);
+const totalBytes = await artifactSize(files);
 
 console.log(
 	`Static output verified: ${requiredRouteFiles.length} routes, ${files.length} files, ${(totalBytes / 1024 / 1024).toFixed(1)} MiB`,

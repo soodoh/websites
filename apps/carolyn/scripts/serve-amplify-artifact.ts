@@ -1,5 +1,10 @@
 import { join, normalize } from "node:path";
 import {
+	assertTcpPortAvailable,
+	parseTcpPort,
+} from "@websites/static-site/ports";
+import { findStaticFile } from "@websites/static-site/preview";
+import {
 	type AmplifyRouteTarget,
 	getCleanUrlRules,
 	matchesAmplifyRoute,
@@ -7,7 +12,6 @@ import {
 	readAmplifyDeployManifest,
 } from "@/lib/amplify-artifact";
 import { forwardComputeResponse } from "@/lib/amplify-proxy";
-import { assertTcpPortAvailable, parseTcpPort } from "@/lib/artifact-server";
 
 const artifactRoot = normalize(join(import.meta.dir, "..", ".amplify-hosting"));
 const staticRoot = join(artifactRoot, "static");
@@ -43,7 +47,7 @@ if (port === computePort) {
 	throw new Error("ARTIFACT_PORT and ARTIFACT_COMPUTE_PORT must differ.");
 }
 await assertTcpPortAvailable(port, "Artifact server port");
-await assertTcpPortAvailable(computePort);
+await assertTcpPortAvailable(computePort, "Amplify compute port");
 
 function spawnCompute() {
 	return Bun.spawn(["node", "server.js"], {
@@ -85,21 +89,6 @@ async function waitForCompute(): Promise<void> {
 		}
 	}
 	throw new Error("Timed out waiting for the Amplify compute server to start.");
-}
-
-function staticFilesForPath(pathname: string): string[] {
-	const relativePath = pathname.slice(1);
-	const candidates =
-		pathname === "/"
-			? ["index.html"]
-			: [
-					relativePath,
-					`${relativePath}.html`,
-					join(relativePath, "index.html"),
-				];
-	return candidates
-		.map((candidate) => normalize(join(staticRoot, candidate)))
-		.filter((candidate) => candidate.startsWith(`${staticRoot}/`));
 }
 
 function targetForPath(pathname: string): AmplifyRouteTarget | undefined {
@@ -159,7 +148,8 @@ const server = Bun.serve({
 
 		const target = targetForPath(cleanUrlResult);
 		if (target?.kind === "Static") {
-			for (const staticPath of staticFilesForPath(cleanUrlResult)) {
+			const staticPath = await findStaticFile(staticRoot, cleanUrlResult);
+			if (staticPath) {
 				const file = Bun.file(staticPath);
 				if (await file.exists()) {
 					return new Response(file, {

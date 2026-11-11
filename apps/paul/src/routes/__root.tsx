@@ -45,7 +45,6 @@ export const Route = createRootRoute({
 			{ name: "viewport", content: "width=device-width, initial-scale=1" },
 			{ title: "PD Portfolio" },
 			{ name: "description", content: about.tagLine },
-			{ name: "robots", content: "index, follow" },
 		],
 		links: [
 			{ rel: "canonical", href: "https://pauldiloreto.com/" },

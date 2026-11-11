@@ -54,6 +54,16 @@ export default defineConfig({
 			appProject("carolyn", ["tests/unit/**/*.test.{ts,tsx}"], {
 				testAlias: true,
 			}),
+			{
+				...appProject("carolyn", ["tests/integration/**/*.test.ts"], {
+					testAlias: true,
+				}),
+				test: {
+					name: "carolyn-artifact",
+					environment: "node",
+					include: ["tests/integration/**/*.test.ts"],
+				},
+			},
 			appProject("diloreto", [
 				"infra/**/*.test.ts",
 				"scripts/**/*.test.ts",

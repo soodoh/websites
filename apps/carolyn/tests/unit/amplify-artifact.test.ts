@@ -21,6 +21,8 @@ import {
 } from "@/lib/amplify-artifact";
 
 const temporaryDirectories: string[] = [];
+const notFoundDocument =
+	'<html><head><title>CD: Page Not Found</title><link rel="modulepreload" href="/route.js"></head><body>Page not found<script src="/hydrate.js"></script></body></html>';
 const projectRoutes = {
 	"protected-project": "protected",
 	"public-project": "public",
@@ -43,16 +45,13 @@ async function createArtifact(): Promise<string> {
 		"photography/index.html",
 		"projects/index.html",
 		"projects/public-project/index.html",
-		"__static-not-found/index.html",
+		"404.html",
 		"test-assets/image.jpg",
 	]) {
 		await mkdir(join(root, "static", path, ".."), { recursive: true });
 		await writeFile(join(root, "static", path), `<html>${path}</html>`);
 	}
-	await writeFile(
-		join(root, "static", "__static-not-found/index.html"),
-		'<html><head><link rel="modulepreload" href="/route.js"></head><body>__static-not-found Page not found<script src="/hydrate.js"></script></body></html>',
-	);
+	await writeFile(join(root, "static", "404.html"), notFoundDocument);
 	await writeFile(
 		join(root, "deploy-manifest.json"),
 		JSON.stringify({
@@ -120,7 +119,7 @@ describe("Amplify artifact preparation", () => {
 		});
 	});
 
-	test("emits clean aliases, a custom 404, and immutable static data routes", async () => {
+	test("emits clean aliases, preserves the native 404, and adds immutable static data routes", async () => {
 		const root = await createArtifact();
 		await prepareAmplifyArtifact(root, "fixture", projectRoutes);
 		expect(await readAmplifyArtifactMode(root)).toBe("fixture");
@@ -134,10 +133,7 @@ describe("Amplify artifact preparation", () => {
 			join(root, "static", "404.html"),
 			"utf8",
 		);
-		expect(notFoundHtml).toContain("__static-not-found");
-		expect(notFoundHtml).toContain("<title>CD: Page Not Found</title>");
-		expect(notFoundHtml).not.toContain("<script");
-		expect(notFoundHtml).not.toContain('rel="modulepreload"');
+		expect(notFoundHtml).toBe(notFoundDocument);
 		expect(
 			JSON.parse(
 				await readFile(join(root, "static", "__deployment.json"), "utf8"),

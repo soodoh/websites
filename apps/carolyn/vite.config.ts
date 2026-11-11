@@ -5,22 +5,26 @@ import { responsiveImages } from "@websites/images/vite";
 import { nitro } from "nitro/vite";
 import { defineConfig, loadEnv } from "vite";
 import { getStaticPublicPaths } from "./src/lib/amplify-artifact.ts";
-import { getArtifactMode } from "./src/lib/build-environment.ts";
+import { assertSafeProductionBuildEnvironment } from "./src/lib/build-environment.ts";
 import projectRoutes from "./src/lib/generated-release/project-routes.json" with {
 	type: "json",
 };
+import publicReleaseContent from "./src/lib/generated-release/public-release-content.json" with {
+	type: "json",
+};
+import { createReleaseFunctionId } from "./src/lib/static-release-function-id.ts";
 
 const publicProjectSlugs = Object.entries(projectRoutes).flatMap(
 	([slug, route]) => (route === "public" ? [slug] : []),
 );
 const staticPublicPaths = new Set([
 	...getStaticPublicPaths(publicProjectSlugs),
-	"/__static-not-found",
+	"/404",
 ]);
 
 export default defineConfig(({ mode }) => {
 	Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
-	const artifactMode = getArtifactMode(process.env);
+	const artifactMode = assertSafeProductionBuildEnvironment(process.env);
 
 	return {
 		publicDir: false,
@@ -52,7 +56,17 @@ export default defineConfig(({ mode }) => {
 				],
 			}),
 			tanstackStart({
-				pages: [{ path: "/__static-not-found" }],
+				serverFns: {
+					generateFunctionId: createReleaseFunctionId(
+						JSON.stringify(publicReleaseContent),
+					),
+				},
+				pages: [
+					{
+						path: "/404",
+						prerender: { outputPath: "/404.html", crawlLinks: false },
+					},
+				],
 				prerender: {
 					enabled: true,
 					autoStaticPathsDiscovery: true,

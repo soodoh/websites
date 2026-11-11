@@ -51,10 +51,10 @@ remain app-local.
 ## Snapshot publication
 
 The four Docker runners retain their own builds, architecture requirements,
-container lifecycle, and verification checks. After every required check succeeds,
-they invoke `scripts/playwright/publish-snapshots.sh` with the successful container,
-the app directory, and the original test arguments. Sarabeth verifies that
-container's release marker before publication.
+artifact modes, and verification checks. They source `scripts/playwright/docker-runner.sh`
+for lock-derived image names, owned-container cleanup, exit-status propagation,
+report copying, and success-only snapshot publication. Sarabeth verifies the actual
+successful container's release marker before calling the shared finish function.
 
 The shared command publishes only for an explicit snapshot-update argument. It
 copies snapshots into a private staging directory, requires at least one PNG,
@@ -63,6 +63,21 @@ Copy/validation failures leave the previous baselines intact; staging is cleaned
 on exit. If restoring the previous baselines also fails, the command retains the
 recovery copy and reports its location instead of deleting it. Normal verification
 with `--update-snapshots=none` never publishes snapshots.
+
+## Local server adapters
+
+Paul and Sarabeth use `@websites/static-site/preview` for packaged static files,
+clean-path aliases, GET/HEAD responses, and genuine interactive 404 documents.
+It never serves an SPA fallback or invokes compute. Carolyn reuses its safe file
+resolution while retaining manifest-directed compute proxying. DiLoreto keeps
+its existing `serve` CLI. Do not replace these with a generic preview command
+without preserving the app's status, alias, and method contracts.
+
+Carolyn's `test:dev-smoke` uses Playwright `webServer` lifecycle management and a
+deterministic fixture provider. Its occupied-compute-port regression lives in
+`tests/integration/` and runs in the separate `carolyn-artifact` Vitest project
+after a fixture or production-shaped build; ordinary unit tests need no artifact.
+Sarabeth's SSR launcher retains an environment allowlist and disables `.env` loading.
 
 ## Coverage expectations
 

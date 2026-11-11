@@ -7,6 +7,7 @@ import {
 import { type JSX, useEffect } from "react";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import NotFound from "@/components/not-found";
 import globalStyles from "@/styles/globals.css?url";
 import { fetchCommonData } from "@/utils/server-functions";
 
@@ -38,9 +39,6 @@ export const Route = createRootRoute({
 				name: "google-site-verification",
 				content: "recDsrmbMWYOcfMC0vEE0asXttST_2d-4VZs1EVtSps",
 			},
-			{ name: "GOOGLEBOT", content: "index, follow" },
-			{ name: "ROBOTS", content: "index, follow" },
-			{ name: "robots", content: "index, follow" },
 			{ name: "msapplication-TileColor", content: "#da532c" },
 			{ name: "theme-color", content: "#ffffff" },
 		],
@@ -72,7 +70,7 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
-	notFoundComponent: () => <h1>Page not found</h1>,
+	notFoundComponent: NotFound,
 	component: RootComponent,
 });
 

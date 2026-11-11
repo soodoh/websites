@@ -1,14 +1,8 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-		"allowJs": true,
-		"checkJs": true,
+		"allowImportingTsExtensions": true,
 		"types": ["node"]
 	},
-	"include": [
-		"commitlint.config.ts",
-		"tests/**/*.ts",
-		"playwright.config.ts",
-		"scripts/*.mjs"
-	]
+	"include": ["tests/**/*.ts", "playwright.config.ts", "scripts/**/*.ts"]
 }

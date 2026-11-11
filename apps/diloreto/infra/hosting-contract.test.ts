@@ -95,7 +95,7 @@ describe("native Amplify hosting contract", () => {
 		expect(workflow).toContain(
 			'scripts/deploy/amplify-static.sh "$AMPLIFY_APP_ID" "$AMPLIFY_BRANCH" release/site.zip',
 		);
-		expect(workflow).toContain("apps/diloreto/scripts/hosting-smoke.mjs");
+		expect(workflow).toContain("apps/diloreto/scripts/hosting-smoke.ts");
 		expect(workflow).toContain(`HOSTING_EXPECT_COMMIT: ${githubShaExpression}`);
 	});
 });

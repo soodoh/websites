@@ -1,5 +1,19 @@
-import { copyFile, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import {
+	type AmplifyRoute,
+	readAmplifyDeployManifest,
+} from "@websites/static-site/amplify";
+import { writeCleanPathAliases } from "@websites/static-site/output";
+import { createReleaseIdentity } from "../../../../scripts/deploy/release.ts";
+
+export {
+	type AmplifyDeployManifest,
+	type AmplifyRoute,
+	type AmplifyRouteTarget,
+	matchesAmplifyRoute,
+	readAmplifyDeployManifest,
+} from "@websites/static-site/amplify";
 
 export type AmplifyArtifactMode = "fixture" | "production";
 
@@ -17,60 +31,6 @@ const fixedStaticPublicPaths = [
 	"/projects",
 ] as const;
 export const maximumAmplifyRouteCount = 25;
-
-export type AmplifyRouteTarget = Record<string, unknown> & {
-	kind: string;
-};
-
-export type AmplifyRoute = Record<string, unknown> & {
-	fallback?: AmplifyRouteTarget;
-	path: string;
-	target: AmplifyRouteTarget;
-};
-
-export type AmplifyDeployManifest = Record<string, unknown> & {
-	version: 1;
-	routes: AmplifyRoute[];
-};
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isRoute(value: unknown): value is AmplifyRoute {
-	return (
-		isRecord(value) &&
-		typeof value.path === "string" &&
-		isRecord(value.target) &&
-		typeof value.target.kind === "string"
-	);
-}
-
-function isDeployManifest(value: unknown): value is AmplifyDeployManifest {
-	return (
-		isRecord(value) &&
-		value.version === 1 &&
-		Array.isArray(value.routes) &&
-		value.routes.every(isRoute)
-	);
-}
-
-function parseDeployManifest(value: unknown): AmplifyDeployManifest {
-	if (!isDeployManifest(value)) {
-		throw new Error("Amplify generated an invalid deployment manifest.");
-	}
-	return value;
-}
-
-export async function readAmplifyDeployManifest(
-	amplifyRoot: string,
-): Promise<AmplifyDeployManifest> {
-	return parseDeployManifest(
-		JSON.parse(
-			await readFile(join(amplifyRoot, "deploy-manifest.json"), "utf8"),
-		),
-	);
-}
 
 export async function readAmplifyArtifactMode(
 	amplifyRoot: string,
@@ -109,31 +69,6 @@ export function getCleanUrlRules(): AmplifyCustomRule[] {
 					},
 				],
 	);
-}
-
-export function matchesAmplifyRoute(
-	pathname: string,
-	pattern: string,
-): boolean {
-	const parts = pattern.split("*");
-	const first = parts[0];
-	if (parts.length === 1) {
-		return pathname === pattern;
-	}
-	if (first === undefined || !pathname.startsWith(first)) {
-		return false;
-	}
-
-	let cursor = first.length;
-	for (const part of parts.slice(1, -1)) {
-		const next = pathname.indexOf(part, cursor);
-		if (next === -1) {
-			return false;
-		}
-		cursor = next + part.length;
-	}
-	const last = parts.at(-1);
-	return last !== undefined && pathname.slice(cursor).endsWith(last);
 }
 
 export function createProductionRoutes(
@@ -179,75 +114,23 @@ export function createProductionRoutes(
 	return routes;
 }
 
-async function emitHtmlAliases(
-	amplifyRoot: string,
-	publicPaths: readonly string[],
-): Promise<void> {
-	for (const publicPath of publicPaths) {
-		if (publicPath === "/") continue;
-		const source = join(
-			amplifyRoot,
-			"static",
-			publicPath.slice(1),
-			"index.html",
-		);
-		await copyFile(
-			source,
-			join(amplifyRoot, "static", `${publicPath.slice(1)}.html`),
-		);
-	}
-}
-
 export function resolveDeploymentMetadata(
 	environment: NodeJS.ProcessEnv = process.env,
 ): { commit: string; runAttempt: string; runId: string } {
-	const commit =
-		environment.RELEASE_COMMIT ?? environment.AWS_COMMIT_ID ?? "local";
-	if (commit !== "local" && !/^[a-f0-9]{40}$/.test(commit)) {
-		throw new Error("Release commit must be a 40-character hexadecimal SHA.");
-	}
-	const runId = environment.RELEASE_RUN_ID ?? "local";
-	const runAttempt = environment.RELEASE_RUN_ATTEMPT ?? "local";
+	const identity = createReleaseIdentity(
+		environment.RELEASE_COMMIT ?? environment.AWS_COMMIT_ID ?? "local",
+		environment.RELEASE_RUN_ID,
+		environment.RELEASE_RUN_ATTEMPT,
+	);
 	if (
-		commit !== "local" &&
-		(!/^\d+$/.test(runId) || !/^\d+$/.test(runAttempt))
+		identity.commit !== "local" &&
+		(!/^\d+$/.test(identity.runId) || !/^\d+$/.test(identity.runAttempt))
 	) {
 		throw new Error(
 			"Production release metadata requires a numeric run identity.",
 		);
 	}
-	return { commit, runAttempt, runId };
-}
-
-async function emitCustomNotFoundPage(amplifyRoot: string): Promise<void> {
-	const source = join(
-		amplifyRoot,
-		"static",
-		"__static-not-found",
-		"index.html",
-	);
-	try {
-		await stat(source);
-	} catch (error) {
-		if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-			throw new Error("Vite did not prerender the static custom 404 page.");
-		}
-		throw error;
-	}
-	const prerenderedHtml = await readFile(source, "utf8");
-	const staticHtml = prerenderedHtml
-		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
-		.replace(/<link\b(?=[^>]*\brel=["']modulepreload["'])[^>]*>/gi, "")
-		.replace(/<title>[\s\S]*?<\/title>/gi, "")
-		.replace("</head>", "<title>CD: Page Not Found</title></head>");
-	if (!staticHtml.includes("Page not found")) {
-		throw new Error("Refusing to emit a custom 404 without its expected UI.");
-	}
-	await writeFile(join(amplifyRoot, "static", "404.html"), staticHtml);
-	await rm(join(amplifyRoot, "static", "__static-not-found"), {
-		force: true,
-		recursive: true,
-	});
+	return identity;
 }
 
 export async function prepareAmplifyArtifact(
@@ -268,8 +151,10 @@ export async function prepareAmplifyArtifact(
 		manifestPath,
 		`${JSON.stringify(generatedManifest, null, 2)}\n`,
 	);
-	await emitHtmlAliases(amplifyRoot, getStaticPublicPaths(publicProjectSlugs));
-	await emitCustomNotFoundPage(amplifyRoot);
+	await writeCleanPathAliases(
+		join(amplifyRoot, "static"),
+		getStaticPublicPaths(publicProjectSlugs),
+	);
 	await writeFile(
 		join(amplifyRoot, "static", "__deployment.json"),
 		`${JSON.stringify(resolveDeploymentMetadata())}\n`,

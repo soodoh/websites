@@ -5,6 +5,7 @@ import {
 } from "@websites/playwright-support/config";
 
 const port = 3000;
+const externalBaseUrl = process.env.PLAYWRIGHT_BASE_URL;
 const sharedBrowserTests = [
 	"browser/shared/**/*.spec.ts",
 	"visual/**/*.visual.spec.ts",
@@ -13,7 +14,7 @@ const sharedBrowserTests = [
 export default defineWebsitePlaywrightConfig({
 	workers: 2,
 	use: {
-		baseURL: `http://127.0.0.1:${port}`,
+		baseURL: externalBaseUrl ?? `http://127.0.0.1:${port}`,
 		colorScheme: "light",
 		timezoneId: "America/Los_Angeles",
 	},
@@ -25,10 +26,12 @@ export default defineWebsitePlaywrightConfig({
 			testMatch: [...sharedBrowserTests, "browser/mobile/**/*.spec.ts"],
 		}),
 	],
-	webServer: {
-		command: `bun --no-env-file scripts/playwright-server.ts ${port}`,
-		port,
-		reuseExistingServer: false,
-		timeout: 180_000,
-	},
+	webServer: externalBaseUrl
+		? undefined
+		: {
+				command: `bun --no-env-file scripts/playwright-server.ts ${port}`,
+				port,
+				reuseExistingServer: false,
+				timeout: 180_000,
+			},
 });

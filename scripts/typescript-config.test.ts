@@ -119,14 +119,40 @@ describe.each(projects)("$workspace TypeScript configuration", (project) => {
 		expect(config.compilerOptions.types).toEqual(project.types);
 		expect(config.include).toEqual(project.include);
 		expect(config.exclude).toEqual(project.exclude);
+		expect(config.compilerOptions.allowJs).not.toBe(true);
+		expect(config.compilerOptions.checkJs).not.toBe(true);
 	});
 });
 
-test("Paul's tooling project still inherits the app policy and checks JavaScript", () => {
+test("root tooling is strictly type checked in both local checks and CI", () => {
+	const config = resolvedConfig("", "tsconfig.tools.json");
+	expect(json("tsconfig.tools.json").extends).toBe("./tsconfig.base.json");
+	expect(config.compilerOptions).toMatchObject({
+		strict: true,
+		noEmit: true,
+		types: ["node"],
+		target: "es2023",
+	});
+	expect(config.compilerOptions.allowJs).not.toBe(true);
+	for (const file of [
+		"scripts/lighthouse/run.ts",
+		"scripts/lighthouse/policy.ts",
+		"scripts/lighthouse-runner.test.ts",
+	]) {
+		expect(config.files).toContain(`./${file}`);
+	}
+	expect(json("package.json").scripts.typecheck).toContain(
+		"bun run typecheck:tools",
+	);
+	expect(readFileSync(join(root, "scripts/ci/lint.sh"), "utf8")).toContain(
+		"bun run typecheck:tools",
+	);
+});
+
+test("Paul's tooling project inherits app policy and covers TypeScript scripts", () => {
 	const config = resolvedConfig("apps/paul", "tsconfig.tools.json");
 	expect(config.compilerOptions).toMatchObject({
-		allowJs: true,
-		checkJs: true,
+		allowImportingTsExtensions: true,
 		noEmit: true,
 		strict: true,
 		target: "es2022",
@@ -134,9 +160,8 @@ test("Paul's tooling project still inherits the app policy and checks JavaScript
 		paths: { "@/*": ["./src/*"] },
 	});
 	expect(config.include).toEqual([
-		"commitlint.config.ts",
 		"tests/**/*.ts",
 		"playwright.config.ts",
-		"scripts/*.mjs",
+		"scripts/**/*.ts",
 	]);
 });

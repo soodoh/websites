@@ -23,6 +23,16 @@ test("workspaces use the root lock and serial, uncached verification", () => {
 	}
 });
 
+test("app package names match their directories and verification filters", () => {
+	const manifest = json("package.json");
+	for (const app of apps) {
+		expect(json(`apps/${app}/package.json`).name).toBe(app);
+		expect(manifest.scripts[`verify:${app}`]).toBe(
+			`turbo run ci:verify --filter=${app} --concurrency=1`,
+		);
+	}
+});
+
 test("browser containers install from the frozen root lock without host dependencies", () => {
 	for (const app of apps) {
 		const dockerfile = read(`apps/${app}/Dockerfile.playwright`);
@@ -50,6 +60,12 @@ test("browser containers install from the frozen root lock without host dependen
 			"COPY packages/images/package.json packages/images/package.json",
 		);
 		expect(dockerfile).toContain("COPY packages/images packages/images");
+		expect(dockerfile).toContain(
+			"COPY packages/static-site/package.json packages/static-site/package.json",
+		);
+		expect(dockerfile).toContain(
+			"COPY packages/static-site packages/static-site",
+		);
 	}
 	expect(read(".dockerignore")).toContain("**/.env.*");
 	expect(read(".dockerignore")).toContain("**/node_modules");

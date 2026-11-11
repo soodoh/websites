@@ -19,17 +19,26 @@ PR CI and all four deployment entry points call `_site-ci.yml` with a site name.
 
 Static deployment callers additionally request packaging. The reusable workflow stamps and uploads the exact Paul/DiLoreto output that passed verification; deployment jobs still download their original site/run/attempt artifact names. Carolyn/Sarabeth retain their repository-connected release mechanism. No reusable verification job receives production credentials, and the PR `CI gate` still requires root checks and all four sites to succeed.
 
+Sarabeth’s pinned browser container runs both its SSR/API suite and a separate packaged-static suite. The static suite serves only `.amplify-hosting/static` (no compute or SPA fallback), checking mobile/desktop 404 hydration and recovery, clean-path aliases, and client navigation using packaged route data. Run `bun run test:artifact` followed by `bun run test:static:prebuilt` from `apps/sarabeth` for the focused local check.
+
 Verification-only changes (shared CI/Lighthouse implementation or per-site baseline files) are checked on PRs but do not independently select a production deployment. Website, dependency, and toolchain changes retain the native deployment selection below.
+
+## Static route-data caching
+
+Carolyn and Sarabeth serve prerendered route-data JSON with year-long immutable caching. Their static server-function IDs must therefore change when the data changes, not just when the source function is renamed. Carolyn scopes these IDs to the hash of its captured public-content snapshot. Sarabeth scopes them to a unique identity created once per build and shared by the client, server, and prerender compiler. Runtime functions retain their default IDs.
+
+Do not use the Git commit alone as the cache identity: Contentful can publish different content at the same commit. Old browser-cached metadata must not override fresh page content or reference album files removed by a newer release. Paul and DiLoreto do not use this static route-data cache.
 
 ## Deployment selection
 
 Source deployments use GitHub's native `push.branches` and ordered `push.paths` filters, with no custom changed-file detector. A push to `main` selects each site whose app files changed, except for app-local docs, infrastructure, tests, root Markdown documentation, and the explicitly excluded browser/Lighthouse configuration files. Source, public assets, build scripts, and build configuration remain deployment triggers. Pull-request CI still verifies all four sites, including changes excluded from deployment.
 
-Shared image-package source changes (`packages/images/**`, excluding package tests and top-level Markdown) select all four sites, since all four consume its policy or Vite integration. Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
+Shared image-package source changes (`packages/images/**`, excluding package tests and top-level Markdown) select all four sites, since all four consume its policy or Vite integration. Shared static-site implementation changes (`packages/static-site/**`, excluding tests and top-level Markdown) also select all four sites. That package preserves native, interactive static 404 documents and provides clean-path alias generation. Shared dependency and toolchain changes (`bun.lock`, root `package.json`, `bunfig.toml`, `turbo.json`, `.nvmrc`, `.bun-version`, and the CI tools action) conservatively select all four sites. In particular, updating only one app's dependencies can still deploy every site when the root lockfile changes; native path filters do not analyze dependency impact.
 
 Deployment-script triggers follow the hosting mechanism:
 
-- `amplify-static.sh`: Paul and DiLoreto.
+- `amplify-static.sh` and `hosting.ts`: Paul and DiLoreto.
+- `release.ts` and its module-scope `package.json`: all four sites (shared build/deployment identity validation).
 - `amplify-release.sh` and `verify-release.sh`: Carolyn and Sarabeth.
 - `wait-for-amplify-job.sh`: all four sites.
 - `amplify.yml`: Carolyn and Sarabeth only.
@@ -37,6 +46,14 @@ Deployment-script triggers follow the hosting mechanism:
 Each site's deployment workflow also selects itself when changed. When adding or changing a deployment-script dependency, update the corresponding native path filters and `scripts/deployment-paths-contract.test.ts`. Manual dispatch and Contentful dispatch intentionally bypass source path filtering.
 
 These filters select changed inputs, not byte-level differences in the built website. They also retain GitHub's native diff limits: path filtering considers up to 300 changed files, while pushes exceeding 1,000 commits or diff-generation timeouts run without path filtering. Manually dispatch an affected site if an unusually large push misses its paths.
+
+Paul and DiLoreto run their site-local `hosting-smoke.ts` with explicitly pinned
+Node from `.nvmrc`, without installing workspace dependencies in deploy jobs.
+The shared `scripts/deploy/hosting.ts` helpers bound HTTP requests, preserve manual
+redirect inspection, and validate the exact commit, run ID, and attempt. Site-local
+checks retain their own content, cache, security-header, and domain policies.
+Carolyn and Sarabeth share release metadata validation while retaining their own
+provenance sources and static/compute routing policies.
 
 ## Required configuration
 

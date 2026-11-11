@@ -1,5 +1,10 @@
 import { readdir, readFile, stat } from "node:fs/promises";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
+import {
+	artifactSize,
+	assertNoArtifactSecrets,
+	listArtifactFiles,
+} from "@websites/static-site/artifact";
 import {
 	createProductionRoutes,
 	getStaticPublicPaths,
@@ -119,22 +124,16 @@ if (artifactMode === "fixture") {
 	);
 }
 
-async function findInspectableFiles(directory: string): Promise<string[]> {
-	const files: string[] = [];
-	for (const entry of await readdir(directory, { withFileTypes: true })) {
-		const path = join(directory, entry.name);
-		if (entry.isDirectory()) {
-			files.push(...(await findInspectableFiles(path)));
-		} else if (/\.(?:css|html|js|json|map|mjs)$/.test(entry.name)) {
-			files.push(path);
-		}
-	}
-	return files;
-}
-
-const publicFiles = await findInspectableFiles(publicRoot);
-const artifactFiles = await findInspectableFiles(amplifyRoot);
-const computeFiles = await findInspectableFiles(computeRoot);
+const artifactFiles = await listArtifactFiles(amplifyRoot);
+const inspectableFiles = artifactFiles.filter((file) =>
+	/\.(?:css|html|js|json|map|mjs)$/.test(file),
+);
+const publicFiles = inspectableFiles.filter((file) =>
+	file.startsWith(`${publicRoot}${sep}`),
+);
+const computeFiles = inspectableFiles.filter((file) =>
+	file.startsWith(`${computeRoot}${sep}`),
+);
 if (publicFiles.some((file) => file.endsWith(".map"))) {
 	throw new Error("Production client source maps must not be published.");
 }
@@ -145,7 +144,6 @@ const requiredIndexPages = staticPublicPaths
 const actualIndexPages = publicFiles
 	.filter((file) => file.endsWith("index.html"))
 	.map((file) => relative(publicRoot, file))
-	.filter((file) => !file.startsWith("__static-not-found/"))
 	.sort();
 if (
 	actualIndexPages.length !== requiredIndexPages.length ||
@@ -203,12 +201,7 @@ if (
 ) {
 	privateValues.push(await getProjectAuthSecret());
 }
-for (const file of artifactFiles) {
-	const contents = await readFile(file, "utf8");
-	if (privateValues.some((value) => contents.includes(value))) {
-		throw new Error(`A secret value was serialized into the artifact: ${file}`);
-	}
-}
+await assertNoArtifactSecrets(artifactFiles, privateValues);
 for (const file of computeFiles) {
 	const contents = await readFile(file, "utf8");
 	if (
@@ -270,18 +263,9 @@ for (const route of deployManifest.routes) {
 	}
 }
 
-async function getDirectorySize(directory: string): Promise<number> {
-	let totalBytes = 0;
-	for (const entry of await readdir(directory, { withFileTypes: true })) {
-		const path = join(directory, entry.name);
-		totalBytes += entry.isDirectory()
-			? await getDirectorySize(path)
-			: (await stat(path)).size;
-	}
-	return totalBytes;
-}
-
-const computeBytes = await getDirectorySize(computeRoot);
+const computeBytes = await artifactSize(
+	artifactFiles.filter((file) => file.startsWith(`${computeRoot}${sep}`)),
+);
 if (computeBytes >= maximumComputeBytes) {
 	throw new Error(
 		`Amplify compute bundle is ${(computeBytes / 1024 / 1024).toFixed(1)} MiB; it must remain below 220 MiB uncompressed`,

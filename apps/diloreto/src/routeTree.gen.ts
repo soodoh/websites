@@ -10,18 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as R404RouteImport } from './routes/404'
 import { Route as AreyouRouteImport } from './routes/areyou'
 import { Route as FamilytreeRouteImport } from './routes/familytree'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const R404Route = R404RouteImport.update({
-  id: '/404',
-  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AreyouRoute = AreyouRouteImport.update({
@@ -37,34 +31,30 @@ const FamilytreeRoute = FamilytreeRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/404': typeof R404Route
   '/areyou': typeof AreyouRoute
   '/familytree': typeof FamilytreeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/404': typeof R404Route
   '/areyou': typeof AreyouRoute
   '/familytree': typeof FamilytreeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/404': typeof R404Route
   '/areyou': typeof AreyouRoute
   '/familytree': typeof FamilytreeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/404' | '/areyou' | '/familytree'
+  fullPaths: '/' | '/areyou' | '/familytree'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/404' | '/areyou' | '/familytree'
-  id: '__root__' | '/' | '/404' | '/areyou' | '/familytree'
+  to: '/' | '/areyou' | '/familytree'
+  id: '__root__' | '/' | '/areyou' | '/familytree'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  R404Route: typeof R404Route
   AreyouRoute: typeof AreyouRoute
   FamilytreeRoute: typeof FamilytreeRoute
 }
@@ -76,13 +66,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/404': {
-      id: '/404'
-      path: '/404'
-      fullPath: '/404'
-      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/areyou': {
@@ -104,7 +87,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  R404Route: R404Route,
   AreyouRoute: AreyouRoute,
   FamilytreeRoute: FamilytreeRoute,
 }

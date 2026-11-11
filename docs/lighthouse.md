@@ -8,6 +8,8 @@ All four sites run the same Lighthouse policy from `scripts/lighthouse/`:
 - The same root-pinned `@lhci/cli` and Playwright-pinned Chromium, including ARM64 support.
 - Local builds only; no production URLs, CMS credentials, report-upload tokens, or public report storage.
 
+`scripts/lighthouse/run.ts` and `policy.ts` are checked by the root tooling TypeScript project. The runner writes each profile's `lighthouserc.json` under ignored `.lighthouseci/` and invokes native LHCI `autorun --failOnUploadFailure`. There is no committed JavaScript config bridge or custom TypeScript loader. Native LHCI owns collect/assert/upload sequencing and report export, including exporting reports after an assertion failure. The wrapper owns fixture builds, both-profile execution, and shared TCP-port preflight checks.
+
 `apps/<site>/lighthouse.json` owns only that site's representative routes and minimum category scores (0–1) for each profile. The shared policy validates these files and rejects missing categories, invalid scores, duplicate routes, and external URLs. Baselines are explicit minimums, not targets for automatic updates or permission to ignore individual accessibility failures.
 
 ## Local commands
@@ -27,7 +29,7 @@ Each command builds the site's output before auditing. Paul/DiLoreto use their s
 
 To reuse an appropriate existing build, add `--prebuilt`. Every app's `ci:verify` chain does this after its existing build/browser verification. The root's `verify:<site>` and `ci:verify` commands therefore include Lighthouse; install Chromium before running them locally. `CHROME_PATH` can select a local browser for debugging, but CI uses the pinned Chromium by default.
 
-Reports are written under `.lighthouseci/<site>/<mobile|desktop>/`: `reports/` contains browsable HTML/JSON and a manifest, while the nested `.lighthouseci/` contains raw runs and assertion results. Everything stays Git-ignored. GitHub retains the site-specific reports for seven days, even when baseline assertions fail. Both profiles run even if the first profile fails; collection or assertion errors fail the verification job.
+Reports are written under `.lighthouseci/<site>/<mobile|desktop>/`: `lighthouserc.json` is the generated config, `reports/` contains browsable HTML/JSON and a manifest, and the nested `.lighthouseci/` contains raw runs and assertion results. Collect-only mode omits the assertion section from the generated config; native LHCI still collects and exports reports. Because the pinned LHCI autorun can swallow a signaled child exit, success also requires a fresh manifest containing every configured run and, outside collect-only mode, passing assertion evidence. `includePassedAssertions` retains positive results in LHCI's native assertion evidence rather than its default empty success array. Everything stays Git-ignored. GitHub retains the site-specific reports for seven days, even when baseline assertions fail. Both profiles run even if the first profile fails; collection or assertion errors fail the verification job.
 
 Do not run audits concurrently on the same checkout. The runner requires free local ports (Paul/Sarabeth 3000, DiLoreto 4173, Carolyn 4100 plus its compute port 3000) and owns the temporary servers through Lighthouse's lifecycle.
 

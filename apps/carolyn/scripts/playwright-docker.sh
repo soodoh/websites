@@ -5,18 +5,13 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly ROOT_DIR
 WORKSPACE_ROOT="$(cd "${ROOT_DIR}/../.." && pwd)"
 readonly WORKSPACE_ROOT
-LOCK_HASH="$(shasum -a 256 "${WORKSPACE_ROOT}/bun.lock" | cut -c1-16)"
-readonly LOCK_HASH
-readonly IMAGE_NAME="websites-carolyn-playwright:lock-${LOCK_HASH}"
+# shellcheck disable=SC1091
+source "${WORKSPACE_ROOT}/scripts/playwright/docker-runner.sh"
+IMAGE_NAME="$(playwright_docker_image "${WORKSPACE_ROOT}" "websites-carolyn-playwright")"
+readonly IMAGE_NAME
 DOCKER_ARCHITECTURE="$(docker info --format '{{.Architecture}}')"
 readonly DOCKER_ARCHITECTURE
-container=""
-cleanup() {
-	if [[ -n "${container}" ]]; then
-		docker rm --force "${container}" >/dev/null 2>&1 || true
-	fi
-}
-trap cleanup EXIT
+playwright_docker_init
 
 if [[ "${DOCKER_ARCHITECTURE}" != "aarch64" && "${DOCKER_ARCHITECTURE}" != "arm64" ]]; then
 	echo "Visual snapshots require an ARM64 Docker engine; found ${DOCKER_ARCHITECTURE}." >&2
@@ -24,6 +19,8 @@ if [[ "${DOCKER_ARCHITECTURE}" != "aarch64" && "${DOCKER_ARCHITECTURE}" != "arm6
 fi
 
 docker build --file "${ROOT_DIR}/Dockerfile.playwright" --tag "${IMAGE_NAME}" "${WORKSPACE_ROOT}"
+# Shared lifecycle functions consume the container handle.
+# shellcheck disable=SC2034
 container=$(docker create --init --ipc=host \
 	--env "CI=${CI:-}" \
 	--env AMPLIFY_BASE_URL \
@@ -45,17 +42,6 @@ container=$(docker create --init --ipc=host \
 		fi
 		bun x --no-install playwright test "$@"
 	' bash "$@")
-set +e
-docker start --attach "${container}"
-status=$?
-set -e
-for report in playwright-report test-results; do
-	rm -rf "${ROOT_DIR:?}/${report}"
-	docker cp "${container}:/work/apps/carolyn/${report}" "${ROOT_DIR}/${report}" >/dev/null 2>&1 || true
-done
-if [[ "${status}" -eq 0 ]]; then
-	bash "${WORKSPACE_ROOT}/scripts/playwright/publish-snapshots.sh" "${container}" "${ROOT_DIR}" "$@"
-fi
-trap - EXIT
-cleanup
-exit "${status}"
+playwright_docker_run
+playwright_copy_reports "${ROOT_DIR}" /work/apps/carolyn playwright-report test-results
+playwright_docker_finish "${ROOT_DIR}" "$@"

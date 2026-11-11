@@ -1,0 +1,12 @@
+{
+	"extends": "./tsconfig.base.json",
+	"compilerOptions": {
+		"target": "ES2023",
+		"lib": ["ES2023", "DOM"],
+		"types": ["node"],
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true
+	},
+	"include": ["scripts/**/*.ts", "vitest.config.mts"]
+}

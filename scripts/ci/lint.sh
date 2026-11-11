@@ -5,6 +5,7 @@ shopt -s nullglob
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."
 
 bun run lint
+bun run typecheck:tools
 
 # Remove this narrow exception once actionlint supports GitHub-hosted Ubuntu 26 upstream.
 go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7 \

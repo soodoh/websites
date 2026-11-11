@@ -15,11 +15,14 @@ COPY apps/paul/package.json apps/paul/package.json
 COPY apps/sarabeth/package.json apps/sarabeth/package.json
 COPY packages/playwright-support/package.json packages/playwright-support/package.json
 COPY packages/images/package.json packages/images/package.json
+COPY packages/static-site/package.json packages/static-site/package.json
 RUN bun install --frozen-lockfile --ignore-scripts
 COPY .github .github
 COPY apps/carolyn apps/carolyn
 COPY packages/playwright-support packages/playwright-support
 COPY packages/images packages/images
+COPY packages/static-site packages/static-site
+COPY scripts/deploy scripts/deploy
 WORKDIR /work/apps/carolyn
 ENV CI=1
 CMD ["bun", "x", "--no-install", "playwright", "test"]

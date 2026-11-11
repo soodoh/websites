@@ -23,9 +23,14 @@ on:
       - .github/workflows/deploy-carolyn.yml
       - scripts/deploy/amplify-release.sh
       - scripts/deploy/verify-release.sh
+      - scripts/deploy/release.ts
+      - scripts/deploy/package.json
       - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock
+      - packages/static-site/**
+      - "!packages/static-site/tests/**"
+      - "!packages/static-site/*.md"
       - packages/images/**
       - "!packages/images/tests/**"
       - "!packages/images/**/*.test.ts"

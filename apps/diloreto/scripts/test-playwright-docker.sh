@@ -5,16 +5,11 @@ repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly repository_root
 workspace_root="$(cd "${repository_root}/../.." && pwd)"
 readonly workspace_root
-lock_hash="$(shasum -a 256 "${workspace_root}/bun.lock" | cut -c1-16)"
-readonly lock_hash
-readonly image_name="websites-diloreto-playwright:lock-${lock_hash}"
-container=""
-cleanup() {
-	if [[ -n "${container}" ]]; then
-		docker rm --force "${container}" >/dev/null 2>&1 || true
-	fi
-}
-trap cleanup EXIT
+# shellcheck disable=SC1091
+source "${workspace_root}/scripts/playwright/docker-runner.sh"
+image_name="$(playwright_docker_image "${workspace_root}" "websites-diloreto-playwright")"
+readonly image_name
+playwright_docker_init
 cd "${repository_root}"
 if [[ "${PLAYWRIGHT_SKIP_BUILD:-0}" != "1" ]]; then
 	bun run build
@@ -42,17 +37,6 @@ if [[ -z "${PLAYWRIGHT_BASE_URL:-}" ]]; then
 	# Preserve invoking user's ownership for the existing non-root test runner.
 	docker cp --archive "${repository_root}/dist/client/." "${container}:/work/apps/diloreto/dist/client"
 fi
-set +e
-docker start --attach "${container}"
-status=$?
-set -e
-for report in playwright-report test-results; do
-	rm -rf "${repository_root:?}/${report}"
-	docker cp "${container}:/work/apps/diloreto/.playwright-output/${report}" "${repository_root}/${report}" >/dev/null 2>&1 || true
-done
-if [[ "${status}" -eq 0 ]]; then
-	bash "${workspace_root}/scripts/playwright/publish-snapshots.sh" "${container}" "${repository_root}" "$@"
-fi
-trap - EXIT
-cleanup
-exit "${status}"
+playwright_docker_run
+playwright_copy_reports "${repository_root}" /work/apps/diloreto/.playwright-output playwright-report test-results
+playwright_docker_finish "${repository_root}" "$@"

@@ -1,14 +1,13 @@
-export type AmplifyTarget = {
-	kind: string;
-	src?: string;
-	cacheControl?: string;
-};
+import {
+	type AmplifyRoute,
+	type AmplifyRouteTarget as AmplifyTarget,
+	matchesAmplifyRoute,
+} from "@websites/static-site/amplify";
 
-export type AmplifyRoute = {
-	path: string;
-	target: AmplifyTarget;
-	fallback?: AmplifyTarget;
-};
+export type {
+	AmplifyRoute,
+	AmplifyRouteTarget as AmplifyTarget,
+} from "@websites/static-site/amplify";
 
 const computeTarget: AmplifyTarget = { kind: "Compute", src: "default" };
 const staticTarget: AmplifyTarget = { kind: "Static" };
@@ -60,11 +59,7 @@ export const resolveRouteTarget = (
 	routes: readonly AmplifyRoute[],
 ): AmplifyTarget | undefined => {
 	for (const route of routes) {
-		if (route.path === pathname) return route.target;
-		if (route.path === "/*.*" && /\/[^/]*\.[^/]+$/.test(pathname)) {
-			return route.target;
-		}
-		if (route.path === "/*") return route.target;
+		if (matchesAmplifyRoute(pathname, route.path)) return route.target;
 	}
 	return undefined;
 };
