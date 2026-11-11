@@ -10,7 +10,7 @@
 	},
 	"packageManager": "bun@1.4.4",
 	"engines": {
-		"node": "26.13.0",
+		"node": "26.13.1",
 		"bun": "1.4.4"
 	},
 	"workspaces": [
@@ -36,9 +36,9 @@
 		"lighthouse:install": "playwright-core install --with-deps chromium"
 	},
 	"devDependencies": {
-		"turbo": "2.11.10",
+		"turbo": "2.11.11",
 		"vitest": "5.1.0",
-		"@biomejs/biome": "2.6.6",
+		"@biomejs/biome": "2.6.7",
 		"@commitlint/cli": "21.2.4",
 		"@commitlint/config-conventional": "21.2.4",
 		"@commitlint/types": "21.2.3",
