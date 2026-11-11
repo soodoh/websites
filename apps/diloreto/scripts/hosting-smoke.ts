@@ -1,31 +1,15 @@
-const baseUrl = new URL(
-	process.env.HOSTING_BASE_URL ?? "http://127.0.0.1:4173/",
-);
-const expectAmplify = process.env.HOSTING_EXPECT_AMPLIFY === "1";
-const expectDomainRedirects =
-	process.env.HOSTING_EXPECT_DOMAIN_REDIRECTS === "1";
-const expectedCommit = process.env.HOSTING_EXPECT_COMMIT;
+import assert from "node:assert/strict";
+import {
+	assertCacheDirectives,
+	assertSecurityHeaders,
+	hasCacheDirective,
+	hostingEnvironment,
+	request,
+	verifyReleaseMarker,
+} from "../../../scripts/deploy/hosting.ts";
 
-/** @type {(condition: unknown, message: string) => asserts condition} */
-const assert = (condition, message) => {
-	if (!condition) {
-		throw new Error(message);
-	}
-};
-
-/** @param {string | URL} url */
-const request = async (url) => {
-	const response = await fetch(url, { redirect: "manual" });
-	return { response, body: await response.text() };
-};
-
-/** @param {Headers} headers @param {string} directive */
-const hasCacheDirective = (headers, directive) =>
-	(headers.get("cache-control") ?? "")
-		.toLowerCase()
-		.split(",")
-		.map((value) => value.trim())
-		.includes(directive);
+const environment = hostingEnvironment("http://127.0.0.1:4173/");
+const { baseUrl, expectAmplify, expectDomainRedirects } = environment;
 
 const root = await request(new URL("/", baseUrl));
 assert(root.response.status === 200, `Root returned ${root.response.status}`);
@@ -112,32 +96,7 @@ for (const { path, amplifyCanonicalPath } of [
 	);
 }
 
-if (expectedCommit) {
-	const releaseUrl = new URL("/__deployment.json", baseUrl);
-	releaseUrl.searchParams.set("expectedCommit", expectedCommit);
-	const release = await request(releaseUrl);
-	assert(
-		release.response.status === 200,
-		`Release marker returned ${release.response.status}`,
-	);
-	const releaseIdentity = JSON.parse(release.body);
-	assert(
-		/^\d+$/.test(releaseIdentity.runId) &&
-			/^\d+$/.test(releaseIdentity.runAttempt),
-		"Release marker is missing its workflow run identity",
-	);
-	assert(
-		releaseIdentity.commit === expectedCommit,
-		`Release marker commit ${releaseIdentity.commit} does not match ${expectedCommit}`,
-	);
-	if (expectAmplify) {
-		assert(
-			hasCacheDirective(release.response.headers, "no-store") &&
-				hasCacheDirective(release.response.headers, "must-revalidate"),
-			`Release marker cache policy is incorrect: ${release.response.headers.get("cache-control")}`,
-		);
-	}
-}
+await verifyReleaseMarker(environment);
 
 if (expectAmplify) {
 	const expectedSecurityHeaders = new Map([
@@ -148,31 +107,22 @@ if (expectAmplify) {
 		["permissions-policy", "camera=(), geolocation=(), microphone=()"],
 	]);
 
-	for (const [name, expectedValue] of expectedSecurityHeaders) {
-		for (const { path, response } of [
-			{ path: "/", response: root.response },
-			...missingResponses,
-		]) {
-			assert(
-				response.headers.get(name) === expectedValue,
-				`${name} header is missing or incorrect for ${path}`,
-			);
-		}
+	for (const { path, response } of [
+		{ path: "/", response: root.response },
+		...missingResponses,
+	]) {
+		assertSecurityHeaders(response, expectedSecurityHeaders, path);
 	}
-	assert(
-		hasCacheDirective(root.response.headers, "no-store") &&
-			hasCacheDirective(root.response.headers, "must-revalidate"),
-		`Root cache policy is incorrect: ${root.response.headers.get("cache-control")}`,
+	assertCacheDirectives(root.response, ["no-store", "must-revalidate"], "Root");
+	assertCacheDirectives(
+		cleanPath.response,
+		["no-store", "must-revalidate"],
+		"Clean-path",
 	);
-	assert(
-		hasCacheDirective(cleanPath.response.headers, "no-store") &&
-			hasCacheDirective(cleanPath.response.headers, "must-revalidate"),
-		`Clean-path cache policy is incorrect: ${cleanPath.response.headers.get("cache-control")}`,
-	);
-	assert(
-		hasCacheDirective(hashedAsset.response.headers, "max-age=31536000") &&
-			hasCacheDirective(hashedAsset.response.headers, "immutable"),
-		`Hashed asset cache policy is incorrect: ${hashedAsset.response.headers.get("cache-control")}`,
+	assertCacheDirectives(
+		hashedAsset.response,
+		["max-age=31536000", "immutable"],
+		"Hashed asset",
 	);
 	const robots = await request(new URL("/robots.txt", baseUrl));
 	assert(

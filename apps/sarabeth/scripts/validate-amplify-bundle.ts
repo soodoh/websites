@@ -3,10 +3,14 @@ import { join } from "node:path";
 import { productionComputePaths } from "@scripts/amplify-routing";
 import publicRoutes from "@scripts/public-routes.json" with { type: "json" };
 import { resolveReleaseCommit } from "@scripts/release-commit";
+import { readAmplifyDeployManifest } from "@websites/static-site/amplify";
+import {
+	assertNoArtifactSecrets,
+	listArtifactFiles,
+} from "@websites/static-site/artifact";
 
 const outputDirectory = ".amplify-hosting";
-const manifestPath = join(outputDirectory, "deploy-manifest.json");
-const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
+const manifest = await readAmplifyDeployManifest(outputDirectory);
 
 const assert: (condition: unknown, message: string) => asserts condition = (
 	condition,
@@ -94,7 +98,7 @@ assert(
 	"Unmatched extensionless requests must return a static 404",
 );
 for (const route of manifest.routes) {
-	if (productionComputePaths.includes(route.path)) continue;
+	if (productionComputePaths.some((path) => path === route.path)) continue;
 	assert(
 		route.target?.kind !== "Compute" && route.fallback?.kind !== "Compute",
 		`Only the approved API endpoints may route to compute: ${route.path}`,
@@ -160,28 +164,15 @@ const secretEnvironmentNames = [
 	"AWS_SESSION_TOKEN",
 	"AWS_SECRET",
 ] as const;
-const artifactEntries = await readdir(outputDirectory, { recursive: true });
-const artifactFiles: string[] = [];
-for (const entry of artifactEntries) {
-	const path = join(outputDirectory, entry);
-	if ((await stat(path)).isFile()) artifactFiles.push(path);
-}
+const artifactFiles = await listArtifactFiles(outputDirectory);
 assert(
 	artifactFiles.every((file) => !file.endsWith(".map")),
 	"Production artifacts must not publish source maps",
 );
-for (const environmentName of secretEnvironmentNames) {
-	const value = process.env[environmentName];
-	if (!value) continue;
-	const secret = Buffer.from(value);
-	for (const file of artifactFiles) {
-		if ((await readFile(file)).includes(secret)) {
-			throw new Error(
-				`Artifact contains the value of ${environmentName}: ${file}`,
-			);
-		}
-	}
-}
+await assertNoArtifactSecrets(
+	artifactFiles,
+	secretEnvironmentNames.map((name) => process.env[name]),
+);
 
 console.log(
 	`Validated Amplify bundle: ${prerenderedPages.length} pages, ${staticCacheFiles.length} static server-function cache files, isolated email and YouTube API compute, and static 404 routing`,

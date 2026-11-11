@@ -25,6 +25,7 @@ COPY apps/sarabeth apps/sarabeth
 COPY packages/playwright-support packages/playwright-support
 COPY packages/images packages/images
 COPY packages/static-site packages/static-site
+COPY scripts/deploy scripts/deploy
 WORKDIR /work/apps/sarabeth
 ENV CI=1
 ENTRYPOINT ["bash", "scripts/playwright-container.sh"]

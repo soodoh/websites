@@ -37,7 +37,8 @@ Shared image-package source changes (`packages/images/**`, excluding package tes
 
 Deployment-script triggers follow the hosting mechanism:
 
-- `amplify-static.sh`: Paul and DiLoreto.
+- `amplify-static.sh` and `hosting.ts`: Paul and DiLoreto.
+- `release.ts` and its module-scope `package.json`: all four sites (shared build/deployment identity validation).
 - `amplify-release.sh` and `verify-release.sh`: Carolyn and Sarabeth.
 - `wait-for-amplify-job.sh`: all four sites.
 - `amplify.yml`: Carolyn and Sarabeth only.
@@ -45,6 +46,14 @@ Deployment-script triggers follow the hosting mechanism:
 Each site's deployment workflow also selects itself when changed. When adding or changing a deployment-script dependency, update the corresponding native path filters and `scripts/deployment-paths-contract.test.ts`. Manual dispatch and Contentful dispatch intentionally bypass source path filtering.
 
 These filters select changed inputs, not byte-level differences in the built website. They also retain GitHub's native diff limits: path filtering considers up to 300 changed files, while pushes exceeding 1,000 commits or diff-generation timeouts run without path filtering. Manually dispatch an affected site if an unusually large push misses its paths.
+
+Paul and DiLoreto run their site-local `hosting-smoke.ts` with explicitly pinned
+Node from `.nvmrc`, without installing workspace dependencies in deploy jobs.
+The shared `scripts/deploy/hosting.ts` helpers bound HTTP requests, preserve manual
+redirect inspection, and validate the exact commit, run ID, and attempt. Site-local
+checks retain their own content, cache, security-header, and domain policies.
+Carolyn and Sarabeth share release metadata validation while retaining their own
+provenance sources and static/compute routing policies.
 
 ## Required configuration
 

@@ -23,7 +23,9 @@ The shared policy supports Tailwind and excludes generated routes, build/test re
 
 ## TypeScript and generated files
 
-All apps and the shared Playwright package extend root `tsconfig.base.json` for their common strict, no-emit, ESM/bundler compiler policy. Targets, runtime libraries/types, React-specific settings, aliases, and included/excluded files remain local. Relative aliases continue to resolve from each workspace, and Paul's tooling project still extends its app config.
+Apps, shared packages, and root `tsconfig.tools.json` extend `tsconfig.base.json` for their common strict, no-emit, ESM/bundler compiler policy. Targets, runtime libraries/types, React-specific settings, aliases, and included/excluded files remain local. Relative aliases continue to resolve from each workspace, and Paul's tooling project still extends its app config. `bun run typecheck:tools` checks root scripts, their tests, and Vitest configuration; `bun run typecheck` runs that check before the serial workspace checks. Root CI also checks tooling types. No project needs `allowJs` or `checkJs`.
+
+Repository-owned programs use TypeScript; declarative Commitlint policy lives in `.commitlintrc.json`. Generated browser/server JavaScript and dependencies remain managed by their existing tools.
 
 Root `.gitignore` owns shared dependency, build, report, environment, secret, and local-tool exclusions. Carolyn retains a small local file for generated release/authentication content and fixture-recovery artifacts; DiLoreto retains its local deployment-recovery exclusion. Paul and Sarabeth need no local ignore file. Intentionally tracked generated route trees and genealogy data remain trackable, as do example environment files and OpenTofu provider lockfiles.
 

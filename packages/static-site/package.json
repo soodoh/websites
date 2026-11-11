@@ -5,7 +5,11 @@
 	"type": "module",
 	"exports": {
 		"./server": "./src/server.ts",
-		"./output": "./src/output.ts"
+		"./output": "./src/output.ts",
+		"./artifact": "./src/artifact.ts",
+		"./amplify": "./src/amplify.ts",
+		"./preview": "./src/preview.ts",
+		"./ports": "./src/ports.ts"
 	},
 	"scripts": {
 		"lint": "biome check .",

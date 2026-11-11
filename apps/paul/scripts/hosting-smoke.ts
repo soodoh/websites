@@ -1,29 +1,14 @@
-const baseUrl = new URL(
-	process.env.HOSTING_BASE_URL ?? "http://127.0.0.1:3000/",
-);
-const expectAmplify = process.env.HOSTING_EXPECT_AMPLIFY === "1";
-const expectDomainRedirects =
-	process.env.HOSTING_EXPECT_DOMAIN_REDIRECTS === "1";
-const expectedCommit = process.env.HOSTING_EXPECT_COMMIT;
+import assert from "node:assert/strict";
+import {
+	assertCacheDirectives,
+	assertSecurityHeaders,
+	hostingEnvironment,
+	request,
+	verifyReleaseMarker,
+} from "../../../scripts/deploy/hosting.ts";
 
-/** @type {(condition: unknown, message: string) => asserts condition} */
-const assert = (condition, message) => {
-	if (!condition) {
-		throw new Error(message);
-	}
-};
-
-/**
- * @param {string | URL} url
- * @param {RequestInit} options
- */
-const request = async (url, options = {}) => {
-	const response = await fetch(url, {
-		redirect: "manual",
-		...options,
-	});
-	return { response, body: await response.text() };
-};
+const environment = hostingEnvironment("http://127.0.0.1:3000/");
+const { baseUrl, expectAmplify, expectDomainRedirects } = environment;
 
 const root = await request(new URL("/", baseUrl));
 assert(root.response.status === 200, `Root returned ${root.response.status}`);
@@ -76,33 +61,7 @@ assert(
 	"Responsive image has an incorrect content type",
 );
 
-if (expectedCommit) {
-	const releaseUrl = new URL("/__deployment.json", baseUrl);
-	releaseUrl.searchParams.set("expectedCommit", expectedCommit);
-	const release = await request(releaseUrl, { cache: "no-store" });
-	assert(
-		release.response.status === 200,
-		`Release marker returned ${release.response.status}`,
-	);
-	const releaseIdentity = JSON.parse(release.body);
-	assert(
-		/^\d+$/.test(releaseIdentity.runId) &&
-			/^\d+$/.test(releaseIdentity.runAttempt),
-		"Release marker is missing its workflow run identity",
-	);
-	assert(
-		releaseIdentity.commit === expectedCommit,
-		`Release marker commit ${releaseIdentity.commit} does not match ${expectedCommit}`,
-	);
-	if (expectAmplify) {
-		const cacheControl = release.response.headers.get("cache-control") ?? "";
-		assert(
-			cacheControl.includes("no-store") &&
-				cacheControl.includes("must-revalidate"),
-			`Release marker cache policy is incorrect: ${cacheControl}`,
-		);
-	}
-}
+await verifyReleaseMarker(environment);
 
 const missing = await request(
 	new URL("/hosting-migration-smoke/missing-page.missing", baseUrl),
@@ -129,31 +88,18 @@ if (expectAmplify) {
 		],
 	]);
 
-	for (const [name, expectedValue] of expectedSecurityHeaders) {
-		assert(
-			root.response.headers.get(name) === expectedValue,
-			`${name} header is missing or incorrect`,
-		);
-	}
+	assertSecurityHeaders(root.response, expectedSecurityHeaders);
 
-	const htmlCacheControl = root.response.headers.get("cache-control") ?? "";
-	assert(
-		htmlCacheControl.includes("no-store") &&
-			htmlCacheControl.includes("must-revalidate"),
-		`HTML cache policy is incorrect: ${htmlCacheControl}`,
+	assertCacheDirectives(root.response, ["no-store", "must-revalidate"], "HTML");
+	assertCacheDirectives(
+		hashedAsset.response,
+		["max-age=31536000", "immutable"],
+		"Hashed asset",
 	);
-	const assetCacheControl =
-		hashedAsset.response.headers.get("cache-control") ?? "";
-	assert(
-		assetCacheControl.includes("max-age=31536000") &&
-			assetCacheControl.includes("immutable"),
-		`Hashed asset cache policy is incorrect: ${assetCacheControl}`,
-	);
-	const imageCacheControl = image.response.headers.get("cache-control") ?? "";
-	assert(
-		imageCacheControl.includes("max-age=31536000") &&
-			imageCacheControl.includes("immutable"),
-		`Image cache policy is incorrect: ${imageCacheControl}`,
+	assertCacheDirectives(
+		image.response,
+		["max-age=31536000", "immutable"],
+		"Image",
 	);
 	assert(
 		Boolean(hashedAsset.response.headers.get("content-encoding")),

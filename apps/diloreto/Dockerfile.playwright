@@ -21,6 +21,7 @@ COPY apps/diloreto apps/diloreto
 COPY packages/playwright-support packages/playwright-support
 COPY packages/images packages/images
 COPY packages/static-site packages/static-site
+COPY scripts/deploy scripts/deploy
 WORKDIR /work/apps/diloreto
 RUN mkdir -p dist/client .playwright-output && chmod -R a+rX /work
 RUN chmod -R a+rwX tests .playwright-output

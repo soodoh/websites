@@ -34,7 +34,7 @@ AWS documents the relevant behavior:
 - [Route 53 custom domains](https://docs.aws.amazon.com/amplify/latest/userguide/to-add-a-custom-domain-managed-by-amazon-route-53.html)
 - [Managed certificates](https://docs.aws.amazon.com/amplify/latest/userguide/using-certificates.html)
 
-`infra/hosting-contract.test.ts` checks the OpenTofu definition, canonical custom-header document, static artifact behavior, deployment workflow, and production smoke contract. Playwright verifies both clean-path forms and the interactive custom 404 without hydration errors. `scripts/hosting-smoke.mjs` checks cache/security headers, domain redirects, and the deployed commit marker.
+`infra/hosting-contract.test.ts` checks the OpenTofu definition, canonical custom-header document, static artifact behavior, deployment workflow, and production smoke contract. Playwright verifies both clean-path forms and the interactive custom 404 without hydration errors. `scripts/hosting-smoke.ts` checks cache/security headers, domain redirects, and the deployed commit marker.
 
 ## Completed transition
 

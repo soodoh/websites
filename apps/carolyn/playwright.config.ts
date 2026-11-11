@@ -16,6 +16,7 @@ if (
 
 export default defineWebsitePlaywrightConfig({
 	testMatch: "**/*.spec.ts",
+	testIgnore: "**/development/**",
 	fullyParallel: false,
 	timeout: 60_000,
 	workers: 1,

@@ -21,7 +21,8 @@
 		"dev": "turbo run dev:workspace --concurrency=4",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
-		"typecheck": "turbo run typecheck --concurrency=1",
+		"typecheck": "bun run typecheck:tools && turbo run typecheck --concurrency=1",
+		"typecheck:tools": "tsc --noEmit -p tsconfig.tools.json",
 		"test:unit": "bun run test:workspace && turbo run test:unit --concurrency=1",
 		"ci:verify": "bun run test:workspace && bash scripts/ci/lint.sh && turbo run ci:verify --concurrency=1",
 		"infra:validate": "bash scripts/infra/validate-opentofu.sh",
@@ -31,7 +32,7 @@
 		"verify:carolyn": "turbo run ci:verify --filter=carolyn --concurrency=1",
 		"verify:diloreto": "turbo run ci:verify --filter=diloreto --concurrency=1",
 		"test:workspace": "vitest run --config vitest.config.mts --project workspace",
-		"lighthouse": "bun scripts/lighthouse/run.mjs",
+		"lighthouse": "bun scripts/lighthouse/run.ts",
 		"lighthouse:install": "playwright-core install --with-deps chromium"
 	},
 	"devDependencies": {
@@ -43,7 +44,10 @@
 		"@commitlint/types": "21.2.3",
 		"lefthook": "2.2.2",
 		"@lhci/cli": "0.16.0",
-		"playwright-core": "1.65.0"
+		"playwright-core": "1.65.0",
+		"typescript": "7.0.2",
+		"@types/node": "26.6.6",
+		"@websites/static-site": "workspace:*"
 	},
 	"trustedDependencies": [
 		"unrs-resolver"

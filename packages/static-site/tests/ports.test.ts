@@ -1,8 +1,8 @@
 import { createServer } from "node:http";
 import { describe, expect, test } from "vitest";
-import { assertTcpPortAvailable, parseTcpPort } from "@/lib/artifact-server";
+import { assertTcpPortAvailable, parseTcpPort } from "../src/ports";
 
-describe("artifact server ports", () => {
+describe("shared TCP port guards", () => {
 	test("rejects an occupied compute port instead of trusting its response", async () => {
 		const unrelatedServer = createServer((_request, response) => {
 			response.end("UNRELATED-COMPUTE-PROCESS");
@@ -16,7 +16,9 @@ describe("artifact server ports", () => {
 			if (!address || typeof address === "string") {
 				throw new Error("Node did not assign a test server port.");
 			}
-			await expect(assertTcpPortAvailable(address.port)).rejects.toThrow(
+			await expect(
+				assertTcpPortAvailable(address.port, "Amplify compute port"),
+			).rejects.toThrow(
 				`Amplify compute port ${address.port} is already in use`,
 			);
 		} finally {

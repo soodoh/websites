@@ -5,7 +5,7 @@ import { responsiveImages } from "@websites/images/vite";
 import { nitro } from "nitro/vite";
 import { defineConfig, loadEnv } from "vite";
 import { getStaticPublicPaths } from "./src/lib/amplify-artifact.ts";
-import { getArtifactMode } from "./src/lib/build-environment.ts";
+import { assertSafeProductionBuildEnvironment } from "./src/lib/build-environment.ts";
 import projectRoutes from "./src/lib/generated-release/project-routes.json" with {
 	type: "json",
 };
@@ -24,7 +24,7 @@ const staticPublicPaths = new Set([
 
 export default defineConfig(({ mode }) => {
 	Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
-	const artifactMode = getArtifactMode(process.env);
+	const artifactMode = assertSafeProductionBuildEnvironment(process.env);
 
 	return {
 		publicDir: false,

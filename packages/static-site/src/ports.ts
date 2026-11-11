@@ -10,7 +10,7 @@ export function parseTcpPort(value: string, name: string): number {
 
 export async function assertTcpPortAvailable(
 	port: number,
-	label = "Amplify compute port",
+	label = "TCP port",
 ): Promise<void> {
 	const probe = createServer();
 	try {

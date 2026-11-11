@@ -60,6 +60,10 @@ function makeRunner(scratch: string, app: App) {
 		readFileSync(join(root, "apps", app, "scripts", script)),
 	);
 	writeFileSync(
+		join(scratch, "scripts/playwright/docker-runner.sh"),
+		readFileSync(join(root, "scripts/playwright/docker-runner.sh")),
+	);
+	writeFileSync(
 		join(scratch, "scripts/playwright/publish-snapshots.sh"),
 		readFileSync(join(root, "scripts/playwright/publish-snapshots.sh")),
 	);

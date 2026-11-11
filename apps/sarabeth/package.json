@@ -49,7 +49,7 @@
 		"test:ci:prebuilt": "bun run test:unit && PLAYWRIGHT_SKIP_BUILD=1 bun run test:e2e",
 		"dev:workspace": "vite dev --port 3100",
 		"ci:verify": "bun run lint && bun run typecheck && bun run build:production-provider && bun run build:amplify:fixture && bun run prepare:amplify && bun run validate:amplify && bun run build:playwright:unchecked && bun run test:unit && bun run test:container && bun run infra:lint && bun run lighthouse --prebuilt",
-		"lighthouse": "bun ../../scripts/lighthouse/run.mjs sarabeth",
+		"lighthouse": "bun ../../scripts/lighthouse/run.ts sarabeth",
 		"test:container": "bash scripts/playwright-docker.sh",
 		"infra:lint": "../../scripts/infra/validate-opentofu.sh apps/sarabeth/infra/opentofu"
 	},

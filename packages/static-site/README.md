@@ -20,6 +20,27 @@ Not-found title and robots metadata belong to the normal not-found UI, so they w
 
 Paths come from the framework’s completed prerenders or the release inventory; there is no directory crawler or second route-discovery implementation. The helper rejects paths outside the output tree.
 
+## Build inspection and local serving
+
+- `@websites/static-site/artifact` lists emitted files, measures artifact sizes,
+  and scans text/binary output for secrets without logging their values. App
+  validators retain independent expected routes, protected-content sentinels,
+  source-map rules, runtime limits, and cache policy.
+- `@websites/static-site/amplify` validates manifest shape and matches wildcard
+  routes. It does not choose compute allowlists, ordering, or cache policy.
+- `@websites/static-site/ports` owns TCP-port parsing and fail-closed availability
+  probes shared by Carolyn's artifact server and the root Lighthouse runner.
+  Callers provide their own labels and required ports.
+- `@websites/static-site/preview` serves packaged indexes and clean-path aliases
+  with a genuine 404 document, GET/HEAD semantics, MIME types, optional compression,
+  and no directory listing, SSR, or SPA fallback. File resolution rejects traversal
+  and symlinks outside the artifact. Carolyn reuses file resolution but owns its
+  manifest-directed compute proxy.
+
+These are source-only TypeScript exports for Bun/Vite tooling, not a replacement
+production hosting layer. Cloud smoke helpers remain dependency-free under root
+`scripts/deploy/` so deployment jobs need no workspace installation.
+
 ## Verification
 
 Unit tests run in the root workspace Vitest project. `@websites/playwright-support/not-found` checks real static fallback status and initial content, metadata, mobile-sheet interaction/focus, navigation to a valid page, metadata cleanup, and history recovery. Run app builds/tests serially.

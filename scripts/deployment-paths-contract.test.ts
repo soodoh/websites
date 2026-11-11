@@ -69,10 +69,15 @@ describe.each(sites)("%s deployment selection", (site) => {
 				? [
 						"scripts/deploy/amplify-release.sh",
 						"scripts/deploy/verify-release.sh",
+						"scripts/deploy/release.ts",
+						"scripts/deploy/package.json",
 						"scripts/deploy/wait-for-amplify-job.sh",
 					]
 				: [
 						"scripts/deploy/amplify-static.sh",
+						"scripts/deploy/hosting.ts",
+						"scripts/deploy/release.ts",
+						"scripts/deploy/package.json",
 						"scripts/deploy/wait-for-amplify-job.sh",
 					],
 		);

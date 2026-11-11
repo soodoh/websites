@@ -23,6 +23,8 @@ on:
       - .github/workflows/deploy-carolyn.yml
       - scripts/deploy/amplify-release.sh
       - scripts/deploy/verify-release.sh
+      - scripts/deploy/release.ts
+      - scripts/deploy/package.json
       - scripts/deploy/wait-for-amplify-job.sh
       - package.json
       - bun.lock

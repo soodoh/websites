@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { expect, test } from "vitest";
@@ -31,6 +31,16 @@ test("commit policy accepts approved scopes and rejects missing or unknown scope
 		expect(lint(subject), subject).toBe(1);
 	}
 });
+test("commit policy is declarative JSON with the same scopes", () => {
+	const config = JSON.parse(
+		readFileSync(resolve(root, ".commitlintrc.json"), "utf8"),
+	);
+	expect(config.extends).toEqual(["@commitlint/config-conventional"]);
+	expect(config.rules["scope-empty"]).toEqual([2, "never"]);
+	expect(config.rules["scope-enum"]).toEqual([2, "always", scopes]);
+	expect(existsSync(resolve(root, "commitlint.config.cjs"))).toBe(false);
+});
+
 test("Renovate uses the approved dependency scope", () => {
 	const config = JSON.parse(
 		readFileSync(resolve(root, "renovate.json"), "utf8"),

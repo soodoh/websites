@@ -1,29 +1,10 @@
-import { access, readdir, readFile, stat } from "node:fs/promises";
+import assert from "node:assert/strict";
+import { access, readFile, stat } from "node:fs/promises";
 import { join, relative, resolve } from "node:path";
+import { listArtifactFiles } from "@websites/static-site/artifact";
 
 const clientRoot = resolve("dist/client");
 const requiredFiles = ["index.html", "404.html", "favicon.png"];
-
-/** @type {(condition: unknown, message: string) => asserts condition} */
-const assert = (condition, message) => {
-	if (!condition) {
-		throw new Error(message);
-	}
-};
-
-/**
- * @param {string} directory
- * @returns {Promise<string[]>}
- */
-const listFiles = async (directory) => {
-	const entries = await readdir(directory, {
-		recursive: true,
-		withFileTypes: true,
-	});
-	return entries
-		.filter((entry) => !entry.isDirectory())
-		.map((entry) => join(entry.parentPath, entry.name));
-};
 
 for (const file of requiredFiles) {
 	await access(join(clientRoot, file));
@@ -31,11 +12,10 @@ for (const file of requiredFiles) {
 
 const indexHtml = await readFile(join(clientRoot, "index.html"), "utf8");
 const notFoundHtml = await readFile(join(clientRoot, "404.html"), "utf8");
-/** @type {{ label: string, url: string }[]} */
-const navigationLinks = JSON.parse(
+const navigationLinks: { label: string; url: string }[] = JSON.parse(
 	await readFile(resolve("src/content/navigation.json"), "utf8"),
 );
-const files = await listFiles(clientRoot);
+const files = await listArtifactFiles(clientRoot);
 const relativeFiles = files.map((file) => relative(clientRoot, file));
 
 assert(
@@ -77,7 +57,7 @@ assert(
 	pictures.length === 3,
 	"All three content images must use responsive picture markup",
 );
-const imageReferences = new Set();
+const imageReferences = new Set<string>();
 for (const [, picture] of pictures) {
 	const sources = [...picture.matchAll(/srcSet="([^"]+)"/gi)];
 	assert(sources.length > 0, "Responsive image has no source candidates");

@@ -1,10 +1,29 @@
-const { readFileSync } = require("node:fs");
-const { resolve } = require("node:path");
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
-const root = resolve(__dirname, "../..");
-const categories = ["performance", "accessibility", "best-practices", "seo"];
-const formFactors = ["mobile", "desktop"];
-const sites = {
+export const root = resolve(import.meta.dirname, "../..");
+export const categories = [
+	"performance",
+	"accessibility",
+	"best-practices",
+	"seo",
+] as const;
+export const formFactors = ["mobile", "desktop"] as const;
+type Category = (typeof categories)[number];
+type FormFactor = (typeof formFactors)[number];
+export type Budgets = { routes: string[] } & Record<
+	FormFactor,
+	Record<Category, number>
+>;
+type SiteDefinition = {
+	build: string;
+	server: string;
+	ready: string;
+	port: number;
+	additionalPorts?: number[];
+	runner: string;
+};
+export const sites = {
 	paul: {
 		build: "build",
 		server: "bun run start",
@@ -36,22 +55,32 @@ const sites = {
 		port: 3000,
 		runner: "ubuntu-26.04-arm",
 	},
-};
+} satisfies Record<string, SiteDefinition>;
 
-function sitePolicy(site) {
+export function sitePolicy(
+	site: string,
+): SiteDefinition & { appRoot: string; budgets: Budgets } {
 	if (!Object.hasOwn(sites, site)) {
 		throw new Error(`Unknown Lighthouse site: ${site}`);
 	}
 	const appRoot = resolve(root, "apps", site);
-	const budgets = JSON.parse(
+	const budgets: unknown = JSON.parse(
 		readFileSync(resolve(appRoot, "lighthouse.json"), "utf8"),
 	);
 	validateBudgets(site, budgets);
-	return { ...sites[site], appRoot, budgets };
+	return { ...sites[site as keyof typeof sites], appRoot, budgets };
 }
 
-function validateBudgets(site, budgets) {
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+export function validateBudgets(
+	site: string,
+	budgets: unknown,
+): asserts budgets is Budgets {
 	if (
+		!isRecord(budgets) ||
 		!Array.isArray(budgets.routes) ||
 		budgets.routes.length === 0 ||
 		new Set(budgets.routes).size !== budgets.routes.length ||
@@ -67,7 +96,7 @@ function validateBudgets(site, budgets) {
 	for (const formFactor of formFactors) {
 		const baseline = budgets[formFactor];
 		if (
-			!baseline ||
+			!isRecord(baseline) ||
 			Object.keys(baseline).sort().join() !== [...categories].sort().join() ||
 			categories.some(
 				(category) =>
@@ -82,9 +111,10 @@ function validateBudgets(site, budgets) {
 	}
 }
 
-function lighthouseConfig(site, formFactor) {
+export function lighthouseConfig(site: string, formFactor: string) {
 	const policy = sitePolicy(site);
-	if (!formFactors.includes(formFactor)) {
+	const selectedFormFactor = formFactors.find((value) => value === formFactor);
+	if (!selectedFormFactor) {
 		throw new Error(`Unknown Lighthouse form factor: ${formFactor}`);
 	}
 	return {
@@ -104,13 +134,14 @@ function lighthouseConfig(site, formFactor) {
 				},
 			},
 			assert: {
+				includePassedAssertions: true,
 				assertions: Object.fromEntries(
 					categories.map((category) => [
 						`categories:${category}`,
 						[
 							"error",
 							{
-								minScore: policy.budgets[formFactor][category],
+								minScore: policy.budgets[selectedFormFactor][category],
 								aggregationMethod: "median",
 							},
 						],
@@ -121,13 +152,3 @@ function lighthouseConfig(site, formFactor) {
 		},
 	};
 }
-
-module.exports = {
-	root,
-	categories,
-	formFactors,
-	sites,
-	sitePolicy,
-	validateBudgets,
-	lighthouseConfig,
-};
