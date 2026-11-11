@@ -1,219 +1,259 @@
 import { spawnSync } from "node:child_process";
 import {
-	copyFileSync,
 	existsSync,
 	mkdirSync,
 	mkdtempSync,
 	readFileSync,
 	rmSync,
-	symlinkSync,
 	writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
-import { expect, test } from "vitest";
+import { basename, join, resolve } from "node:path";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { lighthouseConfig, root } from "./lighthouse/policy";
+import {
+	type LighthouseCommand,
+	verifyLighthouse,
+} from "./lighthouse/verification";
 
-const root = fileURLToPath(new URL("..", import.meta.url));
-const bun = spawnSync("bash", ["-c", "command -v bun"], {
-	encoding: "utf8",
-}).stdout.trim();
-const stages = ["healthcheck", "collect", "assert", "upload"];
-
-// Exercise the actual TS entry point, generated JSON, and pinned LHCI autorun.
-// Only builds and LHCI's child commands are replaced; no browser is launched.
-function withRunner(verify: (runner: ReturnType<typeof fixture>) => void) {
-	const scratch = mkdtempSync(join(tmpdir(), "lighthouse runner "));
-	try {
-		verify(fixture(scratch));
-	} finally {
-		rmSync(scratch, { recursive: true, force: true });
-	}
-}
-function fixture(scratch: string) {
-	const bin = join(scratch, "bin");
-	const log = join(scratch, "commands.log");
-	const output = join(scratch, ".lighthouseci/paul");
-	mkdirSync(bin);
-	mkdirSync(join(scratch, "scripts/lighthouse"), { recursive: true });
-	mkdirSync(join(scratch, "apps/paul"), { recursive: true });
-	mkdirSync(output, { recursive: true });
-	writeFileSync(join(output, "stale.json"), "previous run");
+let scratch: string;
+beforeEach(() => {
+	scratch = mkdtempSync(join(tmpdir(), "lighthouse verification "));
 	writeFileSync(join(scratch, "browser"), "unused fixture browser");
-	writeFileSync(join(scratch, "package.json"), '{"private":true}');
-	symlinkSync(join(root, "node_modules"), join(scratch, "node_modules"), "dir");
-	copyFileSync(
-		join(root, "scripts/lighthouse/run.ts"),
-		join(scratch, "scripts/lighthouse/run.ts"),
-	);
-	copyFileSync(
-		join(root, "apps/paul/lighthouse.json"),
-		join(scratch, "apps/paul/lighthouse.json"),
-	);
-	// Port zero isolates probes from services on the developer's machine. Policy
-	// contracts separately test the real, fixed site ports and generated URLs.
+	vi.spyOn(console, "log").mockImplementation(() => {});
+	vi.spyOn(console, "error").mockImplementation(() => {});
+});
+afterEach(() => {
+	rmSync(scratch, { recursive: true, force: true });
+});
+
+function config(cwd: string): ReturnType<typeof lighthouseConfig> {
+	return JSON.parse(readFileSync(join(cwd, "lighthouserc.json"), "utf8"));
+}
+
+function writeEvidence({ cwd }: LighthouseCommand) {
+	const { ci } = config(cwd);
+	mkdirSync(join(cwd, "reports"), { recursive: true });
 	writeFileSync(
-		join(scratch, "scripts/lighthouse/policy.ts"),
-		readFileSync(join(root, "scripts/lighthouse/policy.ts"), "utf8").replace(
-			/port: \d+/g,
-			"port: 0",
+		join(cwd, "reports/manifest.json"),
+		JSON.stringify(
+			Array.from(
+				{ length: ci.collect.numberOfRuns * ci.collect.url.length },
+				() => ({ url: ci.collect.url[0] }),
+			),
 		),
 	);
-	const preload = join(scratch, "preload.cjs");
-	writeFileSync(
-		preload,
-		`
-const fs = require('node:fs');
-const path = require('node:path');
-const childProcess = require('node:child_process');
-const profile = path.basename(process.cwd());
-const config = JSON.parse(fs.readFileSync(process.argv.find(arg => arg.startsWith('--config=')).slice('--config='.length), 'utf8'));
-childProcess.spawnSync = (_command, args) => {
-  const stage = args[1];
-  fs.appendFileSync(process.env.COMMAND_LOG, profile + ':' + stage + '\\n');
-  const fault = profile === process.env.FAULT_PROFILE && stage === process.env.FAULT_STAGE;
-  if (fault && process.env.FAULT_KIND === 'signal') return {status: null, signal: 'SIGKILL'};
-  if (stage === 'assert') {
-    fs.mkdirSync('.lighthouseci', {recursive: true});
-    const results = fault || config.ci.assert.includePassedAssertions ? [{passed: !fault, level: 'error'}] : [];
-    fs.writeFileSync('.lighthouseci/assertion-results.json', JSON.stringify(results));
-  }
-  if (fault) return {status: 23};
-  if (stage === 'upload') {
-    fs.mkdirSync('reports', {recursive: true});
-    let count = config.ci.collect.numberOfRuns * config.ci.collect.url.length;
-    if (profile === process.env.FAULT_PROFILE && process.env.FAULT_STAGE === 'collect') count--;
-    fs.writeFileSync('reports/manifest.json', JSON.stringify(Array.from({length: count}, () => ({url: config.ci.collect.url[0]}))));
-  }
-  return {status: 0};
-};
-`,
-	);
-	writeFileSync(
-		join(bin, "node"),
-		`#!/usr/bin/env bash\nexec "${process.execPath}" --require "${preload}" "$@"\n`,
-		{ mode: 0o755 },
-	);
-	writeFileSync(
-		join(bin, "bun"),
-		'#!/usr/bin/env bash\nprintf "build\\n" >> "$COMMAND_LOG"\nexit "$BUILD_STATUS"\n',
-		{ mode: 0o755 },
-	);
+	if (ci.assert) {
+		mkdirSync(join(cwd, ".lighthouseci"), { recursive: true });
+		writeFileSync(
+			join(cwd, ".lighthouseci/assertion-results.json"),
+			JSON.stringify([{ passed: true }]),
+		);
+	}
+}
+
+function fixture(site = "paul") {
+	const output = join(scratch, site);
+	mkdirSync(output);
+	writeFileSync(join(output, "stale.json"), "previous run");
+	const environment = { ...process.env, CHROME_PATH: join(scratch, "browser") };
+	const assertPortAvailable = vi.fn(async () => {});
+	const run = vi.fn((command: LighthouseCommand) => {
+		if (command.command === "node") writeEvidence(command);
+		return 0;
+	});
 	return {
 		output,
-		run(flags = ["--prebuilt"], env: Record<string, string> = {}) {
-			return spawnSync(
-				bun,
-				[join(scratch, "scripts/lighthouse/run.ts"), "paul", ...flags],
-				{
-					cwd: scratch,
-					encoding: "utf8",
-					env: {
-						...process.env,
-						PATH: `${bin}:${process.env.PATH}`,
-						CHROME_PATH: join(scratch, "browser"),
-						COMMAND_LOG: log,
-						BUILD_STATUS: "0",
-						...env,
-					},
-				},
-			);
-		},
-		commands: () =>
-			existsSync(log) ? readFileSync(log, "utf8").trim().split("\n") : [],
-		config: (profile: string) =>
-			JSON.parse(
-				readFileSync(join(output, profile, "lighthouserc.json"), "utf8"),
-			),
+		run,
+		environment,
+		assertPortAvailable,
+		verify: (options = { prebuilt: true, collectOnly: false }) =>
+			verifyLighthouse(site, options, {
+				directory: scratch,
+				environment,
+				run,
+				assertPortAvailable,
+			}),
 	};
 }
 
-test("runs native autorun for both profiles from generated JSON and clears stale evidence", () => {
-	withRunner((runner) => {
-		const result = runner.run();
-		expect(result.status, result.stderr).toBe(0);
-		expect(runner.commands()).toEqual([
-			...stages.map((stage) => `mobile:${stage}`),
-			...stages.map((stage) => `desktop:${stage}`),
+test("runs both profiles using generated JSON and removes only the site's stale evidence", async () => {
+	const runner = fixture();
+	mkdirSync(join(scratch, "other-site"));
+	await expect(runner.verify()).resolves.toBe(0);
+	expect(existsSync(join(runner.output, "stale.json"))).toBe(false);
+	expect(existsSync(join(scratch, "other-site"))).toBe(true);
+	expect(
+		runner.run.mock.calls.map(([command]) => basename(command.cwd)),
+	).toEqual(["mobile", "desktop"]);
+	for (const [command] of runner.run.mock.calls) {
+		expect(command.command).toBe("node");
+		expect(command.args).toEqual([
+			expect.stringContaining("@lhci/cli/src/cli.js"),
+			"autorun",
+			`--config=${join(command.cwd, "lighthouserc.json")}`,
+			"--failOnUploadFailure",
 		]);
-		expect(existsSync(join(runner.output, "stale.json"))).toBe(false);
-		for (const profile of ["mobile", "desktop"]) {
-			const { ci } = runner.config(profile);
-			expect(ci.collect.numberOfRuns).toBe(3);
-			expect(ci.assert.includePassedAssertions).toBe(true);
-			expect(ci.assert.assertions["categories:performance"][1]).toEqual({
-				minScore: 0.9,
-				aggregationMethod: "median",
-			});
-			expect(ci.upload).toEqual({ target: "filesystem", outputDir: "reports" });
-		}
+		expect(command.env.CHROME_PATH).toBe(runner.environment.CHROME_PATH);
+		expect(config(command.cwd)).toEqual(
+			lighthouseConfig("paul", basename(command.cwd)),
+		);
+	}
+});
+
+test("builds once before both profiles unless prebuilt", async () => {
+	const runner = fixture();
+	await expect(
+		runner.verify({ prebuilt: false, collectOnly: false }),
+	).resolves.toBe(0);
+	expect(runner.run.mock.calls.map(([command]) => command.command)).toEqual([
+		"bun",
+		"node",
+		"node",
+	]);
+	expect(runner.run.mock.calls[0]?.[0]).toEqual({
+		command: "bun",
+		args: ["--no-env-file", "run", "build"],
+		cwd: resolve(root, "apps/paul"),
+		env: runner.environment,
 	});
 });
 
-test.each(stages)(
-	"%s failure remains fatal without suppressing the desktop profile",
-	(stage) => {
-		withRunner((runner) => {
-			const result = runner.run(["--prebuilt"], {
-				FAULT_PROFILE: "mobile",
-				FAULT_STAGE: stage,
-			});
-			expect(result.status).toBe(1);
-			expect(runner.commands()).toContain("desktop:upload");
-			if (stage === "assert") {
-				expect(runner.commands()).toContain("mobile:upload");
-				expect(
-					existsSync(join(runner.output, "mobile/reports/manifest.json")),
-				).toBe(true);
+test("a failed build returns its status, clears stale evidence, and skips collection", async () => {
+	const runner = fixture();
+	runner.run.mockReturnValue(23);
+	await expect(
+		runner.verify({ prebuilt: false, collectOnly: false }),
+	).resolves.toBe(23);
+	expect(runner.run).toHaveBeenCalledTimes(1);
+	expect(existsSync(runner.output)).toBe(false);
+});
+
+test.each(["mobile", "desktop"])(
+	"a nonzero %s profile fails verification without skipping either profile",
+	async (profile) => {
+		const runner = fixture();
+		runner.run.mockImplementation((command) => {
+			writeEvidence(command);
+			return basename(command.cwd) === profile ? 23 : 0;
+		});
+		await expect(runner.verify()).resolves.toBe(1);
+		expect(runner.run).toHaveBeenCalledTimes(2);
+	},
+);
+
+test.each([undefined, "not json", "{}", "[]", '[{"url":"/"}]'])(
+	"rejects absent, malformed, or incomplete report manifests: %s",
+	async (manifest) => {
+		const runner = fixture();
+		runner.run.mockImplementation((command) => {
+			writeEvidence(command);
+			if (basename(command.cwd) === "mobile") {
+				const path = join(command.cwd, "reports/manifest.json");
+				if (manifest === undefined) rmSync(path);
+				else writeFileSync(path, manifest);
 			}
-			if (stage === "collect")
-				expect(runner.commands()).not.toContain("mobile:upload");
+			return 0;
 		});
+		await expect(runner.verify()).resolves.toBe(1);
+		expect(runner.run).toHaveBeenCalledTimes(2);
+		expect(console.error).toHaveBeenCalledWith(
+			"Incomplete Lighthouse evidence for paul/mobile:",
+			expect.any(Error),
+		);
 	},
 );
 
-test.each(["collect", "assert", "upload"])(
-	"does not accept incomplete evidence when LHCI swallows a signaled %s child",
-	(stage) => {
-		withRunner((runner) => {
-			const result = runner.run(["--prebuilt"], {
-				FAULT_PROFILE: "mobile",
-				FAULT_STAGE: stage,
-				FAULT_KIND: "signal",
-			});
-			expect(result.status).toBe(1);
-			expect(result.stderr).toContain("Incomplete Lighthouse evidence");
-			expect(runner.commands()).toContain("desktop:upload");
-		});
-	},
-);
-
-test("collect-only omits assertions but still exports reports", () => {
-	withRunner((runner) => {
-		const result = runner.run(["--prebuilt", "--collect-only"], {
-			FAULT_PROFILE: "mobile",
-			FAULT_STAGE: "assert",
-		});
-		expect(result.status, result.stderr).toBe(0);
-		expect(runner.commands()).not.toContain("mobile:assert");
-		expect(runner.commands()).not.toContain("desktop:assert");
-		expect(runner.config("mobile").ci.assert).toBeUndefined();
-		expect(runner.commands()).toContain("desktop:upload");
+test.each([
+	undefined,
+	"not json",
+	"{}",
+	"[]",
+	'[{"passed":false}]',
+	'[{"passed":true},{}]',
+])("rejects missing or nonpassing assertion evidence: %s", async (results) => {
+	const runner = fixture();
+	runner.run.mockImplementation((command) => {
+		writeEvidence(command);
+		if (basename(command.cwd) === "mobile") {
+			const path = join(command.cwd, ".lighthouseci/assertion-results.json");
+			if (results === undefined) rmSync(path);
+			else writeFileSync(path, results);
+		}
+		return 0;
 	});
+	await expect(runner.verify()).resolves.toBe(1);
+	expect(runner.run).toHaveBeenCalledTimes(2);
 });
 
-test("builds once unless prebuilt and propagates build failures before collection", () => {
-	withRunner((runner) => {
-		const result = runner.run([]);
-		expect(result.status, result.stderr).toBe(0);
-		expect(runner.commands()[0]).toBe("build");
+test("collect-only omits assertion configuration and accepts complete reports without assertions", async () => {
+	const runner = fixture();
+	await expect(
+		runner.verify({ prebuilt: true, collectOnly: true }),
+	).resolves.toBe(0);
+	for (const [command] of runner.run.mock.calls) {
+		expect(config(command.cwd).ci.assert).toBeUndefined();
 		expect(
-			runner.commands().filter((command) => command === "build"),
-		).toHaveLength(1);
+			existsSync(join(command.cwd, ".lighthouseci/assertion-results.json")),
+		).toBe(false);
+	}
+});
+
+test("collect-only still requires complete report evidence", async () => {
+	const runner = fixture();
+	runner.run.mockReturnValue(0);
+	await expect(
+		runner.verify({ prebuilt: true, collectOnly: true }),
+	).resolves.toBe(1);
+});
+
+test("preflights every required port, including Carolyn compute", async () => {
+	const runner = fixture("carolyn");
+	await expect(runner.verify()).resolves.toBe(0);
+	expect(runner.assertPortAvailable.mock.calls).toEqual([
+		[4100, "Lighthouse requires free port"],
+		[3000, "Lighthouse requires free port"],
+	]);
+});
+
+test("an occupied port clears stale evidence and prevents any process execution", async () => {
+	const runner = fixture();
+	runner.assertPortAvailable.mockRejectedValue(new Error("occupied"));
+	await expect(runner.verify()).rejects.toThrow("occupied");
+	expect(runner.run).not.toHaveBeenCalled();
+	expect(existsSync(runner.output)).toBe(false);
+});
+
+test("a missing browser fails before altering evidence or probing ports", async () => {
+	const runner = fixture();
+	runner.environment.CHROME_PATH = join(scratch, "missing");
+	await expect(runner.verify()).rejects.toThrow("Lighthouse browser missing");
+	expect(runner.assertPortAvailable).not.toHaveBeenCalled();
+	expect(runner.run).not.toHaveBeenCalled();
+	expect(existsSync(join(runner.output, "stale.json"))).toBe(true);
+});
+
+test("a process launch error remains fatal", async () => {
+	const runner = fixture();
+	runner.run.mockImplementation(() => {
+		throw new Error("spawn failed");
 	});
-	withRunner((runner) => {
-		expect(runner.run([], { BUILD_STATUS: "23" }).status).toBe(23);
-		expect(runner.commands()).toEqual(["build"]);
-		expect(existsSync(join(runner.output, "stale.json"))).toBe(false);
-	});
+	await expect(runner.verify()).rejects.toThrow("spawn failed");
+});
+
+test.each([
+	{ args: [], error: "Usage: bun run lighthouse" },
+	{ args: ["paul", "--unknown"], error: "Usage: bun run lighthouse" },
+	{ args: ["unknown"], error: "Unknown Lighthouse site" },
+])("the actual CLI rejects invalid input: $args", ({ args, error }) => {
+	const result = spawnSync(
+		"bun",
+		[resolve(root, "scripts/lighthouse/run.ts"), ...args],
+		{
+			cwd: scratch,
+			encoding: "utf8",
+		},
+	);
+	expect(result.status).not.toBe(0);
+	expect(result.stderr).toContain(error);
 });

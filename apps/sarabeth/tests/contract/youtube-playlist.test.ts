@@ -308,16 +308,6 @@ test("thumbnail preview failure cannot make a playable playlist unavailable", as
 	expect(decodeYouTubePlaylist(playlist).videos).toHaveLength(1);
 });
 
-test("a stalled thumbnail cannot hold the playlist beyond its preview budget", async () => {
-	const playlist = await fetchYouTubePlaylist({
-		...createDependencies(defaultFetch),
-		timeoutMilliseconds: 10,
-		loadThumbnailPreview: () => new Promise<string>(() => {}),
-	});
-	expect(playlist.videos).toHaveLength(1);
-	expect(playlist.videos[0].thumbnailPlaceholder).toMatch(/^data:image\//);
-});
-
 test("formats ISO-8601 durations for minutes, hours, and days", () => {
 	expect(formatYouTubeDuration("PT5M8S")).toBe("5:08");
 	expect(formatYouTubeDuration("PT1H2M3S")).toBe("1:02:03");

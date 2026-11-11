@@ -4,12 +4,12 @@ import {
 	SSMClient,
 	type SSMClientConfig,
 } from "@aws-sdk/client-ssm";
-import { fallbackPlaceholder } from "@websites/images";
-import { createRemotePreviewLoader, mapImages } from "@websites/images/server";
+import { createRemotePreviewLoader } from "@websites/images/server";
+import { requireYouTubeThumbnailUrl } from "@websites/images/youtube";
 import {
-	getYouTubePreviewSource,
-	requireYouTubeThumbnailUrl,
-} from "@websites/images/youtube";
+	enrichPlaylistPreviews,
+	type PlaylistPreviewOptions,
+} from "@/utils/playlist-preview-enrichment.server";
 import type { YouTubePlaylist } from "@/utils/types";
 import {
 	youtubeApiKeyParameterName,
@@ -107,12 +107,10 @@ export interface YouTubePlaylistLogger {
 	error(message: string): void;
 }
 
-export interface YouTubePlaylistDependencies {
+export interface YouTubePlaylistDependencies extends PlaylistPreviewOptions {
 	readApiKey(): Promise<string>;
 	fetch(input: string | URL | Request, init?: RequestInit): Promise<Response>;
-	timeoutMilliseconds: number;
 	logger: YouTubePlaylistLogger;
-	loadThumbnailPreview?: (source: string) => Promise<string>;
 }
 
 const productionYouTubePlaylistDependencies: YouTubePlaylistDependencies = {
@@ -340,40 +338,11 @@ export const fetchYouTubePlaylist = async (
 		});
 	}
 
-	// Thumbnail enhancement must not hold the entire playable playlist hostage.
-	const previewDeadline =
-		Date.now() + Math.min(1000, dependencies.timeoutMilliseconds);
-	async function previewBeforeDeadline(source: string): Promise<string> {
-		const load = dependencies.loadThumbnailPreview;
-		const remaining = previewDeadline - Date.now();
-		if (!load || remaining <= 0) return fallbackPlaceholder;
-		let timer: ReturnType<typeof setTimeout> | undefined;
-		try {
-			return await Promise.race([
-				Promise.resolve()
-					.then(() => load(source))
-					.catch(() => fallbackPlaceholder),
-				new Promise<string>((resolve) => {
-					timer = setTimeout(() => resolve(fallbackPlaceholder), remaining);
-				}),
-			]);
-		} finally {
-			clearTimeout(timer);
-		}
-	}
-	const preparedVideos = await mapImages(videos, async (video) => {
-		const source = getYouTubePreviewSource(
-			video.thumbnailUrl,
-			video.thumbnailRenditions ?? [],
-		);
-		const thumbnailPlaceholder = await previewBeforeDeadline(source);
-		return { ...video, thumbnailPlaceholder };
-	});
 	return {
 		id: metadata.id,
 		title: metadata.title,
 		unavailableCount,
-		videos: preparedVideos,
+		videos: await enrichPlaylistPreviews(videos, dependencies),
 	};
 };
 
