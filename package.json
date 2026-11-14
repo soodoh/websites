@@ -43,8 +43,8 @@
 		"@commitlint/config-conventional": "21.2.4",
 		"@commitlint/types": "21.2.3",
 		"lefthook": "2.2.2",
-		"@lhci/cli": "0.16.0",
-		"playwright-core": "1.65.0",
+		"@lhci/cli": "0.16.1",
+		"playwright-core": "1.65.1",
 		"typescript": "7.0.2",
 		"@types/node": "26.6.6",
 		"@websites/static-site": "workspace:*"
