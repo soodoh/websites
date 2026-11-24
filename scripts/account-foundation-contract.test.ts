@@ -59,6 +59,17 @@ describe("AWS account foundation", () => {
 		expect(foundation).toContain('output "operational_alarm_topic_arn"');
 	});
 
+	test("excludes only Amazon Registrar renewals from the account budget", () => {
+		const budget = foundation.match(
+			/^resource "aws_budgets_budget" "monthly_account" \{([\s\S]*?)^\}/m,
+		)?.[1];
+		const filter = budget?.match(/^ {2}filter_expression \{(.*?)^ {2}\}/ms);
+		expect(filter?.[1].replace(/\s+/g, " ").trim()).toBe(
+			'not { and { dimensions { key = "SERVICE" values = ["Amazon Registrar"] } } and { dimensions { key = "OPERATION" values = ["RenewDomain"] } } }',
+		);
+		expect(budget).toMatch(/metrics\s*= \["UnblendedCost"\]/);
+	});
+
 	test("binds production roles to the current GitHub repository identity", () => {
 		const subjects = siteConfigurations.flatMap((configuration) =>
 			Array.from(

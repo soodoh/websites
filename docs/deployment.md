@@ -72,7 +72,7 @@ The OIDC role trust must name only the monorepo repository and the matching envi
 
 ### AWS account foundation
 
-The OpenTofu account foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, one account-wide monthly budget, and the versioned state bucket. Pass its `github_oidc_provider_arn` and `operational_alarm_topic_arn` outputs to the site roots. A budget is intentionally account-scoped; do not recreate it in an individual site's hosting root or name it as though it measures only one Amplify app.
+The OpenTofu account foundation owns the account-level GitHub Actions OIDC provider, one production alarm topic and email subscription, one account-wide monthly budget, and the versioned state bucket. Pass its `github_oidc_provider_arn` and `operational_alarm_topic_arn` outputs to the site roots. The budget measures account-wide unblended cost, excluding only Amazon Registrar's `RenewDomain` charges. Domain registrations, transfers, Route 53 DNS, and other account costs still count toward both the actual and forecast alerts. Do not recreate the budget in an individual site's hosting root or name it as though it measures only one Amplify app.
 
 Each resource has one state owner. Plan an explicit import and state transfer before moving an account-level provider or shared resource between roots.
 

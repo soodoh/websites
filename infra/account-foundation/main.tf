@@ -219,6 +219,24 @@ resource "aws_budgets_budget" "monthly_account" {
   limit_amount = tostring(var.monthly_budget_amount)
   limit_unit   = "USD"
   time_unit    = "MONTHLY"
+  metrics      = ["UnblendedCost"]
+
+  filter_expression {
+    not {
+      and {
+        dimensions {
+          key    = "SERVICE"
+          values = ["Amazon Registrar"]
+        }
+      }
+      and {
+        dimensions {
+          key    = "OPERATION"
+          values = ["RenewDomain"]
+        }
+      }
+    }
+  }
 
   notification {
     comparison_operator        = "GREATER_THAN"
